@@ -55,6 +55,7 @@ HRESULT CGraphic_Device::Clear_BackBuffer_View(const _float4* pClearColor)
 	if (nullptr == m_pDeviceContext)
 		return E_FAIL;
 
+	//11
 	//백 버퍼 초기화
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV, reinterpret_cast<const _float*>(pClearColor));
 
