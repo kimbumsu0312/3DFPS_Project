@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Graphic_Device.h"
 
 CGraphic_Device::CGraphic_Device() : m_pDevice { nullptr }, m_pDeviceContext { nullptr }
@@ -13,8 +14,6 @@ HRESULT CGraphic_Device::Initialize(HWND hWnd, WINMODE isWindowed, _uint iWinSiz
 #endif
 
 	D3D_FEATURE_LEVEL FeatureLV;
-
-	// 테스트 주석3
 
 	// 그래픽 장치 초기화
 	if (FAILED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, 0, iFlag, nullptr, 0, D3D11_SDK_VERSION, &m_pDevice, &FeatureLV, &m_pDeviceContext)))
@@ -47,8 +46,8 @@ HRESULT CGraphic_Device::Initialize(HWND hWnd, WINMODE isWindowed, _uint iWinSiz
 	*ppDevice = m_pDevice;
 	*ppContext = m_pDeviceContext;
 
-	Safe_Release(m_pDevice);
-	Safe_Release(m_pDeviceContext);
+	Safe_AddRef(m_pDevice);
+	Safe_AddRef(m_pDeviceContext);
 	return S_OK;
 }
 
@@ -138,7 +137,7 @@ HRESULT CGraphic_Device::Ready_BackBufferRenderTargetView()
 
 	ID3D11Texture2D* pBackBufferTextture = nullptr;
 
-	if (FAILED(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)pBackBufferTextture)))
+	if (FAILED(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBackBufferTextture)))
 		return E_FAIL;
 
 	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTextture, nullptr, &m_pBackBufferRTV)))
@@ -219,7 +218,8 @@ void CGraphic_Device::Free()
 		OutputDebugStringW(L"                                                                    D3D11 Live Object ref Count Checker END \r ");
 		OutputDebugStringW(L"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \r ");
 	}
-	if (d3dDebug != nullptr)            d3dDebug->Release();
+	if (d3dDebug != nullptr)        
+		d3dDebug->Release();
 #endif
 
 	Safe_Release(m_pDevice);

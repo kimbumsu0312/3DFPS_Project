@@ -96,9 +96,6 @@
     <ClInclude Include="..\public\GameInstance.h">
       <Filter>01.Utility\00.GameInstance</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\stdafx.h">
-      <Filter>98.PCH</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Level.h">
       <Filter>01.Utility\01.Level</Filter>
     </ClInclude>
@@ -128,6 +125,9 @@
     </ClInclude>
     <ClInclude Include="..\public\UIObject.h">
       <Filter>01.Utility\02.GameObject\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Private\stdafx.h">
+      <Filter>98.PCH</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

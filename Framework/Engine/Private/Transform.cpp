@@ -92,10 +92,6 @@ void CTransform::Rotation(_fvector vAxis, _float fRadian)
 	Set_State(STATE::RIGHT, XMVector4Transform(vRight, RotationMatrix));
 	Set_State(STATE::UP, XMVector4Transform(vUp, RotationMatrix));
 	Set_State(STATE::LOOK, XMVector4Transform(vLook, RotationMatrix));
-
-	// XMVector3TransformNormal();
-
-
 }
 
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
