@@ -85,16 +85,102 @@ HRESULT CGraphic_Device::Present()
 
 HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, WINMODE isWindowed, _uint iWinCX, _uint iWinCY)
 {
+	IDXGIDevice* pDevice = nullptr;
+	m_pDevice->QueryInterface(__uuidof(IDXGIDevice), ((void**)&pDevice));
+
+	IDXGIAdapter* pAdapter = nullptr;
+	pDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&pAdapter);
+
+	IDXGIFactory* pFactory = nullptr;
+	pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&pFactory);
+
+	//스왑 체인 생성
+	DXGI_SWAP_CHAIN_DESC	Swapchain;
+	ZeroMemory(&Swapchain, sizeof(DXGI_SWAP_CHAIN_DESC));
+
+	//텍스처 버퍼 생성
+	Swapchain.BufferDesc.Width = iWinCX;
+	Swapchain.BufferDesc.Height = iWinCY;
+
+	Swapchain.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	Swapchain.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	Swapchain.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+
+	Swapchain.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	Swapchain.BufferCount = 1;
+
+	//스왑 형태
+	Swapchain.BufferDesc.RefreshRate.Numerator = 60;
+	Swapchain.BufferDesc.RefreshRate.Numerator = 1;
+
+	//멀티 샘플링, 후처리 렌더링
+	Swapchain.SampleDesc.Quality = 0;
+	Swapchain.SampleDesc.Count = 1;
+
+	Swapchain.OutputWindow = hWnd;
+	Swapchain.Windowed = static_cast<BOOL>(isWindowed);
+	Swapchain.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+
+	if (FAILED(pFactory->CreateSwapChain(m_pDevice, &Swapchain, &m_pSwapChain)))
+		return E_FAIL;
+	
+	Safe_Release(pFactory);
+	Safe_Release(pAdapter);
+	Safe_Release(pDevice);
+
 	return S_OK;
 }
 
 HRESULT CGraphic_Device::Ready_BackBufferRenderTargetView()
 {
+	if (nullptr == m_pDevice)
+		return E_FAIL;
+
+	ID3D11Texture2D* pBackBufferTextture = nullptr;
+
+	if (FAILED(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)pBackBufferTextture)))
+		return E_FAIL;
+
+	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTextture, nullptr, &m_pBackBufferRTV)))
+		return E_FAIL;
+	
+	Safe_Release(pBackBufferTextture);
+
 	return S_OK;
 }
 
 HRESULT CGraphic_Device::Ready_DepthStencilView(_uint iWinCX, _uint iWinCY)
 {
+	if (nullptr == m_pDevice)
+		return E_FAIL;
+
+	ID3D11Texture2D* pDepthStencilTexture = nullptr;
+
+	D3D11_TEXTURE2D_DESC TextureDesc;
+	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+	TextureDesc.Width = iWinCX;
+	TextureDesc.Height = iWinCY;
+	TextureDesc.MipLevels = 1;
+	TextureDesc.ArraySize = 1;
+	TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+	TextureDesc.SampleDesc.Quality = 0;
+	TextureDesc.SampleDesc.Count = 1;
+
+	TextureDesc.Usage = D3D11_USAGE_DEFAULT;	//동적, 정적 설정
+	TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;	//어떤 용도로 바인드 될지 플래그
+	TextureDesc.CPUAccessFlags = 0;
+	TextureDesc.MiscFlags = 0;
+
+	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture)))
+		return E_FAIL;
+
+	if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pDepthStencilView)))
+		return E_FAIL;
+
+	Safe_Release(pDepthStencilTexture);
+
 	return S_OK;
 }
 
