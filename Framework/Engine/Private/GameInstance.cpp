@@ -28,17 +28,37 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	m_pLevel_Manager = CLevel_Manager::Create();
 	if (nullptr == m_pLevel_Manager)
 		return E_FAIL;
+	
+	m_pObject_Manager = CObject_Manager::Create(EngineDesc.iNumLevels);
+	if (nullptr == m_pObject_Manager)
+		return E_FAIL;
+
+	m_pPrototype_Manager = CPrototype_Manager::Create(EngineDesc.iNumLevels);
+	if (nullptr == m_pPrototype_Manager)
+		return E_FAIL;
+
+	m_pRenderer = CRenderer::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pRenderer)
+		return E_FAIL;
 
 	return S_OK;
 }
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
+	m_pObject_Manager->Priority_Update(fTimeDelta);
+	m_pObject_Manager->Update(fTimeDelta);
+	m_pObject_Manager->Late_Update(fTimeDelta);
+
 	m_pLevel_Manager->Update(fTimeDelta);
 }
 
 HRESULT CGameInstance::Clear_Resources(_uint iClearLevelID)
 {
+	m_pPrototype_Manager->Clear(iClearLevelID);
+
+	m_pObject_Manager->Clear(iClearLevelID);
+
 	return S_OK;
 }
 
@@ -54,8 +74,10 @@ void CGameInstance::Render_Begin(const _float4* pClearColor)
 
 HRESULT CGameInstance::Draw()
 {
-	if (nullptr == m_pLevel_Manager)
+	if (nullptr == m_pLevel_Manager || nullptr == m_pRenderer)
 		return E_FAIL;
+
+	m_pRenderer->Draw();
 
 	if (FAILED(m_pLevel_Manager->Render()))
 		return E_FAIL;
@@ -143,6 +165,7 @@ void CGameInstance::Release_Engine()
 {
 	Release();
 	Safe_Release(m_pRenderer);
+	Safe_Release(m_pPrototype_Manager);
 	Safe_Release(m_pObject_Manager);
 	Safe_Release(m_pLevel_Manager);
 	Safe_Release(m_pTimer_Manager);
