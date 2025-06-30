@@ -60,6 +60,9 @@
     <ClInclude Include="..\public\Graphic_Device.h">
       <Filter>00.System\01.Device\Graphic</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\GameInstance.h">
+      <Filter>01.Utility\00.GameInstance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -73,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Graphic_Device.cpp">
       <Filter>00.System\01.Device\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GameInstance.cpp">
+      <Filter>01.Utility\00.GameInstance</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
