@@ -14,6 +14,11 @@ namespace Engine
 		unsigned int	iNumLevels;
 	}ENGINE_DESC;	
 	
+	typedef struct tagVertexPositionTexcoord
+	{
+		XMFLOAT3	vPosition;
+		XMFLOAT2	vTexcoord;
+	}VTXPOSTEX;
 }
 
 
