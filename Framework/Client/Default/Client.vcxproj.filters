@@ -1,46 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="98.Default">
-      <UniqueIdentifier>{3442f46b-afa7-4feb-bb85-adba8d7a14bd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Defines">
       <UniqueIdentifier>{d8d16bc1-2149-41f4-8de6-cbcd337bba3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.Default">
+      <UniqueIdentifier>{3442f46b-afa7-4feb-bb85-adba8d7a14bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.PCH">
+      <UniqueIdentifier>{a6bcf3a9-cc54-44e8-ba11-ac98c08ba285}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
-      <Filter>98.Default</Filter>
+      <Filter>97.Default</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
-      <Filter>98.Default</Filter>
+      <Filter>97.Default</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>98.Default</Filter>
+      <Filter>97.Default</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>98.Default</Filter>
+      <Filter>97.Default</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Defines.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\stdafx.h">
+      <Filter>98.PCH</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
-      <Filter>98.Default</Filter>
+      <Filter>97.Default</Filter>
     </Image>
     <Image Include="Client.ico">
-      <Filter>98.Default</Filter>
+      <Filter>97.Default</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
-      <Filter>98.Default</Filter>
+      <Filter>97.Default</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
-      <Filter>98.Default</Filter>
+      <Filter>97.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\stdafx.cpp">
+      <Filter>98.PCH</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
