@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "BackGround.h"
 #include "GameInstance.h"
 

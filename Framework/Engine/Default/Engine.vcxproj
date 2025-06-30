@@ -112,7 +112,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Public/;../Private/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../default/;</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -150,7 +150,6 @@ call Copy.bat</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Private\stdafx.h" />
     <ClInclude Include="..\public\Base.h" />
     <ClInclude Include="..\public\Component.h" />
     <ClInclude Include="..\public\UIObject.h" />
@@ -172,6 +171,9 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\Timer.h" />
     <ClInclude Include="..\Public\Timer_Manager.h" />
     <ClInclude Include="..\public\Transform.h" />
+    <ClInclude Include="..\public\VIBuffer.h" />
+    <ClInclude Include="..\public\VIBuffer_Rect.h" />
+    <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp" />
@@ -186,12 +188,12 @@ call Copy.bat</Command>
     <ClCompile Include="..\private\Object_Manager.cpp" />
     <ClCompile Include="..\private\Prototype_Manager.cpp" />
     <ClCompile Include="..\private\Renderer.cpp" />
-    <ClCompile Include="..\private\stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="..\Private\Timer.cpp" />
     <ClCompile Include="..\Private\Timer_Manager.cpp" />
     <ClCompile Include="..\private\Transform.cpp" />
+    <ClCompile Include="..\private\VIBuffer.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Rect.cpp" />
+    <ClCompile Include="pch.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
