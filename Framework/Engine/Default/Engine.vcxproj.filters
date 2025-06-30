@@ -28,6 +28,9 @@
     <Filter Include="00.System\01.Device\Graphic">
       <UniqueIdentifier>{4f15cdb7-a254-47fe-8b61-886b77b104b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.PCH">
+      <UniqueIdentifier>{a9822529-1939-4f63-9598-8de17bd701cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -63,6 +66,9 @@
     <ClInclude Include="..\public\GameInstance.h">
       <Filter>01.Utility\00.GameInstance</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\stdafx.h">
+      <Filter>98.PCH</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -79,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="..\private\GameInstance.cpp">
       <Filter>01.Utility\00.GameInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\stdafx.cpp">
+      <Filter>98.PCH</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
