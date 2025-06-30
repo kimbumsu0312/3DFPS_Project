@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "MainApp.h"
 #include "GameInstance.h"
 

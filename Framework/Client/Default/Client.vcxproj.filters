@@ -4,12 +4,6 @@
     <Filter Include="99.Defines">
       <UniqueIdentifier>{d8d16bc1-2149-41f4-8de6-cbcd337bba3b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.Default">
-      <UniqueIdentifier>{3442f46b-afa7-4feb-bb85-adba8d7a14bd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="98.PCH">
-      <UniqueIdentifier>{a6bcf3a9-cc54-44e8-ba11-ac98c08ba285}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00.MainApp">
       <UniqueIdentifier>{de741457-4ffe-4bc1-b18c-ac1e1719c256}</UniqueIdentifier>
     </Filter>
@@ -34,25 +28,25 @@
     <Filter Include="02.GameObject\BackGround">
       <UniqueIdentifier>{28d960be-0ec3-4954-8a47-a34797be1e2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="98.Default">
+      <UniqueIdentifier>{3442f46b-afa7-4feb-bb85-adba8d7a14bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
-      <Filter>97.Default</Filter>
+      <Filter>98.Default</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
-      <Filter>97.Default</Filter>
+      <Filter>98.Default</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>97.Default</Filter>
+      <Filter>98.Default</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>97.Default</Filter>
+      <Filter>98.Default</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Defines.h">
       <Filter>99.Defines</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Private\stdafx.h">
-      <Filter>98.PCH</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MainApp.h">
       <Filter>00.MainApp</Filter>
@@ -72,26 +66,26 @@
     <ClInclude Include="..\public\BackGround.h">
       <Filter>02.GameObject\BackGround</Filter>
     </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
-      <Filter>97.Default</Filter>
+      <Filter>98.Default</Filter>
     </Image>
     <Image Include="Client.ico">
-      <Filter>97.Default</Filter>
+      <Filter>98.Default</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
-      <Filter>97.Default</Filter>
+      <Filter>98.Default</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
-      <Filter>97.Default</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\stdafx.cpp">
-      <Filter>98.PCH</Filter>
+      <Filter>98.Default</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MainApp.cpp">
       <Filter>00.MainApp</Filter>
@@ -110,6 +104,9 @@
     </ClCompile>
     <ClCompile Include="..\private\BackGround.cpp">
       <Filter>02.GameObject\BackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>98.Default</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Level_Logo.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
