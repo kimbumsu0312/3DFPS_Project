@@ -14,6 +14,8 @@ HRESULT CGraphic_Device::Initialize(HWND hWnd, WINMODE isWindowed, _uint iWinSiz
 
 	D3D_FEATURE_LEVEL FeatureLV;
 
+	// 테스트 주석3
+
 	// 그래픽 장치 초기화
 	if (FAILED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, 0, iFlag, nullptr, 0, D3D11_SDK_VERSION, &m_pDevice, &FeatureLV, &m_pDeviceContext)))
 		return E_FAIL;
@@ -55,7 +57,6 @@ HRESULT CGraphic_Device::Clear_BackBuffer_View(const _float4* pClearColor)
 	if (nullptr == m_pDeviceContext)
 		return E_FAIL;
 
-	//11
 	//백 버퍼 초기화
 	m_pDeviceContext->ClearRenderTargetView(m_pBackBufferRTV, reinterpret_cast<const _float*>(pClearColor));
 
