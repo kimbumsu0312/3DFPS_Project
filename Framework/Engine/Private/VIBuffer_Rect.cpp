@@ -13,6 +13,11 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 {
 	m_iNumVertices = 4;
 	m_iVertexStride = sizeof(VTXPOSTEX);
+	m_iNumIndices = 6;
+	m_iIndexStride = 2;
+	m_iNumVertexBuffers = 1;
+	m_eIndexFormat = DXGI_FORMAT_R16_UINT;
+	m_ePrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	D3D11_BUFFER_DESC		VBDesc{};
 
