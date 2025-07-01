@@ -19,6 +19,10 @@ protected:
 	
 	_uint				m_iNumVertices = {};
 	_uint				m_iVertexStride = {};
+	_uint				m_iNumIndices = {};
+	_uint				m_iIndexStride = {};
+	_uint				m_iNumVertexBuffers = {};
+	
 
 public:
 	virtual CComponent* Clone(void* pArg) = 0;

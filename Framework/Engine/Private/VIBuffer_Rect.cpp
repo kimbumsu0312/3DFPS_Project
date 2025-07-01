@@ -46,11 +46,30 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 	Safe_Delete_Array(pVertices);
 
 	D3D11_BUFFER_DESC		IBDesc{};
+	IBDesc.ByteWidth = m_iNumIndices * m_iIndexStride;
+	IBDesc.Usage = D3D11_USAGE_DEFAULT;
+	IBDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	IBDesc.CPUAccessFlags = 0;
+	IBDesc.MiscFlags = 0;
+	IBDesc.StructureByteStride = m_iIndexStride;
+
+	_ushort* pIndices = new _ushort[m_iNumIndices];
+
+	pIndices[0] = 0;
+	pIndices[1] = 1;
+	pIndices[2] = 2;
+
+	pIndices[3] = 0;
+	pIndices[4] = 2;
+	pIndices[5] = 3;
 
 	D3D11_SUBRESOURCE_DATA	IBInitialData{};
+	IBInitialData.pSysMem = pIndices;
 
 	if (FAILED(m_pDevice->CreateBuffer(&IBDesc, &IBInitialData, &m_pIB)))
 		return E_FAIL;
+
+	Safe_Delete_Array(pIndices);
 
 	return S_OK;
 }
