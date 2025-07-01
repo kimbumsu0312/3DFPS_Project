@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "VIBuffer_Rect.h"
 
 CVIBuffer_Rect::CVIBuffer_Rect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CVIBuffer{ pDevice, pContext}
