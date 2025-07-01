@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "Transform.h"
 
 CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

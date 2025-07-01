@@ -54,6 +54,15 @@ public:
 	HRESULT				Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
 #pragma endregion
 
+#pragma region INPUT_MANAGER
+public:
+	void						AddTrackIngKey(int iKey);
+	_bool						IsKeyDown(int iKey) const;
+	_bool						IsKeyUp(int iKey) const;
+	_bool						IsKeyHold(int iKey) const;
+	_float						GetKeyHoldTime(int iKey) const;
+#pragma endregion
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
@@ -61,6 +70,7 @@ private:
 	class CObject_Manager*		m_pObject_Manager = { nullptr };
 	class CPrototype_Manager*	m_pPrototype_Manager = { nullptr };
 	class CRenderer*			m_pRenderer = { nullptr };
+	class CInput_Manager*		m_pInput_Manager = { nullptr };
 
 public:
 	void						Release_Engine();

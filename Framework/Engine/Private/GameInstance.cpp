@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "GameInstance.h"
 
 #include "Graphic_Device.h"
@@ -7,6 +7,7 @@
 #include "Object_Manager.h"
 #include "Prototype_Manager.h"
 #include "Renderer.h"
+#include "Input_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -41,11 +42,16 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pRenderer)
 		return E_FAIL;
 
+	m_pInput_Manager = CInput_Manager::Create();
+	if (nullptr == m_pInput_Manager)
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
+	m_pInput_Manager->Update(fTimeDelta);
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 	m_pObject_Manager->Update(fTimeDelta);
 	m_pObject_Manager->Late_Update(fTimeDelta);
@@ -161,9 +167,35 @@ HRESULT CGameInstance::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pR
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
+void CGameInstance::AddTrackIngKey(int iKey)
+{
+	m_pInput_Manager->AddTrackIngKey(iKey);
+}
+
+_bool CGameInstance::IsKeyDown(int iKey) const
+{
+	return m_pInput_Manager->IsKeyDown(iKey);
+}
+
+_bool CGameInstance::IsKeyUp(int iKey) const
+{
+	return m_pInput_Manager->IsKeyUp(iKey);
+}
+
+_bool CGameInstance::IsKeyHold(int iKey) const
+{
+	return m_pInput_Manager->IsKeyHold(iKey);
+}
+
+_float CGameInstance::GetKeyHoldTime(int iKey) const
+{
+	return m_pInput_Manager->GetKeyHoldTime(iKey);
+}
+
 void CGameInstance::Release_Engine()
 {
 	Release();
+	Safe_Release(m_pInput_Manager);
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pPrototype_Manager);
 	Safe_Release(m_pObject_Manager);
