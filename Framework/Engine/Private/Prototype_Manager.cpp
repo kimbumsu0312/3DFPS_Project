@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "Prototype_Manager.h"
 #include "GameInstance.h"
 #include "GameObject.h"

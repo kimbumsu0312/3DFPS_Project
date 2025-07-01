@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "Graphic_Device.h"
 
 CGraphic_Device::CGraphic_Device() : m_pDevice { nullptr }, m_pDeviceContext { nullptr }
