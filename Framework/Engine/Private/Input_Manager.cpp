@@ -12,7 +12,7 @@ HRESULT CInput_Manager::Initialize()
 	m_mapKeyHoldTime.clear();
 	m_vecTrackingKeys.clear();
 
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 void CInput_Manager::Update(float fTimeDelta)
