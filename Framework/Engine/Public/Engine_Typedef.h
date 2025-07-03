@@ -7,6 +7,7 @@ namespace Engine
 
 	typedef		signed char					_byte;
 	typedef		unsigned char				_ubyte;
+	typedef		char						_char;
 
 	typedef		wchar_t						_tchar;
 	typedef		wstring						_wstring;

@@ -37,6 +37,9 @@ HRESULT CUIObject::Initialize(void* pArg)
 
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(Viewport.Width, Viewport.Height, 0.0f, 1.f));
+	
+	m_iWinSizeX = Viewport.Width;
+	m_iWinSizeY = Viewport.Height;
 
 	return S_OK;
 }
@@ -58,7 +61,7 @@ HRESULT CUIObject::Render()
 	return S_OK;
 }
 
-HRESULT CUIObject::Bind_ShaderResources(CShader* pShaderCom)
+HRESULT CUIObject::Begin()
 {
 	m_pTransformCom->Scale(_float3(m_fSizeX, m_fSizeY, 1.f));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fX - m_iWinSizeX * 0.5f, -m_fY + m_iWinSizeY * 0.5f, 0.f, 1.f));

@@ -38,6 +38,8 @@ HRESULT CLoader::Loading()
 {
 	EnterCriticalSection(&m_CriticalSection);
 
+	CoInitializeEx(nullptr, 0);
+
 	HRESULT			hr = {};
 
 	switch (m_eNextLevelID)
