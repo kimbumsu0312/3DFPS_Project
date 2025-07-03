@@ -40,6 +40,9 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 
 public:
+	HRESULT Bind_Shader_Resource(class CShader* pShader, const _char* pConstantName);
+
+public:
 	void Scale(_float3 vScale);
 	void Scaling(_float3 vScale);
 	void Go_Straight(_float fTimeDelta);

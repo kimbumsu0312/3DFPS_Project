@@ -23,8 +23,11 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(m_pGameInstance->Initialize_Engine(EngineDesc, &m_pDevice, &m_pContext)))
 		return E_FAIL;
 
+	Ready_Key_Setting();
+
 	if (FAILED(Ready_Prototype_ForStatic()))
 		return E_FAIL;
+
 
 	if (FAILED(Start_Level(LEVEL::LOGO)))
 		return E_FAIL;
@@ -52,6 +55,20 @@ HRESULT CMainApp::Render()
 
 HRESULT CMainApp::Ready_Prototype_ForStatic()
 {
+	D3D11_INPUT_ELEMENT_DESC Elements[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+	
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex.hlsl"), Elements, 2))))
+		return E_FAIL;
+	
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
+		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -61,6 +78,26 @@ HRESULT CMainApp::Start_Level(LEVEL eStartLevelID)
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CMainApp::Ready_Key_Setting()
+{
+	m_pGameInstance->AddTrackIngKey(VK_UP);
+	m_pGameInstance->AddTrackIngKey(VK_DOWN);
+	m_pGameInstance->AddTrackIngKey(VK_LEFT);
+	m_pGameInstance->AddTrackIngKey(VK_RIGHT);
+	m_pGameInstance->AddTrackIngKey(VK_SPACE);
+	
+	m_pGameInstance->AddTrackIngKey(VK_LBUTTON);
+	m_pGameInstance->AddTrackIngKey(VK_RBUTTON);
+
+	m_pGameInstance->AddTrackIngKey('1');
+	m_pGameInstance->AddTrackIngKey('2');
+	m_pGameInstance->AddTrackIngKey('3');
+	m_pGameInstance->AddTrackIngKey('4');
+
+	m_pGameInstance->AddTrackIngKey('R');
+
 }
 
 CMainApp* CMainApp::Create()
