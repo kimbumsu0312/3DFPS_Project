@@ -7,6 +7,8 @@
 #include <d3dcompiler.h>
 
 #include "Fx11/d3dx11effect.h"	
+#include "DirectXTK/SpriteBatch.h"	
+#include "DirectXTK/SpriteFont.h"
 
 using namespace DirectX;
 

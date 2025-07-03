@@ -38,28 +38,23 @@ void CBackGround::Priority_Update(_float fTimeDelta)
 
 void CBackGround::Update(_float fTimeDelta)
 {
+    if (IsPick())
+        m_bTest = true;
 }
 
 void CBackGround::Late_Update(_float fTimeDelta)
 {
+    if (m_bTest)
+        return;
+
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
         return;
 }
 
 HRESULT CBackGround::Render()
 {
-    __super::Begin();
+    __super::Bind_Shader_Resourec(m_pShaderCom);
 
-    if(FAILED(m_pTransformCom->Bind_Shader_Resource(m_pShaderCom,"g_WorldMatrix")))
-        return E_FAIL;
-
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-        return E_FAIL;
-    
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-        return E_FAIL;
-
-    m_pShaderCom->Begin(0);
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();
 
