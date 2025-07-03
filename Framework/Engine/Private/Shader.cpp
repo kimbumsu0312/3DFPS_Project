@@ -41,8 +41,9 @@ HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath, const D3D11
 
 	m_iNumPasses = TechniqueDesc.Passes;
 	
-	for (size_t i = 0; i < m_iNumPasses; i++)
+	for (_uint i = 0; i < m_iNumPasses; i++)
 	{
+		
 		// i번 패스를 가져온다.
 		ID3DX11EffectPass* pPass = pTechnique->GetPassByIndex(i);
 		if (nullptr == pPass)
