@@ -31,7 +31,7 @@ protected:
 	_float					m_iWinSizeX{}, m_iWinSizeY{};
 
 protected:
-	HRESULT					Bind_ShaderResources(class CShader* pShaderCom);
+	HRESULT					Begin();
 
 
 public:
