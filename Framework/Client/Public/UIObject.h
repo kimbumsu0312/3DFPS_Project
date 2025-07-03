@@ -2,8 +2,12 @@
 #include "GameObject.h"
 
 NS_BEGIN(Engine)
-class ENGINE_DLL CUIObject abstract : public CGameObject
-{	
+class CShader;
+NS_END
+
+NS_BEGIN(Client)
+class CUIObject abstract : public CGameObject
+{
 public:
 	typedef struct tagUIObjectDesc : public CGameObject::GAMEOBJECT_DESC
 	{
@@ -24,16 +28,25 @@ public:
 	virtual HRESULT			Render();
 
 protected:
-	_float					m_fX{}, m_fY{}, m_fSizeX{}, m_fSizeY{};
+	CUIObject*				m_pParent = { nullptr };
+	
+	_float3					m_vLocalPos = {};
+	_float3					m_vPos = {};
+
+	_float2					m_vLocalSize = {};
+	_float2					m_vSize = {};
+
 	_float4x4				m_ViewMatrix = {};
 	_float4x4				m_ProjMatrix = {};
 
 	_float					m_iWinSizeX{}, m_iWinSizeY{};
 
+
 protected:
-	HRESULT					Begin();
-
-
+	HRESULT					Bind_Shader_Resourec(CShader* pShader);
+	_bool					IsPick();
+	void					Update_Position();
+	
 public:
 	virtual CGameObject*	Clone(void* pArg) = 0;
 	virtual void			Free() override;

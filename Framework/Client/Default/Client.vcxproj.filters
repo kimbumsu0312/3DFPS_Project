@@ -31,6 +31,12 @@
     <Filter Include="98.Default">
       <UniqueIdentifier>{3442f46b-afa7-4feb-bb85-adba8d7a14bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="97.SuperClass">
+      <UniqueIdentifier>{9763b096-1caf-4213-806f-d41f09daa415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.SuperClass\UIObject">
+      <UniqueIdentifier>{957fd0d8-3b1b-4234-802f-0da30c9db91d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -68,6 +74,9 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UIObject.h">
+      <Filter>97.SuperClass\UIObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>98.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UIObject.cpp">
+      <Filter>97.SuperClass\UIObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
