@@ -1,5 +1,7 @@
 #pragma once
-#include "Component.h"
+#include "VIBuffer_Rect.h"
+#include "Transform.h"
+#include "Shader.h"
 
 NS_BEGIN(Engine)
 class CPrototype_Manager final : public CBase
