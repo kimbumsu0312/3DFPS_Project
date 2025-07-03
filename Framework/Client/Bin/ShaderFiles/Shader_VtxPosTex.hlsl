@@ -22,6 +22,9 @@ VS_OUT VS_MAIN(VS_IN In)
     
     float4x4 matWV, matWVP;
     
+    // 로컬 * 월드 * 뷰 * 투영
+    // 월드 * 뷰 * 투영 
+    
     //뷰 스페이스 변환 행렬
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     //클립 스페이스 변환 행렬
@@ -58,7 +61,8 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-    Out.vColor.rgb = In.vTexcoord.y;
+    //Out.vColor.rgb = In.vTexcoord.y;
+    Out.vColor.rgb = 1;
     return Out;
 }
 
