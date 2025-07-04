@@ -79,8 +79,8 @@
     <Filter Include="00.System\03.Font\Manager">
       <UniqueIdentifier>{35b339f8-cfbc-4fe5-8463-608d607545fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\02.GameObject\UIObjectManager">
-      <UniqueIdentifier>{7cd9dc75-863b-440a-9f8b-cb0d094eeb90}</UniqueIdentifier>
+    <Filter Include="01.Utility\03.Component\Texture">
+      <UniqueIdentifier>{62ccee71-dec8-4261-8595-37c43c1fd144}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +162,9 @@
     <ClInclude Include="..\public\Font.h">
       <Filter>00.System\03.Font</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Texture.h">
+      <Filter>01.Utility\03.Component\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -223,6 +226,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Font.cpp">
       <Filter>00.System\03.Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Texture.cpp">
+      <Filter>01.Utility\03.Component\Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

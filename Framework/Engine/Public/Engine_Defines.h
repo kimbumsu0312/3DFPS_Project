@@ -6,7 +6,13 @@
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
 
-#include "Fx11/d3dx11effect.h"	
+#include "Fx11/d3dx11effect.h"
+
+//텍스처 로드 헤더
+#include "DirectXTK/DDSTextureLoader.h"
+#include "DirectXTK/WICTextureLoader.h"
+
+//폰트 로드 헤더
 #include "DirectXTK/SpriteBatch.h"	
 #include "DirectXTK/SpriteFont.h"
 

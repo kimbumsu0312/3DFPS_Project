@@ -102,6 +102,21 @@ HRESULT CShader::Bind_Matrix(const _char* pConstantName, const _float4x4* pMatir
 	return pMatrixVariable->SetMatrix(reinterpret_cast<const _float*>(pMatirx));
 }
 
+HRESULT CShader::Bind_SRV(const _char* pConstantName, ID3D11ShaderResourceView* pSRV)
+{
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	ID3DX11EffectShaderResourceVariable* pSrvVariable = pVariable->AsShaderResource();
+
+	if (nullptr == pSrvVariable)
+		return E_FAIL;
+
+	return pSrvVariable->SetResource(pSRV);
+}
+
 
 CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {
