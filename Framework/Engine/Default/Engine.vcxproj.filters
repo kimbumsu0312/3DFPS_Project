@@ -79,6 +79,9 @@
     <Filter Include="00.System\03.Font\Manager">
       <UniqueIdentifier>{35b339f8-cfbc-4fe5-8463-608d607545fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\02.GameObject\UIObjectManager">
+      <UniqueIdentifier>{7cd9dc75-863b-440a-9f8b-cb0d094eeb90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">

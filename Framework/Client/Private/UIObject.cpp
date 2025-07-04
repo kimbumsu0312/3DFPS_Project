@@ -91,7 +91,7 @@ _bool CUIObject::IsPick()
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	RECT rcUI = { m_vPos.x - m_vSize.x * 0.5f, m_vPos.y - m_vSize.y * 0.5f, m_vPos.x + m_vSize.x * 0.5f, m_vPos.y + m_vSize.y * 0.5f };
+	RECT rcUI = { LONG(m_vPos.x - m_vSize.x * 0.5f), LONG(m_vPos.y - m_vSize.y * 0.5f), LONG(m_vPos.x + m_vSize.x * 0.5f), LONG(m_vPos.y + m_vSize.y * 0.5f) };
 
 	return PtInRect(&rcUI, ptMouse);
 }
@@ -102,22 +102,14 @@ void CUIObject::Update_Position()
 	{
 		m_vPos.x = m_pParent->m_vPos.x + m_vLocalPos.x;
 		m_vPos.y = m_pParent->m_vPos.y + m_vLocalPos.y;
-		m_vPos.z = m_pParent->m_vPos.z;
 	}
 	else
 	{
-		m_vPos.x = m_vLocalPos.x;
-		m_vPos.y = m_vLocalPos.y;
-		m_vPos.z = m_vLocalPos.z;
+		m_vPos = m_vLocalPos;
 	}
 	
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, m_vPos.z, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.f, 1.f));
 
-}
-
-CGameObject* CUIObject::Clone(void* pArg)
-{
-	return nullptr;
 }
 
 void CUIObject::Free()

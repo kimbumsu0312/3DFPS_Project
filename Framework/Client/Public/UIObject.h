@@ -30,8 +30,9 @@ public:
 protected:
 	CUIObject*				m_pParent = { nullptr };
 	
-	_float3					m_vLocalPos = {};
-	_float3					m_vPos = {};
+	_float2					m_vLocalPos = {};
+	_float2					m_vPos = {};
+	_float					m_fZOrder = {};
 
 	_float2					m_vLocalSize = {};
 	_float2					m_vSize = {};
@@ -40,7 +41,6 @@ protected:
 	_float4x4				m_ProjMatrix = {};
 
 	_float					m_iWinSizeX{}, m_iWinSizeY{};
-
 
 protected:
 	HRESULT					Bind_Shader_Resourec(CShader* pShader);
