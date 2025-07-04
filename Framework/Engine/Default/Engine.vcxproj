@@ -73,6 +73,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\Bin\Debug\</OutDir>
     <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\Bin\Release\</OutDir>
@@ -124,10 +125,10 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>d3d11.lib;dxguid.lib;DirectXTKd.lib;Effects11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdPartyLib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <OutputFile>$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
-      <ImportLibrary>$(OutDir)$(TargetName)d.lib</ImportLibrary>
-      <ProgramDatabaseFile>$(OutDir)$(TargetName)d.pdb</ProgramDatabaseFile>
-      <ProfileGuidedDatabase>$(OutDir)$(TargetName)d.pgd</ProfileGuidedDatabase>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <ProfileGuidedDatabase>$(OutDir)$(TargetName).pgd</ProfileGuidedDatabase>
     </Link>
     <PostBuildEvent>
       <Command>cd $(ProjectDir)..\..\
