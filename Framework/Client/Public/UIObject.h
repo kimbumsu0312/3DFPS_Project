@@ -3,6 +3,7 @@
 
 NS_BEGIN(Engine)
 class CShader;
+class CTexture;
 NS_END
 
 NS_BEGIN(Client)
@@ -21,15 +22,15 @@ protected:
 
 public:
 	virtual HRESULT			Initialize_Prototype();
-	virtual HRESULT			Initialize(void* pArg);
+	virtual HRESULT			Initialize(void* pArg = nullptr);
 	virtual void			Priority_Update(_float fTimeDelta);
 	virtual void			Update(_float fTimeDelta);
 	virtual void			Late_Update(_float fTimeDelta);
 	virtual HRESULT			Render();
 
 protected:
-	CUIObject*				m_pParent = { nullptr };
-	
+	vector<CUIObject*>		m_vecChildren;
+
 	_float2					m_vLocalPos = {};
 	_float2					m_vPos = {};
 	_float					m_fZOrder = {};
@@ -44,9 +45,12 @@ protected:
 
 protected:
 	HRESULT					Bind_Shader_Resourec(CShader* pShader);
+	HRESULT					Bind_Shader_Resourec(CShader* pShader, CTexture* pTexture);
 	_bool					IsPick();
-	void					Update_Position();
-	
+
+	void					Update_Position(CUIObject* pParent = nullptr);
+	void					Add_Child(CUIObject* pParent,CUIObject* pChild);
+
 public:
 	virtual CGameObject*	Clone(void* pArg) = 0;
 	virtual void			Free() override;

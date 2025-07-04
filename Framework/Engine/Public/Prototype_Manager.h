@@ -2,6 +2,7 @@
 #include "VIBuffer_Rect.h"
 #include "Transform.h"
 #include "Shader.h"
+#include "Texture.h"
 
 NS_BEGIN(Engine)
 class CPrototype_Manager final : public CBase

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "UIObject.h"
 #include "Shader.h"
-
+#include "Texture.h"
 CUIObject::CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CGameObject{ pDevice, pContext }
 {
 }
@@ -17,22 +17,14 @@ HRESULT CUIObject::Initialize_Prototype()
 
 HRESULT CUIObject::Initialize(void* pArg)
 {
-	if (nullptr == pArg)
-		return E_FAIL;
-
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	UIOBJECT_DESC* pDesc = static_cast<UIOBJECT_DESC*>(pArg);
+	if(pArg != nullptr)
+		UIOBJECT_DESC* pDesc = static_cast<UIOBJECT_DESC*>(pArg);
 
-	m_vLocalPos.x = pDesc->fX;
-	m_vLocalPos.y = pDesc->fY;
-	m_vLocalSize.x = pDesc->fSizeX;
-	m_vLocalSize.y = pDesc->fSizeY;
-
-	m_vSize.x = pDesc->fSizeX;
-	m_vSize.y = pDesc->fSizeY;
-
+	m_vSize = m_vLocalSize;
+	
 	D3D11_VIEWPORT			Viewport{};
 
 	_uint			iNumViewports = { 1 };
@@ -52,14 +44,35 @@ HRESULT CUIObject::Initialize(void* pArg)
 
 void CUIObject::Priority_Update(_float fTimeDelta)
 {
+	for (auto child : m_vecChildren)
+	{
+		if (m_vecChildren.size() == 0)
+			return;
+		if (child != nullptr)
+			child->Priority_Update(fTimeDelta);
+	}
 }
 
 void CUIObject::Update(_float fTimeDelta)
 {
+	for (auto child : m_vecChildren)
+	{
+		if (m_vecChildren.size() == 0)
+			return;
+		if (child != nullptr)
+			child->Update(fTimeDelta);
+	}
 }
 
 void CUIObject::Late_Update(_float fTimeDelta)
 {
+	for (auto child : m_vecChildren)
+	{
+		if (m_vecChildren.size() == 0)
+			return;
+		if (child != nullptr)
+			child->Late_Update(fTimeDelta);
+	}
 }
 
 HRESULT CUIObject::Render()
@@ -85,6 +98,27 @@ HRESULT CUIObject::Bind_Shader_Resourec(CShader* pShader)
 	return S_OK;
 }
 
+HRESULT CUIObject::Bind_Shader_Resourec(CShader* pShader, CTexture* pTexture)
+{
+	m_pTransformCom->Scale(_float3(m_vSize.x, m_vSize.y, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
+
+	m_pTransformCom->Bind_Shader_Resource(pShader, "g_WorldMatrix");
+
+	if (FAILED(pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+
+	if (FAILED(pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	if (FAILED(pTexture->Bind_Shader_Resource(pShader, "g_Texture", 0)))
+		return E_FAIL;
+
+	pShader->Begin(0);
+
+	return S_OK;
+}
+
 _bool CUIObject::IsPick()
 {
 	POINT	ptMouse{};
@@ -96,23 +130,35 @@ _bool CUIObject::IsPick()
 	return PtInRect(&rcUI, ptMouse);
 }
 
-void CUIObject::Update_Position()
+
+void CUIObject::Update_Position(CUIObject* pParent)
 {
-	if (m_pParent != nullptr)
+	if (pParent != nullptr)
 	{
-		m_vPos.x = m_pParent->m_vPos.x + m_vLocalPos.x;
-		m_vPos.y = m_pParent->m_vPos.y + m_vLocalPos.y;
+		m_vPos.x = pParent->m_vPos.x + m_vLocalPos.x;
+		m_vPos.y = pParent->m_vPos.y + m_vLocalPos.y;
 	}
 	else
 	{
 		m_vPos = m_vLocalPos;
 	}
-	
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.f, 1.f));
 
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.f, 1.f));
+	for (auto child : m_vecChildren)
+		child->Update_Position(this);
+}
+
+void CUIObject::Add_Child(CUIObject* pParent, CUIObject* pChild)
+{
+	m_vecChildren.push_back(pChild);
+	pChild->Update_Position(pParent);
 }
 
 void CUIObject::Free()
 {
+	for (auto& pChildren : m_vecChildren)
+		Safe_Release(pChildren);
+	m_vecChildren.clear();
+
 	__super::Free();
 }
