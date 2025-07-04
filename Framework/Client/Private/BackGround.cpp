@@ -45,20 +45,16 @@ void CBackGround::Priority_Update(_float fTimeDelta)
 
 void CBackGround::Update(_float fTimeDelta)
 {
-    if (IsPick())
-        m_bTest = true;
+
 }
 
 void CBackGround::Late_Update(_float fTimeDelta)
 {
-    /*if (m_bTest)
-        return;*/
-
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
         return;
-    __super::Update_Position();
+    //__super::Update_Position();
 
-    __super::Late_Update(fTimeDelta);
+    //__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CBackGround::Render()
