@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Client_Defines.h"
 
 NS_BEGIN(Engine)
 class CShader;
@@ -46,7 +47,6 @@ protected:
 protected:
 	HRESULT					Bind_Shader_Resourec(CShader* pShader);
 	HRESULT					Bind_Shader_Resourec(CShader* pShader, CTexture* pTexture);
-	_bool					IsPick();
 
 	void					Update_Position(CUIObject* pParent = nullptr);
 	void					Add_Child(CUIObject* pParent,CUIObject* pChild);

@@ -119,18 +119,6 @@ HRESULT CUIObject::Bind_Shader_Resourec(CShader* pShader, CTexture* pTexture)
 	return S_OK;
 }
 
-_bool CUIObject::IsPick()
-{
-	POINT	ptMouse{};
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
-	RECT rcUI = { LONG(m_vPos.x - m_vSize.x * 0.5f), LONG(m_vPos.y - m_vSize.y * 0.5f), LONG(m_vPos.x + m_vSize.x * 0.5f), LONG(m_vPos.y + m_vSize.y * 0.5f) };
-
-	return PtInRect(&rcUI, ptMouse);
-}
-
-
 void CUIObject::Update_Position(CUIObject* pParent)
 {
 	if (pParent != nullptr)

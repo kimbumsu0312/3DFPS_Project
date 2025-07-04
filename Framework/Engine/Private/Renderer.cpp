@@ -10,6 +10,17 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_p
 
 HRESULT CRenderer::Initialize()
 {
+    m_pContext->OMGetDepthStencilState(&m_pDepthStencil, 0);
+
+    D3D11_DEPTH_STENCIL_DESC DepthStencil_Desc = {};
+    DepthStencil_Desc.DepthEnable = FALSE;
+    DepthStencil_Desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+    DepthStencil_Desc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+    DepthStencil_Desc.StencilEnable = FALSE;
+
+    if (FAILED(m_pDevice->CreateDepthStencilState(&DepthStencil_Desc, &m_pDepthStencil_Off)))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -86,6 +97,7 @@ HRESULT CRenderer::Render_Blend()
 
 HRESULT CRenderer::Render_UI()
 {
+    m_pContext->OMSetDepthStencilState(m_pDepthStencil_Off, 0);
     for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDERGROUP::UI)])
     {
         if (nullptr != pRenderObject)
@@ -95,6 +107,8 @@ HRESULT CRenderer::Render_UI()
     }
 
     m_RenderObjects[ENUM_CLASS(RENDERGROUP::UI)].clear();
+
+    m_pContext->OMSetDepthStencilState(m_pDepthStencil, 0);
 
     return S_OK;
 }
@@ -124,6 +138,10 @@ void CRenderer::Free()
         m_RenderObjects[i].clear();
     }
 
+    Safe_Release(m_pDepthStencil);
+    Safe_Release(m_pDepthStencil_Off);
+
     Safe_Release(m_pDevice);
     Safe_Release(m_pContext);
+    
 }
