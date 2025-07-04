@@ -14,7 +14,7 @@ protected:
 	CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject(const CGameObject& Prototype);
 	virtual ~CGameObject() = default;
-
+	//123
 public:
 	class CComponent*		Get_Component(const _wstring& strComponentTag);
 
