@@ -19,13 +19,36 @@
 
 #include <DirectXMath.h>
 
+#ifndef DIRECTX_TOOLKIT_API
+#ifdef DIRECTX_TOOLKIT_EXPORT
+#ifdef __GNUC__
+#define DIRECTX_TOOLKIT_API __attribute__ ((dllexport))
+#else
+#define DIRECTX_TOOLKIT_API __declspec(dllexport)
+#endif
+#elif defined(DIRECTX_TOOLKIT_IMPORT)
+#ifdef __GNUC__
+#define DIRECTX_TOOLKIT_API __attribute__ ((dllimport))
+#else
+#define DIRECTX_TOOLKIT_API __declspec(dllimport)
+#endif
+#else
+#define DIRECTX_TOOLKIT_API
+#endif
+#endif
+
+#if defined(DIRECTX_TOOLKIT_IMPORT) && defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+
 
 namespace DirectX
 {
     inline namespace DX11
     {
     // Vertex struct holding position information.
-        struct VertexPosition
+        struct DIRECTX_TOOLKIT_API VertexPosition
         {
             VertexPosition() = default;
 
@@ -37,8 +60,7 @@ namespace DirectX
 
             VertexPosition(XMFLOAT3 const& iposition) noexcept
                 : position(iposition)
-            {
-            }
+            {}
 
             VertexPosition(FXMVECTOR iposition) noexcept
             {
@@ -53,7 +75,7 @@ namespace DirectX
 
 
         // Vertex struct holding position and color information.
-        struct VertexPositionColor
+        struct DIRECTX_TOOLKIT_API VertexPositionColor
         {
             VertexPositionColor() = default;
 
@@ -66,8 +88,7 @@ namespace DirectX
             VertexPositionColor(XMFLOAT3 const& iposition, XMFLOAT4 const& icolor) noexcept
                 : position(iposition),
                 color(icolor)
-            {
-            }
+            {}
 
             VertexPositionColor(FXMVECTOR iposition, FXMVECTOR icolor) noexcept
             {
@@ -84,7 +105,7 @@ namespace DirectX
 
 
         // Vertex struct holding position and texture mapping information.
-        struct VertexPositionTexture
+        struct DIRECTX_TOOLKIT_API VertexPositionTexture
         {
             VertexPositionTexture() = default;
 
@@ -97,8 +118,7 @@ namespace DirectX
             VertexPositionTexture(XMFLOAT3 const& iposition, XMFLOAT2 const& itextureCoordinate) noexcept
                 : position(iposition),
                 textureCoordinate(itextureCoordinate)
-            {
-            }
+            {}
 
             VertexPositionTexture(FXMVECTOR iposition, FXMVECTOR itextureCoordinate) noexcept
             {
@@ -115,7 +135,7 @@ namespace DirectX
 
 
         // Vertex struct holding position and dual texture mapping information.
-        struct VertexPositionDualTexture
+        struct DIRECTX_TOOLKIT_API VertexPositionDualTexture
         {
             VertexPositionDualTexture() = default;
 
@@ -132,8 +152,7 @@ namespace DirectX
                 : position(iposition),
                 textureCoordinate0(itextureCoordinate0),
                 textureCoordinate1(itextureCoordinate1)
-            {
-            }
+            {}
 
             VertexPositionDualTexture(
                 FXMVECTOR iposition,
@@ -155,7 +174,7 @@ namespace DirectX
 
 
         // Vertex struct holding position and normal vector.
-        struct VertexPositionNormal
+        struct DIRECTX_TOOLKIT_API VertexPositionNormal
         {
             VertexPositionNormal() = default;
 
@@ -168,8 +187,7 @@ namespace DirectX
             VertexPositionNormal(XMFLOAT3 const& iposition, XMFLOAT3 const& inormal) noexcept
                 : position(iposition),
                 normal(inormal)
-            {
-            }
+            {}
 
             VertexPositionNormal(FXMVECTOR iposition, FXMVECTOR inormal) noexcept
             {
@@ -186,7 +204,7 @@ namespace DirectX
 
 
         // Vertex struct holding position, color, and texture mapping information.
-        struct VertexPositionColorTexture
+        struct DIRECTX_TOOLKIT_API VertexPositionColorTexture
         {
             VertexPositionColorTexture() = default;
 
@@ -200,8 +218,7 @@ namespace DirectX
                 : position(iposition),
                 color(icolor),
                 textureCoordinate(itextureCoordinate)
-            {
-            }
+            {}
 
             VertexPositionColorTexture(FXMVECTOR iposition, FXMVECTOR icolor, FXMVECTOR itextureCoordinate) noexcept
             {
@@ -220,7 +237,7 @@ namespace DirectX
 
 
         // Vertex struct holding position, normal vector, and color information.
-        struct VertexPositionNormalColor
+        struct DIRECTX_TOOLKIT_API VertexPositionNormalColor
         {
             VertexPositionNormalColor() = default;
 
@@ -234,8 +251,7 @@ namespace DirectX
                 : position(iposition),
                 normal(inormal),
                 color(icolor)
-            {
-            }
+            {}
 
             VertexPositionNormalColor(FXMVECTOR iposition, FXMVECTOR inormal, FXMVECTOR icolor) noexcept
             {
@@ -254,7 +270,7 @@ namespace DirectX
 
 
         // Vertex struct holding position, normal vector, and texture mapping information.
-        struct VertexPositionNormalTexture
+        struct DIRECTX_TOOLKIT_API VertexPositionNormalTexture
         {
             VertexPositionNormalTexture() = default;
 
@@ -268,8 +284,7 @@ namespace DirectX
                 : position(iposition),
                 normal(inormal),
                 textureCoordinate(itextureCoordinate)
-            {
-            }
+            {}
 
             VertexPositionNormalTexture(FXMVECTOR iposition, FXMVECTOR inormal, FXMVECTOR itextureCoordinate) noexcept
             {
@@ -288,7 +303,7 @@ namespace DirectX
 
 
         // Vertex struct holding position, normal vector, color, and texture mapping information.
-        struct VertexPositionNormalColorTexture
+        struct DIRECTX_TOOLKIT_API VertexPositionNormalColorTexture
         {
             VertexPositionNormalColorTexture() = default;
 
@@ -307,8 +322,7 @@ namespace DirectX
                 normal(inormal),
                 color(icolor),
                 textureCoordinate(itextureCoordinate)
-            {
-            }
+            {}
 
             VertexPositionNormalColorTexture(FXMVECTOR iposition, FXMVECTOR inormal, FXMVECTOR icolor, CXMVECTOR itextureCoordinate) noexcept
             {
@@ -330,7 +344,7 @@ namespace DirectX
 
         // Vertex struct for Visual Studio Shader Designer (DGSL) holding position, normal,
         // tangent, color (RGBA), and texture mapping information
-        struct VertexPositionNormalTangentColorTexture
+        struct DIRECTX_TOOLKIT_API VertexPositionNormalTangentColorTexture
         {
             VertexPositionNormalTangentColorTexture() = default;
 
@@ -357,8 +371,7 @@ namespace DirectX
                 tangent(itangent),
                 color(irgba),
                 textureCoordinate(itextureCoordinate)
-            {
-            }
+            {}
 
             VertexPositionNormalTangentColorTexture(
                 FXMVECTOR iposition,
@@ -415,7 +428,7 @@ namespace DirectX
 
         // Vertex struct for Visual Studio Shader Designer (DGSL) holding position, normal,
         // tangent, color (RGBA), texture mapping information, and skinning weights
-        struct VertexPositionNormalTangentColorTextureSkinning : public VertexPositionNormalTangentColorTexture
+        struct DIRECTX_TOOLKIT_API VertexPositionNormalTangentColorTextureSkinning : public VertexPositionNormalTangentColorTexture
         {
             VertexPositionNormalTangentColorTextureSkinning() = default;
 
@@ -502,3 +515,7 @@ namespace DirectX
         };
     }
 }
+
+#if defined(DIRECTX_TOOLKIT_IMPORT) && defined(_MSC_VER)
+#pragma warning(pop)
+#endif

@@ -126,6 +126,8 @@
       <AdditionalLibraryDirectories>../ThirdPartyLib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
       <ImportLibrary>$(OutDir)$(TargetName)d.lib</ImportLibrary>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName)d.pdb</ProgramDatabaseFile>
+      <ProfileGuidedDatabase>$(OutDir)$(TargetName)d.pgd</ProfileGuidedDatabase>
     </Link>
     <PostBuildEvent>
       <Command>cd $(ProjectDir)..\..\
