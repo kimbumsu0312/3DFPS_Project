@@ -31,14 +31,26 @@
     <Filter Include="98.Default">
       <UniqueIdentifier>{3442f46b-afa7-4feb-bb85-adba8d7a14bd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97.SuperClass">
-      <UniqueIdentifier>{9763b096-1caf-4213-806f-d41f09daa415}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97.SuperClass\UIObject">
-      <UniqueIdentifier>{957fd0d8-3b1b-4234-802f-0da30c9db91d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\BackGround\TestUI">
       <UniqueIdentifier>{e67e4871-66e5-4558-a6e1-6f978a87950e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.ShaderFiles">
+      <UniqueIdentifier>{5f8b2b2d-5c69-4d82-bdd0-fbf13e39a08f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass">
+      <UniqueIdentifier>{9763b096-1caf-4213-806f-d41f09daa415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\UIObject">
+      <UniqueIdentifier>{957fd0d8-3b1b-4234-802f-0da30c9db91d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject">
+      <UniqueIdentifier>{649cf777-b74d-4fa6-a98e-2bcbc1e6bd83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Logo_UI">
+      <UniqueIdentifier>{feaac3a7-c7a8-4d45-8feb-18149baf0b0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\UIObject\Button">
+      <UniqueIdentifier>{e2b2e3b2-6bae-449c-8044-cc419dc87070}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -79,10 +91,16 @@
       <Filter>98.Default</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UIObject.h">
-      <Filter>97.SuperClass\UIObject</Filter>
+      <Filter>96.SuperClass\UIObject</Filter>
     </ClInclude>
     <ClInclude Include="..\public\TestUI.h">
       <Filter>02.GameObject\BackGround\TestUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo_Name.h">
+      <Filter>02.GameObject\UIObject\Logo_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Button.h">
+      <Filter>96.SuperClass\UIObject\Button</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -124,15 +142,21 @@
       <Filter>98.Default</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UIObject.cpp">
-      <Filter>97.SuperClass\UIObject</Filter>
+      <Filter>96.SuperClass\UIObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\TestUI.cpp">
       <Filter>02.GameObject\BackGround\TestUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Logo_Name.cpp">
+      <Filter>02.GameObject\UIObject\Logo_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Button.cpp">
+      <Filter>96.SuperClass\UIObject\Button</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
-      <Filter>98.Default</Filter>
+      <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

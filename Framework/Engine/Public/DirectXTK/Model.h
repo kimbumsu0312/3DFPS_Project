@@ -32,6 +32,29 @@
 #include <DirectXMath.h>
 #include <DirectXCollision.h>
 
+#ifndef DIRECTX_TOOLKIT_API
+#ifdef DIRECTX_TOOLKIT_EXPORT
+#ifdef __GNUC__
+#define DIRECTX_TOOLKIT_API __attribute__ ((dllexport))
+#else
+#define DIRECTX_TOOLKIT_API __declspec(dllexport)
+#endif
+#elif defined(DIRECTX_TOOLKIT_IMPORT)
+#ifdef __GNUC__
+#define DIRECTX_TOOLKIT_API __attribute__ ((dllimport))
+#else
+#define DIRECTX_TOOLKIT_API __declspec(dllimport)
+#endif
+#else
+#define DIRECTX_TOOLKIT_API
+#endif
+#endif
+
+#if defined(DIRECTX_TOOLKIT_IMPORT) && defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+
 
 namespace DirectX
 {
@@ -57,21 +80,19 @@ namespace DirectX
 
         //------------------------------------------------------------------------------
         // Frame hierarchy for rigid body and skeletal animation
-        struct ModelBone
+        struct DIRECTX_TOOLKIT_API ModelBone
         {
             ModelBone() noexcept :
                 parentIndex(c_Invalid),
                 childIndex(c_Invalid),
                 siblingIndex(c_Invalid)
-            {
-            }
+            {}
 
             ModelBone(uint32_t parent, uint32_t child, uint32_t sibling) noexcept :
                 parentIndex(parent),
                 childIndex(child),
                 siblingIndex(sibling)
-            {
-            }
+            {}
 
             uint32_t            parentIndex;
             uint32_t            childIndex;
@@ -98,7 +119,7 @@ namespace DirectX
 
         //------------------------------------------------------------------------------
         // Each mesh part is a submesh with a single effect
-        class ModelMeshPart
+        class DIRECTX_TOOLKIT_API ModelMeshPart
         {
         public:
             ModelMeshPart() noexcept;
@@ -142,7 +163,7 @@ namespace DirectX
                 uint32_t startInstanceLocation = 0,
                 _In_ std::function<void __cdecl()> setCustomState = nullptr) const;
 
-           // Create input layout for drawing with a custom effect.
+            // Create input layout for drawing with a custom effect.
             void __cdecl CreateInputLayout(_In_ ID3D11Device* device, _In_ IEffect* ieffect, _Outptr_ ID3D11InputLayout** iinputLayout) const;
 
             // Change effect used by part and regenerate input layout (be sure to call Model::Modified as well)
@@ -152,7 +173,7 @@ namespace DirectX
 
         //------------------------------------------------------------------------------
         // A mesh consists of one or more model mesh parts
-        class ModelMesh
+        class DIRECTX_TOOLKIT_API ModelMesh
         {
         public:
             ModelMesh() noexcept;
@@ -160,8 +181,8 @@ namespace DirectX
             ModelMesh(ModelMesh&&) = default;
             ModelMesh& operator= (ModelMesh&&) = default;
 
-            ModelMesh(ModelMesh const&) = default;
-            ModelMesh& operator= (ModelMesh const&) = default;
+            ModelMesh(ModelMesh const&) = delete;
+            ModelMesh& operator= (ModelMesh const&) = delete;
 
             virtual ~ModelMesh();
 
@@ -218,7 +239,7 @@ namespace DirectX
 
         //------------------------------------------------------------------------------
         // A model consists of one or more meshes
-        class Model
+        class DIRECTX_TOOLKIT_API Model
         {
         public:
             Model() = default;
@@ -327,7 +348,7 @@ namespace DirectX
                 _In_ std::shared_ptr<IEffect> ieffect = nullptr,
                 ModelLoaderFlags flags = ModelLoader_Clockwise);
 
-#ifdef __cpp_lib_byte
+        #ifdef __cpp_lib_byte
             static std::unique_ptr<Model> __cdecl CreateFromCMO(
                 _In_ ID3D11Device* device,
                 _In_reads_bytes_(dataSize) const std::byte* meshData, size_t dataSize,
@@ -355,9 +376,9 @@ namespace DirectX
             {
                 return CreateFromVBO(device, reinterpret_cast<const uint8_t*>(meshData), dataSize, ieffect, flags);
             }
-#endif // __cpp_lib_byte
+        #endif // __cpp_lib_byte
 
-#if defined(_MSC_VER) && !defined(_NATIVE_WCHAR_T_DEFINED)
+        #if defined(_MSC_VER) && !defined(_NATIVE_WCHAR_T_DEFINED)
             static std::unique_ptr<Model> __cdecl CreateFromCMO(
                 _In_ ID3D11Device* device,
                 _In_z_ const __wchar_t* szFileName,
@@ -376,7 +397,7 @@ namespace DirectX
                 _In_z_ const __wchar_t* szFileName,
                 _In_ std::shared_ptr<IEffect> ieffect = nullptr,
                 ModelLoaderFlags flags = ModelLoader_Clockwise);
-#endif // !_NATIVE_WCHAR_T_DEFINED
+        #endif // !_NATIVE_WCHAR_T_DEFINED
 
         private:
             std::set<IEffect*>  mEffectCache;
@@ -395,8 +416,12 @@ namespace DirectX
 
         DEFINE_ENUM_FLAG_OPERATORS(ModelLoaderFlags)
 
-    #ifdef __clang__
-    #pragma clang diagnostic pop
-    #endif
+        #ifdef __clang__
+        #pragma clang diagnostic pop
+        #endif
     }
 }
+
+#if defined(DIRECTX_TOOLKIT_IMPORT) && defined(_MSC_VER)
+#pragma warning(pop)
+#endif
