@@ -1,5 +1,10 @@
-matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 //사용할 데이터를 전역 변수로 선언
+matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+Texture2D g_Texture;
+sampler DefaultSampler = sampler_state
+{
+    filter = min_mag_mip_linear;
+};
 
 struct VS_IN
 {
@@ -21,6 +26,9 @@ VS_OUT VS_MAIN(VS_IN In)
     VS_OUT Out = (VS_OUT) 0;
     
     float4x4 matWV, matWVP;
+    
+    // 로컬 * 월드 * 뷰 * 투영
+    // 월드 * 뷰 * 투영 
     
     //뷰 스페이스 변환 행렬
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
@@ -58,7 +66,12 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-    Out.vColor.rgb = In.vTexcoord.y;
+    //Out.vColor.rgb = In.vTexcoord.y;
+    
+    //텍스처 셋팅 - 텍스처 타입, 텍스처 픽셀 색상 값
+    //Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord * 2.f);
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    
     return Out;
 }
 
