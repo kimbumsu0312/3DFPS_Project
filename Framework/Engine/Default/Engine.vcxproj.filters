@@ -49,9 +49,6 @@
     <Filter Include="01.Utility\03.Component\Transform">
       <UniqueIdentifier>{30f77116-e473-45d3-a6f7-477884a1c865}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\02.GameObject\UIObject">
-      <UniqueIdentifier>{a0e5c1d6-5bdd-46af-8a87-1c70eef77032}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03.Component\VIBuffer">
       <UniqueIdentifier>{b9191381-aad7-4f75-aeb7-1640c59f4631}</UniqueIdentifier>
     </Filter>
@@ -75,6 +72,15 @@
     </Filter>
     <Filter Include="01.Utility\03.Component\Shader">
       <UniqueIdentifier>{c19ff1bb-deec-4e80-9a58-184a7111aaac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\03.Font">
+      <UniqueIdentifier>{76c706c3-e61f-4558-a877-1ad852d6eca5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\03.Font\Manager">
+      <UniqueIdentifier>{35b339f8-cfbc-4fe5-8463-608d607545fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Component\Texture">
+      <UniqueIdentifier>{62ccee71-dec8-4261-8595-37c43c1fd144}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -138,9 +144,6 @@
     <ClInclude Include="..\public\Transform.h">
       <Filter>01.Utility\03.Component\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UIObject.h">
-      <Filter>01.Utility\02.GameObject\UIObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\VIBuffer.h">
       <Filter>01.Utility\03.Component\VIBuffer</Filter>
     </ClInclude>
@@ -155,6 +158,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Shader.h">
       <Filter>01.Utility\03.Component\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Font.h">
+      <Filter>00.System\03.Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Texture.h">
+      <Filter>01.Utility\03.Component\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -200,9 +209,6 @@
     <ClCompile Include="..\private\Transform.cpp">
       <Filter>01.Utility\03.Component\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UIObject.cpp">
-      <Filter>01.Utility\02.GameObject\UIObject</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\VIBuffer.cpp">
       <Filter>01.Utility\03.Component\VIBuffer</Filter>
     </ClCompile>
@@ -217,6 +223,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Shader.cpp">
       <Filter>01.Utility\03.Component\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Font.cpp">
+      <Filter>00.System\03.Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Texture.cpp">
+      <Filter>01.Utility\03.Component\Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

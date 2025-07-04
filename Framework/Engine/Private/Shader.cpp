@@ -41,8 +41,9 @@ HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath, const D3D11
 
 	m_iNumPasses = TechniqueDesc.Passes;
 	
-	for (size_t i = 0; i < m_iNumPasses; i++)
+	for (_uint i = 0; i < m_iNumPasses; i++)
 	{
+		
 		// i번 패스를 가져온다.
 		ID3DX11EffectPass* pPass = pTechnique->GetPassByIndex(i);
 		if (nullptr == pPass)
@@ -99,6 +100,21 @@ HRESULT CShader::Bind_Matrix(const _char* pConstantName, const _float4x4* pMatir
 		
 	//매트릭스 셋팅
 	return pMatrixVariable->SetMatrix(reinterpret_cast<const _float*>(pMatirx));
+}
+
+HRESULT CShader::Bind_SRV(const _char* pConstantName, ID3D11ShaderResourceView* pSRV)
+{
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	ID3DX11EffectShaderResourceVariable* pSrvVariable = pVariable->AsShaderResource();
+
+	if (nullptr == pSrvVariable)
+		return E_FAIL;
+
+	return pSrvVariable->SetResource(pSRV);
 }
 
 
