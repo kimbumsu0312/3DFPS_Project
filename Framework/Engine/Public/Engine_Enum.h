@@ -7,7 +7,8 @@ namespace Engine
 	enum class PROTOTYPE { GAMEOBJECT, COMPONENT };
 	enum class RENDERGROUP { PRIORITY, NONBLEND, BLEND, UI, END };
 	enum class WINMODE { FULL, WIN, END };
-	
+	enum class RENDERSTATE { BLEND, DEPTH_STENCIL, END };
+
 	enum class MOUSEKEYSTATE { LB, RB, MB, END	};
 	enum class MOUSEMOVESTATE {	X, Y, Z, END	};
 }

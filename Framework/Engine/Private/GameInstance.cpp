@@ -167,6 +167,16 @@ HRESULT CGameInstance::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pR
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
+HRESULT CGameInstance::Add_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates, const void* pDesc)
+{
+	return m_pRenderer->Add_RenderState(szRenderTag, eRenderStates, pDesc);
+}
+
+HRESULT CGameInstance::Switching_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates)
+{
+	return m_pRenderer->Switching_RenderState(szRenderTag, eRenderStates);
+}
+
 void CGameInstance::AddTrackIngKey(int iKey)
 {
 	m_pInput_Manager->AddTrackIngKey(iKey);

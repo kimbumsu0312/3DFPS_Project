@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Logo_Button.h"
-#include "GameInstance.h"
 
+//#include "Logo_Button_Line.h"
 CLogo_Button::CLogo_Button(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CButton{ pDevice, pContext }
 {
 }
@@ -12,6 +12,9 @@ CLogo_Button::CLogo_Button(const CLogo_Button& Prototype) : CButton(Prototype)
 
 HRESULT CLogo_Button::Initialize_Prototype()
 {
+	if (FAILED(Ready_Children_Prototype()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -28,11 +31,15 @@ HRESULT CLogo_Button::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Children()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CLogo_Button::Priority_Update(_float fTimeDelta)
 {
+
 }
 
 void CLogo_Button::Update(_float fTimeDelta)
@@ -43,11 +50,12 @@ void CLogo_Button::Late_Update(_float fTimeDelta)
 {
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
 		return;
+	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CLogo_Button::Render()
 {
-	__super::Bind_Shader_Resourec(m_pShaderCom, m_pTextureCom);
+	__super::Bind_Shader_Resourec(m_pShaderCom);
 
 	m_pVIBufferCom->Bind_Resources();
 	m_pVIBufferCom->Render();
@@ -65,9 +73,26 @@ HRESULT CLogo_Button::Ready_Components()
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
 		return E_FAIL;
 
-	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Texture_Logo_Name"),
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
-		return E_FAIL;
+	return S_OK;
+}
+
+HRESULT CLogo_Button::Ready_Children_Prototype()
+{
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button_Line"),
+	//	CLogo_Button_Line::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLogo_Button::Ready_Children()
+{
+	CUIObject* pGameObject = nullptr;
+
+	//pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button_Line")));
+	//if (nullptr == pGameObject)
+	//	return E_FAIL;
+	//Add_Child(this, pGameObject);
 
 	return S_OK;
 }
@@ -104,5 +129,4 @@ void CLogo_Button::Free()
 
 	Safe_Release(m_pVIBufferCom);
 	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pTextureCom);
 }

@@ -52,6 +52,9 @@ public:
 #pragma region RENDERER
 public:
 	HRESULT				Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
+	HRESULT				Add_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates, const void* pDesc);
+	HRESULT				Switching_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates);
+
 #pragma endregion
 
 #pragma region INPUT_MANAGER

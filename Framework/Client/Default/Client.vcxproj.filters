@@ -52,6 +52,9 @@
     <Filter Include="96.SuperClass\UIObject\Button">
       <UniqueIdentifier>{e2b2e3b2-6bae-449c-8044-cc419dc87070}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\UIObject\Logo_UI\Button">
+      <UniqueIdentifier>{bb802f42-3c6c-46a2-83e1-83aa87c9bf8e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -103,7 +106,7 @@
       <Filter>96.SuperClass\UIObject\Button</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Logo_Button.h">
-      <Filter>02.GameObject\UIObject\Logo_UI</Filter>
+      <Filter>02.GameObject\UIObject\Logo_UI\Button</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -157,7 +160,7 @@
       <Filter>96.SuperClass\UIObject\Button</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Logo_Button.cpp">
-      <Filter>02.GameObject\UIObject\Logo_UI</Filter>
+      <Filter>02.GameObject\UIObject\Logo_UI\Button</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

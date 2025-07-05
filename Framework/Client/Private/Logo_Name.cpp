@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Logo_Name.h"
-#include "GameInstance.h"
 
 CLogo_Name::CLogo_Name(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {

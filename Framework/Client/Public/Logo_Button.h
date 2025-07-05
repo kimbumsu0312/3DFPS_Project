@@ -3,7 +3,6 @@
 
 NS_BEGIN(Engine)
 class CShader;
-class CTexture;
 class CVIBuffer_Rect;
 NS_END
 
@@ -26,10 +25,11 @@ public:
 private:
 	CShader*					m_pShaderCom = { nullptr };
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
-	CTexture*					m_pTextureCom = { nullptr };
 
 private:
 	HRESULT						Ready_Components();
+	HRESULT						Ready_Children_Prototype();
+	HRESULT						Ready_Children();
 
 public:
 	static CLogo_Button*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
