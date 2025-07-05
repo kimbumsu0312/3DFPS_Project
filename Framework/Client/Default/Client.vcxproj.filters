@@ -102,6 +102,9 @@
     <ClInclude Include="..\public\Button.h">
       <Filter>96.SuperClass\UIObject\Button</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Logo_Button.h">
+      <Filter>02.GameObject\UIObject\Logo_UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -152,6 +155,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Button.cpp">
       <Filter>96.SuperClass\UIObject\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo_Button.cpp">
+      <Filter>02.GameObject\UIObject\Logo_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
