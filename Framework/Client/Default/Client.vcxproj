@@ -158,6 +158,7 @@
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\Button.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\public\Logo_Button.h" />
     <ClInclude Include="..\public\Logo_Name.h" />
     <ClInclude Include="..\public\TestUI.h" />
     <ClInclude Include="..\public\UIObject.h" />
@@ -175,6 +176,7 @@
   <ItemGroup>
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\Button.cpp" />
+    <ClCompile Include="..\private\Logo_Button.cpp" />
     <ClCompile Include="..\private\Logo_Name.cpp" />
     <ClCompile Include="..\private\TestUI.cpp" />
     <ClCompile Include="..\private\UIObject.cpp" />
