@@ -50,6 +50,10 @@ HRESULT CLevel_Logo::Ready_Layer_UI(const _wstring& strLayerTag)
 		ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Name"))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::LOGO), strLayerTag,
+		ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

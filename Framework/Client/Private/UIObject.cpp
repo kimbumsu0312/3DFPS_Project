@@ -98,7 +98,7 @@ HRESULT CUIObject::Bind_Shader_Resourec(CShader* pShader)
 	return S_OK;
 }
 
-HRESULT CUIObject::Bind_Shader_Resourec(CShader* pShader, CTexture* pTexture)
+HRESULT CUIObject::Bind_Shader_Resourec(CShader* pShader, CTexture* pTexture, _uint TextureIndex)
 {
 	m_pTransformCom->Scale(_float3(m_vSize.x, m_vSize.y, 1.f));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
@@ -111,7 +111,7 @@ HRESULT CUIObject::Bind_Shader_Resourec(CShader* pShader, CTexture* pTexture)
 	if (FAILED(pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(pTexture->Bind_Shader_Resource(pShader, "g_Texture", 0)))
+	if (FAILED(pTexture->Bind_Shader_Resource(pShader, "g_Texture", TextureIndex)))
 		return E_FAIL;
 
 	pShader->Begin(0);
