@@ -16,8 +16,10 @@ HRESULT CLogo_Name::Initialize_Prototype()
 
 HRESULT CLogo_Name::Initialize(void* pArg)
 {
-    m_vLocalPos.x = g_iWinSizeX >> 1;
-    m_vLocalPos.y = 300.f;
+    UIOBJECT_DESC* Desc = static_cast<UIOBJECT_DESC*>(pArg);
+
+    m_vLocalPos.x = 0.f;
+    m_vLocalPos.y = Desc->OffsetY;
     m_vLocalSize.x = 512.f;
     m_vLocalSize.y = 512.f;
 
@@ -26,6 +28,7 @@ HRESULT CLogo_Name::Initialize(void* pArg)
 
     if (FAILED(Ready_Components()))
         return E_FAIL;
+    
 
     return S_OK;
 }
@@ -36,6 +39,8 @@ void CLogo_Name::Priority_Update(_float fTimeDelta)
 
 void CLogo_Name::Update(_float fTimeDelta)
 {
+ 
+
 }
 
 void CLogo_Name::Late_Update(_float fTimeDelta)

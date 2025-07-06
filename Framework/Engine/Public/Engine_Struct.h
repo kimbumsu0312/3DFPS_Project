@@ -19,6 +19,7 @@ namespace Engine
 		XMFLOAT3	vPosition;
 		XMFLOAT2	vTexcoord;
 	}VTXPOSTEX;
+
 }
 
 

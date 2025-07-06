@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Logo_Button.h"
 
-//#include "Logo_Button_Line.h"
+#include "Logo_Button_Line.h"
 CLogo_Button::CLogo_Button(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CButton{ pDevice, pContext }
 {
 }
@@ -20,11 +20,19 @@ HRESULT CLogo_Button::Initialize_Prototype()
 
 HRESULT CLogo_Button::Initialize(void* pArg)
 {
-	m_vLocalPos.x = g_iWinSizeX >> 1;
-	m_vLocalPos.y = 300.f;
-	m_vLocalSize.x = 512.f;
-	m_vLocalSize.y = 512.f;
+	m_vLocalPos.x = 0.f;
+	
+	m_vLocalSize.x = 200.f;
+	m_vLocalSize.y = 50.f;
 
+	if (pArg == nullptr)
+		m_vLocalPos.y = 0.f;
+	else
+	{
+		UIOBJECT_DESC* Desc = static_cast<UIOBJECT_DESC*>(pArg);
+		m_iIndex = Desc->iIndex;
+		m_vLocalPos.y = 100 + Desc->iIndex * Desc->OffsetY - (Desc->iMaxIndex - 1) * Desc->OffsetY / 2;;
+	}
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
@@ -44,19 +52,36 @@ void CLogo_Button::Priority_Update(_float fTimeDelta)
 
 void CLogo_Button::Update(_float fTimeDelta)
 {
+	if (IsClick_Down(VK_LBUTTON))
+	{
+		switch (m_iIndex)
+		{
+		case 0:
+			m_pGameInstance->Publish(Event_NextLevel{});
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		}
+		
+	}
 }
 
 void CLogo_Button::Late_Update(_float fTimeDelta)
 {
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
 		return;
-	__super::Late_Update(fTimeDelta);
+	if(IsPick())
+		__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CLogo_Button::Render()
 {
-	__super::Bind_Shader_Resourec(m_pShaderCom);
-
+	__super::Bind_Shader_Resourec(m_pShaderCom, 1);
+	
 	m_pVIBufferCom->Bind_Resources();
 	m_pVIBufferCom->Render();
 
@@ -78,9 +103,9 @@ HRESULT CLogo_Button::Ready_Components()
 
 HRESULT CLogo_Button::Ready_Children_Prototype()
 {
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button_Line"),
-	//	CLogo_Button_Line::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button_Line"),
+		CLogo_Button_Line::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -88,11 +113,20 @@ HRESULT CLogo_Button::Ready_Children_Prototype()
 HRESULT CLogo_Button::Ready_Children()
 {
 	CUIObject* pGameObject = nullptr;
+	
+	UIOBJECT_DESC Desc;
+	Desc.iIndex = 1;
 
-	//pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button_Line")));
-	//if (nullptr == pGameObject)
-	//	return E_FAIL;
-	//Add_Child(this, pGameObject);
+	pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button_Line"), &Desc));
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	Add_Child(this, pGameObject);
+
+	Desc.iIndex = 2;
+	pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button_Line"), &Desc));
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	Add_Child(this, pGameObject);
 
 	return S_OK;
 }

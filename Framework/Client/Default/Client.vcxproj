@@ -159,7 +159,9 @@
     <ClInclude Include="..\public\Button.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\public\Logo_Button.h" />
+    <ClInclude Include="..\public\Logo_Button_Line.h" />
     <ClInclude Include="..\public\Logo_Name.h" />
+    <ClInclude Include="..\public\Logo_UI.h" />
     <ClInclude Include="..\public\TestUI.h" />
     <ClInclude Include="..\public\UIObject.h" />
     <ClInclude Include="..\public\Level_GamePlay.h" />
@@ -168,6 +170,7 @@
     <ClInclude Include="..\public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="Client_Event.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -177,7 +180,9 @@
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\Button.cpp" />
     <ClCompile Include="..\private\Logo_Button.cpp" />
+    <ClCompile Include="..\private\Logo_Button_Line.cpp" />
     <ClCompile Include="..\private\Logo_Name.cpp" />
+    <ClCompile Include="..\private\Logo_UI.cpp" />
     <ClCompile Include="..\private\TestUI.cpp" />
     <ClCompile Include="..\private\UIObject.cpp" />
     <ClCompile Include="..\private\Level_GamePlay.cpp" />

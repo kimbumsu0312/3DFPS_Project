@@ -73,14 +73,14 @@
     <Filter Include="01.Utility\03.Component\Shader">
       <UniqueIdentifier>{c19ff1bb-deec-4e80-9a58-184a7111aaac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00.System\03.Font">
-      <UniqueIdentifier>{76c706c3-e61f-4558-a877-1ad852d6eca5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00.System\03.Font\Manager">
-      <UniqueIdentifier>{35b339f8-cfbc-4fe5-8463-608d607545fa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03.Component\Texture">
       <UniqueIdentifier>{62ccee71-dec8-4261-8595-37c43c1fd144}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\03.Event">
+      <UniqueIdentifier>{70be65e1-ae6e-437f-9a2a-0746c87a29f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\03.Event\Manager">
+      <UniqueIdentifier>{2455d380-5a30-4fb0-b783-04f652e9ce76}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -159,11 +159,11 @@
     <ClInclude Include="..\public\Shader.h">
       <Filter>01.Utility\03.Component\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Font.h">
-      <Filter>00.System\03.Font</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Texture.h">
       <Filter>01.Utility\03.Component\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Event_Manager.h">
+      <Filter>00.System\03.Event\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -224,11 +224,11 @@
     <ClCompile Include="..\private\Shader.cpp">
       <Filter>01.Utility\03.Component\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Font.cpp">
-      <Filter>00.System\03.Font</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Texture.cpp">
       <Filter>01.Utility\03.Component\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Event_Manager.cpp">
+      <Filter>00.System\03.Event\Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

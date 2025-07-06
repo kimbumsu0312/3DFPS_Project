@@ -8,7 +8,7 @@
 #include "Prototype_Manager.h"
 #include "Renderer.h"
 #include "Input_Manager.h"
-
+#include "Event_Manager.h"
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
@@ -44,6 +44,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 
 	m_pInput_Manager = CInput_Manager::Create();
 	if (nullptr == m_pInput_Manager)
+		return E_FAIL;
+
+	m_pEvent_Manager = CEvent_Manager::Create();
+	if (nullptr == m_pEvent_Manager)
 		return E_FAIL;
 
 	return S_OK;
@@ -212,6 +216,7 @@ void CGameInstance::Release_Engine()
 	Safe_Release(m_pLevel_Manager);
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pGraphic_Device);
+	Safe_Release(m_pEvent_Manager);
 }
 
 void CGameInstance::Free()

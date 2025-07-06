@@ -25,7 +25,8 @@ public:
 private:
 	CShader*					m_pShaderCom = { nullptr };
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
-
+	_uint						m_iIndex = {};
+	_bool						m_bIsSelete = { false };
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children_Prototype();

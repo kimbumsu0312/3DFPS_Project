@@ -16,6 +16,8 @@ public:
 	virtual HRESULT		Render() override;
 
 private:
+	_bool				m_bIsNextLevel = { false };
+private:
 	HRESULT				Ready_Layer_BackGround(const _wstring& strLayerTag);
 	HRESULT				Ready_Layer_UI(const _wstring& strLayerTag);
 public:
