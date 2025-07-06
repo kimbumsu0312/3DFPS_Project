@@ -55,6 +55,9 @@
     <Filter Include="02.GameObject\UIObject\Logo_UI\Button">
       <UniqueIdentifier>{bb802f42-3c6c-46a2-83e1-83aa87c9bf8e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\UIObject\Logo_UI\ETC">
+      <UniqueIdentifier>{f6416ab8-62b1-4904-aa63-701c8582715d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -99,14 +102,23 @@
     <ClInclude Include="..\public\TestUI.h">
       <Filter>02.GameObject\BackGround\TestUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Logo_Name.h">
-      <Filter>02.GameObject\UIObject\Logo_UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Button.h">
       <Filter>96.SuperClass\UIObject\Button</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Logo_Button.h">
       <Filter>02.GameObject\UIObject\Logo_UI\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo_Button_Line.h">
+      <Filter>02.GameObject\UIObject\Logo_UI\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo_UI.h">
+      <Filter>02.GameObject\UIObject\Logo_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo_Name.h">
+      <Filter>02.GameObject\UIObject\Logo_UI\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="Client_Event.h">
+      <Filter>99.Defines</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -153,14 +165,20 @@
     <ClCompile Include="..\private\TestUI.cpp">
       <Filter>02.GameObject\BackGround\TestUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Logo_Name.cpp">
-      <Filter>02.GameObject\UIObject\Logo_UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Button.cpp">
       <Filter>96.SuperClass\UIObject\Button</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Logo_Button.cpp">
       <Filter>02.GameObject\UIObject\Logo_UI\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo_Button_Line.cpp">
+      <Filter>02.GameObject\UIObject\Logo_UI\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo_UI.cpp">
+      <Filter>02.GameObject\UIObject\Logo_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo_Name.cpp">
+      <Filter>02.GameObject\UIObject\Logo_UI\ETC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
 #pragma once
 #include "Prototype_Manager.h"
+#include "Event_Manager.h"
 
 NS_BEGIN(Engine)
 class ENGINE_DLL CGameInstance final : public CBase
@@ -64,6 +65,24 @@ public:
 	_bool						IsKeyUp(int iKey) const;
 	_bool						IsKeyHold(int iKey) const;
 	_float						GetKeyHoldTime(int iKey) const;
+#pragma endregion
+
+#pragma region EVENT_MANAGER
+private:
+	class CEvent_Manager* m_pEvent_Manager = { nullptr };
+public:
+	template<typename EventType>
+	using HandlerFunc = function<void(const EventType&)>;
+	
+	template<typename EventType>
+	void Subscribe(HandlerFunc<EventType> handler)	{
+		m_pEvent_Manager->Subscribe(handler);
+	}
+
+	template<typename EventType>
+	void Publish(const EventType& event)	{
+		m_pEvent_Manager->Publish(event);
+	}
 #pragma endregion
 
 private:

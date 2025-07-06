@@ -1,5 +1,5 @@
 #pragma once
-#include "Button.h"
+#include "UIObject.h"
 
 NS_BEGIN(Engine)
 class CShader;
@@ -7,12 +7,12 @@ class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
-class CLogo_Button final : public CButton
+class CLogo_UI final : public CUIObject
 {
 private:
-	CLogo_Button(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CLogo_Button(const CLogo_Button& Prototype);
-	virtual ~CLogo_Button() = default;
+	CLogo_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CLogo_UI(const CLogo_UI& Prototype);
+	virtual ~CLogo_UI() = default;
 
 public:
 	virtual HRESULT				Initialize_Prototype();
@@ -25,15 +25,14 @@ public:
 private:
 	CShader*					m_pShaderCom = { nullptr };
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
-	_uint						m_iIndex = {};
-	_bool						m_bIsSelete = { false };
+
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children_Prototype();
 	HRESULT						Ready_Children();
 
 public:
-	static CLogo_Button*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLogo_UI*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;
 	virtual void				Free() override;
 };

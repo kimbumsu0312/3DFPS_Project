@@ -14,12 +14,16 @@ HRESULT CLevel_Logo::Initialize()
 
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
 		return E_FAIL;
+
+	//이벤트 구독
+	m_pGameInstance->Subscribe<Event_NextLevel>([&](const Event_NextLevel& e) {m_bIsNextLevel = true; });
+
 	return S_OK;
 }
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
-	if (GetKeyState(VK_RETURN) & 0x8000)
+	if (m_bIsNextLevel)
 	{
 		if (FAILED(m_pGameInstance->Open_Level(static_cast<_uint>(LEVEL::LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::GAMEPLAY))))
 			return;
@@ -47,13 +51,8 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _wstring& strLayerTag)
 HRESULT CLevel_Logo::Ready_Layer_UI(const _wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::LOGO), strLayerTag,
-		ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Name"))))
+		ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_UI"))))
 		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::LOGO), strLayerTag,
-		ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button"))))
-		return E_FAIL;
-
 	return S_OK;
 }
 

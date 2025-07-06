@@ -1,6 +1,7 @@
 #pragma once
 #include "framework.h"
 #include <process.h>
+#include <Client_Event.h>
 
 namespace Client
 {

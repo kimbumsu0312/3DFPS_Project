@@ -13,7 +13,9 @@ class CUIObject abstract : public CGameObject
 public:
 	typedef struct tagUIObjectDesc : public CGameObject::GAMEOBJECT_DESC
 	{
-		_float fX{}, fY{}, fSizeX{}, fSizeY{};
+		_uint  iIndex{}, iMaxIndex{};
+		_float OffsetX{}, OffsetY{};
+		
 	}UIOBJECT_DESC;
 
 protected:
@@ -45,7 +47,7 @@ protected:
 	_float					m_iWinSizeX{}, m_iWinSizeY{};
 
 protected:
-	HRESULT					Bind_Shader_Resourec(CShader* pShader);
+	HRESULT					Bind_Shader_Resourec(CShader* pShader, _uint iPassIndex = 0);
 	HRESULT					Bind_Shader_Resourec(CShader* pShader, CTexture* pTexture, _uint TextureIndex = 0);
 
 	void					Update_Position(CUIObject* pParent = nullptr);
