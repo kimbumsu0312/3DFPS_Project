@@ -31,8 +31,13 @@ HRESULT CLogo_Button::Initialize(void* pArg)
 	{
 		UIOBJECT_DESC* Desc = static_cast<UIOBJECT_DESC*>(pArg);
 		m_iIndex = Desc->iIndex;
+		m_iMaxIndex = Desc->iMaxIndex;
 		m_vLocalPos.y = 100 + Desc->iIndex * Desc->OffsetY - (Desc->iMaxIndex - 1) * Desc->OffsetY / 2;;
 	}
+
+	if (m_iIndex == 1)
+		m_bIsSelete = true;
+
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
 
@@ -41,6 +46,9 @@ HRESULT CLogo_Button::Initialize(void* pArg)
 
 	if (FAILED(Ready_Children()))
 		return E_FAIL;
+
+	m_pGameInstance->Subscribe<Event_NonSelete_LogoButton>([&](const Event_NonSelete_LogoButton& e) {m_bIsSelete = false; });
+	m_pGameInstance->Subscribe<Event_Selete_LogoButton>([&](const Event_Selete_LogoButton& e) { if (e.iIndex == m_iIndex) { m_bIsSelete = true; } });
 
 	return S_OK;
 }
@@ -52,30 +60,18 @@ void CLogo_Button::Priority_Update(_float fTimeDelta)
 
 void CLogo_Button::Update(_float fTimeDelta)
 {
-	if (IsClick_Down(VK_LBUTTON))
-	{
-		switch (m_iIndex)
-		{
-		case 0:
-			m_pGameInstance->Publish(Event_NextLevel{});
-			break;
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		}
-		
-	}
+	Button_Event();
+	Button_Selete();
 }
 
 void CLogo_Button::Late_Update(_float fTimeDelta)
 {
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
 		return;
-	if(IsPick())
+	if (m_bIsSelete)
+	{
 		__super::Late_Update(fTimeDelta);
+	}
 }
 
 HRESULT CLogo_Button::Render()
@@ -129,6 +125,38 @@ HRESULT CLogo_Button::Ready_Children()
 	Add_Child(this, pGameObject);
 
 	return S_OK;
+}
+
+void CLogo_Button::Button_Event()
+{
+	if (IsClick_Down(VK_LBUTTON) || m_pGameInstance->IsKeyDown('F') && m_bIsSelete)
+	{
+		switch (m_iIndex)
+		{
+		case 1:
+			m_pGameInstance->Publish(Event_NextLevel{});
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		}
+	}
+}
+
+void CLogo_Button::Button_Selete()
+{
+	if (IsPick())
+	{
+		m_pGameInstance->Publish(Event_NonSelete_LogoButton{});
+		m_pGameInstance->Publish(Event_Selete_LogoButton_Index{ {m_iIndex} });
+
+		m_bIsSelete = true;
+	}
+
+
 }
 
 CLogo_Button* CLogo_Button::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

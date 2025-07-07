@@ -3,7 +3,17 @@
 
 namespace Client
 {
-
-	typedef struct CreatedEvent {
+	typedef struct Next_Level {
 	}Event_NextLevel;
+
+	typedef struct NonSelete_LogoButton {
+	}Event_NonSelete_LogoButton;
+
+	typedef struct Selete_LogoButton {
+		_uint iIndex;
+	}Event_Selete_LogoButton;
+
+	typedef struct Selete_LogoButton_Index {
+		_uint iIndex;
+	}Event_Selete_LogoButton_Index;
 }
