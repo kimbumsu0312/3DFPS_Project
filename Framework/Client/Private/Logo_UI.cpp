@@ -35,6 +35,9 @@ HRESULT CLogo_UI::Initialize(void* pArg)
     if (FAILED(Ready_Children()))
         return E_FAIL;
 
+    m_pGameInstance->Subscribe<Event_Selete_LogoButton_Index>([&](const Event_Selete_LogoButton_Index& e) { m_iNumSeleteButton = e.iIndex; });
+
+
     return S_OK;
 }
 
@@ -45,6 +48,7 @@ void CLogo_UI::Priority_Update(_float fTimeDelta)
 
 void CLogo_UI::Update(_float fTimeDelta)
 {
+    Button_Selete();
     __super::Update(fTimeDelta);
 }
 
@@ -96,12 +100,13 @@ HRESULT CLogo_UI::Ready_Children()
         return E_FAIL;
     Add_Child(this, pGameObject);
     
-    
-    Desc.iMaxIndex = 4;
+    m_iNumMaxButton = 4;
+    Desc.iMaxIndex = m_iNumMaxButton;
     Desc.OffsetY = 60.f;
-    for (_int i = 0; i < Desc.iMaxIndex; i++)
+    m_iNumSeleteButton = 1;
+    for (_uint i = 0; i < Desc.iMaxIndex; i++)
     {
-        Desc.iIndex = i;
+        Desc.iIndex = i + 1;
       
         pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button"), &Desc));
         if (nullptr == pGameObject)
@@ -111,6 +116,40 @@ HRESULT CLogo_UI::Ready_Children()
 
     
     return S_OK;
+}
+
+void CLogo_UI::Button_Selete()
+{
+    if (m_pGameInstance->IsKeyDown('S'))
+    {
+        m_pGameInstance->Publish(Event_NonSelete_LogoButton{});
+
+        m_iNumSeleteButton += 1;
+        if (m_iNumSeleteButton > m_iNumMaxButton)
+        {
+            m_iNumSeleteButton = 1;
+            m_pGameInstance->Publish(Event_Selete_LogoButton{ { 1 } });
+        }
+        else
+            m_pGameInstance->Publish(Event_Selete_LogoButton{ { m_iNumSeleteButton } });
+
+    }
+
+    if (m_pGameInstance->IsKeyDown('W'))
+    {
+        m_pGameInstance->Publish(Event_NonSelete_LogoButton{});
+
+        m_iNumSeleteButton -= 1;
+
+        if (m_iNumSeleteButton == 0)
+        {
+            m_iNumSeleteButton = m_iNumMaxButton;
+            m_pGameInstance->Publish(Event_Selete_LogoButton{ { m_iNumMaxButton } });
+        }
+        else
+            m_pGameInstance->Publish(Event_Selete_LogoButton{ { m_iNumSeleteButton } });
+
+    }
 }
 
 CLogo_UI* CLogo_UI::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

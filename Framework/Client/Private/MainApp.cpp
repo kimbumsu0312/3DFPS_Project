@@ -96,7 +96,14 @@ void CMainApp::Ready_Key_Setting()
 	m_pGameInstance->AddTrackIngKey('3');
 	m_pGameInstance->AddTrackIngKey('4');
 
+	m_pGameInstance->AddTrackIngKey('W');
+	m_pGameInstance->AddTrackIngKey('A');
+	m_pGameInstance->AddTrackIngKey('S');
+	m_pGameInstance->AddTrackIngKey('D');
+
+
 	m_pGameInstance->AddTrackIngKey('R');
+	m_pGameInstance->AddTrackIngKey('F');
 
 }
 
