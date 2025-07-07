@@ -93,6 +93,15 @@ PS_OUT PS_Loding_BackGround(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_Inven_Base(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vColor.a += 0.1;
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass DefaultPass
@@ -111,5 +120,11 @@ technique11 DefaultTechnique
     {
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_Loding_BackGround();
+    }
+
+    pass Invent_Pass
+    {
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_Inven_Base();
     }
 }

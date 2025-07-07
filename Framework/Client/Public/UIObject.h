@@ -48,7 +48,7 @@ protected:
 
 protected:
 	HRESULT					Bind_Shader_Resourec(CShader* pShader, _uint iPassIndex = 0);
-	HRESULT					Bind_Shader_Resourec(CShader* pShader, CTexture* pTexture, _uint TextureIndex = 0);
+	HRESULT					Bind_ShaderTex_Resourec(CShader* pShader, _uint iPassIndex, CTexture* pTexture, _uint iTexIndex = 0);
 
 	void					Update_Position(CUIObject* pParent = nullptr);
 	void					Add_Child(CUIObject* pParent,CUIObject* pChild);

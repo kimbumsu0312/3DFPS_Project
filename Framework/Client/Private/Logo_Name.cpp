@@ -51,7 +51,7 @@ void CLogo_Name::Late_Update(_float fTimeDelta)
 
 HRESULT CLogo_Name::Render()
 {
-    __super::Bind_Shader_Resourec(m_pShaderCom, m_pTextureCom);
+    __super::Bind_ShaderTex_Resourec(m_pShaderCom,0, m_pTextureCom);
 
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();

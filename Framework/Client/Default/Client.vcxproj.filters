@@ -61,6 +61,12 @@
     <Filter Include="02.GameObject\UIObject\Loding_UI">
       <UniqueIdentifier>{ed1bf769-835e-4cba-81a3-72a9407eac2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\UIObject\Inventory">
+      <UniqueIdentifier>{6946eef0-18f6-4343-b205-a505735ace78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Inventory\ETC">
+      <UniqueIdentifier>{78f55f92-14de-4fc3-a107-38dba95891c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -126,6 +132,12 @@
     <ClInclude Include="..\public\Fade_UI.h">
       <Filter>02.GameObject\UIObject\Loding_UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Inventory.h">
+      <Filter>02.GameObject\UIObject\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Inventory_Base.h">
+      <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -188,6 +200,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Fade_UI.cpp">
       <Filter>02.GameObject\UIObject\Loding_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Inventory.cpp">
+      <Filter>02.GameObject\UIObject\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Inventory_Base.cpp">
+      <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
