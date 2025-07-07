@@ -98,7 +98,7 @@ HRESULT CUIObject::Bind_Shader_Resourec(CShader* pShader, _uint iPassIndex)
 	return S_OK;
 }
 
-HRESULT CUIObject::Bind_Shader_Resourec(CShader* pShader, CTexture* pTexture, _uint TextureIndex)
+HRESULT CUIObject::Bind_ShaderTex_Resourec(CShader* pShader, _uint iPassIndex, CTexture* pTexture, _uint iTexIndex)
 {
 	m_pTransformCom->Scale(_float3(m_vSize.x, m_vSize.y, 1.f));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
@@ -111,10 +111,10 @@ HRESULT CUIObject::Bind_Shader_Resourec(CShader* pShader, CTexture* pTexture, _u
 	if (FAILED(pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(pTexture->Bind_Shader_Resource(pShader, "g_Texture", TextureIndex)))
+	if (FAILED(pTexture->Bind_Shader_Resource(pShader, "g_Texture", iTexIndex)))
 		return E_FAIL;
 
-	pShader->Begin(0);
+	pShader->Begin(iPassIndex);
 
 	return S_OK;
 }

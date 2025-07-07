@@ -64,7 +64,7 @@ void CLogo_Button_Line::Late_Update(_float fTimeDelta)
 
 HRESULT CLogo_Button_Line::Render()
 {
-    __super::Bind_Shader_Resourec(m_pShaderCom, m_pTextureCom, m_iIndex-1);
+    __super::Bind_ShaderTex_Resourec(m_pShaderCom,0, m_pTextureCom, m_iIndex-1);
 
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();

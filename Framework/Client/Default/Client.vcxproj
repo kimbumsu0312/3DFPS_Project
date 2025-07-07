@@ -159,6 +159,8 @@
     <ClInclude Include="..\public\Button.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\public\Fade_UI.h" />
+    <ClInclude Include="..\public\Inventory.h" />
+    <ClInclude Include="..\public\Inventory_Base.h" />
     <ClInclude Include="..\public\Logo_Button.h" />
     <ClInclude Include="..\public\Logo_Button_Line.h" />
     <ClInclude Include="..\public\Logo_Name.h" />
@@ -181,6 +183,8 @@
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\Button.cpp" />
     <ClCompile Include="..\private\Fade_UI.cpp" />
+    <ClCompile Include="..\private\Inventory.cpp" />
+    <ClCompile Include="..\private\Inventory_Base.cpp" />
     <ClCompile Include="..\private\Logo_Button.cpp" />
     <ClCompile Include="..\private\Logo_Button_Line.cpp" />
     <ClCompile Include="..\private\Logo_Name.cpp" />
