@@ -26,6 +26,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Effect(TEXT("Layer_Effect"))))
 		return E_FAIL;
 
+	if(FAILED(Ready_Fade(TEXT("Layer_Fade"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -72,6 +75,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring& strLayerTag)
 {
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Fade(const _wstring& strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::LOGO), strLayerTag,
+		ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Loding_Fade"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

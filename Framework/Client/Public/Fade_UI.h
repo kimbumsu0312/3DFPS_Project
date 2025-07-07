@@ -3,18 +3,17 @@
 
 NS_BEGIN(Engine)
 class CShader;
-class CTexture;
 class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
 
-class CBackGround final : public CUIObject
+class CFade_UI final : public CUIObject
 {
 private:
-	CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CBackGround(const CBackGround& Prototype);
-	virtual ~CBackGround() = default;
+	CFade_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CFade_UI(const CFade_UI& Prototype);
+	virtual ~CFade_UI() = default;
 
 public:
 	virtual HRESULT				Initialize_Prototype();
@@ -25,16 +24,21 @@ public:
 	virtual HRESULT				Render();
 
 private:
-	CShader*					m_pShaderCom = { nullptr };
-	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
-	CTexture*					m_pTextureCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
+	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+	_bool						m_bIsFadeIn = { false };
+	_bool						m_bIsFadeOut = { true };
+
+	_float4						m_vFadeValue = {};
+	_float						m_fFadeTime = {};
+	_float						m_fAlpah = {};
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children();
 
 public:
-	static CBackGround*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CFade_UI*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;
 	virtual void				Free() override;
 };
