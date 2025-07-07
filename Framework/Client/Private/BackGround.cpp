@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "BackGround.h"
 #include "GameInstance.h"
-#include "TestUI.h"
 
 CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
@@ -13,10 +12,6 @@ CBackGround::CBackGround(const CBackGround& Prototype) : CUIObject( Prototype )
 
 HRESULT CBackGround::Initialize_Prototype()
 {
-    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_TestUI"),
-        CTestUI::Create(m_pDevice, m_pContext))))
-        return E_FAIL;
-
     return S_OK;
 }
 
@@ -52,9 +47,6 @@ void CBackGround::Late_Update(_float fTimeDelta)
 {
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
         return;
-    //__super::Update_Position();
-
-    //__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CBackGround::Render()
@@ -87,12 +79,6 @@ HRESULT CBackGround::Ready_Components()
 HRESULT CBackGround::Ready_Children()
 {
     CUIObject* pGameObject = nullptr;
-
-    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_TestUI")));
-    if (nullptr == pGameObject)
-        return E_FAIL;
-    Add_Child(this, pGameObject);
-
     return S_OK;
 }
 

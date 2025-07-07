@@ -134,7 +134,7 @@ void CLogo_Button::Button_Event()
 		switch (m_iIndex)
 		{
 		case 1:
-			m_pGameInstance->Publish(Event_NextLevel{});
+			m_pGameInstance->Publish(Event_Level_Change{});
 			break;
 		case 2:
 			break;

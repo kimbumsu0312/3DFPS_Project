@@ -2,10 +2,11 @@
 #include "Renderer.h"
 #include "GameObject.h"
 
-CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_pDevice { pDevice }, m_pContext { pContext }
+CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_pDevice { pDevice }, m_pContext { pContext }, m_pGameInstance{ CGameInstance::GetInstance() }
 {
     Safe_AddRef(m_pDevice);
     Safe_AddRef(m_pContext);
+    Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CRenderer::Initialize()
@@ -145,6 +146,8 @@ HRESULT CRenderer::Render_UI()
     Switching_RenderState(TEXT("NonDepthTest"), RENDERSTATE::DEPTH_STENCIL);
     Switching_RenderState(TEXT("AlphaBlend"), RENDERSTATE::BLEND);
 
+    //m_RenderObjects[ENUM_CLASS(RENDERGROUP::UI)].sort([](const RenderObject& a, const RenderObject& b) {return a.vWorldPos.z > b.vWorldPos.z;  });
+
     for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDERGROUP::UI)])
     {
         if (nullptr != pRenderObject)
@@ -248,7 +251,7 @@ void CRenderer::Free()
         m_pRenderState[i].clear();
     }
 
+    Safe_Release(m_pGameInstance);
     Safe_Release(m_pDevice);
     Safe_Release(m_pContext);
-    
 }

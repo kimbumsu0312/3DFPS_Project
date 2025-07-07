@@ -29,7 +29,6 @@ private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	CTexture*					m_pTextureCom = { nullptr };
 
-	_bool						m_bTest = { false };
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children();

@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 
 #include "Level_Loading.h"
+#include "Fade_UI.h"
 
 CMainApp::CMainApp() : m_pGameInstance{ CGameInstance::GetInstance()}
 {
@@ -61,6 +62,10 @@ HRESULT CMainApp::Ready_Prototype_ForStatic()
 	
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Loding_Fade"),
+		CFade_UI::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;

@@ -54,7 +54,7 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord * 2.f);
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
     return Out;
 }

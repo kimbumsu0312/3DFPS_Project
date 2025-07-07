@@ -35,7 +35,7 @@ void CTerrain::Update(_float fTimeDelta)
 
 void CTerrain::Late_Update(_float fTimeDelta)
 {
-    if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
+    if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
         return;
 }
 

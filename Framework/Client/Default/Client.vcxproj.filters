@@ -31,9 +31,6 @@
     <Filter Include="98.Default">
       <UniqueIdentifier>{3442f46b-afa7-4feb-bb85-adba8d7a14bd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\BackGround\TestUI">
-      <UniqueIdentifier>{e67e4871-66e5-4558-a6e1-6f978a87950e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.ShaderFiles">
       <UniqueIdentifier>{5f8b2b2d-5c69-4d82-bdd0-fbf13e39a08f}</UniqueIdentifier>
     </Filter>
@@ -60,6 +57,9 @@
     </Filter>
     <Filter Include="02.GameObject\Terrain">
       <UniqueIdentifier>{ec2057f9-56db-4c83-bc7f-54ea0256dea3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Loding_UI">
+      <UniqueIdentifier>{ed1bf769-835e-4cba-81a3-72a9407eac2a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -102,9 +102,6 @@
     <ClInclude Include="..\public\UIObject.h">
       <Filter>96.SuperClass\UIObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\TestUI.h">
-      <Filter>02.GameObject\BackGround\TestUI</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Button.h">
       <Filter>96.SuperClass\UIObject\Button</Filter>
     </ClInclude>
@@ -125,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Terrain.h">
       <Filter>02.GameObject\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Fade_UI.h">
+      <Filter>02.GameObject\UIObject\Loding_UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -168,9 +168,6 @@
     <ClCompile Include="..\private\UIObject.cpp">
       <Filter>96.SuperClass\UIObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\TestUI.cpp">
-      <Filter>02.GameObject\BackGround\TestUI</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Button.cpp">
       <Filter>96.SuperClass\UIObject\Button</Filter>
     </ClCompile>
@@ -188,6 +185,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Terrain.cpp">
       <Filter>02.GameObject\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Fade_UI.cpp">
+      <Filter>02.GameObject\UIObject\Loding_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

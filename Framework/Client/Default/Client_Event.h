@@ -16,4 +16,7 @@ namespace Client
 	typedef struct Selete_LogoButton_Index {
 		_uint iIndex;
 	}Event_Selete_LogoButton_Index;
+
+	typedef struct Level_Change {
+	}Event_Level_Change;
 }
