@@ -162,6 +162,7 @@
     <ClInclude Include="..\public\Logo_Button_Line.h" />
     <ClInclude Include="..\public\Logo_Name.h" />
     <ClInclude Include="..\public\Logo_UI.h" />
+    <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\TestUI.h" />
     <ClInclude Include="..\public\UIObject.h" />
     <ClInclude Include="..\public\Level_GamePlay.h" />
@@ -183,6 +184,7 @@
     <ClCompile Include="..\private\Logo_Button_Line.cpp" />
     <ClCompile Include="..\private\Logo_Name.cpp" />
     <ClCompile Include="..\private\Logo_UI.cpp" />
+    <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\TestUI.cpp" />
     <ClCompile Include="..\private\UIObject.cpp" />
     <ClCompile Include="..\private\Level_GamePlay.cpp" />
@@ -206,6 +208,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
