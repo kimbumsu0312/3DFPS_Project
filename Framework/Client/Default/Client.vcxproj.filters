@@ -58,6 +58,9 @@
     <Filter Include="02.GameObject\UIObject\Logo_UI\ETC">
       <UniqueIdentifier>{f6416ab8-62b1-4904-aa63-701c8582715d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Terrain">
+      <UniqueIdentifier>{ec2057f9-56db-4c83-bc7f-54ea0256dea3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -120,6 +123,9 @@
     <ClInclude Include="Client_Event.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Terrain.h">
+      <Filter>02.GameObject\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -180,9 +186,15 @@
     <ClCompile Include="..\private\Logo_Name.cpp">
       <Filter>02.GameObject\UIObject\Logo_UI\ETC</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Terrain.cpp">
+      <Filter>02.GameObject\Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
