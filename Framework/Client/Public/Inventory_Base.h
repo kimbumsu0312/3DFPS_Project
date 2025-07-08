@@ -29,10 +29,16 @@ private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	CTexture*					m_pTextureCom = { nullptr };
 
+	_bool						m_bIsOpen = {false};
+	_float4						m_vOpenTex = {};
+	_float						m_fOpenTexValueX = {};
+	_float						m_fOpenTexValueY = {};
+	_float						m_fOpenTexSpeed = {};
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children();
 
+	void						Open_UI();
 public:
 	static CInventory_Base*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;

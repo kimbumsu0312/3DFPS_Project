@@ -30,12 +30,16 @@ void CLevel_Logo::Update(_float fTimeDelta)
 			return;
 	}
 
+	TCHAR szChar[MAX_PATH];
+	swprintf_s(szChar, MAX_PATH, L"DeltaTime: %.4f", fTimeDelta);
+	SetWindowText(g_hWnd, szChar);
+
 	return;
 }
 
 HRESULT CLevel_Logo::Render()
 {
-	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
+	//SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
 
 	return S_OK;
 }

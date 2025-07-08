@@ -96,11 +96,14 @@ PS_OUT PS_Loding_BackGround(PS_IN In)
 PS_OUT PS_Inven_Base(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
+    if (In.vPosition.x <= g_Vector.r || In.vPosition.x >= g_Vector.g || In.vPosition.y <= g_Vector.b || In.vPosition.y >= g_Vector.a)
+        discard;
     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     Out.vColor.a += 0.1;
     return Out;
 }
+
 
 technique11 DefaultTechnique
 {
