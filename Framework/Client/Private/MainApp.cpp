@@ -86,7 +86,7 @@ void CMainApp::Ready_Key_Setting()
 	m_pGameInstance->AddTrackIngKey(VK_LEFT);
 	m_pGameInstance->AddTrackIngKey(VK_RIGHT);
 	m_pGameInstance->AddTrackIngKey(VK_SPACE);
-	
+	m_pGameInstance->AddTrackIngKey(VK_TAB);
 	m_pGameInstance->AddTrackIngKey(VK_LBUTTON);
 	m_pGameInstance->AddTrackIngKey(VK_RBUTTON);
 

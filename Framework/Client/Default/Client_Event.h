@@ -19,4 +19,8 @@ namespace Client
 
 	typedef struct Level_Change {
 	}Event_Level_Change;
+
+	typedef struct Inventory_Open {
+		_bool bIsOpen;
+	}Event_Inventory_Open;
 }

@@ -34,7 +34,16 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-
+	if (m_pGameInstance->IsKeyDown(VK_TAB) && !m_bInvenOpen)
+	{
+		m_pGameInstance->Publish(Event_Inventory_Open{ {true} });
+		m_bInvenOpen = true;
+	}
+	else if (m_pGameInstance->IsKeyDown(VK_TAB) && m_bInvenOpen)
+	{
+		m_pGameInstance->Publish(Event_Inventory_Open{ {false} });
+		m_bInvenOpen = false;
+	}
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -84,9 +93,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Inventroy"))))
 		return E_FAIL;
 	
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-		ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Loding_Fade"))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+	//	ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Loding_Fade"))))
+	//	return E_FAIL;
 
 	return S_OK;
 }

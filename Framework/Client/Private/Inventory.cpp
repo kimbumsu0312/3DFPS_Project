@@ -36,21 +36,30 @@ HRESULT CInventory::Initialize(void* pArg)
     if (FAILED(Ready_Children()))
         return E_FAIL;
 
+    m_pGameInstance->Subscribe<Event_Inventory_Open>([&](const Event_Inventory_Open& e) { m_bIsOpen = e.bIsOpen; });
+
     return S_OK;
 }
 
 void CInventory::Priority_Update(_float fTimeDelta)
 {
+    if (!m_bIsOpen)
+        return;
     __super::Priority_Update(fTimeDelta);
 }
 
 void CInventory::Update(_float fTimeDelta)
 {
+    if (!m_bIsOpen)
+        return;
     __super::Update(fTimeDelta);
 }
 
 void CInventory::Late_Update(_float fTimeDelta)
 {
+    if (!m_bIsOpen)
+        return;
+
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
         return;
     __super::Late_Update(fTimeDelta);
