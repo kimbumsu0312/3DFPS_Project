@@ -85,6 +85,12 @@
     <Filter Include="01.Utility\03.Component\VIBuffer\Terrain">
       <UniqueIdentifier>{5899f6d6-0f92-44b6-84a6-79d254a85f02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\02.GameObject\Camera">
+      <UniqueIdentifier>{c71ee599-8593-474e-8b9a-a4d4cb366f1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\97.PipeLine">
+      <UniqueIdentifier>{97967dd0-9eb8-4528-a920-9d5446b4f236}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -171,6 +177,12 @@
     <ClInclude Include="..\public\VIBuffer_Terrain.h">
       <Filter>01.Utility\03.Component\VIBuffer\Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Camera.h">
+      <Filter>01.Utility\02.GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PipeLine.h">
+      <Filter>01.Utility\97.PipeLine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -238,6 +250,12 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Terrain.cpp">
       <Filter>01.Utility\03.Component\VIBuffer\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera.cpp">
+      <Filter>01.Utility\02.GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PipeLine.cpp">
+      <Filter>01.Utility\97.PipeLine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

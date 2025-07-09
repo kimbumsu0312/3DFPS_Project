@@ -163,9 +163,11 @@ call Copy_Release.bat</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h" />
+    <ClInclude Include="..\Public\Camera.h" />
     <ClInclude Include="..\public\Component.h" />
     <ClInclude Include="..\public\Event_Manager.h" />
     <ClInclude Include="..\public\Input_Manager.h" />
+    <ClInclude Include="..\public\PipeLine.h" />
     <ClInclude Include="..\public\Shader.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
     <ClInclude Include="..\Public\Engine_Enum.h" />
@@ -193,9 +195,11 @@ call Copy_Release.bat</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp" />
+    <ClCompile Include="..\Private\Camera.cpp" />
     <ClCompile Include="..\private\Component.cpp" />
     <ClCompile Include="..\private\Event_Manager.cpp" />
     <ClCompile Include="..\private\Input_Manager.cpp" />
+    <ClCompile Include="..\private\PipeLine.cpp" />
     <ClCompile Include="..\private\Shader.cpp" />
     <ClCompile Include="..\private\GameInstance.cpp" />
     <ClCompile Include="..\private\GameObject.cpp" />

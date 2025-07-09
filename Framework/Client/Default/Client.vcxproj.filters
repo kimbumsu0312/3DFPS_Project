@@ -67,6 +67,12 @@
     <Filter Include="02.GameObject\UIObject\Inventory\ETC">
       <UniqueIdentifier>{78f55f92-14de-4fc3-a107-38dba95891c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Camera">
+      <UniqueIdentifier>{938702cd-cae2-4f3b-be44-2c75f8b1c3f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Camera\Free">
+      <UniqueIdentifier>{f7c04a64-6b13-4726-8fed-a33406fd7467}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -138,6 +144,9 @@
     <ClInclude Include="..\public\Inventory_Base.h">
       <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Camera_Free.h">
+      <Filter>02.GameObject\Camera\Free</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -206,6 +215,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Inventory_Base.cpp">
       <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera_Free.cpp">
+      <Filter>02.GameObject\Camera\Free</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
