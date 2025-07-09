@@ -67,10 +67,16 @@ void CInventory::Late_Update(_float fTimeDelta)
 
 HRESULT CInventory::Render()
 {
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+        return E_FAIL;
+
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+        return E_FAIL;
+
     if (FAILED(m_pShaderCom->Bind_Vector("g_Vector", XMLoadFloat4(&m_vBackGroundColor))))
         return E_FAIL;
 
-    __super::Bind_Shader_Resourec(m_pShaderCom, 2);
+    __super::Bind_ShaderTransform_Resourc(1);
 
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();
@@ -80,7 +86,7 @@ HRESULT CInventory::Render()
 
 HRESULT CInventory::Ready_Components()
 {
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex_UI"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
         return E_FAIL;
 
@@ -107,7 +113,7 @@ HRESULT CInventory::Ready_Children()
     pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Inventory_Base")));
     if (nullptr == pGameObject)
         return E_FAIL;
-    Add_Child(this, pGameObject);
+    Add_Child(this, pGameObject, m_pShaderCom);
 
     return S_OK;
 }
@@ -143,5 +149,4 @@ void CInventory::Free()
     __super::Free();
 
     Safe_Release(m_pVIBufferCom);
-    Safe_Release(m_pShaderCom);
 }

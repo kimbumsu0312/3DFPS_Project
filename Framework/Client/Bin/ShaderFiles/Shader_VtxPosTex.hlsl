@@ -84,27 +84,6 @@ PS_OUT PS_MAIN_COLOR(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_Loding_BackGround(PS_IN In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-    Out.vColor.rgb = 0.f;
-    Out.vColor.a = g_Vector.w;
-   
-    return Out;
-}
-
-PS_OUT PS_Inven_Base(PS_IN In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-    if (In.vPosition.x <= g_Vector.r || In.vPosition.x >= g_Vector.g || In.vPosition.y <= g_Vector.b || In.vPosition.y >= g_Vector.a)
-        discard;
-    
-    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    Out.vColor.a += 0.1;
-    return Out;
-}
-
-
 technique11 DefaultTechnique
 {
     pass DefaultPass
@@ -119,15 +98,4 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_COLOR();
     }
 
-    pass Loding_BackGround_Pass
-    {
-        VertexShader = compile vs_5_0 VS_MAIN();
-        PixelShader = compile ps_5_0 PS_Loding_BackGround();
-    }
-
-    pass Invent_Pass
-    {
-        VertexShader = compile vs_5_0 VS_MAIN();
-        PixelShader = compile ps_5_0 PS_Inven_Base();
-    }
 }

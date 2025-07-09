@@ -26,6 +26,13 @@ public:
 	_float			Rand(_float fMin, _float fMax);
 #pragma endregion
 
+#pragma region INPUT_DEVICE
+public:
+	_byte	Get_DIKeyState(_ubyte byKeyID);
+	_byte	Get_DIMouseState(MOUSEKEYSTATE eMouse);
+	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseState);
+#pragma endregion 
+
 #pragma region TIMER_MANAGER
 public:
 	_float			Get_TimeDelta(const _wstring& strTimerTag);
@@ -100,6 +107,7 @@ public:
 
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
+	class CInput_Device*		m_pInput_Device = { nullptr };
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
 	class CLevel_Manager*		m_pLevel_Manager = { nullptr };
 	class CObject_Manager*		m_pObject_Manager = { nullptr };

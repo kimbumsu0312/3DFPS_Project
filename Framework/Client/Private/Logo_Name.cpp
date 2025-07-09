@@ -20,10 +20,10 @@ HRESULT CLogo_Name::Initialize(void* pArg)
 
     m_vLocalPos.x = 0.f;
     m_vLocalPos.y = Desc->OffsetY;
-    m_vLocalSize.x = 512.f;
-    m_vLocalSize.y = 512.f;
+   
+    m_vLocalSize = Desc->vSize;
 
-    if (FAILED(__super::Initialize()))
+    if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
     if (FAILED(Ready_Components()))
@@ -39,8 +39,6 @@ void CLogo_Name::Priority_Update(_float fTimeDelta)
 
 void CLogo_Name::Update(_float fTimeDelta)
 {
- 
-
 }
 
 void CLogo_Name::Late_Update(_float fTimeDelta)
@@ -51,7 +49,8 @@ void CLogo_Name::Late_Update(_float fTimeDelta)
 
 HRESULT CLogo_Name::Render()
 {
-    __super::Bind_ShaderTex_Resourec(m_pShaderCom,0, m_pTextureCom);
+    Bind_ShaderTransform_Resourc();
+
 
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();
@@ -61,16 +60,8 @@ HRESULT CLogo_Name::Render()
 
 HRESULT CLogo_Name::Ready_Components()
 {
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
-        TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
-        return E_FAIL;
-
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
         TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
-        return E_FAIL;
-
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Texture_Logo_Name"),
-        TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
         return E_FAIL;
 
     return S_OK;
@@ -107,6 +98,4 @@ void CLogo_Name::Free()
     __super::Free();
 
     Safe_Release(m_pVIBufferCom);
-    Safe_Release(m_pShaderCom);
-    Safe_Release(m_pTextureCom);
 }

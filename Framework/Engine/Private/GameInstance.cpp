@@ -10,6 +10,8 @@
 #include "Input_Manager.h"
 #include "Event_Manager.h"
 #include "PipeLine.h"
+#include "Input_Device.h"
+
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
@@ -23,6 +25,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
 	
+	m_pInput_Device = CInput_Device::Create(EngineDesc.hInst, EngineDesc.hWnd);
+	if (nullptr == m_pInput_Device)
+		return E_FAIL;
+
 	m_pTimer_Manager = CTimer_Manager::Create();
 	if (nullptr == m_pTimer_Manager)
 		return E_FAIL;
@@ -52,6 +58,8 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 
 	m_pPipeLine = CPipeLine::Create();
+	if (nullptr == m_pPipeLine)
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -59,6 +67,8 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
 	m_pInput_Manager->Update(fTimeDelta);
+	m_pInput_Device->Update();
+
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 	m_pPipeLine->Update();
 
@@ -118,6 +128,19 @@ _float CGameInstance::Rand(_float fMin, _float fMax)
 	return fMin + Rand_Normal() * (fMax - fMin);
 }
 #pragma endregion
+
+_byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
+{
+	return m_pInput_Device->Get_DIKeyState(byKeyID);
+}
+_byte CGameInstance::Get_DIMouseState(MOUSEKEYSTATE eMouse)
+{
+	return m_pInput_Device->Get_DIMouseState(eMouse);
+}
+_long CGameInstance::Get_DIMouseMove(MOUSEMOVESTATE eMouseState)
+{
+	return m_pInput_Device->Get_DIMouseMove(eMouseState);
+}
 
 _float CGameInstance::Get_TimeDelta(const _wstring& strTimerTag)
 {
@@ -256,6 +279,7 @@ void CGameInstance::Release_Engine()
 	Safe_Release(m_pObject_Manager);
 	Safe_Release(m_pLevel_Manager);
 	Safe_Release(m_pTimer_Manager);
+	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pEvent_Manager);
 }

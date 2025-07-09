@@ -22,15 +22,13 @@ HRESULT CFade_UI::Initialize(void* pArg)
     m_vLocalSize.y = g_iWinSizeY;
     m_fFadeTime = 1.f;
     m_fAlpah = 1.f;
-
+    m_vFadeValue = { 0.f, 0.f, 0.f, 0.f };
     if (FAILED(__super::Initialize()))
         return E_FAIL;
 
     if (FAILED(Ready_Components()))
         return E_FAIL;
 
-    if (FAILED(Ready_Children()))
-        return E_FAIL;
     m_pGameInstance->Subscribe<Event_Level_Change>([&](const Event_Level_Change& e) { m_bIsFadeIn = true; });
 
     return S_OK;
@@ -62,9 +60,7 @@ void CFade_UI::Update(_float fTimeDelta)
             m_bIsFadeOut = false;
             m_fAlpah = 0.f;
         }
-    }
-
-    
+    }    
 }
 
 void CFade_UI::Late_Update(_float fTimeDelta)
@@ -76,10 +72,16 @@ void CFade_UI::Late_Update(_float fTimeDelta)
 
 HRESULT CFade_UI::Render()
 {
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+        return E_FAIL;
+
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+        return E_FAIL;
+
     if (FAILED(m_pShaderCom->Bind_Vector("g_Vector", XMLoadFloat4(&m_vFadeValue))))
         return E_FAIL;
 
-    __super::Bind_Shader_Resourec(m_pShaderCom, 2);
+    __super::Bind_ShaderTransform_Resourc(1);
 
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();
@@ -89,7 +91,7 @@ HRESULT CFade_UI::Render()
 
 HRESULT CFade_UI::Ready_Components()
 {
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex_UI"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
         return E_FAIL;
 
@@ -97,12 +99,6 @@ HRESULT CFade_UI::Ready_Components()
         TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
         return E_FAIL;
 
-    return S_OK;
-}
-
-HRESULT CFade_UI::Ready_Children()
-{
-    CUIObject* pGameObject = nullptr;
     return S_OK;
 }
 
@@ -137,5 +133,4 @@ void CFade_UI::Free()
     __super::Free();
 
     Safe_Release(m_pVIBufferCom);
-    Safe_Release(m_pShaderCom);
 }

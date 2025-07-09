@@ -2,7 +2,6 @@
 #include "UIObject.h"
 
 NS_BEGIN(Engine)
-class CShader;
 class CVIBuffer_Rect;
 NS_END
 
@@ -24,7 +23,6 @@ public:
 	virtual HRESULT				Render();
 
 private:
-	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	_bool						m_bIsFadeIn = { false };
@@ -35,10 +33,9 @@ private:
 	_float						m_fAlpah = {};
 private:
 	HRESULT						Ready_Components();
-	HRESULT						Ready_Children();
 
 public:
-	static CFade_UI*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CFade_UI*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;
 	virtual void				Free() override;
 };

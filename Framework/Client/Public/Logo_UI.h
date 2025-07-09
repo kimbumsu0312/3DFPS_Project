@@ -2,8 +2,8 @@
 #include "UIObject.h"
 
 NS_BEGIN(Engine)
-class CShader;
 class CVIBuffer_Rect;
+class CTexture;
 NS_END
 
 NS_BEGIN(Client)
@@ -23,8 +23,8 @@ public:
 	virtual HRESULT				Render();
 
 private:
-	CShader*					m_pShaderCom = { nullptr };
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
+	CTexture*					m_pTextureCom = { nullptr };
 
 	_uint						m_iNumSeleteButton = {};
 	_uint						m_iNumMaxButton = {};

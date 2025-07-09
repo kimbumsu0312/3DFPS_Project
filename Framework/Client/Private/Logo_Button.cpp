@@ -20,25 +20,23 @@ HRESULT CLogo_Button::Initialize_Prototype()
 
 HRESULT CLogo_Button::Initialize(void* pArg)
 {
-	m_vLocalPos.x = 0.f;
-	
-	m_vLocalSize.x = 200.f;
-	m_vLocalSize.y = 50.f;
-
 	if (pArg == nullptr)
-		m_vLocalPos.y = 0.f;
-	else
-	{
-		UIOBJECT_DESC* Desc = static_cast<UIOBJECT_DESC*>(pArg);
-		m_iIndex = Desc->iIndex;
-		m_iMaxIndex = Desc->iMaxIndex;
-		m_vLocalPos.y = 100 + Desc->iIndex * Desc->OffsetY - (Desc->iMaxIndex - 1) * Desc->OffsetY / 2;;
-	}
+		return E_FAIL;
+	m_vBackGroundColor = { 0.3f, 0.3f, 0.3f, 0.7f };
+
+	UIOBJECT_DESC* Desc = static_cast<UIOBJECT_DESC*>(pArg);
+
+	m_vLocalPos.x = Desc->vPos.x;
+	m_vLocalSize = Desc->vSize;
+	m_iIndex = Desc->iIndex;
+	m_iMaxIndex = Desc->iMaxIndex;
+
+	m_vLocalPos.y = Desc->vPos.y + Desc->iIndex * Desc->OffsetY - (Desc->iMaxIndex - 1) * Desc->OffsetY / 2;;
 
 	if (m_iIndex == 1)
 		m_bIsSelete = true;
 
-	if (FAILED(__super::Initialize()))
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components()))
@@ -76,8 +74,11 @@ void CLogo_Button::Late_Update(_float fTimeDelta)
 
 HRESULT CLogo_Button::Render()
 {
-	__super::Bind_Shader_Resourec(m_pShaderCom, 1);
-	
+	if (FAILED(m_pShaderCom->Bind_Vector("g_Vector", XMLoadFloat4(&m_vBackGroundColor))))
+		return E_FAIL;
+
+	__super::Bind_ShaderTransform_Resourc(1);
+
 	m_pVIBufferCom->Bind_Resources();
 	m_pVIBufferCom->Render();
 
@@ -86,10 +87,6 @@ HRESULT CLogo_Button::Render()
 
 HRESULT CLogo_Button::Ready_Components()
 {
-	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
-		return E_FAIL;
-
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
 		return E_FAIL;
@@ -111,18 +108,26 @@ HRESULT CLogo_Button::Ready_Children()
 	CUIObject* pGameObject = nullptr;
 	
 	UIOBJECT_DESC Desc;
-	Desc.iIndex = 1;
+	Desc.vSize = { 255.f, 18.f };
+	Desc.vPos = { 0, 20 };
+	Desc.vMinUV = { 500.f / 1024.f, 0.f };
+	Desc.vMaxUV = { 755.f / 1024.f, 18.f / 512.f };
+
 
 	pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button_Line"), &Desc));
 	if (nullptr == pGameObject)
 		return E_FAIL;
-	Add_Child(this, pGameObject);
+	Add_Child(this, pGameObject, m_pShaderCom);
 
-	Desc.iIndex = 2;
+	Desc.vSize = { 255.f, 20.f };
+	Desc.vPos = { 0, 0 };
+	Desc.vMinUV = { 500.f / 1024.f, 20.f / 512.f};
+	Desc.vMaxUV = { 755.f / 1024.f, 40.f / 512.f };
+
 	pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button_Line"), &Desc));
 	if (nullptr == pGameObject)
 		return E_FAIL;
-	Add_Child(this, pGameObject);
+	Add_Child(this, pGameObject, m_pShaderCom);
 
 	return S_OK;
 }
@@ -190,5 +195,4 @@ void CLogo_Button::Free()
 	__super::Free();
 
 	Safe_Release(m_pVIBufferCom);
-	Safe_Release(m_pShaderCom);
 }

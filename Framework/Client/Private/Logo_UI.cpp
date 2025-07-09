@@ -54,17 +54,28 @@ void CLogo_UI::Update(_float fTimeDelta)
 
 void CLogo_UI::Late_Update(_float fTimeDelta)
 {
+    if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
+        return;
     __super::Late_Update(fTimeDelta);
 }
 
 HRESULT CLogo_UI::Render()
 {
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+        return E_FAIL;
+
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+        return E_FAIL;
+
+    if (FAILED(m_pTextureCom->Bind_Shader_Resource(m_pShaderCom, "g_Texture", 0)))
+        return E_FAIL;
+
     return S_OK;
 }
 
 HRESULT CLogo_UI::Ready_Components()
 {
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex_UI"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
         return E_FAIL;
 
@@ -72,18 +83,22 @@ HRESULT CLogo_UI::Ready_Components()
         TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
         return E_FAIL;
 
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Texture_Logo"),
+        TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
+        return E_FAIL;
+
     return S_OK;
 }
 
 HRESULT CLogo_UI::Ready_Children_Prototype()
-{
-    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Name"),
+{ 
+     if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Name"),
         CLogo_Name::Create(m_pDevice, m_pContext))))
         return E_FAIL;
 
-    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button"),
-        CLogo_Button::Create(m_pDevice, m_pContext))))
-        return E_FAIL;
+   if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button"),
+       CLogo_Button::Create(m_pDevice, m_pContext))))
+       return E_FAIL;
 
     return S_OK;
 }
@@ -94,15 +109,24 @@ HRESULT CLogo_UI::Ready_Children()
 
     UIOBJECT_DESC Desc;
     Desc.OffsetY = -150.f;
+   
+    Desc.vMinUV.x = 0;
+    Desc.vMinUV.y = 150.f / 512.f;
+    Desc.vMaxUV.x = 440.f / 1024.f;
+    Desc.vMaxUV.y = 320.f / 512.f;
+    Desc.vSize = { 1024.f * 0.3f, 512.f * 0.3f };
 
     pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Name"), &Desc));
     if (nullptr == pGameObject)
         return E_FAIL;
-    Add_Child(this, pGameObject);
+    Add_Child(this, pGameObject, m_pShaderCom);
     
     m_iNumMaxButton = 4;
     Desc.iMaxIndex = m_iNumMaxButton;
+    Desc.vSize = { 200.f, 50.f };
+    Desc.vPos = {0.f, 100.f };
     Desc.OffsetY = 60.f;
+
     m_iNumSeleteButton = 1;
     for (_uint i = 0; i < Desc.iMaxIndex; i++)
     {
@@ -111,7 +135,7 @@ HRESULT CLogo_UI::Ready_Children()
         pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button"), &Desc));
         if (nullptr == pGameObject)
             return E_FAIL;
-        Add_Child(this, pGameObject);
+        Add_Child(this, pGameObject, m_pShaderCom);
     }
 
     
@@ -120,7 +144,7 @@ HRESULT CLogo_UI::Ready_Children()
 
 void CLogo_UI::Button_Selete()
 {
-    if (m_pGameInstance->IsKeyDown('S'))
+    if (m_pGameInstance->Get_DIKeyState(DIK_S))
     {
         m_pGameInstance->Publish(Event_NonSelete_LogoButton{});
 
@@ -134,8 +158,8 @@ void CLogo_UI::Button_Selete()
             m_pGameInstance->Publish(Event_Selete_LogoButton{ { m_iNumSeleteButton } });
 
     }
-
-    if (m_pGameInstance->IsKeyDown('W'))
+    
+    if (m_pGameInstance->Get_DIKeyState(DIK_W))
     {
         m_pGameInstance->Publish(Event_NonSelete_LogoButton{});
 
@@ -183,5 +207,5 @@ void CLogo_UI::Free()
     __super::Free();
 
     Safe_Release(m_pVIBufferCom);
-    Safe_Release(m_pShaderCom);
+    Safe_Release(m_pTextureCom);
 }

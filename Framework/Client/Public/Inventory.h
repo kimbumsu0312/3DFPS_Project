@@ -2,7 +2,6 @@
 #include "UIObject.h"
 
 NS_BEGIN(Engine)
-class CShader;
 class CVIBuffer_Rect;
 NS_END
 
@@ -23,7 +22,6 @@ public:
 	virtual HRESULT				Render();
 
 private:
-	CShader*					m_pShaderCom = { nullptr };
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	_float4						m_vBackGroundColor = {};
 
