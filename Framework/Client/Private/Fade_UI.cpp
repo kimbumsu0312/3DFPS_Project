@@ -20,7 +20,7 @@ HRESULT CFade_UI::Initialize(void* pArg)
     m_vLocalPos.y = g_iWinSizeY >> 1;
     m_vLocalSize.x = g_iWinSizeX;
     m_vLocalSize.y = g_iWinSizeY;
-    m_fFadeTime = 1.f;
+    m_fFadeTime = 2.f;
     m_fAlpah = 1.f;
     m_vFadeValue = { 0.f, 0.f, 0.f, 0.f };
     if (FAILED(__super::Initialize()))
@@ -43,7 +43,7 @@ void CFade_UI::Update(_float fTimeDelta)
 
     if (m_bIsFadeIn)
     {
-        m_fAlpah += m_fFadeTime * fTimeDelta;
+        m_fAlpah += (1.0f / m_fFadeTime) * fTimeDelta;
         m_vFadeValue.w = m_fAlpah;
         if (m_fAlpah > 1.f)
         {
@@ -53,7 +53,7 @@ void CFade_UI::Update(_float fTimeDelta)
     }
     else if (m_bIsFadeOut)
     {
-        m_fAlpah -= m_fFadeTime * fTimeDelta;
+        m_fAlpah -= (1.0f / m_fFadeTime) * fTimeDelta;
         m_vFadeValue.w = m_fAlpah;
         if (m_fAlpah < 0.f)
         {

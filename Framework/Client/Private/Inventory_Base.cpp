@@ -16,9 +16,9 @@ HRESULT CInventory_Base::Initialize_Prototype()
 
 HRESULT CInventory_Base::Initialize(void* pArg)
 {
-    m_fOpenTexSpeed = 0.05f;
+    m_fOpenTexSpeed = 1.f;
     m_fOpenTexValueY = 0.15f;
-
+   
     m_vLocalPos.x = 0.f;
     m_vLocalPos.y = 0.f;
     m_vLocalSize.x = 1280 * 0.7;
@@ -45,7 +45,7 @@ void CInventory_Base::Priority_Update(_float fTimeDelta)
 void CInventory_Base::Update(_float fTimeDelta)
 {
     if(m_bIsOpen)
-        Open_UI();
+        Open_UI(fTimeDelta);
 }
 
 void CInventory_Base::Late_Update(_float fTimeDelta)
@@ -90,9 +90,8 @@ HRESULT CInventory_Base::Ready_Children()
     return S_OK;
 }
 
-void CInventory_Base::Open_UI()
+void CInventory_Base::Open_UI(_float fTimeDelta)
 {
- 
     if (m_fOpenTexValueY > 1.f)
     {
         m_bIsOpen = false;
@@ -107,7 +106,7 @@ void CInventory_Base::Open_UI()
         m_vOpenTex.y = (m_vPos.x + m_vSize.x * 0.5f);
         m_vOpenTex.z = 0.f;
         m_vOpenTex.w = m_vSize.y * m_fOpenTexValueY;
-        m_fOpenTexValueY += m_fOpenTexSpeed;
+        m_fOpenTexValueY += m_fOpenTexSpeed * fTimeDelta;
     }
     else
     {
@@ -115,9 +114,8 @@ void CInventory_Base::Open_UI()
         m_vOpenTex.y = (m_vPos.x + m_vSize.x * m_fOpenTexValueX);
         m_vOpenTex.z = 0.f;
         m_vOpenTex.w = m_vSize.y * m_fOpenTexValueY;
-        m_fOpenTexValueX += m_fOpenTexSpeed;
+        m_fOpenTexValueX += m_fOpenTexSpeed * fTimeDelta;
     }
-    
 }
 
 CInventory_Base* CInventory_Base::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
