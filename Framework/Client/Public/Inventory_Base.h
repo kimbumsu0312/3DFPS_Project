@@ -36,7 +36,7 @@ private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children();
 
-	void						Open_UI();
+	void						Open_UI(_float fTimeDelta);
 public:
 	static CInventory_Base*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;

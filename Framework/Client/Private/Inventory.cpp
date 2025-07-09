@@ -20,7 +20,7 @@ HRESULT CInventory::Initialize_Prototype()
 
 HRESULT CInventory::Initialize(void* pArg)
 {
-    m_vBackGroundColor = { 0.f, 0.f, 0.f, 0.8f };
+    m_vBackGroundColor = { 0.f, 0.f, 0.f, 0.9f };
 
     m_vLocalPos.x = g_iWinSizeX >> 1;
     m_vLocalPos.y = g_iWinSizeY >> 1;
