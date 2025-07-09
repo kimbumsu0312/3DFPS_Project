@@ -52,9 +52,6 @@
     <Filter Include="02.GameObject\UIObject\Logo_UI\Button">
       <UniqueIdentifier>{bb802f42-3c6c-46a2-83e1-83aa87c9bf8e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\UIObject\Logo_UI\ETC">
-      <UniqueIdentifier>{f6416ab8-62b1-4904-aa63-701c8582715d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Terrain">
       <UniqueIdentifier>{ec2057f9-56db-4c83-bc7f-54ea0256dea3}</UniqueIdentifier>
     </Filter>
@@ -72,6 +69,18 @@
     </Filter>
     <Filter Include="02.GameObject\Camera\Free">
       <UniqueIdentifier>{f7c04a64-6b13-4726-8fed-a33406fd7467}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud">
+      <UniqueIdentifier>{d964eea6-465a-4bac-b44e-3e1cef206137}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim">
+      <UniqueIdentifier>{bb3df6ea-ee2a-44f3-8b00-45fc5c6e0a1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim\ETC">
+      <UniqueIdentifier>{5466a443-3cc4-467e-b0ab-e9e8776518be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Logo_UI\Title">
+      <UniqueIdentifier>{f6416ab8-62b1-4904-aa63-701c8582715d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -127,7 +136,7 @@
       <Filter>02.GameObject\UIObject\Logo_UI</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Logo_Name.h">
-      <Filter>02.GameObject\UIObject\Logo_UI\ETC</Filter>
+      <Filter>02.GameObject\UIObject\Logo_UI\Title</Filter>
     </ClInclude>
     <ClInclude Include="Client_Event.h">
       <Filter>99.Defines</Filter>
@@ -146,6 +155,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Camera_Free.h">
       <Filter>02.GameObject\Camera\Free</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Aim_Pistol.h">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Aim_Pistol_Line.h">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\ETC</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -202,7 +217,7 @@
       <Filter>02.GameObject\UIObject\Logo_UI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Logo_Name.cpp">
-      <Filter>02.GameObject\UIObject\Logo_UI\ETC</Filter>
+      <Filter>02.GameObject\UIObject\Logo_UI\Title</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Terrain.cpp">
       <Filter>02.GameObject\Terrain</Filter>
@@ -218,6 +233,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Camera_Free.cpp">
       <Filter>02.GameObject\Camera\Free</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Aim_Pistol.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Aim_Pistol_Line.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\ETC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

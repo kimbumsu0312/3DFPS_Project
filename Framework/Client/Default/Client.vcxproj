@@ -155,6 +155,8 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\public\Aim_Pistol.h" />
+    <ClInclude Include="..\public\Aim_Pistol_Line.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\Button.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
@@ -181,6 +183,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\Aim_Pistol.cpp" />
+    <ClCompile Include="..\private\Aim_Pistol_Line.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\Button.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
