@@ -59,10 +59,10 @@ HRESULT CInventory_Base::Render()
     if (FAILED(m_pShaderCom->Bind_Vector("g_Vector", XMLoadFloat4(&m_vOpenTex))))
          return E_FAIL;
 
-    __super::Bind_ShaderTransform_Resourc(2);
-
     if (FAILED(m_pTextureCom->Bind_Shader_Resource(m_pShaderCom, "g_Texture", 5)))
         return E_FAIL;
+
+    __super::Bind_ShaderTransform_Resourc(2);
 
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();
