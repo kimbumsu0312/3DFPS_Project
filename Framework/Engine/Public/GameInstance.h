@@ -85,6 +85,19 @@ public:
 	}
 #pragma endregion
 
+#pragma region PIPELINE
+public:
+	_matrix				Get_Transform_Matrix(D3DTS eTransformState) const;
+	const _float4x4*	Get_Transform_Float4x4(D3DTS eTransformState) const;
+	_matrix				Get_Transform_Matrix_Inverse(D3DTS eTransformState) const;
+	const _float4x4*	Get_Transform_Float4x4_Inverse(D3DTS eTransformState) const;
+	const _float4*		Get_CamPosition() const;
+
+	void				Set_Transform(D3DTS eTransformState, _fmatrix Matrix);
+	void				Set_Transform(D3DTS eTransformState, const _float4x4& Matrix);
+
+#pragma endregion
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
@@ -93,6 +106,7 @@ private:
 	class CPrototype_Manager*	m_pPrototype_Manager = { nullptr };
 	class CRenderer*			m_pRenderer = { nullptr };
 	class CInput_Manager*		m_pInput_Manager = { nullptr };
+	class CPipeLine*			m_pPipeLine = { nullptr };
 
 public:
 	void						Release_Engine();

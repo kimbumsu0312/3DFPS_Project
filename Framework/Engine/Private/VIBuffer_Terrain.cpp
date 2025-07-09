@@ -48,9 +48,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 
 	VTXNORTEX* pVertices = new VTXNORTEX[m_iNumVertices];
 
-	for (size_t i = 0; i < m_iNumverticesZ; i++)
+	for (_uint i = 0; i < m_iNumverticesZ; i++)
 	{
-		for (size_t j = 0; j < m_iNumverticesX; j++)
+		for (_uint j = 0; j < m_iNumverticesX; j++)
 		{
 			_uint	iIndex = i * m_iNumverticesX + j;
 
@@ -63,9 +63,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 	_uint* pIndices = new _uint[m_iNumIndices];
 	_uint iNumIndices = {};
 
-	for (size_t i = 0; i < m_iNumverticesZ - 1; ++i)
+	for (_uint i = 0; i < m_iNumverticesZ - 1; ++i)
 	{
-		for (size_t j = 0; j < m_iNumverticesX - 1; ++j)
+		for (_uint j = 0; j < m_iNumverticesX - 1; ++j)
 		{
 			_uint iIndex = i * m_iNumverticesX + j;
 			_uint iIndices[] = {

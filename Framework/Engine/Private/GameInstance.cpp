@@ -9,6 +9,7 @@
 #include "Renderer.h"
 #include "Input_Manager.h"
 #include "Event_Manager.h"
+#include "PipeLine.h"
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
@@ -50,6 +51,8 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pEvent_Manager)
 		return E_FAIL;
 
+	m_pPipeLine = CPipeLine::Create();
+
 	return S_OK;
 }
 
@@ -57,6 +60,8 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 {
 	m_pInput_Manager->Update(fTimeDelta);
 	m_pObject_Manager->Priority_Update(fTimeDelta);
+	m_pPipeLine->Update();
+
 	m_pObject_Manager->Update(fTimeDelta);
 	m_pObject_Manager->Late_Update(fTimeDelta);
 
@@ -206,9 +211,45 @@ _float CGameInstance::GetKeyHoldTime(int iKey) const
 	return m_pInput_Manager->GetKeyHoldTime(iKey);
 }
 
+_matrix CGameInstance::Get_Transform_Matrix(D3DTS eTransformState) const
+{
+	return m_pPipeLine->Get_Transform_Matrix(eTransformState);
+}
+
+const _float4x4* CGameInstance::Get_Transform_Float4x4(D3DTS eTransformState) const
+{
+	return m_pPipeLine->Get_Transform_Float4x4(eTransformState);
+}
+
+_matrix CGameInstance::Get_Transform_Matrix_Inverse(D3DTS eTransformState) const
+{
+	return m_pPipeLine->Get_Transform_Matrix_Inverse(eTransformState);
+}
+
+const _float4x4* CGameInstance::Get_Transform_Float4x4_Inverse(D3DTS eTransformState) const
+{
+	return m_pPipeLine->Get_Transform_Float4x4_Inverse(eTransformState);
+}
+
+const _float4* CGameInstance::Get_CamPosition() const
+{
+	return m_pPipeLine->Get_CamPosition();
+}
+
+void CGameInstance::Set_Transform(D3DTS eTransformState, _fmatrix Matrix)
+{
+	m_pPipeLine->Set_Transform(eTransformState, Matrix);
+}
+
+void CGameInstance::Set_Transform(D3DTS eTransformState, const _float4x4& Matrix)
+{
+	m_pPipeLine->Set_Transform(eTransformState, Matrix);
+}
+
 void CGameInstance::Release_Engine()
 {
 	Release();
+	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pInput_Manager);
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pPrototype_Manager);
