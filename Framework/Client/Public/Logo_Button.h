@@ -2,7 +2,6 @@
 #include "Button.h"
 
 NS_BEGIN(Engine)
-class CShader;
 class CVIBuffer_Rect;
 NS_END
 
@@ -23,11 +22,11 @@ public:
 	virtual HRESULT				Render();
 
 private:
-	CShader*					m_pShaderCom = { nullptr };
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	_uint						m_iIndex = {};
 	_uint						m_iMaxIndex = {};
 	_bool						m_bIsSelete = { false };
+	_float4						m_vBackGroundColor = {};
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children_Prototype();

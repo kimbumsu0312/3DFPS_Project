@@ -1,5 +1,5 @@
-//사용할 데이터를 전역 변수로 선언
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float2 g_MinUV, g_MaxUV;
 float4 g_Vector;
 Texture2D g_Texture;
 sampler DefaultSampler = sampler_state
@@ -17,7 +17,6 @@ struct VS_OUT
 {
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
-    //월드 좌표를 텍스처 값으로 전달
     float4 vWorldPos : TEXCOORD1;
 };
 
@@ -27,16 +26,10 @@ VS_OUT VS_MAIN(VS_IN In)
     VS_OUT Out = (VS_OUT) 0;
     
     float4x4 matWV, matWVP;
-    
-    // 로컬 * 월드 * 뷰 * 투영
-    // 월드 * 뷰 * 투영 
-    
-    //뷰 스페이스 변환 행렬
+
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    //클립 스페이스 변환 행렬
     matWVP = mul(matWV, g_ProjMatrix);
-   
-    //로컬 스페이스를 클립 스페이스로 변환해서 저장 해준다.
+
     Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
@@ -44,14 +37,6 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 }
 
-// SV_POSITION을 이용해서 컴퓨터한테 연산을 시작시킨다.
-// 컴퓨터가 W 나누기를 수행하고 투영 스페이스로 변환
-// 컴퓨터가 뷰포트 변환
-// 레스터 라이즈를 해준다.
-
-
-// 픽셀 셰이더
-// 픽셀의 색을 결정해준다.
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
@@ -64,38 +49,68 @@ struct PS_OUT
     float4 vColor : SV_TARGET;
 };
 
-PS_OUT PS_MAIN(PS_IN In)
+PS_OUT PS_Tex_UV(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-    //Out.vColor.rgb = In.vTexcoord.y;
-    
-    //텍스처 셋팅 - 텍스처 타입, 텍스처 픽셀 색상 값
-    //Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord * 2.f);
+       
+    In.vTexcoord = g_MinUV + (g_MaxUV - g_MinUV) * In.vTexcoord;
+     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
     return Out;
 }
 
-PS_OUT PS_MAIN_COLOR(PS_IN In)
+PS_OUT PS_Color(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-    Out.vColor = 0.5f;
+    Out.vColor = g_Vector;
+   
+    return Out;
+}
+
+PS_OUT PS_Inven_Bass(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    if (In.vPosition.x <= g_Vector.r || In.vPosition.x >= g_Vector.g || In.vPosition.y <= g_Vector.b || In.vPosition.y >= g_Vector.a)
+        discard;
+    
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vColor.a += 0.1;
+    return Out;
+}
+
+PS_OUT PS_Tex(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
     return Out;
 }
 
 technique11 DefaultTechnique
 {
-    pass DefaultPass
+    pass UI_TexUV_Pass
     {
         VertexShader = compile vs_5_0 VS_MAIN();
-        PixelShader = compile ps_5_0 PS_MAIN();
+        PixelShader = compile ps_5_0 PS_Tex_UV();
     }
 
-    pass ColorPass
+    pass UI_Color_Pass
     {
         VertexShader = compile vs_5_0 VS_MAIN();
-        PixelShader = compile ps_5_0 PS_MAIN_COLOR();
+        PixelShader = compile ps_5_0 PS_Color();
+    }
+
+    pass UI_Invent_Pass
+    {
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_Inven_Bass();
+    }
+
+    pass UI_Tex_Pass
+    {
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_Tex();
     }
 
 }

@@ -21,25 +21,10 @@ HRESULT CLogo_Button_Line::Initialize(void* pArg)
 
    UIOBJECT_DESC* pDesc = static_cast<UIOBJECT_DESC*>(pArg);
 
-   m_iIndex = pDesc->iIndex;
-   if (m_iIndex == 1)
-   {
-       m_vLocalPos.x = -10;
-       m_vLocalPos.y = 20;
-       m_vLocalSize.x = 512.f;
-       m_vLocalSize.y = 512.f;
-   }
-   else if (m_iIndex = 2)
-   {
-       m_vLocalPos.x = -10;
-       m_vLocalPos.y = 0;
-       m_vLocalSize.x = 512.f;
-       m_vLocalSize.y = 800.f;
-   }
-   else
-       return E_FAIL;
+   m_vLocalPos = pDesc->vPos;
+   m_vLocalSize = pDesc->vSize;
 
-   if (FAILED(__super::Initialize()))
+   if (FAILED(__super::Initialize(pArg)))
        return E_FAIL;
 
    if (FAILED(Ready_Components()))
@@ -64,7 +49,7 @@ void CLogo_Button_Line::Late_Update(_float fTimeDelta)
 
 HRESULT CLogo_Button_Line::Render()
 {
-    __super::Bind_ShaderTex_Resourec(m_pShaderCom,0, m_pTextureCom, m_iIndex-1);
+    __super::Bind_ShaderTransform_Resourc();
 
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();
@@ -74,18 +59,10 @@ HRESULT CLogo_Button_Line::Render()
 
 HRESULT CLogo_Button_Line::Ready_Components()
 {
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
-        TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
-        return E_FAIL;
-
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
         TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
         return E_FAIL;
-
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Texture_Logo_Line"),
-        TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
-        return E_FAIL;
-
+    
     return S_OK;
 }
 
@@ -120,6 +97,4 @@ void CLogo_Button_Line::Free()
     __super::Free();
 
     Safe_Release(m_pVIBufferCom);
-    Safe_Release(m_pShaderCom);
-    Safe_Release(m_pTextureCom);
 }

@@ -20,9 +20,12 @@ HRESULT CUIObject::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if(pArg != nullptr)
+	if (pArg != nullptr)
+	{
 		UIOBJECT_DESC* pDesc = static_cast<UIOBJECT_DESC*>(pArg);
-
+		m_vMinUV = pDesc->vMinUV;
+		m_vMaxUV = pDesc->vMaxUV;
+	}
 	m_vSize = m_vLocalSize;
 	
 	D3D11_VIEWPORT			Viewport{};
@@ -80,41 +83,18 @@ HRESULT CUIObject::Render()
 	return S_OK;
 }
 
-HRESULT CUIObject::Bind_Shader_Resourec(CShader* pShader, _uint iPassIndex)
-{
-	m_pTransformCom->Scale(_float3(m_vSize.x, m_vSize.y, 1.f));
- 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
-
-	m_pTransformCom->Bind_Shader_Resource(pShader, "g_WorldMatrix");
-	
-	if (FAILED(pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-		return E_FAIL;
-
-	if (FAILED(pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-		return E_FAIL;
-
-	pShader->Begin(iPassIndex);
-
-	return S_OK;
-}
-
-HRESULT CUIObject::Bind_ShaderTex_Resourec(CShader* pShader, _uint iPassIndex, CTexture* pTexture, _uint iTexIndex)
+HRESULT CUIObject::Bind_ShaderTransform_Resourc(_uint iPassIndex)
 {
 	m_pTransformCom->Scale(_float3(m_vSize.x, m_vSize.y, 1.f));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
-
-	m_pTransformCom->Bind_Shader_Resource(pShader, "g_WorldMatrix");
-
-	if (FAILED(pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+	m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix");
+	
+	if (FAILED(m_pShaderCom->Bind_Vector("g_MinUV", XMLoadFloat2(&m_vMinUV))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Vector("g_MaxUV", XMLoadFloat2(&m_vMaxUV))))
 		return E_FAIL;
 
-	if (FAILED(pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-		return E_FAIL;
-
-	if (FAILED(pTexture->Bind_Shader_Resource(pShader, "g_Texture", iTexIndex)))
-		return E_FAIL;
-
-	pShader->Begin(iPassIndex);
+	m_pShaderCom->Begin(iPassIndex);
 
 	return S_OK;
 }
@@ -136,17 +116,30 @@ void CUIObject::Update_Position(CUIObject* pParent)
 		child->Update_Position(this);
 }
 
-void CUIObject::Add_Child(CUIObject* pParent, CUIObject* pChild)
+void CUIObject::Add_Child(CUIObject* pParent, CUIObject* pChild, CShader* pShader)
 {
 	m_vecChildren.push_back(pChild);
 	pChild->Update_Position(pParent);
+	pChild->Update_Shader(pShader);
+}
+
+void CUIObject::Update_Shader(CShader* pShader)
+{
+	m_pShaderCom = pShader;
+	Safe_AddRef(m_pShaderCom);
+
+	for (auto child : m_vecChildren)
+		child->Update_Shader(pShader);
 }
 
 void CUIObject::Free()
 {
+	
 	for (auto& pChildren : m_vecChildren)
 		Safe_Release(pChildren);
 	m_vecChildren.clear();
 
 	__super::Free();
+
+	Safe_Release(m_pShaderCom);
 }
