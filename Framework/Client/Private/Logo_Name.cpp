@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Logo_Name.h"
-#include "GameInstance.h"
 
 CLogo_Name::CLogo_Name(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
@@ -17,16 +16,19 @@ HRESULT CLogo_Name::Initialize_Prototype()
 
 HRESULT CLogo_Name::Initialize(void* pArg)
 {
-    m_vLocalPos.x = g_iWinSizeX >> 1;
-    m_vLocalPos.y = 300.f;
-    m_vLocalSize.x = 512.f;
-    m_vLocalSize.y = 512.f;
+    UIOBJECT_DESC* Desc = static_cast<UIOBJECT_DESC*>(pArg);
 
-    if (FAILED(__super::Initialize()))
+    m_vLocalPos.x = 0.f;
+    m_vLocalPos.y = Desc->OffsetY;
+   
+    m_vLocalSize = Desc->vSize;
+
+    if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
     if (FAILED(Ready_Components()))
         return E_FAIL;
+    
 
     return S_OK;
 }
@@ -47,7 +49,10 @@ void CLogo_Name::Late_Update(_float fTimeDelta)
 
 HRESULT CLogo_Name::Render()
 {
-    __super::Bind_Shader_Resourec(m_pShaderCom, m_pTextureCom);
+    if (FAILED(m_pTextureCom->Bind_Shader_Resource(m_pShaderCom, "g_Texture", 0)))
+        return E_FAIL;
+    
+    Bind_ShaderTransform_Resourc();
 
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();
@@ -57,16 +62,8 @@ HRESULT CLogo_Name::Render()
 
 HRESULT CLogo_Name::Ready_Components()
 {
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
-        TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
-        return E_FAIL;
-
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
         TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
-        return E_FAIL;
-
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Texture_Logo_Name"),
-        TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
         return E_FAIL;
 
     return S_OK;
@@ -103,6 +100,4 @@ void CLogo_Name::Free()
     __super::Free();
 
     Safe_Release(m_pVIBufferCom);
-    Safe_Release(m_pShaderCom);
-    Safe_Release(m_pTextureCom);
 }

@@ -13,7 +13,11 @@ class CUIObject abstract : public CGameObject
 public:
 	typedef struct tagUIObjectDesc : public CGameObject::GAMEOBJECT_DESC
 	{
-		_float fX{}, fY{}, fSizeX{}, fSizeY{};
+		_float2 vPos{}, vSize{};
+		_uint  iIndex{}, iMaxIndex{};
+		_float OffsetX{}, OffsetY{};
+		_float2 vMinUV{}, vMaxUV{};
+		
 	}UIOBJECT_DESC;
 
 protected:
@@ -28,7 +32,7 @@ public:
 	virtual void			Update(_float fTimeDelta);
 	virtual void			Late_Update(_float fTimeDelta);
 	virtual HRESULT			Render();
-
+	
 protected:
 	vector<CUIObject*>		m_vecChildren;
 
@@ -44,13 +48,18 @@ protected:
 
 	_float					m_iWinSizeX{}, m_iWinSizeY{};
 
+	CShader*				m_pShaderCom = { nullptr };
+	CTexture*				m_pTextureCom = { nullptr };
+
+	_float2					m_vMinUV = {}, m_vMaxUV = {};
 protected:
-	HRESULT					Bind_Shader_Resourec(CShader* pShader);
-	HRESULT					Bind_Shader_Resourec(CShader* pShader, CTexture* pTexture);
+	HRESULT					Bind_ShaderTransform_Resourc(_uint iPassIndex = 0);
 
 	void					Update_Position(CUIObject* pParent = nullptr);
-	void					Add_Child(CUIObject* pParent,CUIObject* pChild);
-
+	void					Add_Child(CUIObject* pParent,CUIObject* pChild, CShader* pShader, CTexture* pTexture);
+	void					Update_Shader(CShader* pShader);
+	void					Update_Texture(CTexture* pTexture);
+	void					Correct_Position(_float2 pPos);
 public:
 	virtual CGameObject*	Clone(void* pArg) = 0;
 	virtual void			Free() override;

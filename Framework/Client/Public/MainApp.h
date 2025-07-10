@@ -23,12 +23,11 @@ private:
 	CGameInstance*					m_pGameInstance = { nullptr };
 	ID3D11Device*					m_pDevice = { nullptr };
 	ID3D11DeviceContext*			m_pContext = { nullptr };
-
+	
 private:
 	HRESULT							Ready_Prototype_ForStatic();
 	HRESULT							Start_Level(LEVEL eStartLevelID);
 
-	void							Ready_Key_Setting();
 public:
 	static CMainApp*				Create();
 	virtual void					Free() override;

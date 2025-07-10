@@ -6,15 +6,15 @@
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
 
+//Input 디바이스 헤더
+#define DIRECTINPUT_VERSION 0x0800
+#include <dinput.h>
+
 #include "Fx11/d3dx11effect.h"
 
 //텍스처 로드 헤더
 #include "DirectXTK/DDSTextureLoader.h"
 #include "DirectXTK/WICTextureLoader.h"
-
-//폰트 로드 헤더
-#include "DirectXTK/SpriteBatch.h"	
-#include "DirectXTK/SpriteFont.h"
 
 using namespace DirectX;
 
@@ -26,6 +26,7 @@ using namespace DirectX;
 #include <string>
 #include <unordered_map>
 #include <ctime>
+#include <typeindex>
 using namespace std;
 
 #include "Engine_Enum.h"
