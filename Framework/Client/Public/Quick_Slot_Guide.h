@@ -24,7 +24,8 @@ public:
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	_float4						m_vBackGroundColor = {};
-	_float						m_iIndex = {};
+	_int						m_iIndex = {};
+
 private:
 	HRESULT						Ready_Components();
 

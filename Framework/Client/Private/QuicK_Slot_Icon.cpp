@@ -55,10 +55,25 @@ HRESULT CQuick_Slot_Icon::Initialize(void* pArg)
 
 void CQuick_Slot_Icon::Priority_Update(_float fTimeDelta)
 {
+    if (m_pGameInstance->IsKeyDown(DIK_O))
+        m_iITemType = 0;
+
+    if (m_pGameInstance->IsKeyDown(DIK_P))
+        m_iITemType = 1;
 }
 
 void CQuick_Slot_Icon::Update(_float fTimeDelta)
 {
+    switch (m_iITemType)
+    {
+    case 0:
+        m_vSize.x = m_vLocalSize.x;
+        break;
+    case 1:
+        m_vSize.x = m_vLocalSize.x * 2.f;
+        break;
+
+    }
 }
 
 void CQuick_Slot_Icon::Late_Update(_float fTimeDelta)
