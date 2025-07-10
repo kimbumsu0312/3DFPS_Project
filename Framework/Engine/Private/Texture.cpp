@@ -60,6 +60,7 @@ HRESULT CTexture::Bind_Shader_Resource(CShader* pShader, const _char* pConstantN
 		return E_FAIL;
 
 	return pShader->Bind_SRV(pConstantName, m_SRVs[iTextureIndex]);
+
 }
 
 CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pTextureFilePath, _uint iNumTextures)

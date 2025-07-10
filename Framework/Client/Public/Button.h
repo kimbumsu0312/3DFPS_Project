@@ -19,9 +19,9 @@ public:
 
 protected:
 	_bool					IsPick();
-	_bool					IsClick_Up(_int iKey);
-	_bool					IsClick_Down(_int iKey);
-	_bool					IsClick_Holding(_int iKey);
+	_bool					IsClick_Up(MOUSEKEYSTATE iKey);
+	_bool					IsClick_Down(MOUSEKEYSTATE iKey);
+	_bool					IsClick_Holding(MOUSEKEYSTATE iKey);
 
 public:
 	virtual CGameObject*	Clone(void* pArg) = 0;

@@ -31,9 +31,6 @@
     <Filter Include="98.Default">
       <UniqueIdentifier>{3442f46b-afa7-4feb-bb85-adba8d7a14bd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\BackGround\TestUI">
-      <UniqueIdentifier>{e67e4871-66e5-4558-a6e1-6f978a87950e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.ShaderFiles">
       <UniqueIdentifier>{5f8b2b2d-5c69-4d82-bdd0-fbf13e39a08f}</UniqueIdentifier>
     </Filter>
@@ -51,6 +48,57 @@
     </Filter>
     <Filter Include="96.SuperClass\UIObject\Button">
       <UniqueIdentifier>{e2b2e3b2-6bae-449c-8044-cc419dc87070}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Logo_UI\Button">
+      <UniqueIdentifier>{bb802f42-3c6c-46a2-83e1-83aa87c9bf8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Terrain">
+      <UniqueIdentifier>{ec2057f9-56db-4c83-bc7f-54ea0256dea3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Loding_UI">
+      <UniqueIdentifier>{ed1bf769-835e-4cba-81a3-72a9407eac2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Inventory">
+      <UniqueIdentifier>{6946eef0-18f6-4343-b205-a505735ace78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Inventory\ETC">
+      <UniqueIdentifier>{78f55f92-14de-4fc3-a107-38dba95891c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Camera">
+      <UniqueIdentifier>{938702cd-cae2-4f3b-be44-2c75f8b1c3f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Camera\Free">
+      <UniqueIdentifier>{f7c04a64-6b13-4726-8fed-a33406fd7467}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud">
+      <UniqueIdentifier>{d964eea6-465a-4bac-b44e-3e1cef206137}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim">
+      <UniqueIdentifier>{bb3df6ea-ee2a-44f3-8b00-45fc5c6e0a1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Logo_UI\Title">
+      <UniqueIdentifier>{f6416ab8-62b1-4904-aa63-701c8582715d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim\Pistol">
+      <UniqueIdentifier>{b87a56a5-464c-42cd-9640-844b05da54be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim\AImLine">
+      <UniqueIdentifier>{5466a443-3cc4-467e-b0ab-e9e8776518be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim\ShotGun">
+      <UniqueIdentifier>{69d78a2f-0200-4677-8eed-38aa3573f51b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim\ShotGun\AimLine">
+      <UniqueIdentifier>{51eac506-b818-4bd4-8565-88f25f7416f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim\Sniper">
+      <UniqueIdentifier>{8406d20c-54c1-46db-b478-41dc21008a47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Quick_Slot">
+      <UniqueIdentifier>{c3e07d4f-869c-499f-9c71-f50acdb641da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Quick_Slot\ETC">
+      <UniqueIdentifier>{ec519a67-b9ca-45e9-b29b-835404fe4a8d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -93,14 +141,65 @@
     <ClInclude Include="..\public\UIObject.h">
       <Filter>96.SuperClass\UIObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\TestUI.h">
-      <Filter>02.GameObject\BackGround\TestUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Logo_Name.h">
-      <Filter>02.GameObject\UIObject\Logo_UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Button.h">
       <Filter>96.SuperClass\UIObject\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo_Button.h">
+      <Filter>02.GameObject\UIObject\Logo_UI\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo_Button_Line.h">
+      <Filter>02.GameObject\UIObject\Logo_UI\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo_UI.h">
+      <Filter>02.GameObject\UIObject\Logo_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo_Name.h">
+      <Filter>02.GameObject\UIObject\Logo_UI\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Client_Event.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Terrain.h">
+      <Filter>02.GameObject\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Fade_UI.h">
+      <Filter>02.GameObject\UIObject\Loding_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Inventory.h">
+      <Filter>02.GameObject\UIObject\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Inventory_Base.h">
+      <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Camera_Free.h">
+      <Filter>02.GameObject\Camera\Free</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Aim_Line.h">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\AImLine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Aim_Pistol.h">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\Pistol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Aim_Shotgun.h">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\ShotGun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Aim_Shotgun_Line.h">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\ShotGun\AimLine</Filter>
+    </ClInclude>
+    <ClInclude Include="Client_Item.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Aim_Sniper.h">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\Sniper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quick_Slot.h">
+      <Filter>02.GameObject\UIObject\Hud\Quick_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quick_Slot_Guide.h">
+      <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\QuicK_Slot_Icon.h">
+      <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -144,18 +243,69 @@
     <ClCompile Include="..\private\UIObject.cpp">
       <Filter>96.SuperClass\UIObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\TestUI.cpp">
-      <Filter>02.GameObject\BackGround\TestUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Logo_Name.cpp">
-      <Filter>02.GameObject\UIObject\Logo_UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Button.cpp">
       <Filter>96.SuperClass\UIObject\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo_Button.cpp">
+      <Filter>02.GameObject\UIObject\Logo_UI\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo_Button_Line.cpp">
+      <Filter>02.GameObject\UIObject\Logo_UI\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo_UI.cpp">
+      <Filter>02.GameObject\UIObject\Logo_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo_Name.cpp">
+      <Filter>02.GameObject\UIObject\Logo_UI\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Terrain.cpp">
+      <Filter>02.GameObject\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Fade_UI.cpp">
+      <Filter>02.GameObject\UIObject\Loding_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Inventory.cpp">
+      <Filter>02.GameObject\UIObject\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Inventory_Base.cpp">
+      <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera_Free.cpp">
+      <Filter>02.GameObject\Camera\Free</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Aim_Line.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\AImLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Aim_Pistol.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\Pistol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Aim_Shotgun.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\ShotGun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Aim_Shotgun_Line.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\ShotGun\AimLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Aim_Sniper.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\Sniper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quick_Slot.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Quick_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quick_Slot_Guide.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\QuicK_Slot_Icon.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_UI.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

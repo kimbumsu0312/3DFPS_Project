@@ -1,5 +1,6 @@
 //사용할 데이터를 전역 변수로 선언
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float4 g_Vector;
 Texture2D g_Texture;
 sampler DefaultSampler = sampler_state
 {
@@ -75,14 +76,26 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
-// 어떤 셰이더를 사용할 건지 정의한다.
-// 정점의 정보에 따라 패스를 추가할 수 있다.
+PS_OUT PS_MAIN_COLOR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    Out.vColor = 0.5f;
+    
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass DefaultPass
     {
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();
-
     }
+
+    pass ColorPass
+    {
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_COLOR();
+    }
+
 }

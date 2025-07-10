@@ -5,7 +5,8 @@
 #include "Timer.h"
 #include "Timer_Manager.h"
 #include "Graphic_Device.h"
+#include "Input_Device.h"
+#include "GameInstance.h"
 #include "Engine_Defines.h"
-#include "Input_Manager.h"
 
 #endif //PCH_H

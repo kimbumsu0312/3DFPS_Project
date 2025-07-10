@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "BackGround.h"
 #include "GameInstance.h"
-#include "TestUI.h"
 
 CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
@@ -13,10 +12,6 @@ CBackGround::CBackGround(const CBackGround& Prototype) : CUIObject( Prototype )
 
 HRESULT CBackGround::Initialize_Prototype()
 {
-    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_TestUI"),
-        CTestUI::Create(m_pDevice, m_pContext))))
-        return E_FAIL;
-
     return S_OK;
 }
 
@@ -31,9 +26,6 @@ HRESULT CBackGround::Initialize(void* pArg)
         return E_FAIL;
 
     if (FAILED(Ready_Components()))
-        return E_FAIL;
-
-    if (FAILED(Ready_Children()))
         return E_FAIL;
 
     return S_OK;
@@ -52,14 +44,20 @@ void CBackGround::Late_Update(_float fTimeDelta)
 {
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
         return;
-    //__super::Update_Position();
-
-    //__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CBackGround::Render()
 {
-    __super::Bind_Shader_Resourec(m_pShaderCom, m_pTextureCom);
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+    if (FAILED(m_pTextureCom->Bind_Shader_Resource(m_pShaderCom, "g_Texture", 0)))
+        return E_FAIL;
+
+    __super::Bind_ShaderTransform_Resourc(3);
 
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();
@@ -69,7 +67,7 @@ HRESULT CBackGround::Render()
 
 HRESULT CBackGround::Ready_Components()
 {
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex_UI"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
         return E_FAIL;
 
@@ -80,18 +78,6 @@ HRESULT CBackGround::Ready_Components()
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Texture_BackGround"),
         TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
         return E_FAIL;
-
-    return S_OK;
-}
-
-HRESULT CBackGround::Ready_Children()
-{
-    CUIObject* pGameObject = nullptr;
-
-    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_TestUI")));
-    if (nullptr == pGameObject)
-        return E_FAIL;
-    Add_Child(this, pGameObject);
 
     return S_OK;
 }
@@ -127,6 +113,4 @@ void CBackGround::Free()
     __super::Free();
 
     Safe_Release(m_pVIBufferCom);
-    Safe_Release(m_pShaderCom);
-    Safe_Release(m_pTextureCom);
 }

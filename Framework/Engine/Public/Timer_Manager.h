@@ -1,6 +1,4 @@
 #pragma once
-
-
 #include "Timer.h"
 
 NS_BEGIN(Engine)
