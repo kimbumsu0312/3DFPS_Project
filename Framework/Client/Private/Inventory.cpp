@@ -94,6 +94,10 @@ HRESULT CInventory::Ready_Components()
         TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
         return E_FAIL;
 
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Inventory"),
+        TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -113,7 +117,7 @@ HRESULT CInventory::Ready_Children()
     pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Inventory_Base")));
     if (nullptr == pGameObject)
         return E_FAIL;
-    Add_Child(this, pGameObject, m_pShaderCom);
+    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
 
     return S_OK;
 }

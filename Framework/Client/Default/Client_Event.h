@@ -1,5 +1,7 @@
 #pragma once
+#include "pch.h"
 #include "Engine_Defines.h"
+#include "Client_Item.h"
 
 namespace Client
 {
@@ -23,4 +25,25 @@ namespace Client
 	typedef struct Inventory_Open {
 		_bool bIsOpen;
 	}Event_Inventory_Open;
+
+	typedef struct Hud_Gun_Zoom_Aim {
+		_bool bIsAIm;
+	}Event_HUD_GUN_AIM;
+
+	typedef struct Hud_Gun_Zoom {
+		_bool bZoom;
+	}Event_HUD_GUN;
+
+	typedef struct Hud_Weapon_Selete {
+		WEAPON_TYPE eType;
+	}Event_Weapon_Selete;
+
+	typedef struct Camera_Zoom {
+		CAMERA_STATE eState;
+		_float fZoomSpeed;
+		_float fZoomFov;
+	}Event_Camera_Zoom;
+
+	typedef struct Hud_Weapon_Shoting {
+	}Event_Weapon_Shoting;
 }

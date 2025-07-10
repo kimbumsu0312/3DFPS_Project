@@ -6,12 +6,12 @@ class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
-class CAim_Pistol final : public CUIObject
+class CAim_Shotgun final : public CUIObject
 {
 private:
-	CAim_Pistol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CAim_Pistol(const CAim_Pistol& Prototype);
-	virtual ~CAim_Pistol() = default;
+	CAim_Shotgun(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CAim_Shotgun(const CAim_Shotgun& Prototype);
+	virtual ~CAim_Shotgun() = default;
 
 public:
 	virtual HRESULT				Initialize_Prototype();
@@ -33,16 +33,17 @@ private:
 
 	_float						m_fCool = {};
 	_bool						m_bIsZoomIn = { false };
+
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children_Prototype();
 	HRESULT						Ready_Children();
 
-	void						Shoting();
 	void						KeyInput();
+	void						Shoting();
 public:
-	static CAim_Pistol*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CGameObject*		Clone(void* pArg) override;
+	static CAim_Shotgun* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject* Clone(void* pArg) override;
 	virtual void				Free() override;
 };
 NS_END

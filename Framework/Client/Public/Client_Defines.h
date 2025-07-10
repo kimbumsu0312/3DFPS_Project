@@ -1,7 +1,7 @@
 #pragma once
 #include "framework.h"
 #include <process.h>
-#include <Client_Event.h>
+#include "Client_Item.h"
 
 namespace Client
 {
@@ -9,6 +9,7 @@ namespace Client
 	const unsigned int			g_iWinSizeY = 720;
 
 	enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, END };
+	enum class CAMERA_STATE { ZOOM_IN, ZOOM_OUT, ZOOM_RESET, END };
 }
 
 extern HWND g_hWnd;

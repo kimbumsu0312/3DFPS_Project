@@ -116,11 +116,12 @@ void CUIObject::Update_Position(CUIObject* pParent)
 		child->Update_Position(this);
 }
 
-void CUIObject::Add_Child(CUIObject* pParent, CUIObject* pChild, CShader* pShader)
+void CUIObject::Add_Child(CUIObject* pParent, CUIObject* pChild, CShader* pShader, CTexture* pTexture)
 {
 	m_vecChildren.push_back(pChild);
 	pChild->Update_Position(pParent);
 	pChild->Update_Shader(pShader);
+	pChild->Update_Texture(pTexture);
 }
 
 void CUIObject::Update_Shader(CShader* pShader)
@@ -141,6 +142,11 @@ void CUIObject::Update_Texture(CTexture* pTexture)
 		child->Update_Texture(pTexture);
 }
 
+void CUIObject::Correct_Position(_float2 pPos)
+{
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(pPos.x - m_iWinSizeX * 0.5f, -pPos.y + m_iWinSizeY * 0.5f, 0.f, 1.f));
+}
+
 void CUIObject::Free()
 {
 	
@@ -150,5 +156,6 @@ void CUIObject::Free()
 
 	__super::Free();
 
+	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pShaderCom);
 }

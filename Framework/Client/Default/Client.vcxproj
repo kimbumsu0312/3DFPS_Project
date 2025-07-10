@@ -156,7 +156,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Aim_Pistol.h" />
-    <ClInclude Include="..\public\Aim_Pistol_Line.h" />
+    <ClInclude Include="..\public\Aim_Line.h" />
+    <ClInclude Include="..\public\Aim_Shotgun.h" />
+    <ClInclude Include="..\public\Aim_Shotgun_Line.h" />
+    <ClInclude Include="..\public\Aim_Sniper.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\Button.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
@@ -177,6 +180,7 @@
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Client_Event.h" />
+    <ClInclude Include="Client_Item.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -184,7 +188,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Aim_Pistol.cpp" />
-    <ClCompile Include="..\private\Aim_Pistol_Line.cpp" />
+    <ClCompile Include="..\private\Aim_Line.cpp" />
+    <ClCompile Include="..\private\Aim_Shotgun.cpp" />
+    <ClCompile Include="..\private\Aim_Shotgun_Line.cpp" />
+    <ClCompile Include="..\private\Aim_Sniper.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\Button.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />

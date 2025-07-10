@@ -6,12 +6,18 @@ class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
-class CAim_Pistol final : public CUIObject
+class CAim_Line final : public CUIObject
 {
+public:
+	typedef struct CAimLineDesc : public CUIObject::UIOBJECT_DESC
+	{
+		WEAPON_TYPE eType;
+	}AIM_LINE_DESC;
+
 private:
-	CAim_Pistol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CAim_Pistol(const CAim_Pistol& Prototype);
-	virtual ~CAim_Pistol() = default;
+	CAim_Line(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CAim_Line(const CAim_Line& Prototype);
+	virtual ~CAim_Line() = default;
 
 public:
 	virtual HRESULT				Initialize_Prototype();
@@ -23,25 +29,18 @@ public:
 
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
-
-	WEAPON_TYPE					m_eWeapon_Type = {};
-	_uint						m_iNumSeleteButton = {};
-	_uint						m_iNumMaxButton = {};
-
-	_bool						m_bIsSelete = { false };
+	_float						m_fRotation = {};
 	_bool						m_bZoom = { false };
+	_uint						m_iIndex = {};
+	_float2						m_vMovePos = {};
+	_float2						m_vZoomUV = {};
 
-	_float						m_fCool = {};
-	_bool						m_bIsZoomIn = { false };
 private:
 	HRESULT						Ready_Components();
-	HRESULT						Ready_Children_Prototype();
-	HRESULT						Ready_Children();
 
-	void						Shoting();
-	void						KeyInput();
+	void						Aim_Zoom();
 public:
-	static CAim_Pistol*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CAim_Line*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;
 	virtual void				Free() override;
 };
