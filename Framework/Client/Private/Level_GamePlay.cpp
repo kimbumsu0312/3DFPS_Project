@@ -63,11 +63,16 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	{
 		m_pGameInstance->Publish(Hud_Weapon_Shoting{});
 	}
+
+	TCHAR szChar[MAX_PATH];
+	swprintf_s(szChar, MAX_PATH, L"DeltaTime: %.4f", fTimeDelta);
+	SetWindowText(g_hWnd, szChar);
+
 }
 
 HRESULT CLevel_GamePlay::Render()
 {
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
+	//SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
 
 	return S_OK;
 }
@@ -133,6 +138,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Quick_Slot"))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Aim_Pistol"))))
 		return E_FAIL;

@@ -1,4 +1,5 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float2 g_Alpha;
 float2 g_MinUV, g_MaxUV;
 float4 g_Vector;
 Texture2D g_Texture;
@@ -87,6 +88,24 @@ PS_OUT PS_Tex(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_Tex_UV_ApllyAlpha(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+       
+    In.vTexcoord = g_MinUV + (g_MaxUV - g_MinUV) * In.vTexcoord;
+     
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vColor.a = Out.vColor.a * g_Alpha.r;
+    return Out;
+}
+
+PS_OUT PS_Color_ApllyAlpha(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    Out.vColor = g_Vector;
+    Out.vColor.a = Out.vColor.a * g_Alpha.r;
+    return Out;
+}
 technique11 DefaultTechnique
 {
     pass UI_TexUV_Pass
@@ -113,4 +132,15 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_Tex();
     }
 
+    pass UI_TexUV_AlphaAplly_Pass
+    {
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_Tex_UV_ApllyAlpha();
+    }
+
+    pass UI_Color_AlphaAplly_Pass
+    {
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_Color_ApllyAlpha();
+    }
 }

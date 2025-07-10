@@ -171,6 +171,9 @@
     <ClInclude Include="..\public\Logo_Button_Line.h" />
     <ClInclude Include="..\public\Logo_Name.h" />
     <ClInclude Include="..\public\Logo_UI.h" />
+    <ClInclude Include="..\public\Quick_Slot.h" />
+    <ClInclude Include="..\public\Quick_Slot_Guide.h" />
+    <ClInclude Include="..\public\QuicK_Slot_Icon.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\public\UIObject.h" />
     <ClInclude Include="..\public\Level_GamePlay.h" />
@@ -202,6 +205,9 @@
     <ClCompile Include="..\private\Logo_Button_Line.cpp" />
     <ClCompile Include="..\private\Logo_Name.cpp" />
     <ClCompile Include="..\private\Logo_UI.cpp" />
+    <ClCompile Include="..\private\Quick_Slot.cpp" />
+    <ClCompile Include="..\private\Quick_Slot_Guide.cpp" />
+    <ClCompile Include="..\private\QuicK_Slot_Icon.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\private\UIObject.cpp" />
     <ClCompile Include="..\private\Level_GamePlay.cpp" />
