@@ -22,10 +22,10 @@ HRESULT CLogo_Button::Initialize(void* pArg)
 {
 	if (pArg == nullptr)
 		return E_FAIL;
-	m_vBackGroundColor = { 0.3f, 0.3f, 0.3f, 0.7f };
 
 	UIOBJECT_DESC* Desc = static_cast<UIOBJECT_DESC*>(pArg);
 
+	m_vBackGroundColor = { 0.3f, 0.3f, 0.3f, 0.7f };
 	m_vLocalPos.x = Desc->vPos.x;
 	m_vLocalSize = Desc->vSize;
 	m_iIndex = Desc->iIndex;

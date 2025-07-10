@@ -94,6 +94,12 @@
     <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim\Sniper">
       <UniqueIdentifier>{8406d20c-54c1-46db-b478-41dc21008a47}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Quick_Slot">
+      <UniqueIdentifier>{c3e07d4f-869c-499f-9c71-f50acdb641da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Quick_Slot\ETC">
+      <UniqueIdentifier>{ec519a67-b9ca-45e9-b29b-835404fe4a8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -186,6 +192,15 @@
     <ClInclude Include="..\public\Aim_Sniper.h">
       <Filter>02.GameObject\UIObject\Hud\Gun_Aim\Sniper</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Quick_Slot.h">
+      <Filter>02.GameObject\UIObject\Hud\Quick_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quick_Slot_Guide.h">
+      <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\QuicK_Slot_Icon.h">
+      <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -272,6 +287,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Aim_Sniper.cpp">
       <Filter>02.GameObject\UIObject\Hud\Gun_Aim\Sniper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quick_Slot.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Quick_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quick_Slot_Guide.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\QuicK_Slot_Icon.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
