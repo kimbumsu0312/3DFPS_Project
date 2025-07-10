@@ -82,14 +82,17 @@
     <Filter Include="00.System\01.Device\Input">
       <UniqueIdentifier>{8da13f5e-eea4-4006-b418-ea0d1520bb9c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00.System\01.Device\Input\Manager">
-      <UniqueIdentifier>{cad334d5-cd41-46b8-a396-69afe9bf2720}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00.System\02.Event">
       <UniqueIdentifier>{70be65e1-ae6e-437f-9a2a-0746c87a29f0}</UniqueIdentifier>
     </Filter>
     <Filter Include="00.System\02.Event\Manager">
       <UniqueIdentifier>{2455d380-5a30-4fb0-b783-04f652e9ce76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.Lights">
+      <UniqueIdentifier>{d63e87f4-86f2-4ac1-ab7e-7d3f9842e822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\96.Lights\Manager">
+      <UniqueIdentifier>{48538bc1-359e-4ddd-ac92-a700818dbcdc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -183,8 +186,11 @@
     <ClInclude Include="..\Public\Input_Device.h">
       <Filter>00.System\01.Device\Input</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Input_Manager.h">
-      <Filter>00.System\01.Device\Input\Manager</Filter>
+    <ClInclude Include="..\public\Light_Manager.h">
+      <Filter>01.Utility\96.Lights\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Light.h">
+      <Filter>01.Utility\96.Lights</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -260,8 +266,11 @@
     <ClCompile Include="..\Private\Input_Device.cpp">
       <Filter>00.System\01.Device\Input</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Input_Manager.cpp">
-      <Filter>00.System\01.Device\Input\Manager</Filter>
+    <ClCompile Include="..\private\Light_Manager.cpp">
+      <Filter>01.Utility\96.Lights\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Light.cpp">
+      <Filter>01.Utility\96.Lights</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

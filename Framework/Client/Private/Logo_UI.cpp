@@ -34,7 +34,8 @@ HRESULT CLogo_UI::Initialize(void* pArg)
 
     if (FAILED(Ready_Children()))
         return E_FAIL;
-
+    
+    __super::Update_Texture(m_pTextureCom);
     m_pGameInstance->Subscribe<Event_Selete_LogoButton_Index>([&](const Event_Selete_LogoButton_Index& e) { m_iNumSeleteButton = e.iIndex; });
 
 
@@ -65,9 +66,6 @@ HRESULT CLogo_UI::Render()
         return E_FAIL;
 
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-        return E_FAIL;
-
-    if (FAILED(m_pTextureCom->Bind_Shader_Resource(m_pShaderCom, "g_Texture", 0)))
         return E_FAIL;
 
     return S_OK;
@@ -144,7 +142,7 @@ HRESULT CLogo_UI::Ready_Children()
 
 void CLogo_UI::Button_Selete()
 {
-    if (m_pGameInstance->Get_DIKeyState(DIK_S))
+    if (m_pGameInstance->IsKeyDown(DIK_S))
     {
         m_pGameInstance->Publish(Event_NonSelete_LogoButton{});
 
@@ -159,7 +157,7 @@ void CLogo_UI::Button_Selete()
 
     }
     
-    if (m_pGameInstance->Get_DIKeyState(DIK_W))
+    if (m_pGameInstance->IsKeyDown(DIK_W))
     {
         m_pGameInstance->Publish(Event_NonSelete_LogoButton{});
 

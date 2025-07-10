@@ -54,26 +54,26 @@ _bool CButton::IsPick()
 	return PtInRect(&rcUI, ptMouse);
 }
 
-_bool CButton::IsClick_Up(_int iKey)
+_bool CButton::IsClick_Up(MOUSEKEYSTATE iKey)
 {
 	if (IsPick())
-		return m_pGameInstance->IsKeyUp(iKey);
+		return m_pGameInstance->IsMouseDown(iKey);
 	else
 		return false;
 }
 
-_bool CButton::IsClick_Down(_int iKey)
+_bool CButton::IsClick_Down(MOUSEKEYSTATE iKey)
 {
 	if (IsPick())
-		return m_pGameInstance->IsKeyDown(iKey);
+		return m_pGameInstance->IsMouseDown(iKey);
 	else
 		return false;
 }
 
-_bool CButton::IsClick_Holding(_int iKey)
+_bool CButton::IsClick_Holding(MOUSEKEYSTATE iKey)
 {
 	if (IsPick())
-		return m_pGameInstance->IsKeyHold(iKey);
+		return m_pGameInstance->IsMouseDown(iKey);
 	else
 		return false;
 }

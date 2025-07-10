@@ -3,7 +3,6 @@
 
 NS_BEGIN(Engine)
 class CVIBuffer_Rect;
-class CTexture;
 NS_END
 
 NS_BEGIN(Client)
@@ -24,7 +23,6 @@ public:
 
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
-	CTexture*					m_pTextureCom = { nullptr };
 
 	_uint						m_iNumSeleteButton = {};
 	_uint						m_iNumMaxButton = {};

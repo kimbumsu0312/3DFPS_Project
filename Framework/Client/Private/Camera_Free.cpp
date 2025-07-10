@@ -28,30 +28,33 @@ HRESULT CCamera_Free::Initialize(void* pArg)
 
 void CCamera_Free::Priority_Update(_float fTimeDelta)
 {
-    if (GetKeyState('W') & 0x8000)
+    if (m_pGameInstance->IsKeyHold(DIK_W))
     {
         m_pTransformCom->Go_Straight(fTimeDelta);
     }
-    if (GetKeyState('S') & 0x8000)
+ 
+    if (m_pGameInstance->IsKeyHold(DIK_S))
     {
         m_pTransformCom->Go_Backward(fTimeDelta);
     }
-    if (GetKeyState('A') & 0x8000)
+    if (m_pGameInstance->IsKeyHold(DIK_A))
     {
         m_pTransformCom->Go_Left(fTimeDelta);
     }
-    if (GetKeyState('D') & 0x8000)
+    if (m_pGameInstance->IsKeyHold(DIK_D))
     {
         m_pTransformCom->Go_Right(fTimeDelta);
     }
 
-    _long		lMouse = {};
+    
+    _int		iMouse = {};
 
-    if (lMouse = m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::X))
-        m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * lMouse * m_fMouseSensor);
+    //이전 마우스 기준으로 몇 픽셀만큼 이동했는지 구분한다.
+    if (iMouse = m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::X))
+        m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * iMouse * m_fMouseSensor);
 
-    if (lMouse = m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::Y))
-        m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), fTimeDelta * lMouse * m_fMouseSensor);
+    if (iMouse = m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::Y))
+        m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), fTimeDelta * iMouse * m_fMouseSensor);
 
     __super::Update_PipeLines();
 }

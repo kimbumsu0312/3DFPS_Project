@@ -31,6 +31,12 @@ public:
 	_byte	Get_DIKeyState(_ubyte byKeyID);
 	_byte	Get_DIMouseState(MOUSEKEYSTATE eMouse);
 	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseState);
+	_bool	IsKeyDown(_ubyte byKeyID);
+	_bool	IsKeyUp(_ubyte byKeyID);
+	_bool	IsKeyHold(_ubyte byKeyID);
+	_bool	IsMouseDown(MOUSEKEYSTATE eMouse);
+	_bool	IsMouseUp(MOUSEKEYSTATE eMouse);
+	_bool	IsMouseHold(MOUSEKEYSTATE eMouse);
 #pragma endregion 
 
 #pragma region TIMER_MANAGER
@@ -65,15 +71,6 @@ public:
 
 #pragma endregion
 
-#pragma region INPUT_MANAGER
-public:
-	void						AddTrackIngKey(int iKey);
-	_bool						IsKeyDown(int iKey) const;
-	_bool						IsKeyUp(int iKey) const;
-	_bool						IsKeyHold(int iKey) const;
-	_float						GetKeyHoldTime(int iKey) const;
-#pragma endregion
-
 #pragma region EVENT_MANAGER
 private:
 	class CEvent_Manager* m_pEvent_Manager = { nullptr };
@@ -105,6 +102,10 @@ public:
 
 #pragma endregion
 
+#pragma region LIGHT_MANAGER
+	const LIGHT_DESC*	Get_LightDesc(_uint iIndex);
+	HRESULT				Add_Light(LIGHT_DESC& LightDesc);
+#pragma endregion
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CInput_Device*		m_pInput_Device = { nullptr };
@@ -113,8 +114,8 @@ private:
 	class CObject_Manager*		m_pObject_Manager = { nullptr };
 	class CPrototype_Manager*	m_pPrototype_Manager = { nullptr };
 	class CRenderer*			m_pRenderer = { nullptr };
-	class CInput_Manager*		m_pInput_Manager = { nullptr };
 	class CPipeLine*			m_pPipeLine = { nullptr };
+	class CLight_Manager*		m_pLight_Manager = { nullptr };
 
 public:
 	void						Release_Engine();

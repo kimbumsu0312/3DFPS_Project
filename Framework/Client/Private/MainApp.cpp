@@ -24,8 +24,6 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(m_pGameInstance->Initialize_Engine(EngineDesc, &m_pDevice, &m_pContext)))
 		return E_FAIL;
 
-	Ready_Key_Setting();
-
 	if (FAILED(Ready_Prototype_ForStatic()))
 		return E_FAIL;
 
@@ -81,33 +79,6 @@ HRESULT CMainApp::Start_Level(LEVEL eStartLevelID)
 		return E_FAIL;
 
 	return S_OK;
-}
-
-void CMainApp::Ready_Key_Setting()
-{
-	m_pGameInstance->AddTrackIngKey(VK_UP);
-	m_pGameInstance->AddTrackIngKey(VK_DOWN);
-	m_pGameInstance->AddTrackIngKey(VK_LEFT);
-	m_pGameInstance->AddTrackIngKey(VK_RIGHT);
-	m_pGameInstance->AddTrackIngKey(VK_SPACE);
-	m_pGameInstance->AddTrackIngKey(VK_TAB);
-	m_pGameInstance->AddTrackIngKey(VK_LBUTTON);
-	m_pGameInstance->AddTrackIngKey(VK_RBUTTON);
-
-	m_pGameInstance->AddTrackIngKey('1');
-	m_pGameInstance->AddTrackIngKey('2');
-	m_pGameInstance->AddTrackIngKey('3');
-	m_pGameInstance->AddTrackIngKey('4');
-
-	m_pGameInstance->AddTrackIngKey('W');
-	m_pGameInstance->AddTrackIngKey('A');
-	m_pGameInstance->AddTrackIngKey('S');
-	m_pGameInstance->AddTrackIngKey('D');
-
-
-	m_pGameInstance->AddTrackIngKey('R');
-	m_pGameInstance->AddTrackIngKey('F');
-
 }
 
 CMainApp* CMainApp::Create()

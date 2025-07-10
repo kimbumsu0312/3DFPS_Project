@@ -132,6 +132,15 @@ void CUIObject::Update_Shader(CShader* pShader)
 		child->Update_Shader(pShader);
 }
 
+void CUIObject::Update_Texture(CTexture* pTexture)
+{
+	m_pTextureCom = pTexture;
+	Safe_AddRef(m_pTextureCom);
+
+	for (auto child : m_vecChildren)
+		child->Update_Texture(pTexture);
+}
+
 void CUIObject::Free()
 {
 	

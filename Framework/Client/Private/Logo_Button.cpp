@@ -74,6 +74,7 @@ void CLogo_Button::Late_Update(_float fTimeDelta)
 
 HRESULT CLogo_Button::Render()
 {
+
 	if (FAILED(m_pShaderCom->Bind_Vector("g_Vector", XMLoadFloat4(&m_vBackGroundColor))))
 		return E_FAIL;
 
@@ -134,7 +135,7 @@ HRESULT CLogo_Button::Ready_Children()
 
 void CLogo_Button::Button_Event()
 {
-	if (IsClick_Down(VK_LBUTTON) || m_pGameInstance->IsKeyDown('F') && m_bIsSelete)
+	if (IsClick_Down(MOUSEKEYSTATE::LB) || m_pGameInstance->IsKeyDown(DIK_F) && m_bIsSelete)
 	{
 		switch (m_iIndex)
 		{
