@@ -7,10 +7,10 @@
 #include "Object_Manager.h"
 #include "Prototype_Manager.h"
 #include "Renderer.h"
-#include "Input_Manager.h"
 #include "Event_Manager.h"
 #include "PipeLine.h"
 #include "Input_Device.h"
+#include "Light_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -49,10 +49,6 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pRenderer)
 		return E_FAIL;
 
-	m_pInput_Manager = CInput_Manager::Create();
-	if (nullptr == m_pInput_Manager)
-		return E_FAIL;
-
 	m_pEvent_Manager = CEvent_Manager::Create();
 	if (nullptr == m_pEvent_Manager)
 		return E_FAIL;
@@ -61,12 +57,15 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pPipeLine)
 		return E_FAIL;
 
+	m_pLight_Manager = CLight_Manager::Create();
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
-	m_pInput_Manager->Update(fTimeDelta);
 	m_pInput_Device->Update();
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
@@ -142,6 +141,36 @@ _long CGameInstance::Get_DIMouseMove(MOUSEMOVESTATE eMouseState)
 	return m_pInput_Device->Get_DIMouseMove(eMouseState);
 }
 
+_bool CGameInstance::IsKeyHold(_ubyte byKeyID)
+{
+	return m_pInput_Device->IsKeyHold(byKeyID);
+}
+
+_bool CGameInstance::IsMouseDown(MOUSEKEYSTATE eMouse)
+{
+	return m_pInput_Device->IsMouseDown(eMouse);
+}
+
+_bool CGameInstance::IsMouseUp(MOUSEKEYSTATE eMouse)
+{
+	return m_pInput_Device->IsMouseUp(eMouse);
+}
+
+_bool CGameInstance::IsMouseHold(MOUSEKEYSTATE eMouse)
+{
+	return m_pInput_Device->IsMouseHold(eMouse);
+}
+
+_bool CGameInstance::IsKeyDown(_ubyte byKeyID)
+{
+	return m_pInput_Device->IsKeyDown(byKeyID);
+}
+
+_bool CGameInstance::IsKeyUp(_ubyte byKeyID)
+{
+	return m_pInput_Device->IsKeyUp(byKeyID);
+}
+
 _float CGameInstance::Get_TimeDelta(const _wstring& strTimerTag)
 {
 	return m_pTimer_Manager->Get_TimeDelta(strTimerTag);
@@ -209,31 +238,6 @@ HRESULT CGameInstance::Switching_RenderState(_wstring szRenderTag, RENDERSTATE e
 	return m_pRenderer->Switching_RenderState(szRenderTag, eRenderStates);
 }
 
-void CGameInstance::AddTrackIngKey(int iKey)
-{
-	m_pInput_Manager->AddTrackIngKey(iKey);
-}
-
-_bool CGameInstance::IsKeyDown(int iKey) const
-{
-	return m_pInput_Manager->IsKeyDown(iKey);
-}
-
-_bool CGameInstance::IsKeyUp(int iKey) const
-{
-	return m_pInput_Manager->IsKeyUp(iKey);
-}
-
-_bool CGameInstance::IsKeyHold(int iKey) const
-{
-	return m_pInput_Manager->IsKeyHold(iKey);
-}
-
-_float CGameInstance::GetKeyHoldTime(int iKey) const
-{
-	return m_pInput_Manager->GetKeyHoldTime(iKey);
-}
-
 _matrix CGameInstance::Get_Transform_Matrix(D3DTS eTransformState) const
 {
 	return m_pPipeLine->Get_Transform_Matrix(eTransformState);
@@ -269,11 +273,21 @@ void CGameInstance::Set_Transform(D3DTS eTransformState, const _float4x4& Matrix
 	m_pPipeLine->Set_Transform(eTransformState, Matrix);
 }
 
+const LIGHT_DESC* CGameInstance::Get_LightDesc(_uint iIndex)
+{
+	return m_pLight_Manager->Get_LightDesc(iIndex);
+}
+
+HRESULT CGameInstance::Add_Light(LIGHT_DESC& LightDesc)
+{
+	return m_pLight_Manager->Add_Light(LightDesc);
+}
+
 void CGameInstance::Release_Engine()
 {
 	Release();
+	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pPipeLine);
-	Safe_Release(m_pInput_Manager);
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pPrototype_Manager);
 	Safe_Release(m_pObject_Manager);

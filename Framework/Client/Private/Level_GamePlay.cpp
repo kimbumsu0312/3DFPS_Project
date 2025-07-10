@@ -35,12 +35,12 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->IsKeyDown(VK_TAB) && !m_bInvenOpen)
+	if (m_pGameInstance->IsKeyDown(DIK_TAB) && !m_bInvenOpen)
 	{
 		m_pGameInstance->Publish(Event_Inventory_Open{ {true} });
 		m_bInvenOpen = true;
 	}
-	else if (m_pGameInstance->IsKeyDown(VK_TAB) && m_bInvenOpen)
+	else if (m_pGameInstance->IsKeyDown(DIK_TAB) && m_bInvenOpen)
 	{
 		m_pGameInstance->Publish(Event_Inventory_Open{ {false} });
 		m_bInvenOpen = false;
@@ -56,6 +56,16 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
+	LIGHT_DESC	LightDesc{};
+
+	LightDesc.eType = LIGHT_DESC::TYPE::DIRECTIONAL;
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDiffuse = _float4(1.f, 0.f, 0.f, 1.f);
+	LightDesc.vDiffuse = _float4(0.4f, 0.4f, 0.4f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -70,7 +80,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CameraDesc.fFar = 500.f;
 	CameraDesc.fSpeedPerSec = 10.f;
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.f);
-	CameraDesc.fMouseSensor = 1.f;
+	CameraDesc.fMouseSensor = 0.5f;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"), &CameraDesc)))

@@ -167,7 +167,8 @@ call Copy_Release.bat</Command>
     <ClInclude Include="..\public\Component.h" />
     <ClInclude Include="..\public\Event_Manager.h" />
     <ClInclude Include="..\Public\Input_Device.h" />
-    <ClInclude Include="..\public\Input_Manager.h" />
+    <ClInclude Include="..\public\Light.h" />
+    <ClInclude Include="..\public\Light_Manager.h" />
     <ClInclude Include="..\public\PipeLine.h" />
     <ClInclude Include="..\public\Shader.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
@@ -200,7 +201,8 @@ call Copy_Release.bat</Command>
     <ClCompile Include="..\private\Component.cpp" />
     <ClCompile Include="..\private\Event_Manager.cpp" />
     <ClCompile Include="..\Private\Input_Device.cpp" />
-    <ClCompile Include="..\private\Input_Manager.cpp" />
+    <ClCompile Include="..\private\Light.cpp" />
+    <ClCompile Include="..\private\Light_Manager.cpp" />
     <ClCompile Include="..\private\PipeLine.cpp" />
     <ClCompile Include="..\private\Shader.cpp" />
     <ClCompile Include="..\private\GameInstance.cpp" />

@@ -49,6 +49,8 @@ void CLogo_Button_Line::Late_Update(_float fTimeDelta)
 
 HRESULT CLogo_Button_Line::Render()
 {
+    if (FAILED(m_pTextureCom->Bind_Shader_Resource(m_pShaderCom, "g_Texture", 0)))
+        return E_FAIL;
     __super::Bind_ShaderTransform_Resourc();
 
     m_pVIBufferCom->Bind_Resources();

@@ -5,4 +5,5 @@
 #include "framework.h"
 #include "Client_Defines.h"
 #include "GameInstance.h"
+#include "Engine_Defines.h"
 #endif //PCH_H

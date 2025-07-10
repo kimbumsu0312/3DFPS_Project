@@ -3,7 +3,7 @@
 
 Engine::CInput_Device::CInput_Device(void)
 {
-	ZeroMemory(m_byKeyState, sizeof(m_byKeyState));
+	ZeroMemory(m_byCulKeyState, sizeof(m_byCulKeyState));
 }
 
 HRESULT Engine::CInput_Device::Initialize(HINSTANCE hInst, HWND hWnd)
@@ -49,8 +49,61 @@ HRESULT Engine::CInput_Device::Initialize(HINSTANCE hInst, HWND hWnd)
 
 void Engine::CInput_Device::Update(void)
 {
-	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
-	m_pMouse->GetDeviceState(sizeof(m_tMouseState), &m_tMouseState);
+	for(_int i = 0; i < 256; ++i)
+		m_byPreKeyState[i] = m_byCulKeyState[i];
+	
+	m_tPreMouseState = m_tCulMouseState;
+
+ 	m_pKeyBoard->GetDeviceState(256, m_byCulKeyState);
+	m_pMouse->GetDeviceState(sizeof(m_tCulMouseState), &m_tCulMouseState);
+}
+
+_bool CInput_Device::IsKeyDown(_ubyte byKeyID)
+{
+	if (m_byPreKeyState[byKeyID] != m_byCulKeyState[byKeyID] && m_byCulKeyState[byKeyID] & 0x80)
+		return true;
+
+	return false;
+}
+
+_bool CInput_Device::IsKeyUp(_ubyte byKeyID)
+{
+	if (m_byPreKeyState[byKeyID] != m_byCulKeyState[byKeyID] && !(m_byCulKeyState[byKeyID] & 0x80))
+		return true;
+
+	return false;
+}
+
+_bool CInput_Device::IsKeyHold(_ubyte byKeyID)
+{
+	if(m_byCulKeyState[byKeyID] & 0x80)
+		return true;
+
+	return false;
+}
+
+_bool CInput_Device::IsMouseDown(MOUSEKEYSTATE eMouse)
+{
+
+	if (m_tPreMouseState.rgbButtons[ENUM_CLASS(eMouse)] != m_tCulMouseState.rgbButtons[ENUM_CLASS(eMouse)] 
+		&& m_tCulMouseState.rgbButtons[ENUM_CLASS(eMouse)] & 0x80)
+		return true;
+
+	return false;
+}
+
+_bool CInput_Device::IsMouseUp(MOUSEKEYSTATE eMouse)
+{
+	if (m_tPreMouseState.rgbButtons[ENUM_CLASS(eMouse)] != m_tCulMouseState.rgbButtons[ENUM_CLASS(eMouse)]
+		&& !(m_tCulMouseState.rgbButtons[ENUM_CLASS(eMouse)] & 0x80))
+		return true;
+
+	return false;
+}
+
+_bool CInput_Device::IsMouseHold(MOUSEKEYSTATE eMouse)
+{
+	return m_tCulMouseState.rgbButtons[ENUM_CLASS(eMouse)];
 }
 
 CInput_Device* CInput_Device::Create(HINSTANCE hInstance, HWND hWnd)

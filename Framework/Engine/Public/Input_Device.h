@@ -13,16 +13,21 @@ private:
 	
 public:
 	_byte	Get_DIKeyState(_ubyte byKeyID)	{ 
-		return m_byKeyState[byKeyID]; }
+		return m_byCulKeyState[byKeyID]; }
 
 	_byte	Get_DIMouseState(MOUSEKEYSTATE eMouse)	{ 	
-		return m_tMouseState.rgbButtons[static_cast<_uint>(eMouse)]; }
+		return m_tCulMouseState.rgbButtons[static_cast<_uint>(eMouse)]; }
 
 	// 현재 마우스의 특정 축 좌표를 반환
 	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseState)	{	
-		return *((reinterpret_cast<_int*>(&m_tMouseState)) + static_cast<_uint>(eMouseState));	}
+		return *((reinterpret_cast<_int*>(&m_tCulMouseState)) + static_cast<_uint>(eMouseState));	}
+	_bool IsKeyDown(_ubyte byKeyID);
+	_bool IsKeyUp(_ubyte byKeyID);
+	_bool IsKeyHold(_ubyte byKeyID);
+	_bool IsMouseDown(MOUSEKEYSTATE eMouse);
+	_bool IsMouseUp(MOUSEKEYSTATE eMouse);
+	_bool IsMouseHold(MOUSEKEYSTATE eMouse);
 
-	
 public:
 	HRESULT					Initialize(HINSTANCE hInst, HWND hWnd);
 	void					Update(void);
@@ -33,11 +38,13 @@ private:
 private:
 	LPDIRECTINPUTDEVICE8	m_pKeyBoard = { nullptr };
 	LPDIRECTINPUTDEVICE8	m_pMouse = { nullptr };
-	LPDIRECTINPUTDEVICE8	m_pJoystick = { nullptr };
-
+	
 private:
-	_byte					m_byKeyState[256] = {};	
-	DIMOUSESTATE			m_tMouseState = {};
+	_byte					m_byCulKeyState[256] = {};	
+	_byte					m_byPreKeyState[256] = {};
+
+	DIMOUSESTATE			m_tCulMouseState = {};
+	DIMOUSESTATE			m_tPreMouseState = {};
 
 public:
 	static CInput_Device*	Create(HINSTANCE hInstance, HWND hWnd);

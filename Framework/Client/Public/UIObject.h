@@ -49,6 +49,7 @@ protected:
 	_float					m_iWinSizeX{}, m_iWinSizeY{};
 
 	CShader*				m_pShaderCom = { nullptr };
+	CTexture*				m_pTextureCom = { nullptr };
 
 	_float2					m_vMinUV = {}, m_vMaxUV = {};
 protected:
@@ -57,7 +58,7 @@ protected:
 	void					Update_Position(CUIObject* pParent = nullptr);
 	void					Add_Child(CUIObject* pParent,CUIObject* pChild, CShader* pShader);
 	void					Update_Shader(CShader* pShader);
-
+	void					Update_Texture(CTexture* pTexture);
 public:
 	virtual CGameObject*	Clone(void* pArg) = 0;
 	virtual void			Free() override;
