@@ -2,7 +2,6 @@
 #include "UIObject.h"
 
 NS_BEGIN(Engine)
-class CTexture;
 class CVIBuffer_Rect;
 NS_END
 
@@ -25,7 +24,6 @@ public:
 
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
-	CTexture*					m_pTextureCom = { nullptr };
 
 private:
 	HRESULT						Ready_Components();

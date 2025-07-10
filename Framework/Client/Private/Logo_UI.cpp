@@ -35,7 +35,6 @@ HRESULT CLogo_UI::Initialize(void* pArg)
     if (FAILED(Ready_Children()))
         return E_FAIL;
     
-    __super::Update_Texture(m_pTextureCom);
     m_pGameInstance->Subscribe<Event_Selete_LogoButton_Index>([&](const Event_Selete_LogoButton_Index& e) { m_iNumSeleteButton = e.iIndex; });
 
 
@@ -117,7 +116,7 @@ HRESULT CLogo_UI::Ready_Children()
     pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Name"), &Desc));
     if (nullptr == pGameObject)
         return E_FAIL;
-    Add_Child(this, pGameObject, m_pShaderCom);
+    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
     
     m_iNumMaxButton = 4;
     Desc.iMaxIndex = m_iNumMaxButton;
@@ -133,7 +132,7 @@ HRESULT CLogo_UI::Ready_Children()
         pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button"), &Desc));
         if (nullptr == pGameObject)
             return E_FAIL;
-        Add_Child(this, pGameObject, m_pShaderCom);
+        Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
     }
 
     
@@ -205,5 +204,4 @@ void CLogo_UI::Free()
     __super::Free();
 
     Safe_Release(m_pVIBufferCom);
-    Safe_Release(m_pTextureCom);
 }

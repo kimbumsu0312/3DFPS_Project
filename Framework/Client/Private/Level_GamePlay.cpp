@@ -45,6 +45,24 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 		m_pGameInstance->Publish(Event_Inventory_Open{ {false} });
 		m_bInvenOpen = false;
 	}
+
+	if (m_pGameInstance->IsKeyDown(DIK_1))
+	{
+		m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::PISTOL });
+	}
+	if (m_pGameInstance->IsKeyDown(DIK_2))
+	{
+		m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::SHOTGUN });
+	}
+	if (m_pGameInstance->IsKeyDown(DIK_3))
+	{
+		m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::SNIPER });
+	}
+	
+	if (m_pGameInstance->IsMouseDown(MOUSEKEYSTATE::LB))
+	{
+		m_pGameInstance->Publish(Hud_Weapon_Shoting{});
+	}
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -120,12 +138,20 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Inventroy"))))
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Aim_Shotgun"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Aim_Sniper"))))
 		return E_FAIL;
 	
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-	//	ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Loding_Fade"))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Inventroy"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Loding_Fade"))))
+		return E_FAIL;
 
 	return S_OK;
 }

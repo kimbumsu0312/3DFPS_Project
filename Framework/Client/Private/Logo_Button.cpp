@@ -118,7 +118,7 @@ HRESULT CLogo_Button::Ready_Children()
 	pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button_Line"), &Desc));
 	if (nullptr == pGameObject)
 		return E_FAIL;
-	Add_Child(this, pGameObject, m_pShaderCom);
+	Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
 
 	Desc.vSize = { 255.f, 20.f };
 	Desc.vPos = { 0, 0 };
@@ -128,7 +128,7 @@ HRESULT CLogo_Button::Ready_Children()
 	pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button_Line"), &Desc));
 	if (nullptr == pGameObject)
 		return E_FAIL;
-	Add_Child(this, pGameObject, m_pShaderCom);
+	Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
 
 	return S_OK;
 }

@@ -76,11 +76,23 @@
     <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim">
       <UniqueIdentifier>{bb3df6ea-ee2a-44f3-8b00-45fc5c6e0a1b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim\ETC">
-      <UniqueIdentifier>{5466a443-3cc4-467e-b0ab-e9e8776518be}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\UIObject\Logo_UI\Title">
       <UniqueIdentifier>{f6416ab8-62b1-4904-aa63-701c8582715d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim\Pistol">
+      <UniqueIdentifier>{b87a56a5-464c-42cd-9640-844b05da54be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim\AImLine">
+      <UniqueIdentifier>{5466a443-3cc4-467e-b0ab-e9e8776518be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim\ShotGun">
+      <UniqueIdentifier>{69d78a2f-0200-4677-8eed-38aa3573f51b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim\ShotGun\AimLine">
+      <UniqueIdentifier>{51eac506-b818-4bd4-8565-88f25f7416f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Gun_Aim\Sniper">
+      <UniqueIdentifier>{8406d20c-54c1-46db-b478-41dc21008a47}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -156,11 +168,23 @@
     <ClInclude Include="..\public\Camera_Free.h">
       <Filter>02.GameObject\Camera\Free</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Aim_Pistol.h">
-      <Filter>02.GameObject\UIObject\Hud\Gun_Aim</Filter>
+    <ClInclude Include="..\public\Aim_Line.h">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\AImLine</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Aim_Pistol_Line.h">
-      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\ETC</Filter>
+    <ClInclude Include="..\public\Aim_Pistol.h">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\Pistol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Aim_Shotgun.h">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\ShotGun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Aim_Shotgun_Line.h">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\ShotGun\AimLine</Filter>
+    </ClInclude>
+    <ClInclude Include="Client_Item.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Aim_Sniper.h">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\Sniper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -234,11 +258,20 @@
     <ClCompile Include="..\private\Camera_Free.cpp">
       <Filter>02.GameObject\Camera\Free</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Aim_Pistol.cpp">
-      <Filter>02.GameObject\UIObject\Hud\Gun_Aim</Filter>
+    <ClCompile Include="..\private\Aim_Line.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\AImLine</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Aim_Pistol_Line.cpp">
-      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\ETC</Filter>
+    <ClCompile Include="..\private\Aim_Pistol.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\Pistol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Aim_Shotgun.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\ShotGun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Aim_Shotgun_Line.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\ShotGun\AimLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Aim_Sniper.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Gun_Aim\Sniper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -25,7 +25,21 @@ public:
 
 private:
 	_float					m_fMouseSensor = { };
+	
+	_float					m_fMoveFovy = {};
+	
+	_float					m_fResetFovy = {};
+	_float					m_fZoomSpeed = {};
 
+	_bool					m_bIsZoomIn = { false };
+	_bool					m_bIsZoomout = { false };
+
+	
+
+private:
+	void					Zoom_In(_float fTimeDelta);
+	void					Zoom_Out(_float fTimeDelta);
+	void					KeyInput(_float fTimeDelta);
 public:
 	static CCamera_Free*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg)override;

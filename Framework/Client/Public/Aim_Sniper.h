@@ -6,12 +6,12 @@ class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
-class CAim_Pistol final : public CUIObject
+class CAim_Sniper final : public CUIObject
 {
 private:
-	CAim_Pistol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CAim_Pistol(const CAim_Pistol& Prototype);
-	virtual ~CAim_Pistol() = default;
+	CAim_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CAim_Sniper(const CAim_Sniper& Prototype);
+	virtual ~CAim_Sniper() = default;
 
 public:
 	virtual HRESULT				Initialize_Prototype();
@@ -22,7 +22,7 @@ public:
 	virtual HRESULT				Render();
 
 private:
-	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
+	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	WEAPON_TYPE					m_eWeapon_Type = {};
 	_uint						m_iNumSeleteButton = {};
@@ -33,16 +33,17 @@ private:
 
 	_float						m_fCool = {};
 	_bool						m_bIsZoomIn = { false };
+
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children_Prototype();
 	HRESULT						Ready_Children();
 
-	void						Shoting();
 	void						KeyInput();
+	void						Shoting();
 public:
-	static CAim_Pistol*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CGameObject*		Clone(void* pArg) override;
+	static CAim_Sniper* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject* Clone(void* pArg) override;
 	virtual void				Free() override;
 };
 NS_END
