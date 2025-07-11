@@ -11,7 +11,7 @@
 #include "PipeLine.h"
 #include "Input_Device.h"
 #include "Light_Manager.h"
-
+#include "Pooling_Manager.h"
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
@@ -59,6 +59,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 
 	m_pLight_Manager = CLight_Manager::Create();
 	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
+	m_pPooling_Manager = CPooling_Manager::Create();
+	if (nullptr == m_pPooling_Manager)
 		return E_FAIL;
 
 	return S_OK;
@@ -207,6 +211,11 @@ HRESULT CGameInstance::Add_GameObject_ToLayer(_uint iLayerLevelIndex, const _wst
 	return m_pObject_Manager->Add_GameObject_ToLayer(iLayerLevelIndex, strLayerTag, iPrototypeLevelIndex, strPrototypeTag, pArg);
 }
 
+HRESULT CGameInstance::Add_PoolGameObject_ToLayer(CPoolingObject* pObject, _uint iLayerLevelIndex, const _wstring& strLayerTag)
+{
+	return m_pObject_Manager->Add_PoolGameObject_ToLayer(pObject, iLayerLevelIndex, strLayerTag);
+}
+
 HRESULT CGameInstance::Add_Prototype(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, CBase* pPrototype)
 {
 	if (nullptr == m_pPrototype_Manager)
@@ -283,9 +292,25 @@ HRESULT CGameInstance::Add_Light(LIGHT_DESC& LightDesc)
 	return m_pLight_Manager->Add_Light(LightDesc);
 }
 
+HRESULT CGameInstance::Add_Object_ToPool(const _wstring& szPoolingPath, _uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, void* pArg)
+{
+	return m_pPooling_Manager->Add_Object_ToPool(szPoolingPath, iPrototypeLevelIndex, strPrototypeTag, pArg);
+}
+
+HRESULT CGameInstance::Add_Pool_ToLayer(const _wstring& szPoolingPath, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg)
+{
+	return E_NOTIMPL;
+}
+
+HRESULT CGameInstance::Return_Object(CPoolingObject* pObject, const _wstring& szPoolingPath)
+{
+	return E_NOTIMPL;
+}
+
 void CGameInstance::Release_Engine()
 {
 	Release();
+	Safe_Release(m_pPooling_Manager);
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pRenderer);

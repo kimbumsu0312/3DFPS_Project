@@ -9,7 +9,7 @@ namespace Engine
 	enum class RENDERGROUP { PRIORITY, NONBLEND, BLEND, UI, END };
 	enum class WINMODE { FULL, WIN, END };
 	enum class RENDERSTATE { BLEND, DEPTH_STENCIL, END };
-
+	enum class OBJECTTYPE { GAMEOBJECT, POLLINGOBJECT, END};
 	enum class MOUSEKEYSTATE { LB, RB, WB, END };
 	enum class MOUSEMOVESTATE { X, Y, WHEEL, END };
 }
