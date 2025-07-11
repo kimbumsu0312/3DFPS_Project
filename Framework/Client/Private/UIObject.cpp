@@ -89,9 +89,9 @@ HRESULT CUIObject::Bind_ShaderTransform_Resourc(_uint iPassIndex)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
 	m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix");
 	
-	if (FAILED(m_pShaderCom->Bind_Vector("g_MinUV", XMLoadFloat2(&m_vMinUV))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_MinUV", &m_vMinUV, sizeof(_float2))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Vector("g_MaxUV", XMLoadFloat2(&m_vMaxUV))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_MaxUV", &m_vMaxUV, sizeof(_float2))))
 		return E_FAIL;
 
 	m_pShaderCom->Begin(iPassIndex);

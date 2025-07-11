@@ -20,8 +20,8 @@ HRESULT CQuick_Slot::Initialize_Prototype()
 
 HRESULT CQuick_Slot::Initialize(void* pArg)
 {
-    m_vLocalPos.x = g_iWinSizeX * 0.22;
-    m_vLocalPos.y = g_iWinSizeY * 0.63;
+    m_vLocalPos.x = g_iWinSizeX * 0.22f;
+    m_vLocalPos.y = g_iWinSizeY * 0.63f;
     m_vLocalSize.x = g_iWinSizeX;
     m_vLocalSize.y = g_iWinSizeY;
     if (FAILED(__super::Initialize()))
@@ -42,12 +42,12 @@ void CQuick_Slot::Priority_Update(_float fTimeDelta)
     {
         m_bIsOpen = true;
         m_bIsClose = false;
-        m_fAlpha.x = 0.f;
+        m_fAlpha = 0.f;
     }
     if (m_pGameInstance->IsKeyDown(DIK_6))
     {
         m_bIsClose = true;
-        m_fAlpha.x = 1.f;
+        m_fAlpha = 1.f;
 
     }
     __super::Priority_Update(fTimeDelta);
@@ -58,13 +58,13 @@ void CQuick_Slot::Update(_float fTimeDelta)
     if (!m_bIsOpen)
         return;
 
-    if (!m_bIsClose && m_fAlpha.x < 1.f)
-        m_fAlpha.x += 0.1f;
+    if (!m_bIsClose && m_fAlpha < 1.f)
+        m_fAlpha += 0.1f;
 
     if (m_bIsClose && m_bIsOpen)
     {
-        if (m_fAlpha.x >= 0.f)
-            m_fAlpha.x -= 0.1f;
+        if (m_fAlpha >= 0.f)
+            m_fAlpha -= 0.1f;
         else {
             m_bIsOpen = false;
             m_bIsClose = false;
@@ -92,7 +92,7 @@ HRESULT CQuick_Slot::Render()
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
         return E_FAIL;
 
-    if (FAILED(m_pShaderCom->Bind_Vector("g_Alpha", XMLoadFloat2(&m_fAlpha))))
+    if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
         return E_FAIL;
 
     if (FAILED(m_pTextureCom->Bind_Shader_Resource(m_pShaderCom, "g_Texture", 3)))

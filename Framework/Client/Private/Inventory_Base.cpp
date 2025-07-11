@@ -56,7 +56,7 @@ void CInventory_Base::Late_Update(_float fTimeDelta)
 
 HRESULT CInventory_Base::Render()
 {
-    if (FAILED(m_pShaderCom->Bind_Vector("g_Vector", XMLoadFloat4(&m_vOpenTex))))
+    if (FAILED(m_pShaderCom->Bind_RawValue("g_Vector", &m_vOpenTex, sizeof(_float4))))
          return E_FAIL;
 
     if (FAILED(m_pTextureCom->Bind_Shader_Resource(m_pShaderCom, "g_Texture", 5)))
