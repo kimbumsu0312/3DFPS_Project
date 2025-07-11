@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "MainApp.h"
 #include "GameInstance.h"
-
 #include "Level_Loading.h"
 #include "Fade_UI.h"
+#include "Player_Manager.h"
 
 CMainApp::CMainApp() : m_pGameInstance{ CGameInstance::GetInstance()}
 {
@@ -27,6 +27,8 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Prototype_ForStatic()))
 		return E_FAIL;
 
+	if (FAILED(CPlayer_Manager::GetInstance()->Initialize()))
+		return E_FAIL;
 
 	if (FAILED(Start_Level(LEVEL::LOGO)))
 		return E_FAIL;
@@ -98,6 +100,7 @@ void CMainApp::Free()
 {
 	__super::Free();
 
+	CPlayer_Manager::GetInstance()->DestroyInstance();
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 

@@ -1,10 +1,10 @@
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
-vector g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vLightAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
-vector g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
+vector g_vLightDir;
+vector g_vLightDiffuse;
+vector g_vLightAmbient;
+vector g_vLightSpecular;
 
 vector g_vCamPosition;
 
@@ -77,13 +77,17 @@ PS_OUT PS_MAIN(PS_IN In)
     
     //빛의 반사각 : reflect 
     //빛의 반사각 계산식 : 빛의 방향 벡터 + (내적(빛의 방향 벡터(노말) * -1.F, 물체의 법선) * 법선 * 2)
-    vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
+    vector vReflect = reflect(normalize(g_vLightDir), In.vNormal);
     
+    //vector vLightDirR = normalize(g_vLightDir) * -1.f;
+    //vector vReflect = normalize(g_vLightDir) + dot(vLightDirR, normalize(In.vNormal)) * (normalize(In.vNormal) * 2);
+   
+   
     //카메라 보는 방향을 월드 행렬로 전환
     vector vLook = In.vWorldPos - g_vCamPosition;
     
     //스펙큘러
-    float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 2.f);
+    float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 10.f);
     
     //빛 디퓨즈 * 물체 디퓨즈  = 모든 물체가 빛의 색상을 따라감
     //최종 디퓨즈 * (빛의 세기 + 빛의 환경광 * 물체의 환경광) 빛의 세기 및 주위 환경광을 셋팅해줌
