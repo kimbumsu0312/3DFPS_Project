@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 NS_BEGIN(Engine)
-class ENGINE_DLL CPoolingObject : public CGameObject
+class ENGINE_DLL CPoolingObject abstract : public CGameObject
 {
 public:
 	typedef struct tagPoolingObject: public CGameObject::GAMEOBJECT_DESC

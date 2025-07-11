@@ -100,6 +100,9 @@
     <Filter Include="02.GameObject\UIObject\Hud\Quick_Slot\ETC">
       <UniqueIdentifier>{ec519a67-b9ca-45e9-b29b-835404fe4a8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="95.Manager">
+      <UniqueIdentifier>{e59c2c87-f71c-45d1-8278-b74d10422a2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -201,6 +204,9 @@
     <ClInclude Include="..\public\QuicK_Slot_Icon.h">
       <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Player_Manager.h">
+      <Filter>95.Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -296,6 +302,9 @@
     </ClCompile>
     <ClCompile Include="..\private\QuicK_Slot_Icon.cpp">
       <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Player_Manager.cpp">
+      <Filter>95.Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -176,11 +176,14 @@ ID3D11DeviceChild* CRenderer::Find_RenderState(_wstring szRenderTag, RENDERSTATE
 
 HRESULT CRenderer::Ready_RenderState()
 {
-    ////현재 뎁스 스텐실을 가져온다.
-    ID3D11DepthStencilState* pDepthStencil = nullptr;
-    m_pContext->OMGetDepthStencilState(&pDepthStencil, 0);
+    D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+    dsDesc.DepthEnable = TRUE;                  
+    dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    dsDesc.DepthFunc = D3D11_COMPARISON_LESS;       
+    dsDesc.StencilEnable = FALSE;
 
-    m_pRenderState[ENUM_CLASS(RENDERSTATE::DEPTH_STENCIL)].emplace(TEXT("Default_State"), pDepthStencil);
+    if (FAILED(Add_RenderState(TEXT("Default_State"), RENDERSTATE::DEPTH_STENCIL, &dsDesc)))
+        return E_FAIL;
 
     //뎁스 스텐실 컴객체 생성
     //뎁스 버퍼 : 깊이 값을 저장하는 버퍼

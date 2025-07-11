@@ -73,4 +73,6 @@ void CPooling_Manager::Free()
 		}
 	}
 	m_ObjectPool.clear();
+
+	Safe_Release(m_pGameInstance);
 }
