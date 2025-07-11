@@ -75,7 +75,7 @@ void CLogo_Button::Late_Update(_float fTimeDelta)
 HRESULT CLogo_Button::Render()
 {
 
-	if (FAILED(m_pShaderCom->Bind_Vector("g_Vector", XMLoadFloat4(&m_vBackGroundColor))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Vector", &m_vBackGroundColor, sizeof(_float4))))
 		return E_FAIL;
 
 	__super::Bind_ShaderTransform_Resourc(1);

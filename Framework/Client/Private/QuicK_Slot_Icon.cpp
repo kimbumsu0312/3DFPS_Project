@@ -68,6 +68,7 @@ void CQuick_Slot_Icon::Update(_float fTimeDelta)
     {
     case 0:
         m_vSize.x = m_vLocalSize.x;
+        
         break;
     case 1:
         m_vSize.x = m_vLocalSize.x * 2.f;
@@ -85,8 +86,35 @@ void CQuick_Slot_Icon::Late_Update(_float fTimeDelta)
 HRESULT CQuick_Slot_Icon::Render()
 {
 
-    Bind_ShaderTransform_Resourc(4);
+    //Bind_ShaderTransform_Resourc(4);
+    m_pTransformCom->Scale(_float3(m_vSize.x, m_vSize.y, 1.f));
+    
+    if (m_iITemType == 1)
+    {
+        if (m_iIndex == 1)
+        {
+            m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f - (m_vLocalSize.x * 0.5f), -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
+        }
+        else if (m_iIndex == 3)
+        {
+            m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f + (m_vLocalSize.x * 0.5f), -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
+        }
+        else
+            m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
+    }
+    else
+        m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
+    
 
+
+    m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix");
+
+    if (FAILED(m_pShaderCom->Bind_RawValue("g_MinUV", &m_vMinUV, sizeof(_float2))))
+        return E_FAIL;
+    if (FAILED(m_pShaderCom->Bind_RawValue("g_MaxUV", &m_vMaxUV, sizeof(_float2))))
+        return E_FAIL;
+
+    m_pShaderCom->Begin(4);
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();
 
