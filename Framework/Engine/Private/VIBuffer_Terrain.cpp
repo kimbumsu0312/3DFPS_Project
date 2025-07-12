@@ -22,10 +22,10 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 
 	//앞에 이미지 파일들의 기본 정보를 읽어옴
 	//14바이트를 읽어옴 : 비트맵 기본정보 (bfType, bfSize, bfofffBits)
-	if (!ReadFile(hFile, &fh, sizeof(fh), &dwByte, nullptr))
+	if (!ReadFile(hFile, &fh, sizeof fh, &dwByte, nullptr))
 		return E_FAIL;
 	//40바이트를 읽어옴 -> 14바이트 이후 정보를 읽어옴 : 해상도, 픽셀 수, 색상 깊이 등
-	if (!ReadFile(hFile, &ih, sizeof(ih), &dwByte, nullptr))
+	if (!ReadFile(hFile, &ih, sizeof ih, &dwByte, nullptr))
 		return E_FAIL;
 
 	m_iNumverticesX = ih.biWidth;
@@ -54,9 +54,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 		{
 			_uint	iIndex = i * m_iNumverticesX + j;
 
-			pVertices[iIndex].vPosition = _float3((_float)j, (pPixels[iIndex] & 0x000000ff) / 10.0f, (_float)i);
+			pVertices[iIndex].vPosition = _float3(j, (pPixels[iIndex] & 0x000000ff) / 10.0f, i);
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
-			pVertices[iIndex].vTexcoord = _float2(j / (m_iNumverticesX - 1.f), (_float)i / (m_iNumverticesZ - 1.f));
+			pVertices[iIndex].vTexcoord = _float2(j / (m_iNumverticesX - 1.f), i / (m_iNumverticesZ - 1.f));
 		}
 	}
 
@@ -81,25 +81,25 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 			pIndices[iNumIndices++] = iIndices[1];
 			pIndices[iNumIndices++] = iIndices[2];
 
-			vSour = XMLoadFloat3(&pVertices[pIndices[1]].vPosition) - XMLoadFloat3(&pVertices[pIndices[0]].vPosition);
-			vDest = XMLoadFloat3(&pVertices[pIndices[2]].vPosition) - XMLoadFloat3(&pVertices[pIndices[1]].vPosition);
+			vSour = XMLoadFloat3(&pVertices[iIndices[1]].vPosition) - XMLoadFloat3(&pVertices[iIndices[0]].vPosition);
+			vDest = XMLoadFloat3(&pVertices[iIndices[2]].vPosition) - XMLoadFloat3(&pVertices[iIndices[1]].vPosition);
 			vNormal = XMVector3Normalize(XMVector3Cross(vSour, vDest));
 
-			XMStoreFloat3(&pVertices[iIndices[0]].vNormal, XMLoadFloat3(&pVertices[0].vNormal) + vNormal);
-			XMStoreFloat3(&pVertices[iIndices[1]].vNormal, XMLoadFloat3(&pVertices[1].vNormal) + vNormal);
-			XMStoreFloat3(&pVertices[iIndices[2]].vNormal, XMLoadFloat3(&pVertices[2].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[iIndices[0]].vNormal, XMLoadFloat3(&pVertices[iIndices[0]].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[iIndices[1]].vNormal, XMLoadFloat3(&pVertices[iIndices[1]].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[iIndices[2]].vNormal, XMLoadFloat3(&pVertices[iIndices[2]].vNormal) + vNormal);
 
 			pIndices[iNumIndices++] = iIndices[0];
 			pIndices[iNumIndices++] = iIndices[2];
 			pIndices[iNumIndices++] = iIndices[3];
 
-			vSour = XMLoadFloat3(&pVertices[pIndices[2]].vPosition) - XMLoadFloat3(&pVertices[pIndices[0]].vPosition);
-			vDest = XMLoadFloat3(&pVertices[pIndices[3]].vPosition) - XMLoadFloat3(&pVertices[pIndices[2]].vPosition);
+			vSour = XMLoadFloat3(&pVertices[iIndices[2]].vPosition) - XMLoadFloat3(&pVertices[iIndices[0]].vPosition);
+			vDest = XMLoadFloat3(&pVertices[iIndices[3]].vPosition) - XMLoadFloat3(&pVertices[iIndices[2]].vPosition);
 			vNormal = XMVector3Normalize(XMVector3Cross(vSour, vDest));
 
-			XMStoreFloat3(&pVertices[iIndices[0]].vNormal, XMLoadFloat3(&pVertices[0].vNormal) + vNormal);
-			XMStoreFloat3(&pVertices[iIndices[2]].vNormal, XMLoadFloat3(&pVertices[2].vNormal) + vNormal);
-			XMStoreFloat3(&pVertices[iIndices[3]].vNormal, XMLoadFloat3(&pVertices[3].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[iIndices[0]].vNormal, XMLoadFloat3(&pVertices[iIndices[0]].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[iIndices[2]].vNormal, XMLoadFloat3(&pVertices[iIndices[2]].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[iIndices[3]].vNormal, XMLoadFloat3(&pVertices[iIndices[3]].vNormal) + vNormal);
 		}
 	}
 

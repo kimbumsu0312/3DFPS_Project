@@ -32,6 +32,7 @@ private:
 	_float						m_fOpenTexSpeed = {};
 private:
 	HRESULT						Ready_Components();
+	HRESULT						Ready_Children_Prototype();
 	HRESULT						Ready_Children();
 
 	void						Open_UI(_float fTimeDelta);

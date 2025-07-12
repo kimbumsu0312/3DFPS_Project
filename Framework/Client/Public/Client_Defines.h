@@ -10,6 +10,7 @@ namespace Client
 
 	enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, END };
 	enum class CAMERA_STATE { ZOOM_IN, ZOOM_OUT, ZOOM_RESET, END };
+	enum class ITEM_2DRENDER_TYPE { HUD, INVEN, END };
 }
 
 extern HWND g_hWnd;

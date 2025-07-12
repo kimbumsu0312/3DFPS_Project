@@ -17,6 +17,7 @@ public:
 		_uint  iIndex{}, iMaxIndex{};
 		_float OffsetX{}, OffsetY{};
 		_float2 vMinUV{}, vMaxUV{};
+		_float fRot = {};
 		
 	}UIOBJECT_DESC;
 
@@ -46,12 +47,10 @@ protected:
 	_float4x4				m_ViewMatrix = {};
 	_float4x4				m_ProjMatrix = {};
 
-	_float					m_iWinSizeX{}, m_iWinSizeY{};
-
 	CShader*				m_pShaderCom = { nullptr };
 	CTexture*				m_pTextureCom = { nullptr };
 
-	_float2					m_vMinUV = {}, m_vMaxUV = {};
+	_float2					m_vMinUV = {0.f,0.f}, m_vMaxUV = {1.f,1.f};
 protected:
 	HRESULT					Bind_ShaderTransform_Resourc(_uint iPassIndex = 0);
 

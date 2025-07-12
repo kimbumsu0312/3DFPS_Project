@@ -86,7 +86,7 @@ HRESULT CShader::Begin(_uint iPassIndex)
 	return S_OK;
 }
 
-HRESULT CShader::Bind_Matrix(const _char* pConstantName, const _float4x4* pMatirx)
+HRESULT CShader::Bind_Matrix(const _char* pConstantName, const _float4x4* pMatrix)
 {
 	//전역 변수의 이름을 찾아서 접근, 없으면 Nullptr 반환
 	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
@@ -99,7 +99,7 @@ HRESULT CShader::Bind_Matrix(const _char* pConstantName, const _float4x4* pMatir
 		return E_FAIL;
 		
 	//매트릭스 셋팅
-	return pMatrixVariable->SetMatrix(reinterpret_cast<const _float*>(pMatirx));
+	return pMatrixVariable->SetMatrix(reinterpret_cast<const _float*>(pMatrix));
 }
 
 HRESULT CShader::Bind_SRV(const _char* pConstantName, ID3D11ShaderResourceView* pSRV)
