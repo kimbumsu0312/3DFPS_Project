@@ -1,5 +1,5 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-float2 g_Alpha;
+float g_Alpha;
 float2 g_MinUV, g_MaxUV;
 float4 g_Vector;
 Texture2D g_Texture;
@@ -57,7 +57,7 @@ PS_OUT PS_Tex_UV(PS_IN In)
     In.vTexcoord = g_MinUV + (g_MaxUV - g_MinUV) * In.vTexcoord;
      
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    
+   
     return Out;
 }
 
@@ -75,6 +75,8 @@ PS_OUT PS_Inven_Bass(PS_IN In)
     if (In.vPosition.x <= g_Vector.r || In.vPosition.x >= g_Vector.g || In.vPosition.y <= g_Vector.b || In.vPosition.y >= g_Vector.a)
         discard;
     
+    In.vTexcoord = g_MinUV + (g_MaxUV - g_MinUV) * In.vTexcoord;
+     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     Out.vColor.a += 0.1;
     return Out;
@@ -95,7 +97,7 @@ PS_OUT PS_Tex_UV_ApllyAlpha(PS_IN In)
     In.vTexcoord = g_MinUV + (g_MaxUV - g_MinUV) * In.vTexcoord;
      
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    Out.vColor.a = Out.vColor.a * g_Alpha.r;
+    Out.vColor.a = Out.vColor.a * g_Alpha;
     return Out;
 }
 
@@ -103,9 +105,21 @@ PS_OUT PS_Color_ApllyAlpha(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     Out.vColor = g_Vector;
-    Out.vColor.a = Out.vColor.a * g_Alpha.r;
+    Out.vColor.a = Out.vColor.a * g_Alpha;
     return Out;
 }
+
+PS_OUT PS_Hp_Flash(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    In.vTexcoord = g_MinUV + (g_MaxUV - g_MinUV) * In.vTexcoord;
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    
+    Out.vColor.rgb = Out.vColor.rgb + g_Vector.rgb;
+    Out.vColor.a = Out.vColor.a * g_Vector.w * g_Alpha;
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass UI_TexUV_Pass
@@ -120,7 +134,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_Color();
     }
 
-    pass UI_Invent_Pass
+    pass UI_Inven_Pass
     {
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_Inven_Bass();
@@ -142,5 +156,11 @@ technique11 DefaultTechnique
     {
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_Color_ApllyAlpha();
+    }
+
+    pass UI_Hp_Flash_Pass
+    {
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_Hp_Flash();
     }
 }

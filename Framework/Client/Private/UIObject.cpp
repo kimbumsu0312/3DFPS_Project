@@ -37,9 +37,6 @@ HRESULT CUIObject::Initialize(void* pArg)
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(Viewport.Width, Viewport.Height, 0.0f, 1.f));
 
-	m_iWinSizeX = Viewport.Width;
-	m_iWinSizeY = Viewport.Height;
-
 	Update_Position();
 
 	return S_OK;
@@ -86,7 +83,7 @@ HRESULT CUIObject::Render()
 HRESULT CUIObject::Bind_ShaderTransform_Resourc(_uint iPassIndex)
 {
 	m_pTransformCom->Scale(_float3(m_vSize.x, m_vSize.y, 1.f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - g_iWinSizeX * 0.5f, -m_vPos.y + g_iWinSizeY * 0.5f, 0.0f, 1.0f));
 	m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix");
 	
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_MinUV", &m_vMinUV, sizeof(_float2))))
@@ -111,7 +108,7 @@ void CUIObject::Update_Position(CUIObject* pParent)
 		m_vPos = m_vLocalPos;
 	}
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - g_iWinSizeX * 0.5f, -m_vPos.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	for (auto child : m_vecChildren)
 		child->Update_Position(this);
 }
@@ -144,7 +141,7 @@ void CUIObject::Update_Texture(CTexture* pTexture)
 
 void CUIObject::Correct_Position(_float2 pPos)
 {
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(pPos.x - m_iWinSizeX * 0.5f, -pPos.y + m_iWinSizeY * 0.5f, 0.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(pPos.x - g_iWinSizeX * 0.5f, -pPos.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 }
 
 void CUIObject::Free()

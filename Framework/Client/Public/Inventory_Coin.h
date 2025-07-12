@@ -6,13 +6,13 @@ class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
-
-class CInventory_Base final : public CUIObject
+class CInventory_Coin final : public CUIObject
 {
+
 private:
-	CInventory_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CInventory_Base(const CInventory_Base& Prototype);
-	virtual ~CInventory_Base() = default;
+	CInventory_Coin(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CInventory_Coin(const CInventory_Coin& Prototype);
+	virtual ~CInventory_Coin() = default;
 
 public:
 	virtual HRESULT				Initialize_Prototype();
@@ -25,21 +25,12 @@ public:
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 
-	_bool						m_bIsOpen = {false};
-	_float4						m_vOpenTex = {};
-	_float						m_fOpenTexValueX = {};
-	_float						m_fOpenTexValueY = {};
-	_float						m_fOpenTexSpeed = {};
 private:
 	HRESULT						Ready_Components();
-	HRESULT						Ready_Children_Prototype();
-	HRESULT						Ready_Children();
 
-	void						Open_UI(_float fTimeDelta);
 public:
-	static CInventory_Base*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CInventory_Coin*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;
 	virtual void				Free() override;
 };
-
 NS_END

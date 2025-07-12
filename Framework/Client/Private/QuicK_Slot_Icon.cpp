@@ -86,24 +86,23 @@ void CQuick_Slot_Icon::Late_Update(_float fTimeDelta)
 HRESULT CQuick_Slot_Icon::Render()
 {
 
-    //Bind_ShaderTransform_Resourc(4);
     m_pTransformCom->Scale(_float3(m_vSize.x, m_vSize.y, 1.f));
     
     if (m_iITemType == 1)
     {
         if (m_iIndex == 1)
         {
-            m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f - (m_vLocalSize.x * 0.5f), -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
+            m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - g_iWinSizeX * 0.5f - (m_vLocalSize.x * 0.5f), -m_vPos.y + g_iWinSizeY * 0.5f, 0.0f, 1.0f));
         }
         else if (m_iIndex == 3)
         {
-            m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f + (m_vLocalSize.x * 0.5f), -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
+            m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - g_iWinSizeX * 0.5f + (m_vLocalSize.x * 0.5f), -m_vPos.y + g_iWinSizeY * 0.5f, 0.0f, 1.0f));
         }
         else
-            m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
+            m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - g_iWinSizeX * 0.5f, -m_vPos.y + g_iWinSizeY * 0.5f, 0.0f, 1.0f));
     }
     else
-        m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - m_iWinSizeX * 0.5f, -m_vPos.y + m_iWinSizeY * 0.5f, 0.0f, 1.0f));
+        m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - g_iWinSizeX * 0.5f, -m_vPos.y + g_iWinSizeY * 0.5f, 0.0f, 1.0f));
     
 
 
