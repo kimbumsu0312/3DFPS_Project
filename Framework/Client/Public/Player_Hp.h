@@ -25,14 +25,22 @@ public:
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	_float						m_fAlpha = {};
+	_bool						m_bIsOpen = {};
+	_bool						m_bIsClose = {};
+	_float						m_fIsOpenTime = {};
+
+	_bool						m_bIsInven = {};
 
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children_Prototype();
 	HRESULT						Ready_Children();
 
+	void						UIOpen_Damage();
+	void						UIOpen_Inventory(_bool bIsOpen);
+	void						UIAlpha_OnOff(_float fTimeDelta);
 public:
-	static CPlayer_Hp*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CPlayer_Hp*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;
 	virtual void				Free() override;
 };

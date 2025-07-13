@@ -113,7 +113,7 @@ HRESULT CQuick_Slot_Icon::Render()
     if (FAILED(m_pShaderCom->Bind_RawValue("g_MaxUV", &m_vMaxUV, sizeof(_float2))))
         return E_FAIL;
 
-    m_pShaderCom->Begin(4);
+    m_pShaderCom->Begin(8);
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();
 
