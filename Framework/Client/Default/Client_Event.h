@@ -46,4 +46,14 @@ namespace Client
 
 	typedef struct Hud_Weapon_Shoting {
 	}Event_Weapon_Shoting;
+
+	typedef struct Player_Hp_Set
+	{
+		_float4 Color;
+	}Event_Player_Hp_Set;
+
+	typedef struct Player_Hp_UI_Open
+	{
+		_uint itype;
+	}Event_Player_Hp_UI_Open;
 }

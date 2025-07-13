@@ -55,10 +55,13 @@ protected:
 	HRESULT					Bind_ShaderTransform_Resourc(_uint iPassIndex = 0);
 
 	void					Update_Position(CUIObject* pParent = nullptr);
+	void					Update_Position_Children(CUIObject* pParent);
 	void					Add_Child(CUIObject* pParent,CUIObject* pChild, CShader* pShader, CTexture* pTexture);
 	void					Update_Shader(CShader* pShader);
 	void					Update_Texture(CTexture* pTexture);
 	void					Correct_Position(_float2 pPos);
+
+
 public:
 	virtual CGameObject*	Clone(void* pArg) = 0;
 	virtual void			Free() override;

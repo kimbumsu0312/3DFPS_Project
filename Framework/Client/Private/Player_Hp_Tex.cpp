@@ -53,7 +53,7 @@ void CPlayer_Hp_Tex::Late_Update(_float fTimeDelta)
 HRESULT CPlayer_Hp_Tex::Render()
 {
 
-     Bind_ShaderTransform_Resourc(4);
+    Bind_ShaderTransform_Resourc(4);
 
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();

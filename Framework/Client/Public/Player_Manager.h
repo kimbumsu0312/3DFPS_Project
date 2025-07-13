@@ -10,9 +10,14 @@ private:
 	virtual ~CPlayer_Manager() = default;
 
 public:
-	HRESULT Initialize();
-	
+	HRESULT			Initialize();
+	void			Player_Hp(_int iValue);
+
 private:
+	CGameInstance*	m_pGameInstance = { nullptr };
+	_float			m_fMaxHp = {};
+	_float			m_fPreHp = {};
+	_float			m_fCulHp = {};
 
 public:
 	virtual void Free() override;

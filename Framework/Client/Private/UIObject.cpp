@@ -113,6 +113,13 @@ void CUIObject::Update_Position(CUIObject* pParent)
 		child->Update_Position(this);
 }
 
+void CUIObject::Update_Position_Children(CUIObject* pParent)
+{
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - g_iWinSizeX * 0.5f, -m_vPos.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
+	for (auto child : m_vecChildren)
+		child->Update_Position(this);
+}
+
 void CUIObject::Add_Child(CUIObject* pParent, CUIObject* pChild, CShader* pShader, CTexture* pTexture)
 {
 	m_vecChildren.push_back(pChild);

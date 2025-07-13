@@ -25,8 +25,10 @@ public:
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	_float4						m_vColor = {};
-	_float						m_vAlpha = {};
+	_float						m_fAlpha = {};
+	_float						m_fFlashSpeed = {};
 	_bool						m_bAlphaAdd = {};
+
 private:
 	HRESULT						Ready_Components();
 

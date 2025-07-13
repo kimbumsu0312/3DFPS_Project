@@ -19,8 +19,9 @@ HRESULT CPlayer_Hp_Flash::Initialize(void* pArg)
 {
     if (pArg == nullptr)
         return E_FAIL;
-    m_vColor = { 0.5f, 0.f, 0.f, 0.f };
-    m_vAlpha = 0.f;
+    m_vColor = { 0.f, 0.6f, 0.f, 0.7f };
+    m_fAlpha = 0.f;
+    m_fFlashSpeed = 0.5f;
     m_bAlphaAdd = true;
     UIOBJECT_DESC* Desc = static_cast<UIOBJECT_DESC*>(pArg);
 
@@ -32,6 +33,8 @@ HRESULT CPlayer_Hp_Flash::Initialize(void* pArg)
 
     if (FAILED(Ready_Components()))
         return E_FAIL;
+
+    m_pGameInstance->Subscribe<Event_Player_Hp_Set>([&](const Event_Player_Hp_Set& e) {m_vColor = e.Color; });
 
     return S_OK;
 }
@@ -45,23 +48,23 @@ void CPlayer_Hp_Flash::Update(_float fTimeDelta)
 {
     if (m_bAlphaAdd)
     {
-        m_vAlpha += fTimeDelta;
-        if (m_vAlpha >= 1.f)
+        m_fAlpha += m_fFlashSpeed * fTimeDelta;
+        if (m_fAlpha >= 0.5f)
         {
-            m_vAlpha = 1.f;
+            m_fAlpha = 0.5f;
             m_bAlphaAdd = false;
         }
     }
     else
     {
-        m_vAlpha -= fTimeDelta;
-        if (m_vAlpha <= 0.f)
+        m_fAlpha -= m_fFlashSpeed * fTimeDelta;
+        if (m_fAlpha <= 0.f)
         {
-            m_vAlpha = 0.f;
+            m_fAlpha = 0.f;
             m_bAlphaAdd = true;
         }
     }
-    m_vColor.w = m_vAlpha;
+    m_vColor.w = m_fAlpha;
 }
 
 void CPlayer_Hp_Flash::Late_Update(_float fTimeDelta)
@@ -72,7 +75,7 @@ void CPlayer_Hp_Flash::Late_Update(_float fTimeDelta)
 
 HRESULT CPlayer_Hp_Flash::Render()
 {
-    m_pShaderCom->Bind_RawValue("g_Vector", &m_vColor, sizeof(_float4));
+    m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4));
     Bind_ShaderTransform_Resourc(6);
 
     m_pVIBufferCom->Bind_Resources();
