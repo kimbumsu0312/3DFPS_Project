@@ -23,7 +23,7 @@ public:
 
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
-	_float2						m_fAlpha = {};
+	_float						m_fAlpha = {};
 	_bool						m_bIsOpen = {};
 	_bool						m_bIsClose = {};
 

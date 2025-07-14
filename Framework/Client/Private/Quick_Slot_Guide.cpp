@@ -69,7 +69,7 @@ void CQuick_Slot_Guide::Late_Update(_float fTimeDelta)
 
 HRESULT CQuick_Slot_Guide::Render()
 {
-    if (FAILED(m_pShaderCom->Bind_Vector("g_Vector", XMLoadFloat4(&m_vBackGroundColor))))
+    if (FAILED(m_pShaderCom->Bind_RawValue("g_Vector", &m_vBackGroundColor, sizeof(_float4))))
         return E_FAIL;
 
     __super::Bind_ShaderTransform_Resourc(5);

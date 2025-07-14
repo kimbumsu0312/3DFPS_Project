@@ -17,6 +17,7 @@ public:
 		_uint  iIndex{}, iMaxIndex{};
 		_float OffsetX{}, OffsetY{};
 		_float2 vMinUV{}, vMaxUV{};
+		_float fRot = {};
 		
 	}UIOBJECT_DESC;
 
@@ -46,20 +47,24 @@ protected:
 	_float4x4				m_ViewMatrix = {};
 	_float4x4				m_ProjMatrix = {};
 
-	_float					m_iWinSizeX{}, m_iWinSizeY{};
-
 	CShader*				m_pShaderCom = { nullptr };
 	CTexture*				m_pTextureCom = { nullptr };
 
-	_float2					m_vMinUV = {}, m_vMaxUV = {};
+	_float2					m_vMinUV = {0.f,0.f}, m_vMaxUV = {1.f,1.f};
 protected:
 	HRESULT					Bind_ShaderTransform_Resourc(_uint iPassIndex = 0);
 
 	void					Update_Position(CUIObject* pParent = nullptr);
+	void					Update_Position_Children(CUIObject* pParent);
+	void					Add_Child(CUIObject* pParent, CUIObject* pChild);
+	void					Add_Child(CUIObject* pParent, CUIObject* pChild, CShader* pShader);
 	void					Add_Child(CUIObject* pParent,CUIObject* pChild, CShader* pShader, CTexture* pTexture);
+
 	void					Update_Shader(CShader* pShader);
 	void					Update_Texture(CTexture* pTexture);
 	void					Correct_Position(_float2 pPos);
+
+
 public:
 	virtual CGameObject*	Clone(void* pArg) = 0;
 	virtual void			Free() override;

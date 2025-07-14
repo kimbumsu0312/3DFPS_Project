@@ -25,6 +25,7 @@ using namespace DirectX;
 #include <functional>
 #include <string>
 #include <unordered_map>
+#include <queue>
 #include <ctime>
 #include <typeindex>
 using namespace std;

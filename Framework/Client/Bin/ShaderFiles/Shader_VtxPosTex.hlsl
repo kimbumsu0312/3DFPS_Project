@@ -9,6 +9,7 @@ sampler DefaultSampler = sampler_state
 
 struct VS_IN
 {
+    
     float3 vPosition : POSITION;
     float2 vTexcoord : TEXCOORD0;
 };

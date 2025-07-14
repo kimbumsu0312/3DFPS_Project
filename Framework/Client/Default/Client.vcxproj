@@ -155,6 +155,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\public\2DItem.h" />
     <ClInclude Include="..\public\Aim_Pistol.h" />
     <ClInclude Include="..\public\Aim_Line.h" />
     <ClInclude Include="..\public\Aim_Shotgun.h" />
@@ -163,14 +164,29 @@
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\Button.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
+    <ClInclude Include="..\public\3DItem.h" />
+    <ClInclude Include="..\public\Item_Penal.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\public\Create_Penal.h" />
     <ClInclude Include="..\public\Fade_UI.h" />
     <ClInclude Include="..\public\Inventory.h" />
     <ClInclude Include="..\public\Inventory_Base.h" />
+    <ClInclude Include="..\public\Inventory_Coin.h" />
+    <ClInclude Include="..\public\Inventory_Tex.h" />
+    <ClInclude Include="..\public\Inventory_Node.h" />
+    <ClInclude Include="..\public\Item.h" />
+    <ClInclude Include="..\public\Item_2D_Render.h" />
+    <ClInclude Include="..\public\Item_Manager.h" />
+    <ClInclude Include="..\public\Inventory_Slot.h" />
     <ClInclude Include="..\public\Logo_Button.h" />
     <ClInclude Include="..\public\Logo_Button_Line.h" />
     <ClInclude Include="..\public\Logo_Name.h" />
     <ClInclude Include="..\public\Logo_UI.h" />
+    <ClInclude Include="..\public\Player_Hp.h" />
+    <ClInclude Include="..\public\Player_Hp_Beat.h" />
+    <ClInclude Include="..\public\Player_Hp_Flash.h" />
+    <ClInclude Include="..\public\Player_Hp_Tex.h" />
+    <ClInclude Include="..\public\Player_Manager.h" />
     <ClInclude Include="..\public\Quick_Slot.h" />
     <ClInclude Include="..\public\Quick_Slot_Guide.h" />
     <ClInclude Include="..\public\QuicK_Slot_Icon.h" />
@@ -198,13 +214,28 @@
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\Button.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
+    <ClCompile Include="..\private\3DItem.cpp" />
+    <ClCompile Include="..\private\Item_Penal.cpp" />
+    <ClCompile Include="..\private\Create_Penal.cpp" />
     <ClCompile Include="..\private\Fade_UI.cpp" />
     <ClCompile Include="..\private\Inventory.cpp" />
     <ClCompile Include="..\private\Inventory_Base.cpp" />
+    <ClCompile Include="..\private\Inventory_Coin.cpp" />
+    <ClCompile Include="..\private\Inventory_Tex.cpp" />
+    <ClCompile Include="..\private\Inventory_Node.cpp" />
+    <ClCompile Include="..\private\Item.cpp" />
+    <ClCompile Include="..\private\Item_2D_Render.cpp" />
+    <ClCompile Include="..\private\Item_Manager.cpp" />
+    <ClCompile Include="..\private\Inventory_Slot.cpp" />
     <ClCompile Include="..\private\Logo_Button.cpp" />
     <ClCompile Include="..\private\Logo_Button_Line.cpp" />
     <ClCompile Include="..\private\Logo_Name.cpp" />
     <ClCompile Include="..\private\Logo_UI.cpp" />
+    <ClCompile Include="..\private\Player_Hp.cpp" />
+    <ClCompile Include="..\private\Player_Hp_Beat.cpp" />
+    <ClCompile Include="..\private\Player_Hp_Flash.cpp" />
+    <ClCompile Include="..\private\Player_Hp_Tex.cpp" />
+    <ClCompile Include="..\private\Player_Manager.cpp" />
     <ClCompile Include="..\private\Quick_Slot.cpp" />
     <ClCompile Include="..\private\Quick_Slot_Guide.cpp" />
     <ClCompile Include="..\private\QuicK_Slot_Icon.cpp" />
@@ -215,6 +246,7 @@
     <ClCompile Include="..\private\Level_Logo.cpp" />
     <ClCompile Include="..\private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
+    <ClCompile Include="..\public\2DItem.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

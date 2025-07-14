@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="99.Defines">
-      <UniqueIdentifier>{d8d16bc1-2149-41f4-8de6-cbcd337bba3b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00.MainApp">
       <UniqueIdentifier>{de741457-4ffe-4bc1-b18c-ac1e1719c256}</UniqueIdentifier>
     </Filter>
@@ -46,9 +43,6 @@
     <Filter Include="02.GameObject\UIObject\Logo_UI">
       <UniqueIdentifier>{feaac3a7-c7a8-4d45-8feb-18149baf0b0e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96.SuperClass\UIObject\Button">
-      <UniqueIdentifier>{e2b2e3b2-6bae-449c-8044-cc419dc87070}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\UIObject\Logo_UI\Button">
       <UniqueIdentifier>{bb802f42-3c6c-46a2-83e1-83aa87c9bf8e}</UniqueIdentifier>
     </Filter>
@@ -60,9 +54,6 @@
     </Filter>
     <Filter Include="02.GameObject\UIObject\Inventory">
       <UniqueIdentifier>{6946eef0-18f6-4343-b205-a505735ace78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\UIObject\Inventory\ETC">
-      <UniqueIdentifier>{78f55f92-14de-4fc3-a107-38dba95891c9}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\Camera">
       <UniqueIdentifier>{938702cd-cae2-4f3b-be44-2c75f8b1c3f2}</UniqueIdentifier>
@@ -99,6 +90,60 @@
     </Filter>
     <Filter Include="02.GameObject\UIObject\Hud\Quick_Slot\ETC">
       <UniqueIdentifier>{ec519a67-b9ca-45e9-b29b-835404fe4a8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Manager">
+      <UniqueIdentifier>{e59c2c87-f71c-45d1-8278-b74d10422a2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Manager\Player">
+      <UniqueIdentifier>{c02b7756-3276-4d56-a2b5-bd3d1f4312a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Manager\Item_Manager">
+      <UniqueIdentifier>{d6152359-cdde-4ae0-828d-f97188b5c5bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Item">
+      <UniqueIdentifier>{2b9bcc29-43e2-4b25-a43c-d19615f4ac92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\UIObject\Button">
+      <UniqueIdentifier>{e2b2e3b2-6bae-449c-8044-cc419dc87070}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\Item">
+      <UniqueIdentifier>{49da3a7c-86c6-461d-ac35-62bef35a2952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\Item\2D">
+      <UniqueIdentifier>{db7738aa-552d-4a4b-96ce-ecaaae8c8b90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\Item\3D">
+      <UniqueIdentifier>{47a6f88c-9a1f-4a30-ac39-7e3454eace8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Item\Render_Item">
+      <UniqueIdentifier>{5b702a78-cd5d-4049-9366-f6f6c3cd74d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Inventory\Base">
+      <UniqueIdentifier>{78f55f92-14de-4fc3-a107-38dba95891c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Inventory\Base\Inventory_ETC">
+      <UniqueIdentifier>{04024d18-add6-4381-8cd9-8a7d3107037e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Defines">
+      <UniqueIdentifier>{d8d16bc1-2149-41f4-8de6-cbcd337bba3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Player_Hp">
+      <UniqueIdentifier>{a1b43b96-d8d4-48c5-83d0-0941ea3591ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Player_Hp\ETC">
+      <UniqueIdentifier>{514b8f14-2e5c-43b4-807e-442ac4f30b82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Inventory\Panel">
+      <UniqueIdentifier>{3321eca6-0cd3-4f1e-9145-c58375f63299}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Inventory\Panel\Item_Penal">
+      <UniqueIdentifier>{cd59d9d2-5eae-40db-ad35-74705fbc1091}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Inventory\Panel\Create_Penal">
+      <UniqueIdentifier>{e28764ed-b5b5-4ac1-8ce0-d7f20ff967f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Inventory\ETC">
+      <UniqueIdentifier>{a33c099d-7d4e-4b32-abbd-36551bfd5a22}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -169,7 +214,7 @@
       <Filter>02.GameObject\UIObject\Inventory</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Inventory_Base.h">
-      <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
+      <Filter>02.GameObject\UIObject\Inventory\Base</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Camera_Free.h">
       <Filter>02.GameObject\Camera\Free</Filter>
@@ -200,6 +245,54 @@
     </ClInclude>
     <ClInclude Include="..\public\QuicK_Slot_Icon.h">
       <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Player_Manager.h">
+      <Filter>95.Manager\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_Manager.h">
+      <Filter>95.Manager\Item_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item.h">
+      <Filter>96.SuperClass\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\2DItem.h">
+      <Filter>96.SuperClass\Item\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\3DItem.h">
+      <Filter>96.SuperClass\Item\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_2D_Render.h">
+      <Filter>02.GameObject\Item\Render_Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Inventory_Node.h">
+      <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Inventory_Coin.h">
+      <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Player_Hp.h">
+      <Filter>02.GameObject\UIObject\Player_Hp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Player_Hp_Tex.h">
+      <Filter>02.GameObject\UIObject\Player_Hp\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Player_Hp_Flash.h">
+      <Filter>02.GameObject\UIObject\Player_Hp\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Player_Hp_Beat.h">
+      <Filter>02.GameObject\UIObject\Player_Hp\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_Penal.h">
+      <Filter>02.GameObject\UIObject\Inventory\Panel\Item_Penal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Create_Penal.h">
+      <Filter>02.GameObject\UIObject\Inventory\Panel\Create_Penal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Inventory_Slot.h">
+      <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Inventory_Tex.h">
+      <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -268,7 +361,7 @@
       <Filter>02.GameObject\UIObject\Inventory</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Inventory_Base.cpp">
-      <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
+      <Filter>02.GameObject\UIObject\Inventory\Base</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Camera_Free.cpp">
       <Filter>02.GameObject\Camera\Free</Filter>
@@ -296,6 +389,54 @@
     </ClCompile>
     <ClCompile Include="..\private\QuicK_Slot_Icon.cpp">
       <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Player_Manager.cpp">
+      <Filter>95.Manager\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_Manager.cpp">
+      <Filter>95.Manager\Item_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item.cpp">
+      <Filter>96.SuperClass\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\2DItem.cpp">
+      <Filter>96.SuperClass\Item\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\3DItem.cpp">
+      <Filter>96.SuperClass\Item\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_2D_Render.cpp">
+      <Filter>02.GameObject\Item\Render_Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Inventory_Node.cpp">
+      <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Inventory_Coin.cpp">
+      <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Player_Hp.cpp">
+      <Filter>02.GameObject\UIObject\Player_Hp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Player_Hp_Tex.cpp">
+      <Filter>02.GameObject\UIObject\Player_Hp\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Player_Hp_Flash.cpp">
+      <Filter>02.GameObject\UIObject\Player_Hp\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Player_Hp_Beat.cpp">
+      <Filter>02.GameObject\UIObject\Player_Hp\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_Penal.cpp">
+      <Filter>02.GameObject\UIObject\Inventory\Panel\Item_Penal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Create_Penal.cpp">
+      <Filter>02.GameObject\UIObject\Inventory\Panel\Create_Penal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Inventory_Slot.cpp">
+      <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Inventory_Tex.cpp">
+      <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
