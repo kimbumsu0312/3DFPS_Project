@@ -165,7 +165,9 @@
     <ClInclude Include="..\public\Button.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\public\3DItem.h" />
+    <ClInclude Include="..\public\Item_Penal.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\public\Create_Penal.h" />
     <ClInclude Include="..\public\Fade_UI.h" />
     <ClInclude Include="..\public\Inventory.h" />
     <ClInclude Include="..\public\Inventory_Base.h" />
@@ -175,6 +177,7 @@
     <ClInclude Include="..\public\Item.h" />
     <ClInclude Include="..\public\Item_2D_Render.h" />
     <ClInclude Include="..\public\Item_Manager.h" />
+    <ClInclude Include="..\public\Inventory_Slot.h" />
     <ClInclude Include="..\public\Logo_Button.h" />
     <ClInclude Include="..\public\Logo_Button_Line.h" />
     <ClInclude Include="..\public\Logo_Name.h" />
@@ -212,6 +215,8 @@
     <ClCompile Include="..\private\Button.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\private\3DItem.cpp" />
+    <ClCompile Include="..\private\Item_Penal.cpp" />
+    <ClCompile Include="..\private\Create_Penal.cpp" />
     <ClCompile Include="..\private\Fade_UI.cpp" />
     <ClCompile Include="..\private\Inventory.cpp" />
     <ClCompile Include="..\private\Inventory_Base.cpp" />
@@ -221,6 +226,7 @@
     <ClCompile Include="..\private\Item.cpp" />
     <ClCompile Include="..\private\Item_2D_Render.cpp" />
     <ClCompile Include="..\private\Item_Manager.cpp" />
+    <ClCompile Include="..\private\Inventory_Slot.cpp" />
     <ClCompile Include="..\private\Logo_Button.cpp" />
     <ClCompile Include="..\private\Logo_Button_Line.cpp" />
     <ClCompile Include="..\private\Logo_Name.cpp" />

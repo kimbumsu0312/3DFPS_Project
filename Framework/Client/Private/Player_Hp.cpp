@@ -239,7 +239,6 @@ void CPlayer_Hp::UIOpen_Inventory(_bool bIsOpen)
         m_bIsOpen = false;
         m_bIsInven = false;
         m_bIsClose = false;
-
     }
 }
 

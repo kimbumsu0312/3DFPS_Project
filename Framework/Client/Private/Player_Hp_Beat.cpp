@@ -46,7 +46,7 @@ void CPlayer_Hp_Beat::Priority_Update(_float fTimeDelta)
 void CPlayer_Hp_Beat::Update(_float fTimeDelta)
 {  
    
-    m_fMovePos += m_fMoveMaxX * 0.1 * (m_fMoveSpeed * fTimeDelta);
+    m_fMovePos += m_fMoveMaxX * 0.1f * (m_fMoveSpeed * fTimeDelta);
     if (m_fMovePos >= m_fMoveMaxX * 0.7f)
         m_fMovePos = -m_fMoveMaxX * 0.5f;
 }
