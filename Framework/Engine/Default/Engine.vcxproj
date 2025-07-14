@@ -170,6 +170,8 @@ call Copy_Release.bat</Command>
     <ClInclude Include="..\public\Light.h" />
     <ClInclude Include="..\public\Light_Manager.h" />
     <ClInclude Include="..\public\PipeLine.h" />
+    <ClInclude Include="..\public\PoolingObject.h" />
+    <ClInclude Include="..\public\Pooling_Manager.h" />
     <ClInclude Include="..\public\Shader.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
     <ClInclude Include="..\Public\Engine_Enum.h" />
@@ -204,6 +206,8 @@ call Copy_Release.bat</Command>
     <ClCompile Include="..\private\Light.cpp" />
     <ClCompile Include="..\private\Light_Manager.cpp" />
     <ClCompile Include="..\private\PipeLine.cpp" />
+    <ClCompile Include="..\private\PoolingObject.cpp" />
+    <ClCompile Include="..\private\Pooling_Manager.cpp" />
     <ClCompile Include="..\private\Shader.cpp" />
     <ClCompile Include="..\private\GameInstance.cpp" />
     <ClCompile Include="..\private\GameObject.cpp" />

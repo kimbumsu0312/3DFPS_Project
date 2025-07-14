@@ -28,15 +28,15 @@ public:
 
 #pragma region INPUT_DEVICE
 public:
-	_byte	Get_DIKeyState(_ubyte byKeyID);
-	_byte	Get_DIMouseState(MOUSEKEYSTATE eMouse);
-	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseState);
-	_bool	IsKeyDown(_ubyte byKeyID);
-	_bool	IsKeyUp(_ubyte byKeyID);
-	_bool	IsKeyHold(_ubyte byKeyID);
-	_bool	IsMouseDown(MOUSEKEYSTATE eMouse);
-	_bool	IsMouseUp(MOUSEKEYSTATE eMouse);
-	_bool	IsMouseHold(MOUSEKEYSTATE eMouse);
+	_byte			Get_DIKeyState(_ubyte byKeyID);
+	_byte			Get_DIMouseState(MOUSEKEYSTATE eMouse);
+	_long			Get_DIMouseMove(MOUSEMOVESTATE eMouseState);
+	_bool			IsKeyDown(_ubyte byKeyID);
+	_bool			IsKeyUp(_ubyte byKeyID);
+	_bool			IsKeyHold(_ubyte byKeyID);
+	_bool			IsMouseDown(MOUSEKEYSTATE eMouse);
+	_bool			IsMouseUp(MOUSEKEYSTATE eMouse);
+	_bool			IsMouseHold(MOUSEKEYSTATE eMouse);
 #pragma endregion 
 
 #pragma region TIMER_MANAGER
@@ -55,6 +55,7 @@ public:
 public:
 	class CComponent*	Find_Component(_uint iLayerLevelIndex, const _wstring& strLayerTag, const _wstring& strComponentTag, _uint iIndex = 0);
 	HRESULT				Add_GameObject_ToLayer(_uint iLayerLevelIndex, const _wstring& strLayerTag, _uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, void* pArg = nullptr);
+	HRESULT				Add_PoolGameObject_ToLayer(class CPoolingObject* pObject, _uint iLayerLevelIndex, const _wstring& strLayerTag);
 #pragma endregion
 
 #pragma region PROTOTYPE_MANAGER
@@ -91,20 +92,26 @@ public:
 
 #pragma region PIPELINE
 public:
-	_matrix				Get_Transform_Matrix(D3DTS eTransformState) const;
-	const _float4x4*	Get_Transform_Float4x4(D3DTS eTransformState) const;
-	_matrix				Get_Transform_Matrix_Inverse(D3DTS eTransformState) const;
-	const _float4x4*	Get_Transform_Float4x4_Inverse(D3DTS eTransformState) const;
-	const _float4*		Get_CamPosition() const;
+	_matrix						Get_Transform_Matrix(D3DTS eTransformState) const;
+	const _float4x4*			Get_Transform_Float4x4(D3DTS eTransformState) const;
+	_matrix						Get_Transform_Matrix_Inverse(D3DTS eTransformState) const;
+	const _float4x4*			Get_Transform_Float4x4_Inverse(D3DTS eTransformState) const;
+	const _float4*				Get_CamPosition() const;
 
-	void				Set_Transform(D3DTS eTransformState, _fmatrix Matrix);
-	void				Set_Transform(D3DTS eTransformState, const _float4x4& Matrix);
+	void						Set_Transform(D3DTS eTransformState, _fmatrix Matrix);
+	void						Set_Transform(D3DTS eTransformState, const _float4x4& Matrix);
 
 #pragma endregion
 
 #pragma region LIGHT_MANAGER
-	const LIGHT_DESC*	Get_LightDesc(_uint iIndex);
-	HRESULT				Add_Light(LIGHT_DESC& LightDesc);
+	const LIGHT_DESC*			Get_LightDesc(_uint iIndex);
+	HRESULT						Add_Light(LIGHT_DESC& LightDesc);
+#pragma endregion
+
+#pragma region POOLING_MANAGER
+	HRESULT								Add_Object_ToPool(const _wstring& szPoolingPath, _uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, void* pArg);
+	HRESULT								Add_Pool_ToLayer(const _wstring& szPoolingPath, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg);
+	HRESULT								Return_Object(class CPoolingObject* pObject, const _wstring& szPoolingPath);
 #pragma endregion
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
@@ -116,6 +123,7 @@ private:
 	class CRenderer*			m_pRenderer = { nullptr };
 	class CPipeLine*			m_pPipeLine = { nullptr };
 	class CLight_Manager*		m_pLight_Manager = { nullptr };
+	class CPooling_Manager*		m_pPooling_Manager = { nullptr };
 
 public:
 	void						Release_Engine();

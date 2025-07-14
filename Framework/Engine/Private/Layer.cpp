@@ -24,10 +24,24 @@ HRESULT CLayer::Add_GameObject(CGameObject* pGameObject)
 
 void CLayer::Priority_Update(_float fTimeDelta)
 {
-	for (auto& pGameObject : m_GameObjects)
-	{
-		if (nullptr != pGameObject)
-			pGameObject->Priority_Update(fTimeDelta);
+	for (auto pGameObject = m_GameObjects.begin(); pGameObject != m_GameObjects.end();)
+	{		
+		if ((*pGameObject)->IsDead())
+		{
+			switch ((*pGameObject)->IsObjectType())
+			{
+			case OBJECTTYPE::GAMEOBJECT:
+				(*pGameObject)->On_Dead();
+				break;
+			case OBJECTTYPE::POLLINGOBJECT:
+				(*pGameObject)->On_Dead();
+				pGameObject = m_GameObjects.erase(pGameObject);
+				++pGameObject;
+				break;
+			}
+		}
+		(*pGameObject)->Priority_Update(fTimeDelta);
+		++pGameObject;
 	}
 }
 

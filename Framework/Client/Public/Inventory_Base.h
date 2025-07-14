@@ -30,8 +30,11 @@ private:
 	_float						m_fOpenTexValueX = {};
 	_float						m_fOpenTexValueY = {};
 	_float						m_fOpenTexSpeed = {};
+	_int						m_iSeletePenal_Index = {};
+
 private:
 	HRESULT						Ready_Components();
+	HRESULT						Ready_Children_Prototype();
 	HRESULT						Ready_Children();
 
 	void						Open_UI(_float fTimeDelta);

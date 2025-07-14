@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Inventory.h"
 #include "Inventory_Base.h"
+#include "Inventory_Tex.h"
+#include "Inventory_Slot.h"
 
 CInventory::CInventory(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
@@ -73,7 +75,8 @@ HRESULT CInventory::Render()
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
         return E_FAIL;
 
-    if (FAILED(m_pShaderCom->Bind_Vector("g_Vector", XMLoadFloat4(&m_vBackGroundColor))))
+
+    if (FAILED(m_pShaderCom->Bind_RawValue("g_Vector", &m_vBackGroundColor, sizeof(_float4))))
         return E_FAIL;
 
     __super::Bind_ShaderTransform_Resourc(1);
@@ -105,6 +108,14 @@ HRESULT CInventory::Ready_Children_Prototype()
 {
     if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Inventory_Base"),
         CInventory_Base::Create(m_pDevice, m_pContext))))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Tex"),
+        CInventory_Tex::Create(m_pDevice, m_pContext))))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Slot"),
+        CInventory_Slot::Create(m_pDevice, m_pContext))))
         return E_FAIL;
 
     return S_OK;

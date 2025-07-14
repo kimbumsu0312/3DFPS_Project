@@ -83,8 +83,9 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 	LightDesc.eType = LIGHT_DESC::TYPE::DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(1.f, 0.f, 0.f, 1.f);
-	LightDesc.vDiffuse = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
@@ -98,12 +99,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _wstring& strLayerTag)
 
 	CameraDesc.vEye = _float4(0.f, 20.f, -15.f, 1.f);
 	CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
-	CameraDesc.fFovy = XMConvertToRadians(60.f);
+	CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 500.f;
 	CameraDesc.fSpeedPerSec = 10.f;
-	CameraDesc.fRotationPerSec = XMConvertToRadians(90.f);
-	CameraDesc.fMouseSensor = 0.5f;
+	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+	CameraDesc.fMouseSensor = 0.2f;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"), &CameraDesc)))
@@ -157,11 +158,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Inventroy"))))
 		return E_FAIL;
+	
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Player_Hp"))))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Loding_Fade"))))
 		return E_FAIL;
 
+
+	
 	return S_OK;
 }
 

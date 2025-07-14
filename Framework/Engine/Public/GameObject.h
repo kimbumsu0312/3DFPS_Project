@@ -1,5 +1,6 @@
 #pragma once
 #include "Transform.h"
+#include "Engine_Defines.h"
 
 NS_BEGIN(Engine)
 class ENGINE_DLL CGameObject abstract : public CBase
@@ -17,7 +18,8 @@ protected:
 	//123
 public:
 	class CComponent*		Get_Component(const _wstring& strComponentTag);
-
+	_bool					IsDead() { return m_bIsDead; }
+	OBJECTTYPE				IsObjectType() { return m_eObjectType; }
 public:
 	virtual HRESULT			Initialize_Prototype();
 	virtual HRESULT			Initialize(void* pArg);
@@ -26,7 +28,9 @@ public:
 	virtual void			Late_Update(_float fTimeDelta);
 	virtual HRESULT			Render();
 
+	virtual void			On_Dead();
 protected:
+	OBJECTTYPE				m_eObjectType = {};
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 	class CGameInstance*	m_pGameInstance = { nullptr };
@@ -34,11 +38,11 @@ protected:
 
 	map<const _wstring, 
 		class CComponent*>	m_Components;
-
+	
+	_bool					m_bIsDead = {};
 protected:
 	HRESULT					Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag,
 											const _wstring& strComponentTag, CComponent** ppOut, void* pArg = nullptr);
-
 public:
 	virtual CGameObject*	Clone(void* pArg) = 0;
 	virtual void			Free() override;

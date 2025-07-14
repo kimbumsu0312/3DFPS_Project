@@ -2,14 +2,14 @@
 #include "GameObject.h"
 #include "GameInstance.h"
 
-CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_pDevice { pDevice }, m_pContext { pContext }, m_pGameInstance { CGameInstance::GetInstance() }
+CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_pDevice{ pDevice }, m_pContext{ pContext }, m_pGameInstance{ CGameInstance::GetInstance() }
 {
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
 }
 
-CGameObject::CGameObject(const CGameObject& Prototype) : m_pDevice{ Prototype.m_pDevice }, m_pContext{ Prototype.m_pContext }, m_pGameInstance{ CGameInstance::GetInstance() }
+CGameObject::CGameObject(const CGameObject& Prototype) : m_pDevice{ Prototype.m_pDevice }, m_pContext{ Prototype.m_pContext }, m_pGameInstance{ CGameInstance::GetInstance() }, m_bIsDead{ false }, m_eObjectType{ OBJECTTYPE::GAMEOBJECT }
 {
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pDevice);
@@ -61,6 +61,10 @@ void CGameObject::Late_Update(_float fTimeDelta)
 HRESULT CGameObject::Render()
 {
 	return S_OK;
+}
+
+void CGameObject::On_Dead()
+{
 }
 
 HRESULT CGameObject::Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg)
