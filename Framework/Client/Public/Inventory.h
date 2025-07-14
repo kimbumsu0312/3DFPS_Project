@@ -26,6 +26,7 @@ private:
 	_float4						m_vBackGroundColor = {};
 
 	_bool						m_bIsOpen = { false };
+
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children_Prototype();

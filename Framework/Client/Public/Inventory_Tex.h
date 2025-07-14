@@ -8,7 +8,11 @@ NS_END
 NS_BEGIN(Client)
 class CInventory_Tex final : public CUIObject
 {
-
+public:
+	typedef struct tagInven_Tex_Desc : public CUIObject::UIOBJECT_DESC
+	{
+		_uint iTexIndex;
+	}INVEN_TEX_DESC;
 private:
 	CInventory_Tex(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CInventory_Tex(const CInventory_Tex& Prototype);
@@ -26,6 +30,7 @@ private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	_int						m_iIndex = {};
 	_float						m_fRotation = {};
+	_int						m_iTexIndex = {};
 
 private:
 	HRESULT						Ready_Components();

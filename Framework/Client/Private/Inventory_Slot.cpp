@@ -22,8 +22,9 @@ HRESULT CInventory_Slot::Initialize(void* pArg)
 	if (pArg == nullptr)
 		return E_FAIL;
 
-	UIOBJECT_DESC* Desc = static_cast<UIOBJECT_DESC*>(pArg);
+	INVEN_SLOT_DESC* Desc = static_cast<INVEN_SLOT_DESC*>(pArg);
 
+	m_iTexIndex = Desc->iTexIndex;
 	m_iMaxIndex = Desc->iMaxIndex;
 	m_iIndex = Desc->iIndex;
 
@@ -67,6 +68,9 @@ void CInventory_Slot::Late_Update(_float fTimeDelta)
 
 HRESULT CInventory_Slot::Render()
 {
+	if (FAILED(m_pTextureCom->Bind_Shader_Resource_IndexCheck(m_pShaderCom, "g_Texture", m_iTexIndex)))
+		return E_FAIL;
+
 	__super::Bind_ShaderTransform_Resourc(2);
 
 	m_pVIBufferCom->Bind_Resources();

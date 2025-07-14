@@ -8,6 +8,11 @@ NS_END
 NS_BEGIN(Client)
 class CInventory_Slot final : public CButton
 {
+public:
+	typedef struct tagInven_Slot_Desc : public CUIObject::UIOBJECT_DESC
+	{
+		_uint iTexIndex;
+	}INVEN_SLOT_DESC;
 private:
 	CInventory_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CInventory_Slot(const CInventory_Slot& Prototype);
@@ -25,7 +30,7 @@ private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	_uint						m_iIndex = {};
 	_uint						m_iMaxIndex = {};
-
+	_int						m_iTexIndex = {};
 
 private:
 	HRESULT						Ready_Components();

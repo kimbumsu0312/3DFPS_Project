@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Item_Penal.h"
-
+#include "Inventory_Slot.h"
 CItem_Penal::CItem_Penal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
 }
@@ -32,8 +32,6 @@ HRESULT CItem_Penal::Initialize(void* pArg)
     if (FAILED(Ready_Children()))
         return E_FAIL;
 
-    m_pGameInstance->Subscribe<Event_Inven_Selete_penal>([&](const Event_Inven_Selete_penal& e) { if (e.iIndex == m_iIndex) { m_bIsSelete = true; } else { m_bIsSelete = false; } });
-
     return S_OK;
 }
 
@@ -64,6 +62,14 @@ HRESULT CItem_Penal::Render()
     return S_OK;
 }
 
+void CItem_Penal::Selete_Penal(_uint iIndex)
+{
+    if (iIndex == m_iIndex)
+        m_bIsSelete = true;
+    else
+        m_bIsSelete = false;
+}
+
 HRESULT CItem_Penal::Ready_Components()
 {
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
@@ -76,20 +82,21 @@ HRESULT CItem_Penal::Ready_Components()
 HRESULT CItem_Penal::Ready_Children()
 {
     CUIObject* pGameObject = nullptr;
-    CUIObject::UIOBJECT_DESC Desc;
+    CInventory_Slot::INVEN_SLOT_DESC Desc;
 
     _float fTexSizeX = 512.f;
     _float fTexSizeY = 512.f;
 
-    Desc.vPos = { 0.f, -120.f };
-    Desc.vSize = { 60.f, 60.f };
+    Desc.vPos = { 0.f, -140.f };
+    Desc.vSize = { 55.f, 55.f };
     Desc.vMinUV = { 0.f, 0.f };
     Desc.vMaxUV = { 60.f / fTexSizeX , 60.f / fTexSizeY };
-    Desc.OffsetX = 70.f;
+    Desc.OffsetX = 65.f;
     Desc.iIndex = 0;
-    Desc.iMaxIndex = 9;
+    Desc.iMaxIndex = 10;
+    Desc.iTexIndex = 1;
 
-    for (_int i = 0; i < 5; ++i)
+    for (_int i = 0; i < 6; ++i)
     {
         Desc.OffsetY = i;
         for (_int j = 0; j < Desc.iMaxIndex; ++j)
@@ -135,6 +142,5 @@ CGameObject* CItem_Penal::Clone(void* pArg)
 void CItem_Penal::Free()
 {
     __super::Free();
-
     Safe_Release(m_pVIBufferCom);
 }

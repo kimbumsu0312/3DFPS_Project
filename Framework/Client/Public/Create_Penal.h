@@ -22,6 +22,9 @@ public:
 	virtual void				Late_Update(_float fTimeDelta);
 	virtual HRESULT				Render();
 
+public:
+	void						Selete_Penal(_uint iIndex);
+
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 
@@ -30,7 +33,6 @@ private:
 
 private:
 	HRESULT						Ready_Components();
-	HRESULT						Ready_Children_Prototype();
 	HRESULT						Ready_Children();
 
 public:
