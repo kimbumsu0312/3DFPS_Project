@@ -47,25 +47,7 @@ HRESULT CInventory_Base::Initialize(void* pArg)
 
 void CInventory_Base::Priority_Update(_float fTimeDelta)
 {
-    if (m_pGameInstance->IsKeyDown(DIK_Q))
-    {
-        m_iSeletePenal_Index--;
-
-        if (m_iSeletePenal_Index < 0)
-            m_iSeletePenal_Index = 1;
-
-        m_pGameInstance->Publish(Event_Inven_Selete_penal{ m_iSeletePenal_Index });
-    }
-
-    if (m_pGameInstance->IsKeyDown(DIK_E))
-    {
-        m_iSeletePenal_Index++;
-
-        if (m_iSeletePenal_Index > 1)
-            m_iSeletePenal_Index = 0;
-
-        m_pGameInstance->Publish(Event_Inven_Selete_penal{ m_iSeletePenal_Index });
-    }
+    Change_Penal();
 }
 
 void CInventory_Base::Update(_float fTimeDelta)
@@ -94,9 +76,6 @@ HRESULT CInventory_Base::Render()
 
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();
-
-    if (FAILED(m_pTextureCom->Bind_Shader_Resource(m_pShaderCom, "g_Texture", 3)))
-        return E_FAIL;
 
     return S_OK;
 }
@@ -134,7 +113,7 @@ HRESULT CInventory_Base::Ready_Children_Prototype()
 HRESULT CInventory_Base::Ready_Children()
 {
     CUIObject* pGameObject = nullptr;
-    CUIObject::UIOBJECT_DESC Desc;
+    CInventory_Tex::INVEN_TEX_DESC Desc;
 
     _float fTexSizeX = 512.f;
     _float fTexSizeY = 256.f;
@@ -145,6 +124,8 @@ HRESULT CInventory_Base::Ready_Children()
     Desc.vMaxUV = {110/ fTexSizeX , 115/ fTexSizeY };
     Desc.iIndex = 0;
     Desc.fRot = 0.f;
+    Desc.iTexIndex = 3;
+
     pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Tex"), &Desc));
     if (nullptr == pGameObject)
         return E_FAIL;
@@ -190,7 +171,8 @@ HRESULT CInventory_Base::Ready_Children()
 
     Desc.vPos = { 250.f, -225.f };
     Desc.vSize = { 35.f, 35.f };
-
+    Desc.vMinUV = { 589.f / 2048.f, 13.f / 2048.f };
+    Desc.vMaxUV = { 659.f / 2048.f , 86.f / 2048.f };
     pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Coin"), &Desc));
     if (nullptr == pGameObject)
         return E_FAIL;
@@ -204,6 +186,9 @@ HRESULT CInventory_Base::Ready_Children()
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
 
+    m_pItemPenal = static_cast<CItem_Penal*>(pGameObject);
+    Safe_AddRef(m_pItemPenal);
+
     Desc.iIndex = 1;
     Desc.vPos = { 0.f, 0.f };
 
@@ -211,6 +196,10 @@ HRESULT CInventory_Base::Ready_Children()
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+    
+    m_pCreatePenal = static_cast<CCreate_Penal*>(pGameObject);
+    Safe_AddRef(m_pCreatePenal);
+
 
     return S_OK;
 }
@@ -243,6 +232,35 @@ void CInventory_Base::Open_UI(_float fTimeDelta)
     }
 }
 
+void CInventory_Base::Change_Penal()
+{
+    if (m_pGameInstance->IsKeyDown(DIK_Q))
+    {
+        m_iSeletePenal_Index--;
+
+        if (m_iSeletePenal_Index < 0)
+            m_iSeletePenal_Index = 1;
+        
+        Selete_Penal(m_iSeletePenal_Index);
+    }
+
+    if (m_pGameInstance->IsKeyDown(DIK_E))
+    {
+        m_iSeletePenal_Index++;
+
+        if (m_iSeletePenal_Index > 1)
+            m_iSeletePenal_Index = 0;
+
+        Selete_Penal(m_iSeletePenal_Index);
+    }
+}
+
+void CInventory_Base::Selete_Penal(_uint iIndex)
+{
+    m_pItemPenal->Selete_Penal(m_iSeletePenal_Index);
+    m_pCreatePenal->Selete_Penal(m_iSeletePenal_Index);
+}
+
 CInventory_Base* CInventory_Base::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
     CInventory_Base* pInstance = new CInventory_Base(pDevice, pContext);
@@ -271,6 +289,8 @@ CGameObject* CInventory_Base::Clone(void* pArg)
 
 void CInventory_Base::Free()
 {
+    Safe_Release(m_pItemPenal);
+    Safe_Release(m_pCreatePenal);
     __super::Free();
 
     Safe_Release(m_pVIBufferCom);

@@ -23,7 +23,6 @@ public:
 
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
-
 	_uint						m_iNumSeleteButton = {};
 	_uint						m_iNumMaxButton = {};
 private:

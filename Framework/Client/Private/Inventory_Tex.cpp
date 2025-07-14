@@ -20,13 +20,13 @@ HRESULT CInventory_Tex::Initialize(void* pArg)
     if (pArg == nullptr)
         return E_FAIL;
 
-    UIOBJECT_DESC* Desc = static_cast<UIOBJECT_DESC*>(pArg);
+    INVEN_TEX_DESC* Desc = static_cast<INVEN_TEX_DESC*>(pArg);
 
     m_vLocalPos = Desc->vPos;
     m_vLocalSize = Desc->vSize;
     m_iIndex = Desc->iIndex;
     m_fRotation = Desc->fRot;
-
+    m_iTexIndex = Desc->iTexIndex;
 
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
@@ -59,6 +59,8 @@ void CInventory_Tex::Late_Update(_float fTimeDelta)
 
 HRESULT CInventory_Tex::Render()
 {
+    if (FAILED(m_pTextureCom->Bind_Shader_Resource_IndexCheck(m_pShaderCom, "g_Texture", m_iTexIndex)))
+        return E_FAIL;
 
     Bind_ShaderTransform_Resourc(2);
 

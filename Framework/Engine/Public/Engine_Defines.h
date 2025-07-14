@@ -16,6 +16,11 @@
 #include "DirectXTK/DDSTextureLoader.h"
 #include "DirectXTK/WICTextureLoader.h"
 
+//매쉬 파일 로드 헤더
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
+#include "assimp/Importer.hpp"
+
 using namespace DirectX;
 
 #include <vector>

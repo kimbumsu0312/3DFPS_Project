@@ -145,6 +145,12 @@
     <Filter Include="02.GameObject\UIObject\Inventory\ETC">
       <UniqueIdentifier>{a33c099d-7d4e-4b32-abbd-36551bfd5a22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Player">
+      <UniqueIdentifier>{e2bc6bad-4903-4641-8da4-fd80cb69439c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Announce">
+      <UniqueIdentifier>{a1111a65-6e53-4a0d-9ed1-68e8f7698986}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -294,6 +300,9 @@
     <ClInclude Include="..\public\Inventory_Tex.h">
       <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Player.h">
+      <Filter>02.GameObject\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -438,6 +447,9 @@
     <ClCompile Include="..\private\Inventory_Tex.cpp">
       <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Player.cpp">
+      <Filter>02.GameObject\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
@@ -447,6 +459,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_UI.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
