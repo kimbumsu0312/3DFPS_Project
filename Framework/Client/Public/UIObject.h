@@ -56,7 +56,10 @@ protected:
 
 	void					Update_Position(CUIObject* pParent = nullptr);
 	void					Update_Position_Children(CUIObject* pParent);
+	void					Add_Child(CUIObject* pParent, CUIObject* pChild);
+	void					Add_Child(CUIObject* pParent, CUIObject* pChild, CShader* pShader);
 	void					Add_Child(CUIObject* pParent,CUIObject* pChild, CShader* pShader, CTexture* pTexture);
+
 	void					Update_Shader(CShader* pShader);
 	void					Update_Texture(CTexture* pTexture);
 	void					Correct_Position(_float2 pPos);

@@ -99,7 +99,7 @@ CMainApp* CMainApp::Create()
 void CMainApp::Free()
 {
 	__super::Free();
-
+	CPlayer_Manager::GetInstance()->Free();
 	CPlayer_Manager::GetInstance()->DestroyInstance();
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);

@@ -7,12 +7,12 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CInventory_Base final : public CUIObject
+class CItem_Penal final : public CUIObject
 {
 private:
-	CInventory_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CInventory_Base(const CInventory_Base& Prototype);
-	virtual ~CInventory_Base() = default;
+	CItem_Penal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CItem_Penal(const CItem_Penal& Prototype);
+	virtual ~CItem_Penal() = default;
 
 public:
 	virtual HRESULT				Initialize_Prototype();
@@ -24,22 +24,15 @@ public:
 
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
-
-	_bool						m_bIsOpen = {false};
-	_float4						m_vOpenTex = {};
-	_float						m_fOpenTexValueX = {};
-	_float						m_fOpenTexValueY = {};
-	_float						m_fOpenTexSpeed = {};
-	_int						m_iSeletePenal_Index = {};
+	_bool						m_bIsSelete = { false };
+	_int						m_iIndex = {};
 
 private:
 	HRESULT						Ready_Components();
-	HRESULT						Ready_Children_Prototype();
 	HRESULT						Ready_Children();
 
-	void						Open_UI(_float fTimeDelta);
 public:
-	static CInventory_Base*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CItem_Penal*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;
 	virtual void				Free() override;
 };

@@ -26,6 +26,11 @@ HRESULT CUIObject::Initialize(void* pArg)
 		m_vMinUV = pDesc->vMinUV;
 		m_vMaxUV = pDesc->vMaxUV;
 	}
+	else
+	{
+		m_vMinUV = {0.f, 0.f};
+		m_vMaxUV = {1.f, 1.f};
+	}
 	m_vSize = m_vLocalSize;
 	
 	D3D11_VIEWPORT			Viewport{};
@@ -118,6 +123,19 @@ void CUIObject::Update_Position_Children(CUIObject* pParent)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - g_iWinSizeX * 0.5f, -m_vPos.y + g_iWinSizeY * 0.5f, 0.f, 1.f));
 	for (auto child : m_vecChildren)
 		child->Update_Position(this);
+}
+
+void CUIObject::Add_Child(CUIObject* pParent, CUIObject* pChild)
+{
+	m_vecChildren.push_back(pChild);
+	pChild->Update_Position(pParent);
+}
+
+void CUIObject::Add_Child(CUIObject* pParent, CUIObject* pChild, CShader* pShader)
+{
+	m_vecChildren.push_back(pChild);
+	pChild->Update_Position(pParent);
+	pChild->Update_Shader(pShader);
 }
 
 void CUIObject::Add_Child(CUIObject* pParent, CUIObject* pChild, CShader* pShader, CTexture* pTexture)
