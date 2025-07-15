@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Inventory_Base.h"
-#include "Inventory_Tex.h"
+#include "UI_Tex.h"
 #include "Inventory_Node.h"
 #include "Inventory_Coin.h"
 #include "Item_Penal.h"
@@ -113,7 +113,7 @@ HRESULT CInventory_Base::Ready_Children_Prototype()
 HRESULT CInventory_Base::Ready_Children()
 {
     CUIObject* pGameObject = nullptr;
-    CInventory_Tex::INVEN_TEX_DESC Desc;
+    CUI_Tex::UI_TEX_DESC Desc;
 
     _float fTexSizeX = 512.f;
     _float fTexSizeY = 256.f;
@@ -125,8 +125,9 @@ HRESULT CInventory_Base::Ready_Children()
     Desc.iIndex = 0;
     Desc.fRot = 0.f;
     Desc.iTexIndex = 3;
+    Desc.iPassIndex = 2;
 
-    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Tex"), &Desc));
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Tex"), &Desc));
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
@@ -137,7 +138,7 @@ HRESULT CInventory_Base::Ready_Children()
     Desc.vMaxUV = { 53 / fTexSizeX , 103 / fTexSizeY };
     Desc.iIndex = 1;
     Desc.fRot = 0.f;
-    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Tex"), &Desc));
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Tex"), &Desc));
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
@@ -149,7 +150,7 @@ HRESULT CInventory_Base::Ready_Children()
     Desc.iIndex = 2;
     Desc.fRot = 180.f;
 
-    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Tex"), &Desc));
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Tex"), &Desc));
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Item_Penal.h"
-#include "Inventory_Slot.h"
+#include "UI_Slot.h"
 CItem_Penal::CItem_Penal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
 }
@@ -82,11 +82,11 @@ HRESULT CItem_Penal::Ready_Components()
 HRESULT CItem_Penal::Ready_Children()
 {
     CUIObject* pGameObject = nullptr;
-    CInventory_Slot::INVEN_SLOT_DESC Desc;
+    CUI_Slot::UI_SLOT_DESC Desc;
 
     _float fTexSizeX = 512.f;
     _float fTexSizeY = 512.f;
-
+    Desc.iPassIndex = 2;
     Desc.vPos = { 0.f, -140.f };
     Desc.vSize = { 55.f, 55.f };
     Desc.vMinUV = { 0.f, 0.f };
@@ -96,13 +96,13 @@ HRESULT CItem_Penal::Ready_Children()
     Desc.iMaxIndex = 10;
     Desc.iTexIndex = 1;
 
-    for (_int i = 0; i < 6; ++i)
+    for (_uint i = 0; i < 6; ++i)
     {
-        Desc.OffsetY = i;
-        for (_int j = 0; j < Desc.iMaxIndex; ++j)
+        Desc.OffsetY = (_float)i;
+        for (_uint j = 0; j < Desc.iMaxIndex; ++j)
         {
 
-            pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Slot"), &Desc));
+            pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &Desc));
             if (nullptr == pGameObject)
                 return E_FAIL;
             Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);

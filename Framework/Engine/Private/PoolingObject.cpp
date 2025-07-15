@@ -47,7 +47,7 @@ HRESULT CPoolingObject::Render()
 	return S_OK;
 }
 
-void CPoolingObject::OnDead()
+void CPoolingObject::On_Dead()
 {
 	m_pGameInstance->Return_Object(this, m_szPoolingPath);
 }
@@ -56,11 +56,6 @@ HRESULT CPoolingObject::Initialize_Pool(void* pArg)
 {
 	return S_OK;
 }
-
-void CPoolingObject::Return_Pool()
-{
-}
-
 
 void CPoolingObject::Free()
 {

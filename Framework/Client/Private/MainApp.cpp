@@ -4,6 +4,8 @@
 #include "Level_Loading.h"
 #include "Fade_UI.h"
 #include "Player_Manager.h"
+#include "Mouse.h"
+#include "Mouse_Click_Fx.h"
 
 CMainApp::CMainApp() : m_pGameInstance{ CGameInstance::GetInstance()}
 {
@@ -76,12 +78,34 @@ HRESULT CMainApp::Ready_Prototype_ForStatic()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Models/Fiona/fiona_D.png"),1))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Text_Mouse"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Mouse/Mouse_%d.png"), 1))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Loding_Fade"),
 		CFade_UI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Mouse"),
+		CMouse::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Mouse_Click_Fx"),
+		CMouse_Click_Fx::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	CMouse_Click_Fx::CLICKFX_CLONE_DESC pDesc{};
+	pDesc.vSize = { 50.f, 50.f };
+	pDesc.vMinUV = { 0.f , 128.f / 256.f };
+	pDesc.vMaxUV = { 128.f / 256.f , 256.f / 256.f };
+	pDesc.szPoolingPath = TEXT("Pool_Click_Fx");
+
+ 	if(FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Mouse_Click_Fx"), 5 ,&pDesc)))
 		return E_FAIL;
 
 	return S_OK;

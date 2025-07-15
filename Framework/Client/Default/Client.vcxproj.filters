@@ -142,14 +142,20 @@
     <Filter Include="02.GameObject\UIObject\Inventory\Panel\Create_Penal">
       <UniqueIdentifier>{e28764ed-b5b5-4ac1-8ce0-d7f20ff967f4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\UIObject\Inventory\ETC">
-      <UniqueIdentifier>{a33c099d-7d4e-4b32-abbd-36551bfd5a22}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Player">
       <UniqueIdentifier>{e2bc6bad-4903-4641-8da4-fd80cb69439c}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\UIObject\Announce">
       <UniqueIdentifier>{a1111a65-6e53-4a0d-9ed1-68e8f7698986}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Mouse">
+      <UniqueIdentifier>{67ec6e06-9ae6-4593-9514-a62068401f19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\ETC">
+      <UniqueIdentifier>{a33c099d-7d4e-4b32-abbd-36551bfd5a22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Mouse\Click_FX">
+      <UniqueIdentifier>{4bf151f8-6fe8-49d8-b287-df51579ead6c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -294,14 +300,23 @@
     <ClInclude Include="..\public\Create_Penal.h">
       <Filter>02.GameObject\UIObject\Inventory\Panel\Create_Penal</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Inventory_Slot.h">
-      <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
+    <ClInclude Include="..\public\UI_Slot.h">
+      <Filter>02.GameObject\UIObject\ETC</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Inventory_Tex.h">
-      <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
+    <ClInclude Include="..\public\UI_Tex.h">
+      <Filter>02.GameObject\UIObject\ETC</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Player.h">
       <Filter>02.GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Announce.h">
+      <Filter>02.GameObject\UIObject\Announce</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Mouse.h">
+      <Filter>02.GameObject\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Mouse_Click_Fx.h">
+      <Filter>02.GameObject\Mouse\Click_FX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -441,14 +456,23 @@
     <ClCompile Include="..\private\Create_Penal.cpp">
       <Filter>02.GameObject\UIObject\Inventory\Panel\Create_Penal</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Inventory_Slot.cpp">
-      <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
+    <ClCompile Include="..\private\UI_Slot.cpp">
+      <Filter>02.GameObject\UIObject\ETC</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Inventory_Tex.cpp">
-      <Filter>02.GameObject\UIObject\Inventory\ETC</Filter>
+    <ClCompile Include="..\private\UI_Tex.cpp">
+      <Filter>02.GameObject\UIObject\ETC</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Player.cpp">
       <Filter>02.GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Announce.cpp">
+      <Filter>02.GameObject\UIObject\Announce</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Mouse.cpp">
+      <Filter>02.GameObject\Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Mouse_Click_Fx.cpp">
+      <Filter>02.GameObject\Mouse\Click_FX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
