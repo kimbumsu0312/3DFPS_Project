@@ -19,16 +19,13 @@ HRESULT CInventory_Coin::Initialize(void* pArg)
     if (pArg == nullptr)
         return E_FAIL;
 
-    UIOBJECT_DESC* Desc = static_cast<UIOBJECT_DESC*>(pArg);
+        UIOBJECT_DESC* Desc = static_cast<UIOBJECT_DESC*>(pArg);
 
     m_vLocalPos = Desc->vPos;
     m_vLocalSize = Desc->vSize;
 
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
-
-    m_vMinUV = { 0.f, 0.f };
-    m_vMaxUV = { 1.f, 1.f };
 
     if (FAILED(Ready_Components()))
         return E_FAIL;

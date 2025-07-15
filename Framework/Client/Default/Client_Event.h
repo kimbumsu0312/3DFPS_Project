@@ -57,8 +57,4 @@ namespace Client
 		_uint itype;
 	}Event_Player_Hp_UI_Open;
 
-	typedef struct Inven_Selete_Penal
-	{
-		_int iIndex;
-	}Event_Inven_Selete_penal;
 }

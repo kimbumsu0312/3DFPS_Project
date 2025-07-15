@@ -292,19 +292,19 @@ HRESULT CGameInstance::Add_Light(LIGHT_DESC& LightDesc)
 	return m_pLight_Manager->Add_Light(LightDesc);
 }
 
-HRESULT CGameInstance::Add_Object_ToPool(const _wstring& szPoolingPath, _uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, void* pArg)
+HRESULT CGameInstance::Add_Object_ToPool(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iValue, void* pArg)
 {
-	return m_pPooling_Manager->Add_Object_ToPool(szPoolingPath, iPrototypeLevelIndex, strPrototypeTag, pArg);
+	return m_pPooling_Manager->Add_Object_ToPool(iPrototypeLevelIndex, strPrototypeTag, iValue, pArg);
 }
 
 HRESULT CGameInstance::Add_Pool_ToLayer(const _wstring& szPoolingPath, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg)
 {
-	return E_NOTIMPL;
+	return m_pPooling_Manager->Add_Pool_ToLayer(szPoolingPath, iLayerLevelIndex, strLayerTag, pArg);
 }
 
 HRESULT CGameInstance::Return_Object(CPoolingObject* pObject, const _wstring& szPoolingPath)
 {
-	return E_NOTIMPL;
+	return m_pPooling_Manager->Return_Object(pObject, szPoolingPath);
 }
 
 void CGameInstance::Release_Engine()

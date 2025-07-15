@@ -32,12 +32,18 @@ private:
 	_float						m_fOpenTexSpeed = {};
 	_int						m_iSeletePenal_Index = {};
 
+	class CItem_Penal*			m_pItemPenal = { nullptr };
+	class CCreate_Penal*		m_pCreatePenal = { nullptr };
+
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children_Prototype();
 	HRESULT						Ready_Children();
 
-	void						Open_UI(_float fTimeDelta);
+	void						Open_UI(_bool bOpen);
+	void						Opening(_float fTimeDelta);
+	void						Change_Penal();
+	void						Selete_Penal(_uint iIndex);
 public:
 	static CInventory_Base*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;

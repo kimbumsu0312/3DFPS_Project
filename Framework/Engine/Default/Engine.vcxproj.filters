@@ -97,6 +97,15 @@
     <Filter Include="00.System\02.Event\Manager">
       <UniqueIdentifier>{2455d380-5a30-4fb0-b783-04f652e9ce76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Component\Model">
+      <UniqueIdentifier>{785d8f0d-c0fd-4cca-a112-9ef462f21b1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Component\Model\Mesh">
+      <UniqueIdentifier>{2d619a47-24cf-49fc-990b-89db9e136e88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Component\Model\Material">
+      <UniqueIdentifier>{cb12db5c-1b8e-4bd3-b490-5c8ca67315a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -201,6 +210,15 @@
     <ClInclude Include="..\public\Pooling_Manager.h">
       <Filter>01.Utility\02.GameObject\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Model.h">
+      <Filter>01.Utility\03.Component\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Mesh.h">
+      <Filter>01.Utility\03.Component\Model\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MeshMaterial.h">
+      <Filter>01.Utility\03.Component\Model\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -286,6 +304,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Pooling_Manager.cpp">
       <Filter>01.Utility\02.GameObject\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Model.cpp">
+      <Filter>01.Utility\03.Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Mesh.cpp">
+      <Filter>01.Utility\03.Component\Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MeshMaterial.cpp">
+      <Filter>01.Utility\03.Component\Model\Material</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

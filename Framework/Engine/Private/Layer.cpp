@@ -36,12 +36,13 @@ void CLayer::Priority_Update(_float fTimeDelta)
 			case OBJECTTYPE::POLLINGOBJECT:
 				(*pGameObject)->On_Dead();
 				pGameObject = m_GameObjects.erase(pGameObject);
-				++pGameObject;
 				break;
 			}
 		}
-		(*pGameObject)->Priority_Update(fTimeDelta);
-		++pGameObject;
+		else {
+			(*pGameObject)->Priority_Update(fTimeDelta);
+			++pGameObject;
+		}
 	}
 }
 

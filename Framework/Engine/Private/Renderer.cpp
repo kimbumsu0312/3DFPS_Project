@@ -89,7 +89,10 @@ HRESULT CRenderer::Draw()
         return E_FAIL;
     if (FAILED(Render_UI()))
         return E_FAIL;
-
+    if (FAILED(Render_UI_Effect()))
+        return E_FAIL;
+    if (FAILED(Render_Last()))
+        return E_FAIL;
     return S_OK;
 }
 
@@ -158,18 +161,13 @@ HRESULT CRenderer::Render_UI()
 
     m_RenderObjects[ENUM_CLASS(RENDERGROUP::UI)].clear();
 
-    Switching_RenderState(TEXT("Default_State"), RENDERSTATE::DEPTH_STENCIL);
-    Switching_RenderState(TEXT("NonAlphaBlend"), RENDERSTATE::BLEND);
-
     return S_OK;
 }
 
-HRESULT CRenderer::Render_UI_ITEM()
+HRESULT CRenderer::Render_UI_Effect()
 {
-    Switching_RenderState(TEXT("NonDepthTest"), RENDERSTATE::DEPTH_STENCIL);
-    Switching_RenderState(TEXT("AlphaBlend"), RENDERSTATE::BLEND);
 
-    for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDERGROUP::UI_ITEM)])
+    for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDERGROUP::UI_EFFECT)])
     {
         if (nullptr != pRenderObject)
             pRenderObject->Render();
@@ -177,11 +175,26 @@ HRESULT CRenderer::Render_UI_ITEM()
         Safe_Release(pRenderObject);
     }
 
-    m_RenderObjects[ENUM_CLASS(RENDERGROUP::UI)].clear();
+    m_RenderObjects[ENUM_CLASS(RENDERGROUP::UI_EFFECT)].clear();
+
+    return S_OK;
+}
+
+HRESULT CRenderer::Render_Last()
+{
+
+    for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDERGROUP::LAST)])
+    {
+        if (nullptr != pRenderObject)
+            pRenderObject->Render();
+
+        Safe_Release(pRenderObject);
+    }
+
+    m_RenderObjects[ENUM_CLASS(RENDERGROUP::LAST)].clear();
 
     Switching_RenderState(TEXT("Default_State"), RENDERSTATE::DEPTH_STENCIL);
     Switching_RenderState(TEXT("NonAlphaBlend"), RENDERSTATE::BLEND);
-
     return S_OK;
 }
 

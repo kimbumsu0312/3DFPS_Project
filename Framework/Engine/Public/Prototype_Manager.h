@@ -4,6 +4,8 @@
 #include "Transform.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "Mesh.h"
+#include "Model.h"
 
 NS_BEGIN(Engine)
 class CPrototype_Manager final : public CBase

@@ -58,9 +58,22 @@ HRESULT CTexture::Bind_Shader_Resource(CShader* pShader, const _char* pConstantN
 {
 	if (iTextureIndex >= m_iNumTextures)
 		return E_FAIL;
-
+	
+	m_iLastTexIndex = iTextureIndex;
 	return pShader->Bind_SRV(pConstantName, m_SRVs[iTextureIndex]);
 
+}
+
+HRESULT CTexture::Bind_Shader_Resource_IndexCheck(CShader* pShader, const _char* pConstantName, _uint iTextureIndex)
+{
+	if (iTextureIndex >= m_iNumTextures)
+		return E_FAIL;
+
+	if (m_iNumTextures == m_iLastTexIndex)
+		return S_OK;
+
+	m_iLastTexIndex = iTextureIndex;
+	return pShader->Bind_SRV(pConstantName, m_SRVs[iTextureIndex]);
 }
 
 CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pTextureFilePath, _uint iNumTextures)

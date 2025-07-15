@@ -39,7 +39,6 @@ protected:
 
 	_float2					m_vLocalPos = {};
 	_float2					m_vPos = {};
-	_float					m_fZOrder = {};
 
 	_float2					m_vLocalSize = {};
 	_float2					m_vSize = {};
