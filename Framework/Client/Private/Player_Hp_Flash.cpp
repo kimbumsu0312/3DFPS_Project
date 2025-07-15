@@ -48,7 +48,7 @@ void CPlayer_Hp_Flash::Update(_float fTimeDelta)
 {
     if (m_bAlphaAdd)
     {
-        m_fAlpha += m_fFlashSpeed * fTimeDelta;
+        m_fAlpha += m_fFlashSpeed * 0.45f* fTimeDelta;
         if (m_fAlpha >= 0.5f)
         {
             m_fAlpha = 0.5f;
@@ -57,7 +57,7 @@ void CPlayer_Hp_Flash::Update(_float fTimeDelta)
     }
     else
     {
-        m_fAlpha -= m_fFlashSpeed * fTimeDelta;
+        m_fAlpha -= m_fFlashSpeed * 0.45f * fTimeDelta;
         if (m_fAlpha <= 0.f)
         {
             m_fAlpha = 0.f;

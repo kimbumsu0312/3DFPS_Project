@@ -86,7 +86,7 @@ void CPlayer_Hp::Late_Update(_float fTimeDelta)
 
 HRESULT CPlayer_Hp::Render()
 {
-        if (!m_bIsInven)
+    if (!m_bIsInven)
     {
         _float4 vVector = { 0.f, g_iWinSizeX, 0.f, g_iWinSizeY };
 

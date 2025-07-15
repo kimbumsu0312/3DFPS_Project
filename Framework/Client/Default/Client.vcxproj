@@ -161,6 +161,7 @@
     <ClInclude Include="..\public\Aim_Shotgun.h" />
     <ClInclude Include="..\public\Aim_Shotgun_Line.h" />
     <ClInclude Include="..\public\Aim_Sniper.h" />
+    <ClInclude Include="..\public\Announce.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\Button.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
@@ -172,16 +173,19 @@
     <ClInclude Include="..\public\Inventory.h" />
     <ClInclude Include="..\public\Inventory_Base.h" />
     <ClInclude Include="..\public\Inventory_Coin.h" />
-    <ClInclude Include="..\public\Inventory_Tex.h" />
+    <ClInclude Include="..\public\Mouse.h" />
+    <ClInclude Include="..\public\Mouse_Click_Fx.h" />
+    <ClInclude Include="..\public\UI_Tex.h" />
     <ClInclude Include="..\public\Inventory_Node.h" />
     <ClInclude Include="..\public\Item.h" />
     <ClInclude Include="..\public\Item_2D_Render.h" />
     <ClInclude Include="..\public\Item_Manager.h" />
-    <ClInclude Include="..\public\Inventory_Slot.h" />
+    <ClInclude Include="..\public\UI_Slot.h" />
     <ClInclude Include="..\public\Logo_Button.h" />
     <ClInclude Include="..\public\Logo_Button_Line.h" />
     <ClInclude Include="..\public\Logo_Name.h" />
     <ClInclude Include="..\public\Logo_UI.h" />
+    <ClInclude Include="..\public\Player.h" />
     <ClInclude Include="..\public\Player_Hp.h" />
     <ClInclude Include="..\public\Player_Hp_Beat.h" />
     <ClInclude Include="..\public\Player_Hp_Flash.h" />
@@ -211,6 +215,7 @@
     <ClCompile Include="..\private\Aim_Shotgun.cpp" />
     <ClCompile Include="..\private\Aim_Shotgun_Line.cpp" />
     <ClCompile Include="..\private\Aim_Sniper.cpp" />
+    <ClCompile Include="..\private\Announce.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\Button.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
@@ -221,16 +226,19 @@
     <ClCompile Include="..\private\Inventory.cpp" />
     <ClCompile Include="..\private\Inventory_Base.cpp" />
     <ClCompile Include="..\private\Inventory_Coin.cpp" />
-    <ClCompile Include="..\private\Inventory_Tex.cpp" />
+    <ClCompile Include="..\private\Mouse.cpp" />
+    <ClCompile Include="..\private\Mouse_Click_Fx.cpp" />
+    <ClCompile Include="..\private\UI_Tex.cpp" />
     <ClCompile Include="..\private\Inventory_Node.cpp" />
     <ClCompile Include="..\private\Item.cpp" />
     <ClCompile Include="..\private\Item_2D_Render.cpp" />
     <ClCompile Include="..\private\Item_Manager.cpp" />
-    <ClCompile Include="..\private\Inventory_Slot.cpp" />
+    <ClCompile Include="..\private\UI_Slot.cpp" />
     <ClCompile Include="..\private\Logo_Button.cpp" />
     <ClCompile Include="..\private\Logo_Button_Line.cpp" />
     <ClCompile Include="..\private\Logo_Name.cpp" />
     <ClCompile Include="..\private\Logo_UI.cpp" />
+    <ClCompile Include="..\private\Player.cpp" />
     <ClCompile Include="..\private\Player_Hp.cpp" />
     <ClCompile Include="..\private\Player_Hp_Beat.cpp" />
     <ClCompile Include="..\private\Player_Hp_Flash.cpp" />
@@ -263,6 +271,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_UI.hlsl" />

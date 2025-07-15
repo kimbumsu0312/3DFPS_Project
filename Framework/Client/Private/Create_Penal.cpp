@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Create_Penal.h"
-
-
+#include "UI_Slot.h"
+#include "UI_Tex.h"
 CCreate_Penal::CCreate_Penal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
 }
@@ -12,9 +12,6 @@ CCreate_Penal::CCreate_Penal(const CCreate_Penal& Prototype) : CUIObject(Prototy
 
 HRESULT CCreate_Penal::Initialize_Prototype()
 {
-    if (FAILED(Ready_Children_Prototype()))
-        return E_FAIL;
-
     return S_OK;
 }
 
@@ -34,8 +31,7 @@ HRESULT CCreate_Penal::Initialize(void* pArg)
 
     if (FAILED(Ready_Children()))
         return E_FAIL;
-    m_pGameInstance->Subscribe<Event_Inven_Selete_penal>([&](const Event_Inven_Selete_penal& e) { if (e.iIndex == m_iIndex) { m_bIsSelete = true; } else { m_bIsSelete = false; } });
-
+    
     return S_OK;
 }
 
@@ -61,11 +57,18 @@ void CCreate_Penal::Late_Update(_float fTimeDelta)
 
 HRESULT CCreate_Penal::Render()
 {
-
     if (FAILED(m_pTextureCom->Bind_Shader_Resource(m_pShaderCom, "g_Texture", 1)))
         return E_FAIL;
 
     return S_OK;
+}
+
+void CCreate_Penal::Selete_Penal(_uint iIndex)
+{
+    if (iIndex == m_iIndex)
+        m_bIsSelete = true;
+    else
+        m_bIsSelete = false;
 }
 
 HRESULT CCreate_Penal::Ready_Components()
@@ -77,44 +80,143 @@ HRESULT CCreate_Penal::Ready_Components()
     return S_OK;
 }
 
-HRESULT CCreate_Penal::Ready_Children_Prototype()
-{
-    //if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Tex"),
-    //    CInventory_Tex::Create(m_pDevice, m_pContext))))
-    //    return E_FAIL;
-
-    return S_OK;
-}
-
 HRESULT CCreate_Penal::Ready_Children()
 {
     CUIObject* pGameObject = nullptr;
-    CUIObject::UIOBJECT_DESC Desc;
+    CUI_Slot::UI_SLOT_DESC SlotDesc;
+    CUI_Tex::UI_TEX_DESC  TexDesc;
+    TexDesc.iPassIndex = 2;
+    SlotDesc.iPassIndex = 2;
 
     _float fTexSizeX = 512.f;
     _float fTexSizeY = 512.f;
-
-    Desc.vPos = { 0.f, 200.f };
-    Desc.vSize = { 80.f, 80.f };
-    Desc.vMinUV = { 0.f, 0.f };
-    Desc.vMaxUV = { 60.f / fTexSizeX , 60.f / fTexSizeY };
-    Desc.OffsetX = 90.f;
-    Desc.iIndex = 0;
-    Desc.iMaxIndex = 6;
+    SlotDesc.iTexIndex = 1;
+    SlotDesc.vPos = { 0.f, 150.f };
+    SlotDesc.vSize = { 65.f, 65.f };
+    SlotDesc.vMinUV = { 0.f, 0.f };
+    SlotDesc.vMaxUV = { 60.f / fTexSizeX , 60.f / fTexSizeY };
+    SlotDesc.OffsetX = 75.f;
+    SlotDesc.iIndex = 0;
+    SlotDesc.iMaxIndex = 6;
 
     for (_int i = 0; i < 2; ++i)
     {
-        Desc.OffsetY = i;
-        for (_int j = 0; j < Desc.iMaxIndex; ++j)
+        SlotDesc.OffsetY = (float)i;
+        for (_uint j = 0; j < SlotDesc.iMaxIndex; ++j)
         {
 
-            pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Slot"), &Desc));
+            pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &SlotDesc));
             if (nullptr == pGameObject)
                 return E_FAIL;
             Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
-            Desc.iIndex += 1;
+            SlotDesc.iIndex += 1;
         }
     }
+    
+    fTexSizeX = 512.f;
+    fTexSizeY = 128.f;
+    SlotDesc.iTexIndex = 5;
+    SlotDesc.vPos = { 0.f, -120.f };
+    SlotDesc.vSize = { 80.f, 80.f };
+    SlotDesc.vMinUV = { 0.f, 0.f };
+    SlotDesc.vMaxUV = { 128.f / fTexSizeX , 128.f / fTexSizeY };
+    SlotDesc.iIndex = 0;
+    SlotDesc.iMaxIndex = 1;
+    SlotDesc.OffsetX = 0.f;
+    SlotDesc.OffsetY = 0.f;
+
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &SlotDesc));
+    if (nullptr == pGameObject)
+        return E_FAIL;
+    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+
+    TexDesc.vPos = { -50.f, -10.f };
+    TexDesc.vSize = { 70.f, 70.f };
+    TexDesc.vMinUV = { 142.f / fTexSizeX , 2.f / fTexSizeY };
+    TexDesc.vMaxUV = { 217.f / fTexSizeX , 77.f / fTexSizeY };
+    TexDesc.iTexIndex = 5;
+
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Tex"), &TexDesc));
+    if (nullptr == pGameObject)
+        return E_FAIL;
+    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+
+    TexDesc.vPos = { 50.f, -10.f };
+    
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Tex"), &TexDesc));
+    if (nullptr == pGameObject)
+        return E_FAIL;
+    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+
+    fTexSizeX = 512.f;
+    fTexSizeY = 256.f;
+
+    TexDesc.vPos = { 0.f, 70.f };
+    TexDesc.vSize = { 500.f, 100.f };
+    TexDesc.vMinUV = { 64.f / fTexSizeX , 81.f / fTexSizeY };
+    TexDesc.vMaxUV = { 113.f / fTexSizeX , 116.f / fTexSizeY };
+    TexDesc.iTexIndex = 3;
+
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Tex"), &TexDesc));
+    if (nullptr == pGameObject)
+        return E_FAIL;
+    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+
+
+    fTexSizeX = 2048.f;
+    fTexSizeY = 2048.f;
+    SlotDesc.iTexIndex = 4;
+    SlotDesc.vPos = { 0.f, 65.f };
+    SlotDesc.vSize = { 40.f, 40.f };
+    SlotDesc.vMinUV = { 75.f / fTexSizeX, 0.f };
+    SlotDesc.vMaxUV = { 175.f / fTexSizeX , 100.f / fTexSizeY };
+    SlotDesc.iIndex = 0;
+    SlotDesc.iMaxIndex = 5;
+    SlotDesc.OffsetX = 80.f;
+    SlotDesc.OffsetY = 0.f;
+
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &SlotDesc));
+    if (nullptr == pGameObject)
+        return E_FAIL;
+    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+    SlotDesc.iIndex += 1;
+
+    SlotDesc.vMinUV = { 380.f / fTexSizeX, 0.f };
+    SlotDesc.vMaxUV = { 470.f / fTexSizeX , 100.f / fTexSizeY };
+
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &SlotDesc));
+    if (nullptr == pGameObject)
+        return E_FAIL;
+    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+    SlotDesc.iIndex += 1;
+
+    SlotDesc.vMinUV = { 475.f / fTexSizeX, 0.f };
+    SlotDesc.vMaxUV = { 575.f / fTexSizeX , 100.f / fTexSizeY };
+
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &SlotDesc));
+    if (nullptr == pGameObject)
+        return E_FAIL;
+    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+    SlotDesc.iIndex += 1;
+
+    SlotDesc.vMinUV = { 200.f / fTexSizeX, 0.f };
+    SlotDesc.vMaxUV = { 300.f / fTexSizeX , 100.f / fTexSizeY };
+
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &SlotDesc));
+    if (nullptr == pGameObject)
+        return E_FAIL;
+    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+    SlotDesc.iIndex += 1;
+
+    SlotDesc.vMinUV = { 285.f / fTexSizeX, 0.f };
+    SlotDesc.vMaxUV = { 385.f / fTexSizeX , 100.f / fTexSizeY };
+
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &SlotDesc));
+    if (nullptr == pGameObject)
+        return E_FAIL;
+    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+    SlotDesc.iIndex += 1;
+
     return S_OK;
 }
 

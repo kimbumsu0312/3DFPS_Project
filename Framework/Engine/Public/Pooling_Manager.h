@@ -9,7 +9,7 @@ private:
 	virtual ~CPooling_Manager() = default;
 
 public:
-	HRESULT								Add_Object_ToPool(const _wstring& szPoolingPath, _uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, void* pArg);
+	HRESULT								Add_Object_ToPool(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iValue, void* pArg);
 	HRESULT								Add_Pool_ToLayer(const _wstring& szPoolingPath, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg);
 	HRESULT								Return_Object(class CPoolingObject* pObject, const _wstring& szPoolingPath);
 

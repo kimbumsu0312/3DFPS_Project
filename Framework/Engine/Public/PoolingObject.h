@@ -23,16 +23,16 @@ public:
 	virtual void			Late_Update(_float fTimeDelta);
 	virtual HRESULT			Render();
 
-	virtual void			OnDead();
+	virtual void			On_Dead() override;
 public:
 	virtual HRESULT			Initialize_Pool(void *pArg);
-	virtual void			Return_Pool();
+	virtual void			Return_Pool() = 0;
 	
 private:
 	_wstring				m_szPoolingPath;
 
 public:
-	virtual CPoolingObject* Clone(void* pArg) = 0;
+	virtual CGameObject*	Clone(void* pArg) = 0;
 	virtual void			Free() override;
 };
 

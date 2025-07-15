@@ -31,9 +31,9 @@ HRESULT CVIBuffer::Initialize(void* pArg)
 
 HRESULT CVIBuffer::Bind_Resources()
 {
-	ID3D11Buffer*	pVertexBuffers[] = { m_pVB };
-	_uint			iVertexStrides[] = { m_iVertexStride };
-	_uint			iOffsets[]		 = { 0 };
+	ID3D11Buffer*	pVertexBuffers[] = { m_pVB, };
+	_uint			iVertexStrides[] = { m_iVertexStride, };
+	_uint			iOffsets[]		 = { 0, };
 
 	m_pContext->IASetVertexBuffers(0, m_iNumVertexBuffers, pVertexBuffers, iVertexStrides, iOffsets);
 	m_pContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
