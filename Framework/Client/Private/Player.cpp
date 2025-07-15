@@ -21,9 +21,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
-	_vector pVector = { 1.f, 0.f, 0.f, 0.f };
-	
-	//m_pTransformCom->Rotation(pVector, XMConvertToRadians(90.f));
+
 	return S_OK;
 }
 
@@ -55,12 +53,8 @@ HRESULT CPlayer::Render()
 	if (FAILED(m_pTextureCom->Bind_Shader_Resource(m_pShaderCom, "g_DiffuseTexture", 0)))
 		return E_FAIL;
 
-	m_pShaderCom->Begin(0);
-
-	for (int i = 1; i < 44; ++i)
-	{
-		m_pModel->Render(i);
-	}
+	m_pModel->Render(m_pShaderCom, "g_DiffuseTexture", 1, 0);
+		
 	return S_OK;
 }
 

@@ -70,7 +70,7 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord * 50.f);
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     
     float fShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f);
     vector vReflect = reflect(normalize(g_vLightDir), In.vNormal);
@@ -80,7 +80,6 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(fShade + (g_vLightAmbient * g_vMtrlAmbient))
                     + (g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
     return Out;
-
 }
 
 

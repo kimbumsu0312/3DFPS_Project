@@ -169,6 +169,7 @@ call Copy_Release.bat</Command>
     <ClInclude Include="..\Public\Input_Device.h" />
     <ClInclude Include="..\public\Light.h" />
     <ClInclude Include="..\public\Light_Manager.h" />
+    <ClInclude Include="..\public\MeshMaterial.h" />
     <ClInclude Include="..\public\Mesh.h" />
     <ClInclude Include="..\public\Model.h" />
     <ClInclude Include="..\public\PipeLine.h" />
@@ -207,6 +208,7 @@ call Copy_Release.bat</Command>
     <ClCompile Include="..\Private\Input_Device.cpp" />
     <ClCompile Include="..\private\Light.cpp" />
     <ClCompile Include="..\private\Light_Manager.cpp" />
+    <ClCompile Include="..\private\MeshMaterial.cpp" />
     <ClCompile Include="..\private\Mesh.cpp" />
     <ClCompile Include="..\private\Model.cpp" />
     <ClCompile Include="..\private\PipeLine.cpp" />

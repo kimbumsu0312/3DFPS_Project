@@ -40,7 +40,8 @@ private:
 	HRESULT						Ready_Children_Prototype();
 	HRESULT						Ready_Children();
 
-	void						Open_UI(_float fTimeDelta);
+	void						Open_UI(_bool bOpen);
+	void						Opening(_float fTimeDelta);
 	void						Change_Penal();
 	void						Selete_Penal(_uint iIndex);
 public:

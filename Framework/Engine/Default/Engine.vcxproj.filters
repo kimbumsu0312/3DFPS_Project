@@ -103,6 +103,9 @@
     <Filter Include="01.Utility\03.Component\Model\Mesh">
       <UniqueIdentifier>{2d619a47-24cf-49fc-990b-89db9e136e88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Component\Model\Material">
+      <UniqueIdentifier>{cb12db5c-1b8e-4bd3-b490-5c8ca67315a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -213,6 +216,9 @@
     <ClInclude Include="..\public\Mesh.h">
       <Filter>01.Utility\03.Component\Model\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MeshMaterial.h">
+      <Filter>01.Utility\03.Component\Model\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -304,6 +310,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Mesh.cpp">
       <Filter>01.Utility\03.Component\Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MeshMaterial.cpp">
+      <Filter>01.Utility\03.Component\Model\Material</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
