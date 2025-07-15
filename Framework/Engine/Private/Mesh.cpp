@@ -5,12 +5,13 @@ CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CVIBuffer{p
 {
 }
 
-CMesh::CMesh(const CMesh& Prototype) : CVIBuffer(Prototype)
+CMesh::CMesh(const CMesh& Prototype) : CVIBuffer(Prototype), m_iMaterialIndex(Prototype.m_iMaterialIndex)
 {
 }
 
-HRESULT CMesh::Initialize_Prototype(const aiMesh* pAIMesh)
+HRESULT CMesh::Initialize_Prototype(const aiMesh* pAIMesh, _fmatrix PreTransformMatrix)
 {
+	m_iMaterialIndex = pAIMesh->mMaterialIndex;
 	m_iNumVertices = pAIMesh->mNumVertices; //AIMESH에서 정점 개수 가져오기
 	m_iVertexStride = sizeof(VTXMESH);
 	m_iNumIndices = pAIMesh->mNumFaces * 3;	//AIMESH에서 메쉬에 삼각형 개수 가져오기
@@ -32,7 +33,11 @@ HRESULT CMesh::Initialize_Prototype(const aiMesh* pAIMesh)
 	for (size_t i = 0; i < m_iNumVertices; i++)
 	{
 		memcpy(&pVertices[i].vPosition, &pAIMesh->mVertices[i], sizeof(_float3));
+		XMStoreFloat3(&pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PreTransformMatrix));
+
 		memcpy(&pVertices[i].vNormal, &pAIMesh->mNormals[i], sizeof(_float3));
+		XMStoreFloat3(&pVertices[i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vNormal), PreTransformMatrix));
+
 		memcpy(&pVertices[i].vTangent, &pAIMesh->mTangents[i], sizeof(_float3));
 		memcpy(&pVertices[i].vBinormal, &pAIMesh->mBitangents[i], sizeof(_float3));
 		memcpy(&pVertices[i].vTexcoord, &pAIMesh->mTextureCoords[0][i], sizeof(_float2));
@@ -82,11 +87,11 @@ HRESULT CMesh::Initialize(void* pArg)
 	return S_OK;
 }
 
-CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const aiMesh* pAIMesh)
+CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const aiMesh* pAIMesh, _fmatrix PreTransformMatrix)
 {
 	CMesh* pInstance = new CMesh(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(pAIMesh)))
+	if (FAILED(pInstance->Initialize_Prototype(pAIMesh, PreTransformMatrix)))
 	{
 		MSG_BOX(TEXT("Failed to Created : CMesh"));
 		Safe_Release(pInstance);

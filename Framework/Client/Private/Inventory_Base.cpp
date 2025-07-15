@@ -40,7 +40,7 @@ HRESULT CInventory_Base::Initialize(void* pArg)
     if (FAILED(Ready_Children()))
         return E_FAIL;
 
-    m_pGameInstance->Subscribe<Event_Inventory_Open>([&](const Event_Inventory_Open& e) { m_bIsOpen = e.bIsOpen; m_vOpenTex = {}; m_fOpenTexValueY = 0.15f; m_fOpenTexValueX = 0.f; });
+    m_pGameInstance->Subscribe<Event_Inventory_Open>([&](const Event_Inventory_Open& e) { Open_UI(e.bIsOpen); });
 
     return S_OK;
 }
@@ -53,7 +53,7 @@ void CInventory_Base::Priority_Update(_float fTimeDelta)
 void CInventory_Base::Update(_float fTimeDelta)
 {
     if(m_bIsOpen)
-        Open_UI(fTimeDelta);
+        Opening(fTimeDelta);
 }
 
 void CInventory_Base::Late_Update(_float fTimeDelta)
@@ -205,7 +205,17 @@ HRESULT CInventory_Base::Ready_Children()
     return S_OK;
 }
 
-void CInventory_Base::Open_UI(_float fTimeDelta)
+void CInventory_Base::Open_UI(_bool bOpen)
+{
+    m_bIsOpen = bOpen;
+    m_vOpenTex = {};
+    m_fOpenTexValueY = 0.15f;
+    m_fOpenTexValueX = 0.f;
+    m_iSeletePenal_Index = 0;
+   
+}
+
+void CInventory_Base::Opening(_float fTimeDelta)
 {
     if (m_fOpenTexValueY > 1.f)
     {
