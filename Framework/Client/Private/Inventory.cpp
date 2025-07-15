@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "Inventory.h"
 #include "Inventory_Base.h"
-#include "Inventory_Tex.h"
-#include "Inventory_Slot.h"
+#include "UI_Tex.h"
+#include "UI_Slot.h"
 
 CInventory::CInventory(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
@@ -108,14 +108,6 @@ HRESULT CInventory::Ready_Children_Prototype()
 {
     if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Inventory_Base"),
         CInventory_Base::Create(m_pDevice, m_pContext))))
-        return E_FAIL;
-
-    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Tex"),
-        CInventory_Tex::Create(m_pDevice, m_pContext))))
-        return E_FAIL;
-
-    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Slot"),
-        CInventory_Slot::Create(m_pDevice, m_pContext))))
         return E_FAIL;
 
     return S_OK;

@@ -32,7 +32,8 @@ private:
 	HRESULT						Render_NonBlend();
 	HRESULT						Render_Blend();
 	HRESULT						Render_UI();
-	HRESULT						Render_UI_ITEM();
+	HRESULT						Render_UI_Effect();
+	HRESULT						Render_Last();
 
 	ID3D11DeviceChild*			Find_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates);
 

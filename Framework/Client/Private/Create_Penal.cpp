@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Create_Penal.h"
-#include "Inventory_Slot.h"
-#include "Inventory_Tex.h"
+#include "UI_Slot.h"
+#include "UI_Tex.h"
 CCreate_Penal::CCreate_Penal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
 }
@@ -83,8 +83,10 @@ HRESULT CCreate_Penal::Ready_Components()
 HRESULT CCreate_Penal::Ready_Children()
 {
     CUIObject* pGameObject = nullptr;
-    CInventory_Slot::INVEN_SLOT_DESC SlotDesc;
-    CInventory_Tex::INVEN_TEX_DESC  TexDesc;
+    CUI_Slot::UI_SLOT_DESC SlotDesc;
+    CUI_Tex::UI_TEX_DESC  TexDesc;
+    TexDesc.iPassIndex = 2;
+    SlotDesc.iPassIndex = 2;
 
     _float fTexSizeX = 512.f;
     _float fTexSizeY = 512.f;
@@ -103,7 +105,7 @@ HRESULT CCreate_Penal::Ready_Children()
         for (_uint j = 0; j < SlotDesc.iMaxIndex; ++j)
         {
 
-            pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Slot"), &SlotDesc));
+            pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &SlotDesc));
             if (nullptr == pGameObject)
                 return E_FAIL;
             Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
@@ -123,7 +125,7 @@ HRESULT CCreate_Penal::Ready_Children()
     SlotDesc.OffsetX = 0.f;
     SlotDesc.OffsetY = 0.f;
 
-    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Slot"), &SlotDesc));
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &SlotDesc));
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
@@ -134,14 +136,14 @@ HRESULT CCreate_Penal::Ready_Children()
     TexDesc.vMaxUV = { 217.f / fTexSizeX , 77.f / fTexSizeY };
     TexDesc.iTexIndex = 5;
 
-    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Tex"), &TexDesc));
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Tex"), &TexDesc));
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
 
     TexDesc.vPos = { 50.f, -10.f };
     
-    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Tex"), &TexDesc));
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Tex"), &TexDesc));
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
@@ -155,7 +157,7 @@ HRESULT CCreate_Penal::Ready_Children()
     TexDesc.vMaxUV = { 113.f / fTexSizeX , 116.f / fTexSizeY };
     TexDesc.iTexIndex = 3;
 
-    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Tex"), &TexDesc));
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Tex"), &TexDesc));
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
@@ -173,7 +175,7 @@ HRESULT CCreate_Penal::Ready_Children()
     SlotDesc.OffsetX = 80.f;
     SlotDesc.OffsetY = 0.f;
 
-    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Slot"), &SlotDesc));
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &SlotDesc));
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
@@ -182,7 +184,7 @@ HRESULT CCreate_Penal::Ready_Children()
     SlotDesc.vMinUV = { 380.f / fTexSizeX, 0.f };
     SlotDesc.vMaxUV = { 470.f / fTexSizeX , 100.f / fTexSizeY };
 
-    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Slot"), &SlotDesc));
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &SlotDesc));
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
@@ -191,7 +193,7 @@ HRESULT CCreate_Penal::Ready_Children()
     SlotDesc.vMinUV = { 475.f / fTexSizeX, 0.f };
     SlotDesc.vMaxUV = { 575.f / fTexSizeX , 100.f / fTexSizeY };
 
-    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Slot"), &SlotDesc));
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &SlotDesc));
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
@@ -200,7 +202,7 @@ HRESULT CCreate_Penal::Ready_Children()
     SlotDesc.vMinUV = { 200.f / fTexSizeX, 0.f };
     SlotDesc.vMaxUV = { 300.f / fTexSizeX , 100.f / fTexSizeY };
 
-    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Slot"), &SlotDesc));
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &SlotDesc));
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
@@ -209,7 +211,7 @@ HRESULT CCreate_Penal::Ready_Children()
     SlotDesc.vMinUV = { 285.f / fTexSizeX, 0.f };
     SlotDesc.vMaxUV = { 385.f / fTexSizeX , 100.f / fTexSizeY };
 
-    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Slot"), &SlotDesc));
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &SlotDesc));
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);

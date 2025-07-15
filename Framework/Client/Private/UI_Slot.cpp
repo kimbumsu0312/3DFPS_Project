@@ -1,15 +1,15 @@
 #include "pch.h"
-#include "Inventory_Slot.h"
+#include "UI_Slot.h"
 
-CInventory_Slot::CInventory_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CButton{ pDevice, pContext }
+CUI_Slot::CUI_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CButton{ pDevice, pContext }
 {
 }
 
-CInventory_Slot::CInventory_Slot(const CInventory_Slot& Prototype) : CButton(Prototype)
+CUI_Slot::CUI_Slot(const CUI_Slot& Prototype) : CButton(Prototype)
 {
 }
 
-HRESULT CInventory_Slot::Initialize_Prototype()
+HRESULT CUI_Slot::Initialize_Prototype()
 {
 	if (FAILED(Ready_Children_Prototype()))
 		return E_FAIL;
@@ -17,17 +17,17 @@ HRESULT CInventory_Slot::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CInventory_Slot::Initialize(void* pArg)
+HRESULT CUI_Slot::Initialize(void* pArg)
 {
 	if (pArg == nullptr)
 		return E_FAIL;
 
-	INVEN_SLOT_DESC* Desc = static_cast<INVEN_SLOT_DESC*>(pArg);
+	UI_SLOT_DESC* Desc = static_cast<UI_SLOT_DESC*>(pArg);
 
 	m_iTexIndex = Desc->iTexIndex;
 	m_iMaxIndex = Desc->iMaxIndex;
 	m_iIndex = Desc->iIndex;
-
+	m_iPassIndex = Desc->iPassIndex;
 	m_vLocalSize = Desc->vSize;
 
 	_int iIndex = Desc->iIndex;
@@ -50,28 +50,28 @@ HRESULT CInventory_Slot::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CInventory_Slot::Priority_Update(_float fTimeDelta)
+void CUI_Slot::Priority_Update(_float fTimeDelta)
 {
 
 }
 
-void CInventory_Slot::Update(_float fTimeDelta)
+void CUI_Slot::Update(_float fTimeDelta)
 {
 
 }
 
-void CInventory_Slot::Late_Update(_float fTimeDelta)
+void CUI_Slot::Late_Update(_float fTimeDelta)
 {
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
 		return;
 }
 
-HRESULT CInventory_Slot::Render()
+HRESULT CUI_Slot::Render()
 {
 	if (FAILED(m_pTextureCom->Bind_Shader_Resource_IndexCheck(m_pShaderCom, "g_Texture", m_iTexIndex)))
 		return E_FAIL;
 
-	__super::Bind_ShaderTransform_Resourc(2);
+	__super::Bind_ShaderTransform_Resourc(m_iPassIndex);
 
 	m_pVIBufferCom->Bind_Resources();
 	m_pVIBufferCom->Render();
@@ -79,7 +79,7 @@ HRESULT CInventory_Slot::Render()
 	return S_OK;
 }
 
-HRESULT CInventory_Slot::Ready_Components()
+HRESULT CUI_Slot::Ready_Components()
 {
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
@@ -88,7 +88,7 @@ HRESULT CInventory_Slot::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CInventory_Slot::Ready_Children_Prototype()
+HRESULT CUI_Slot::Ready_Children_Prototype()
 {
 	/*if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Button_Line"),
 		CLogo_Button_Line::Create(m_pDevice, m_pContext))))
@@ -97,7 +97,7 @@ HRESULT CInventory_Slot::Ready_Children_Prototype()
 	return S_OK;
 }
 
-HRESULT CInventory_Slot::Ready_Children()
+HRESULT CUI_Slot::Ready_Children()
 {
 	CUIObject* pGameObject = nullptr;
 
@@ -116,33 +116,33 @@ HRESULT CInventory_Slot::Ready_Children()
 	return S_OK;
 }
 
-CInventory_Slot* CInventory_Slot::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Slot* CUI_Slot::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CInventory_Slot* pInstance = new CInventory_Slot(pDevice, pContext);
+	CUI_Slot* pInstance = new CUI_Slot(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX(TEXT("Failed to Created : CInventory_Slot"));
+		MSG_BOX(TEXT("Failed to Created : CUI_Slot"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CInventory_Slot::Clone(void* pArg)
+CGameObject* CUI_Slot::Clone(void* pArg)
 {
-	CInventory_Slot* pInstance = new CInventory_Slot(*this);
+	CUI_Slot* pInstance = new CUI_Slot(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX(TEXT("Failed to Created : CInventory_Slot"));
+		MSG_BOX(TEXT("Failed to Created : CUI_Slot"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CInventory_Slot::Free()
+void CUI_Slot::Free()
 {
 	__super::Free();
 

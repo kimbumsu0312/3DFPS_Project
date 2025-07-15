@@ -6,17 +6,13 @@ class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
-class CInventory_Tex final : public CUIObject
+
+class CAnnounce final : public CUIObject
 {
-public:
-	typedef struct tagInven_Tex_Desc : public CUIObject::UIOBJECT_DESC
-	{
-		_uint iTexIndex;
-	}INVEN_TEX_DESC;
 private:
-	CInventory_Tex(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CInventory_Tex(const CInventory_Tex& Prototype);
-	virtual ~CInventory_Tex() = default;
+	CAnnounce(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CAnnounce(const CAnnounce& Prototype);
+	virtual ~CAnnounce() = default;
 
 public:
 	virtual HRESULT				Initialize_Prototype();
@@ -28,16 +24,21 @@ public:
 
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
-	_int						m_iIndex = {};
-	_float						m_fRotation = {};
-	_int						m_iTexIndex = {};
+	_float						m_fAlpha = {};
+	_bool						m_bIsOpen = {};
+	_bool						m_bIsClose = {};
+	_float						m_fIsOpenTime = {};
 
 private:
 	HRESULT						Ready_Components();
+	HRESULT						Ready_Children();
 
+	void						UIOpen();
+	void						UIAlpha_OnOff(_float fTimeDelta);
 public:
-	static CInventory_Tex* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CAnnounce* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void				Free() override;
 };
+
 NS_END

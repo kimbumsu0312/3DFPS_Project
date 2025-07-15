@@ -1,22 +1,23 @@
 #pragma once
-#include "Button.h"
+#include "UIObject.h"
 
 NS_BEGIN(Engine)
 class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
-class CInventory_Slot final : public CButton
+class CUI_Tex final : public CUIObject
 {
 public:
-	typedef struct tagInven_Slot_Desc : public CUIObject::UIOBJECT_DESC
+	typedef struct tagInven_Tex_Desc : public CUIObject::UIOBJECT_DESC
 	{
-		_uint iTexIndex;
-	}INVEN_SLOT_DESC;
+		_uint iTexIndex{};
+		_uint iPassIndex{};
+	}UI_TEX_DESC;
 private:
-	CInventory_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CInventory_Slot(const CInventory_Slot& Prototype);
-	virtual ~CInventory_Slot() = default;
+	CUI_Tex(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_Tex(const CUI_Tex& Prototype);
+	virtual ~CUI_Tex() = default;
 
 public:
 	virtual HRESULT				Initialize_Prototype();
@@ -28,17 +29,16 @@ public:
 
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
-	_uint						m_iIndex = {};
-	_uint						m_iMaxIndex = {};
-	_int						m_iTexIndex = {};
+	_int						m_iIndex = {};
+	_float						m_fRotation = {};
+	_uint						m_iTexIndex = {};
+	_uint						m_iPassIndex = {};
 
 private:
 	HRESULT						Ready_Components();
-	HRESULT						Ready_Children_Prototype();
-	HRESULT						Ready_Children();
 
 public:
-	static CInventory_Slot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CUI_Tex* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void				Free() override;
 };
