@@ -4,8 +4,6 @@
 #include "Transform.h"
 #include "Shader.h"
 #include "Texture.h"
-#include "Mesh.h"
-#include "Model.h"
 
 NS_BEGIN(Engine)
 class CPrototype_Manager final : public CBase
@@ -13,7 +11,7 @@ class CPrototype_Manager final : public CBase
 private:
 	CPrototype_Manager();
 	virtual ~CPrototype_Manager() = default;
-
+	
 public:
 	HRESULT						Initialize(_uint iNumLevels);
 	HRESULT						Add_Prototype(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, class CBase* pPrototype);
