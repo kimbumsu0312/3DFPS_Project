@@ -46,6 +46,18 @@
     <Filter Include="97.ShaderFiles">
       <UniqueIdentifier>{70b72a6e-7d18-4045-a577-3444649b0e54}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Component">
+      <UniqueIdentifier>{acf89776-fdce-432d-9214-4f58f6c6ee8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Component\Model">
+      <UniqueIdentifier>{a10369f4-12c4-4b49-8ecb-5064baa080db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Component\Model\Mesh">
+      <UniqueIdentifier>{6eb593d9-7f6a-4ae0-8838-97b2f655bd47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Component\Model\Material">
+      <UniqueIdentifier>{f856d542-2f85-4023-b97e-8e1be488c2a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -93,6 +105,15 @@
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.Object\Model</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Edit_Model.h">
+      <Filter>03.Component\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Edit_Mesh.h">
+      <Filter>03.Component\Model\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edit_MeshMaterial.h">
+      <Filter>03.Component\Model\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -127,6 +148,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.Object\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edit_Model.cpp">
+      <Filter>03.Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Edit_Mesh.cpp">
+      <Filter>03.Component\Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edit_MeshMaterial.cpp">
+      <Filter>03.Component\Model\Material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

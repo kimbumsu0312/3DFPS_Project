@@ -9,8 +9,14 @@
 
 // 여기에 미리 컴파일하려는 헤더 추가
 #include "framework.h"
+//매쉬 파일 로드 헤더
+
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
+#include "assimp/Importer.hpp"
+
+#include "Edit_Defines.h"
 #include "Engine_Defines.h"
 #include "GameInstance.h"
-#include "Edit_Defines.h"
 
 #endif //PCH_H

@@ -2,9 +2,6 @@
 #include "GameObject.h"
 
 NS_BEGIN(Engine)
-class CMash;
-class CModel;
-class CTexture;
 class CShader;
 NS_END
 
@@ -25,8 +22,7 @@ public:
 	virtual HRESULT			Render();
 
 private:
-	CModel*					m_pModel = { nullptr };
-	CTexture*				m_pTextureCom = { nullptr };
+	class CEdit_Model*		m_pModel = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
 						
 private:

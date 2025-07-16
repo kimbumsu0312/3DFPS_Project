@@ -116,13 +116,13 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>../Public/;../Default/;../../EngineSDK/Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../Default/;../../EngineSDK/Inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../../EngineSDK/Lib/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engined.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../EngineSDK/Lib/;../ThirdPartyLib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DirectXTKd.lib;Engined.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderType>Effect</ShaderType>
@@ -148,8 +148,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../../EngineSDK/Lib/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../EngineSDK/Lib/;../ThirdPartyLib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DirectXTK.lib;Engine.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -161,6 +161,9 @@
     <ClInclude Include="..\Public\Level_Model.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\EditMain.h" />
+    <ClInclude Include="..\public\Edit_Mesh.h" />
+    <ClInclude Include="..\Public\Edit_MeshMaterial.h" />
+    <ClInclude Include="..\Public\Edit_Model.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="Edit.h" />
@@ -177,6 +180,9 @@
     <ClCompile Include="..\Private\Level_Model.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\EditMain.cpp" />
+    <ClCompile Include="..\private\Edit_Mesh.cpp" />
+    <ClCompile Include="..\Private\Edit_MeshMaterial.cpp" />
+    <ClCompile Include="..\Private\Edit_Model.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="Edit.cpp" />

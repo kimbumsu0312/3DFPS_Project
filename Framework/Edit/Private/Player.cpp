@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Player.h"
+#include "Edit_Model.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CGameObject(pDevice, pContext)
 {
@@ -50,9 +51,6 @@ HRESULT CPlayer::Render()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ))))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom->Bind_Shader_Resource(m_pShaderCom, "g_DiffuseTexture", 0)))
-		return E_FAIL;
-
 	m_pModel->Render(m_pShaderCom, "g_DiffuseTexture", 1, 0);
 		
 	return S_OK;
@@ -60,17 +58,14 @@ HRESULT CPlayer::Render()
 
 HRESULT CPlayer::Ready_Components()
 {
-	//if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxMesh"),
-	//	TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
-	//	return E_FAIL;
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxMesh"),
+		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
+		return E_FAIL;
 
-	//if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Fiona"),
-	//	TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pModel), nullptr)))
-	//	return E_FAIL;
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Fiona"),
+		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pModel), nullptr)))
+		return E_FAIL;
 
-	//if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Text_Fiona"),
-	//	TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
-	//	return E_FAIL;
 	return S_OK;
 }
 
@@ -106,5 +101,4 @@ void CPlayer::Free()
 
 	Safe_Release(m_pModel);
 	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pTextureCom);
 }
