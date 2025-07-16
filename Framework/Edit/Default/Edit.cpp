@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "framework.h"
 #include "Edit.h"
+
 #include "GameInstance.h"
 #include "EditMain.h"
 
@@ -10,7 +11,7 @@
 // 전역 변수:
 HWND g_hWnd;
 
-HINSTANCE g_hInst;                                // 현재 인스턴스입니다.
+HINSTANCE g_hInst;                              // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 
@@ -53,6 +54,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (nullptr == pMainApp)
         return FALSE;
 
+    
     CGameInstance* pGameInstance = CGameInstance::GetInstance();
     Safe_AddRef(pGameInstance);
 
@@ -167,8 +169,13 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
 //
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+        return true;
+
     switch (message)
     {
     case WM_COMMAND:
@@ -202,7 +209,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
-    return 0;
+    return ::DefWindowProcW(hWnd, message, wParam, lParam);
 }
 
 // 정보 대화 상자의 메시지 처리기입니다.

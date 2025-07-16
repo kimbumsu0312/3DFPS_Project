@@ -7,16 +7,19 @@
 #ifndef PCH_H
 #define PCH_H
 
+//Imgui
+#include "imgui.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
 // 여기에 미리 컴파일하려는 헤더 추가
 #include "framework.h"
 //매쉬 파일 로드 헤더
-
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 #include "assimp/Importer.hpp"
 
+
 #include "Edit_Defines.h"
-#include "Engine_Defines.h"
 #include "GameInstance.h"
 
 #endif //PCH_H

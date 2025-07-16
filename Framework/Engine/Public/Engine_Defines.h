@@ -16,8 +16,12 @@
 #include "DirectXTK/DDSTextureLoader.h"
 #include "DirectXTK/WICTextureLoader.h"
 
-
 using namespace DirectX;
+
+//Json ·Îµå
+#include <fstream>
+#include "json.hpp"
+using namespace nlohmann;
 
 #include <vector>
 #include <list>

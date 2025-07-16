@@ -5,7 +5,7 @@
 #include "Camera_Free.h"
 #include "Edit_Model.h"
 #include "Player.h"
-
+#include "Imgui_Manager.h"
 CEditMain::CEditMain() : m_pGameInstance{ CGameInstance::GetInstance()}
 {
 	Safe_AddRef(m_pGameInstance);
@@ -31,12 +31,15 @@ HRESULT CEditMain::Initialize()
 	if (FAILED(Start_Level(LEVEL::LOGO)))
 		return E_FAIL;
 
+	CImgui_Manger::GetInstance()->Initalize(m_pDevice, m_pContext);
+
 	return S_OK;
 }
 
 void CEditMain::Update(_float fTimeDelta)
 {
 	m_pGameInstance->Update_Engine(fTimeDelta);
+	CImgui_Manger::GetInstance()->Update();
 }
 
 HRESULT CEditMain::Render()
@@ -47,6 +50,7 @@ HRESULT CEditMain::Render()
 
 	m_pGameInstance->Draw();
 
+	CImgui_Manger::GetInstance()->Redner();
 	m_pGameInstance->Render_End();
 
 	return S_OK;
@@ -106,8 +110,10 @@ void CEditMain::Free()
 	__super::Free();
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+	CImgui_Manger::GetInstance()->Free();
+	CImgui_Manger::DestroyInstance();
 
 	m_pGameInstance->Release_Engine();
-
+	
 	Safe_Release(m_pGameInstance);
 }
