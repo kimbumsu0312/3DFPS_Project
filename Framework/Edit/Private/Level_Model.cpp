@@ -2,6 +2,8 @@
 #include "Level_Model.h"
 #include "GameInstance.h"
 #include "Camera_Free.h"
+#include "Imgui_Manager.h"
+#include "Level_Loading.h"
 
 CLevel_Model::CLevel_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CLevel{ pDevice, pContext }
 {
@@ -21,12 +23,19 @@ HRESULT CLevel_Model::Initialize()
 	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
 		return E_FAIL;
 
+	m_pGameInstance->Subscribe<Event_NextLevel>([&](const Event_NextLevel& e) {m_bIsNextLevel = true; m_eNextLevel = e.eLevel; });
+
 	return S_OK;
 }
 
 void CLevel_Model::Update(_float fTimeDelta)
 {
-
+	CImgui_Manger::GetInstance()->Update_Model();
+	if (m_bIsNextLevel)
+	{
+		if (FAILED(m_pGameInstance->Open_Level(static_cast<_uint>(LEVEL::LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, m_eNextLevel))))
+			return;
+	}
 }
 
 HRESULT CLevel_Model::Render()

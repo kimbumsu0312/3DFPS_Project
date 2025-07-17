@@ -23,7 +23,8 @@ private:
 	HRESULT Ready_Layer_Model(const _wstring& strLayerTag);
 
 private:
-	_bool	m_bInvenOpen = { false };
+	_bool				m_bIsNextLevel = { false };
+	LEVEL				m_eNextLevel = { LEVEL::END };
 
 public:
 	static CLevel_Map* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

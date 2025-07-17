@@ -2,6 +2,7 @@
 #include "Level_Logo.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "Imgui_Manager.h"
 
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CLevel{ pDevice, pContext }
 {
@@ -15,20 +16,17 @@ HRESULT CLevel_Logo::Initialize()
 
 	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
 		return E_FAIL;*/
+	m_pGameInstance->Subscribe<Event_NextLevel>([&](const Event_NextLevel& e) {m_bIsNextLevel = true; m_eNextLevel = e.eLevel; });
 
 	return S_OK;
 }
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->IsKeyDown(DIK_1))
+	CImgui_Manger::GetInstance()->Update_Logo();
+	if (m_bIsNextLevel)
 	{
-		if (FAILED(m_pGameInstance->Open_Level(static_cast<_uint>(LEVEL::LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::MAP))))
-			return;
-	}
-	else if(m_pGameInstance->IsKeyDown(DIK_2))
-	{
-		if (FAILED(m_pGameInstance->Open_Level(static_cast<_uint>(LEVEL::LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::MODEL))))
+		if (FAILED(m_pGameInstance->Open_Level(static_cast<_uint>(LEVEL::LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, m_eNextLevel))))
 			return;
 	}
 	return;

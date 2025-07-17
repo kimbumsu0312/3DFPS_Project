@@ -70,6 +70,9 @@
     <Filter Include="95.Manager\01.Imgui_Manager">
       <UniqueIdentifier>{7fa36ebc-bb6b-4078-8ae2-79635aede367}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Component\Model\Bone">
+      <UniqueIdentifier>{c0d63ac5-2c38-420b-a639-c936cfc7cec0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -153,6 +156,12 @@
     <ClInclude Include="..\public\Imgui_Manager.h">
       <Filter>95.Manager\01.Imgui_Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Edit_Event.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Edit_Bone.h">
+      <Filter>03.Component\Model\Bone</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -220,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Imgui_Manager.cpp">
       <Filter>95.Manager\01.Imgui_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Edit_Bone.cpp">
+      <Filter>03.Component\Model\Bone</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

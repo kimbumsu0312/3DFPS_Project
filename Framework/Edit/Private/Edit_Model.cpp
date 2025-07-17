@@ -8,7 +8,7 @@ CEdit_Model::CEdit_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) :
 }
 
 CEdit_Model::CEdit_Model(const CEdit_Model& Prototype) : CComponent(Prototype), m_Meshes(Prototype.m_Meshes), m_iNumMeshes(Prototype.m_iNumMeshes), m_eModelType ( Prototype.m_eModelType),
-m_iNumMaterials(Prototype.m_iNumMaterials), m_Materials(Prototype.m_Materials)
+m_iNumMaterials(Prototype.m_iNumMaterials), m_Materials(Prototype.m_Materials), m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
 {
 	for (auto& pMesh : m_Meshes)
 		Safe_AddRef(pMesh);
@@ -48,19 +48,27 @@ HRESULT CEdit_Model::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CEdit_Model::Render(CShader* pShader, const _char* pConstantName, _uint iSRVIndex, _uint iShaderIndex)
+HRESULT CEdit_Model::Bind_Materials(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType, _uint iIndex)
 {
-	for (auto& pMesh : m_Meshes)
-	{
-		m_Materials[pMesh->Get_MaterialIndex()]->Bind_Shader_Resource(pShader, pConstantName, iSRVIndex);
+	if (iMeshIndex >= m_iNumMeshes)
+		return E_FAIL;
 
-		pShader->Begin(iShaderIndex);
-		if (FAILED(pMesh->Bind_Resources()))
-			return E_FAIL;
+	_uint iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
 
-		if (FAILED(pMesh->Render()))
-			return E_FAIL;
-	}
+	if (m_iNumMaterials <= iMaterialIndex)
+		return E_FAIL;
+
+	return m_Materials[iMaterialIndex]->Bind_Shader_Resource(pShader, pConstantName, eTextureType, iIndex);
+}
+
+HRESULT CEdit_Model::Render(_uint iMeshIndex)
+{
+	if (FAILED(m_Meshes[iMeshIndex]->Bind_Resources()))
+		return E_FAIL;
+
+	if (FAILED(m_Meshes[iMeshIndex]->Render()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -81,7 +89,7 @@ HRESULT CEdit_Model::Ready_Meshes()
 
 HRESULT CEdit_Model::Ready_Materials(const _char* pModelFilePath)
 {
-	m_iNumMeshes = m_pAIScene->mNumMaterials;
+	m_iNumMaterials = m_pAIScene->mNumMaterials;
 
 	for (_uint i = 0; i < m_iNumMeshes; ++i)
 	{

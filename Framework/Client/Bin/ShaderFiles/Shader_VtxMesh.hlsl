@@ -72,6 +72,9 @@ PS_OUT PS_MAIN(PS_IN In)
     
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     
+    if(vMtrlDiffuse.a < 0.3f)
+        discard;
+    
     float fShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f);
     vector vReflect = reflect(normalize(g_vLightDir), In.vNormal);
     vector vLook = In.vWorldPos - g_vCamPosition;

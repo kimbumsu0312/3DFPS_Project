@@ -2,6 +2,16 @@
 #include "framework.h"
 #include <process.h>
 
+//Imgui
+#include "imgui.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
+// 여기에 미리 컴파일하려는 헤더 추가
+#include "framework.h"
+//매쉬 파일 로드 헤더
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
+#include "assimp/Importer.hpp"
 
 namespace Edit
 {
@@ -10,13 +20,6 @@ namespace Edit
 
 	enum class LEVEL { STATIC, LOADING, LOGO, MAP, MODEL, END };
 	enum class CAMERA_STATE { ZOOM_IN, ZOOM_OUT, ZOOM_RESET, END };
-
-	// Data
-	//static IDXGISwapChain*			g_pSwapChain = nullptr;
-	//static ID3D11RenderTargetView*	g_mainRenderTargetView = nullptr;
-	//static bool						g_SwapChainOccluded = false;
-	//static UINT						g_ResizeWidth = 0, g_ResizeHeight = 0;
-
 }
 
 extern HWND g_hWnd;

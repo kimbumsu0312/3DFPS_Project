@@ -2,7 +2,8 @@
 #include "Level_Map.h"
 #include "GameInstance.h"
 #include "Camera_Free.h"
-
+#include "Imgui_Manager.h"
+#include "Level_Loading.h"
 CLevel_Map::CLevel_Map(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CLevel{ pDevice, pContext }
 {
 }
@@ -21,6 +22,7 @@ HRESULT CLevel_Map::Initialize()
 	if (FAILED(Ready_Layer_Model(TEXT("Layer_Model"))))
 		return E_FAIL;
 
+	m_pGameInstance->Subscribe<Event_NextLevel>([&](const Event_NextLevel& e) {m_bIsNextLevel = true; m_eNextLevel = e.eLevel; });
 
 	return S_OK;
 }
@@ -30,7 +32,12 @@ void CLevel_Map::Update(_float fTimeDelta)
 	//TCHAR szChar[MAX_PATH];
 	//swprintf_s(szChar, MAX_PATH, L"DeltaTime: %.4f", fTimeDelta);
 	//SetWindowText(g_hWnd, szChar);
-
+	CImgui_Manger::GetInstance()->Update_Map();
+	if (m_bIsNextLevel)
+	{
+		if (FAILED(m_pGameInstance->Open_Level(static_cast<_uint>(LEVEL::LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, m_eNextLevel))))
+			return;
+	}
 }
 
 HRESULT CLevel_Map::Render()

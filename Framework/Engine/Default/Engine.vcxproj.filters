@@ -201,6 +201,7 @@
     <ClInclude Include="..\public\Pooling_Manager.h">
       <Filter>01.Utility\02.GameObject\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Map_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -287,5 +288,6 @@
     <ClCompile Include="..\private\Pooling_Manager.cpp">
       <Filter>01.Utility\02.GameObject\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Map_Manager.cpp" />
   </ItemGroup>
 </Project>

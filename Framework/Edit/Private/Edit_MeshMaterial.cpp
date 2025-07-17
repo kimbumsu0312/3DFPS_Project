@@ -17,24 +17,26 @@ HRESULT CEdit_MeshMaterial::Initialize(const _char* pModelFilePath, const aiMate
 		{
 			ID3D11ShaderResourceView* pSRV = { nullptr };
 
-			_char szDir[MAX_PATH];
-			_splitpath_s(pModelFilePath, nullptr, 0, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
-			
 			aiString	strTexturePath;
 			if (FAILED(pAIMaterial->GetTexture(static_cast<aiTextureType>(i), j, &strTexturePath)))
 				break;
-
-			_char szName[MAX_PATH];
-			_char szExt[MAX_PATH];
-
+		
+			_char szFullPath[MAX_PATH] = {};
+			_char szDrive[MAX_PATH] = {};
+			_char szDir[MAX_PATH] = {};
+			_char szName[MAX_PATH] = {};
+			_char szExt[MAX_PATH] = {};
+			
+			_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
 			_splitpath_s(strTexturePath.data, nullptr, 0, nullptr, 0, szName, MAX_PATH, szExt, MAX_PATH);
 			
-			_char szFullPath[MAX_PATH] = {  };
-			sprintf_s(szFullPath, sizeof(szFullPath), "%s%s%s", szDir, szName, szExt);
+			strcpy_s(szFullPath, szDrive);
+			strcat_s(szFullPath, szDir);
+			strcat_s(szFullPath, szName);
+			strcat_s(szFullPath, szExt);
 
 			_tchar szFullPath_W[MAX_PATH]{};
- 		
-			MultiByteToWideChar(CP_ACP, 0, szFullPath, -1, szFullPath_W, MAX_PATH);
+			MultiByteToWideChar(CP_ACP, 0, szFullPath, strlen(szFullPath), szFullPath_W, MAX_PATH);
 
 			HRESULT hr = {};
 			if (false == strcmp(szExt, ".tga"))
@@ -53,9 +55,12 @@ HRESULT CEdit_MeshMaterial::Initialize(const _char* pModelFilePath, const aiMate
 	return S_OK;
 }
 
-HRESULT CEdit_MeshMaterial::Bind_Shader_Resource(CShader* pShader, const _char* pConstantName, _uint iTexTypeIndex)
+HRESULT CEdit_MeshMaterial::Bind_Shader_Resource(CShader* pShader, const _char* pConstantName, aiTextureType eTextureType, _uint iIndex)
 {
-	return pShader->Bind_SRV(pConstantName, m_SRVs[iTexTypeIndex][0]);
+	if (iIndex >= m_SRVs[eTextureType].size())
+		return E_FAIL;
+
+	return pShader->Bind_SRV(pConstantName, m_SRVs[eTextureType][iIndex]);
 }
 
 CEdit_MeshMaterial* CEdit_MeshMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const aiMaterial* pAIMaterial)

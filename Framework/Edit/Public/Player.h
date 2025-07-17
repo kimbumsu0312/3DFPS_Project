@@ -22,11 +22,13 @@ public:
 	virtual HRESULT			Render();
 
 private:
-	class CEdit_Model*		m_pModel = { nullptr };
+	class CEdit_Model*		m_pModelCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
 						
 private:
 	HRESULT					Ready_Components();
+
+	HRESULT					Bind_ShaderResources();
 public:
 	static CPlayer*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg);
