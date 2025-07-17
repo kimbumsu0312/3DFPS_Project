@@ -97,6 +97,9 @@
     <Filter Include="00.System\02.Event\Manager">
       <UniqueIdentifier>{2455d380-5a30-4fb0-b783-04f652e9ce76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\95.Garbage_Collector">
+      <UniqueIdentifier>{330a235a-7731-4a8a-b783-3b0c050155f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -202,6 +205,9 @@
       <Filter>01.Utility\02.GameObject\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Map_Manager.h" />
+    <ClInclude Include="..\public\Garbage_Collector.h">
+      <Filter>01.Utility\95.Garbage_Collector</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -289,5 +295,8 @@
       <Filter>01.Utility\02.GameObject\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Map_Manager.cpp" />
+    <ClCompile Include="..\private\Garbage_Collector.cpp">
+      <Filter>01.Utility\95.Garbage_Collector</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

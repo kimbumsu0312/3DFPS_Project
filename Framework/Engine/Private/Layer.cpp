@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Layer.h"
 #include "GameObject.h"
+#include "GameInstance.h"
 
 CLayer::CLayer()
 {
@@ -32,6 +33,7 @@ void CLayer::Priority_Update(_float fTimeDelta)
 			{
 			case OBJECTTYPE::GAMEOBJECT:
 				(*pGameObject)->On_Dead();
+				pGameObject = m_GameObjects.erase(pGameObject);
 				break;
 			case OBJECTTYPE::POLLINGOBJECT:
 				(*pGameObject)->On_Dead();

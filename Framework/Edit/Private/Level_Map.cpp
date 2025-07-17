@@ -21,7 +21,6 @@ HRESULT CLevel_Map::Initialize()
 
 	if (FAILED(Ready_Layer_Model(TEXT("Layer_Model"))))
 		return E_FAIL;
-
 	m_pGameInstance->Subscribe<Event_NextLevel>([&](const Event_NextLevel& e) {m_bIsNextLevel = true; m_eNextLevel = e.eLevel; });
 
 	return S_OK;
@@ -85,9 +84,7 @@ HRESULT CLevel_Map::Ready_Layer_Camera(const _wstring& strLayerTag)
 
 HRESULT CLevel_Map::Ready_Layer_BackGround(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), strLayerTag,
-		ENUM_CLASS(LEVEL::MAP), TEXT("Prototype_GameObject_Terrain"))))
-		return E_FAIL;
+
 
 	return S_OK;
 }

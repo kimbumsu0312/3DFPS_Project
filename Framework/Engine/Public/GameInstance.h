@@ -109,10 +109,16 @@ public:
 #pragma endregion
 
 #pragma region POOLING_MANAGER
-	HRESULT								Add_Object_ToPool(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iValue, void* pArg);
-	HRESULT								Add_Pool_ToLayer(const _wstring& szPoolingPath, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg);
-	HRESULT								Return_Object(class CPoolingObject* pObject, const _wstring& szPoolingPath);
+	HRESULT						Add_Object_ToPool(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iValue, void* pArg);
+	HRESULT						Add_Pool_ToLayer(const _wstring& szPoolingPath, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg);
+	HRESULT						Return_Object(class CPoolingObject* pObject, const _wstring& szPoolingPath);
 #pragma endregion
+
+#pragma region POOLING_MANAGER
+	void						GarbageSweep(class CGameObject* pObject);
+	void						Clear_Garbage();
+#pragma endregion
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CInput_Device*		m_pInput_Device = { nullptr };
@@ -124,6 +130,7 @@ private:
 	class CPipeLine*			m_pPipeLine = { nullptr };
 	class CLight_Manager*		m_pLight_Manager = { nullptr };
 	class CPooling_Manager*		m_pPooling_Manager = { nullptr };
+	class CGarbage_Collector*	m_pGarbage_Collector = { nullptr };
 
 public:
 	void						Release_Engine();

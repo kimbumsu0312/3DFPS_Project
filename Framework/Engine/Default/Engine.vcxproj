@@ -166,6 +166,7 @@ call Copy_Release.bat</Command>
     <ClInclude Include="..\Public\Camera.h" />
     <ClInclude Include="..\public\Component.h" />
     <ClInclude Include="..\public\Event_Manager.h" />
+    <ClInclude Include="..\public\Garbage_Collector.h" />
     <ClInclude Include="..\Public\Input_Device.h" />
     <ClInclude Include="..\public\Light.h" />
     <ClInclude Include="..\public\Light_Manager.h" />
@@ -203,6 +204,7 @@ call Copy_Release.bat</Command>
     <ClCompile Include="..\Private\Camera.cpp" />
     <ClCompile Include="..\private\Component.cpp" />
     <ClCompile Include="..\private\Event_Manager.cpp" />
+    <ClCompile Include="..\private\Garbage_Collector.cpp" />
     <ClCompile Include="..\Private\Input_Device.cpp" />
     <ClCompile Include="..\private\Light.cpp" />
     <ClCompile Include="..\private\Light_Manager.cpp" />
