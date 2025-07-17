@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Imgui_Manager.h"
 #include "Edit_Defines.h"
+#include "Terrain.h"
 
 IMPLEMENT_SINGLETON(CImgui_Manger)
 
@@ -65,13 +66,33 @@ void CImgui_Manger::Update_Map()
 
 	End();
 
-	static _float f = 10.f;
-	static _int counter = 0;
+	static _int g_iTerrainSizeX = 1024;
+	static _int g_iTerrainSizeZ = 1024;
+
+	Begin("Create Terrain");
+	InputInt("X", &g_iTerrainSizeX);
+	InputInt("Z", &g_iTerrainSizeZ);
+
+	if (Button("Create"))
+	{
+		CVIBuffer_Terrain::VIBUFFER_TERRAIN_DESC Desc{};
+		Desc.iNumverticesX = g_iTerrainSizeX;
+		Desc.iNumverticesZ = g_iTerrainSizeZ;
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_BackGround"), ENUM_CLASS(LEVEL::MAP), TEXT("Prototype_GameObject_Terrain"),&Desc)))
+			MSG_BOX(TEXT("Failed to Created : Terrain_Clone"));
+	}
+	if (Button("Clear"))
+	{
+		m_pGameInstance->Publish(Clear_Map{});
+	}
+	End();
+
 
 	Begin("Map Tool!");
 	Checkbox("AnotherWindow", &show_another_window);
 
-	SliderFloat("float", &f, 0.0f, 1.0f);
+	//SliderFloat("float", &f, 0.0f, 1.0f);
 
 	End();
 	if (show_another_window)
@@ -104,6 +125,7 @@ void CImgui_Manger::Update_Model()
 	End();
 	if (show_another_window)
 	{
+
 		Begin("Another Window", &show_another_window);  
 		Text("Hello from another window!");
 		if (Button("Close Me"))

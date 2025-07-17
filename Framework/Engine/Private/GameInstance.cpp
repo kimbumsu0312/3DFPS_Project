@@ -12,6 +12,8 @@
 #include "Input_Device.h"
 #include "Light_Manager.h"
 #include "Pooling_Manager.h"
+#include "Garbage_Collector.h"
+
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
@@ -63,6 +65,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 
 	m_pPooling_Manager = CPooling_Manager::Create();
 	if (nullptr == m_pPooling_Manager)
+		return E_FAIL;
+
+	m_pGarbage_Collector = CGarbage_Collector::Create();
+	if (nullptr == m_pGarbage_Collector)
 		return E_FAIL;
 
 	return S_OK;
@@ -307,9 +313,20 @@ HRESULT CGameInstance::Return_Object(CPoolingObject* pObject, const _wstring& sz
 	return m_pPooling_Manager->Return_Object(pObject, szPoolingPath);
 }
 
+void CGameInstance::GarbageSweep(CGameObject* pObject)
+{
+	m_pGarbage_Collector->GarbageSweep(pObject);
+}
+
+void CGameInstance::Clear_Garbage()
+{
+	m_pGarbage_Collector->Clear_Garbage();
+}
+
 void CGameInstance::Release_Engine()
 {
 	Release();
+	Safe_Release(m_pGarbage_Collector);
 	Safe_Release(m_pPooling_Manager);
 	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pPipeLine);

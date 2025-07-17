@@ -77,6 +77,11 @@ void CCamera_Free::Zoom_Out(_float fTimeDelta)
 
 void CCamera_Free::KeyInput(_float fTimeDelta)
 {
+    if (m_pGameInstance->IsKeyDown(DIK_P) && !m_bIsCameraRot)
+        m_bIsCameraRot = true;
+    else if (m_pGameInstance->IsKeyDown(DIK_P) && m_bIsCameraRot)
+        m_bIsCameraRot = false;
+
     if (m_pGameInstance->IsKeyHold(DIK_W))
     {
         m_pTransformCom->Go_Straight(fTimeDelta);
@@ -104,13 +109,17 @@ void CCamera_Free::KeyInput(_float fTimeDelta)
     {
         m_fFovy -= XMConvertToRadians(10.f) * fTimeDelta;
     }
-    _int		iMouse = {};
-    //이전 마우스 기준으로 몇 픽셀만큼 이동했는지 구분한다.
-    if (iMouse = m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::X))
-        m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * iMouse * m_fMouseSensor);
 
-    if (iMouse = m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::Y))
-        m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), fTimeDelta * iMouse * m_fMouseSensor);
+    if (m_bIsCameraRot)
+    {
+        _int		iMouse = {};
+        //이전 마우스 기준으로 몇 픽셀만큼 이동했는지 구분한다.
+        if (iMouse = m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::X))
+            m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta * iMouse * m_fMouseSensor);
+
+        if (iMouse = m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::Y))
+            m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), fTimeDelta * iMouse * m_fMouseSensor);
+    }
 }
 
 CCamera_Free* CCamera_Free::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

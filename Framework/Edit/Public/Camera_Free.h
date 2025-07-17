@@ -34,7 +34,7 @@ private:
 	_bool					m_bIsZoomIn = { false };
 	_bool					m_bIsZoomout = { false };
 
-	
+	_bool					m_bIsCameraRot = { false };
 
 private:
 	void					Zoom_In(_float fTimeDelta);
