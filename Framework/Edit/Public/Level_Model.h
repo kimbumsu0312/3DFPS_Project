@@ -24,7 +24,9 @@ private:
 
 
 private:
-	_bool	m_bInvenOpen = { false };
+	_bool				m_bIsNextLevel = { false };
+	LEVEL				m_eNextLevel = { LEVEL::END };
+
 public:
 	static CLevel_Model* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

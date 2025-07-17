@@ -24,63 +24,100 @@ HRESULT CImgui_Manger::Initalize(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 	ImGui_ImplWin32_Init((HWND)g_hWnd);
 	ImGui_ImplDX11_Init(pDevice, pContext);
 
+	m_pGameInstance = CGameInstance::GetInstance();
 	m_pDevice = pDevice;
 	m_pContext = pContext;
+	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(pDevice);
 	Safe_AddRef(pContext);
 	return S_OK;
 }
 
-void CImgui_Manger::Update()
+void CImgui_Manger::Render_Begin()
 {
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	NewFrame();
-
-	Test();
 }
 
-HRESULT CImgui_Manger::Redner()
+void CImgui_Manger::Update_Logo()
 {
-	ImGui::Render();
+	Begin("Selete Level!");
 
+	if (Button("EDIT_MAP"))
+		m_pGameInstance->Publish(Event_NextLevel{ LEVEL::MAP });
 
-	ImGui_ImplDX11_RenderDrawData(GetDrawData());
+	SameLine();
 
-	return S_OK;
+	if (Button("EDIT_MODEL"))
+		m_pGameInstance->Publish(Event_NextLevel{ LEVEL::MODEL });
+
+	End();
+
 }
 
-void CImgui_Manger::Test()
+void CImgui_Manger::Update_Map()
 {
-	if (show_demo_window)
-		ShowDemoWindow(&show_demo_window);
+	Begin("Selete Level!");
 
-	static _float f = 0.f;
+	if (Button("EDIT_MODEL"))
+		m_pGameInstance->Publish(Event_NextLevel{ LEVEL::MODEL });
+
+	End();
+
+	static _float f = 10.f;
 	static _int counter = 0;
 
-	Begin("Hellow, World");
-	Text("this");
-	Checkbox("Demo Window", &show_demo_window);
+	Begin("Map Tool!");
 	Checkbox("AnotherWindow", &show_another_window);
 
-	SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-	ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+	SliderFloat("float", &f, 0.0f, 1.0f);
 
-	if (Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-		counter++;
-	SameLine();
-	Text("counter = %d", counter);
-
-	//Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 	End();
 	if (show_another_window)
 	{
-		Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+		Begin("Another Window", &show_another_window);  
 		Text("Hello from another window!");
 		if (Button("Close Me"))
 			show_another_window = false;
 		End();
 	}
+}
+
+void CImgui_Manger::Update_Model()
+{
+	Begin("Selete Level!");
+
+	if (Button("EDIT_MAP"))
+		m_pGameInstance->Publish(Event_NextLevel{ LEVEL::MAP });
+
+	End();
+
+	static _float f = 10.f;
+	static _int counter = 0;
+
+	Begin("Model Tool");
+	Checkbox("AnotherWindow", &show_another_window);
+
+	SliderFloat("float", &f, 0.0f, 1.0f);
+
+	End();
+	if (show_another_window)
+	{
+		Begin("Another Window", &show_another_window);  
+		Text("Hello from another window!");
+		if (Button("Close Me"))
+			show_another_window = false;
+		End();
+	}
+}
+
+HRESULT CImgui_Manger::Redner_End()
+{
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(GetDrawData());
+
+	return S_OK;
 }
 
 void CImgui_Manger::Free()
@@ -91,4 +128,5 @@ void CImgui_Manger::Free()
 
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+	Safe_Release(m_pGameInstance);
 }

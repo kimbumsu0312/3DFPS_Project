@@ -115,7 +115,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Public/;../Default/;../Public/nlohmann/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../Default/;</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -143,7 +143,7 @@ call Copy_Debug.bat</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Public/;../Default/;../Public/nlohmann/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;../Default/;</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -169,6 +169,7 @@ call Copy_Release.bat</Command>
     <ClInclude Include="..\Public\Input_Device.h" />
     <ClInclude Include="..\public\Light.h" />
     <ClInclude Include="..\public\Light_Manager.h" />
+    <ClInclude Include="..\public\Map_Manager.h" />
     <ClInclude Include="..\public\PipeLine.h" />
     <ClInclude Include="..\public\PoolingObject.h" />
     <ClInclude Include="..\public\Pooling_Manager.h" />
@@ -205,6 +206,7 @@ call Copy_Release.bat</Command>
     <ClCompile Include="..\Private\Input_Device.cpp" />
     <ClCompile Include="..\private\Light.cpp" />
     <ClCompile Include="..\private\Light_Manager.cpp" />
+    <ClCompile Include="..\private\Map_Manager.cpp" />
     <ClCompile Include="..\private\PipeLine.cpp" />
     <ClCompile Include="..\private\PoolingObject.cpp" />
     <ClCompile Include="..\private\Pooling_Manager.cpp" />

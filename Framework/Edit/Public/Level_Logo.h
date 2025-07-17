@@ -17,6 +17,7 @@ public:
 
 private:
 	_bool				m_bIsNextLevel = { false };
+	LEVEL				m_eNextLevel = { LEVEL::END };
 private:
 	HRESULT				Ready_Layer_BackGround(const _wstring& strLayerTag);
 	HRESULT				Ready_Layer_UI(const _wstring& strLayerTag);

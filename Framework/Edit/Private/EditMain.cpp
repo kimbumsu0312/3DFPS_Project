@@ -38,8 +38,8 @@ HRESULT CEditMain::Initialize()
 
 void CEditMain::Update(_float fTimeDelta)
 {
+	CImgui_Manger::GetInstance()->Render_Begin();
 	m_pGameInstance->Update_Engine(fTimeDelta);
-	CImgui_Manger::GetInstance()->Update();
 }
 
 HRESULT CEditMain::Render()
@@ -50,7 +50,7 @@ HRESULT CEditMain::Render()
 
 	m_pGameInstance->Draw();
 
-	CImgui_Manger::GetInstance()->Redner();
+	CImgui_Manger::GetInstance()->Redner_End();
 	m_pGameInstance->Render_End();
 
 	return S_OK;
