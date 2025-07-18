@@ -21,9 +21,10 @@ namespace Edit
 	enum class LEVEL { STATIC, LOADING, LOGO, MAP, MODEL, END };
 	enum class CAMERA_STATE { ZOOM_IN, ZOOM_OUT, ZOOM_RESET, END };
 }
-
 extern HWND g_hWnd;
 extern HINSTANCE g_hInst;
+extern bool g_CreateModel;
+extern bool g_SeleteModel;
 using namespace Edit;
 using namespace ImGui;
 

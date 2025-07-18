@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Loader.h"
 #include "Terrain.h"
-#include "Player.h"
+#include "MapObject.h"
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_pDevice{ pDevice }, m_pContext { pContext }, m_pGameInstance { CGameInstance::GetInstance()}
 {
 	Safe_AddRef(m_pGameInstance);

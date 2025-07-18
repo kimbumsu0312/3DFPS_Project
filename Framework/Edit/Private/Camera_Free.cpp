@@ -77,9 +77,9 @@ void CCamera_Free::Zoom_Out(_float fTimeDelta)
 
 void CCamera_Free::KeyInput(_float fTimeDelta)
 {
-    if (m_pGameInstance->IsKeyDown(DIK_P) && !m_bIsCameraRot)
+    if (m_pGameInstance->IsKeyDown(DIK_Q) && !m_bIsCameraRot)
         m_bIsCameraRot = true;
-    else if (m_pGameInstance->IsKeyDown(DIK_P) && m_bIsCameraRot)
+    else if (m_pGameInstance->IsKeyDown(DIK_Q) && m_bIsCameraRot)
         m_bIsCameraRot = false;
 
     if (m_pGameInstance->IsKeyHold(DIK_W))

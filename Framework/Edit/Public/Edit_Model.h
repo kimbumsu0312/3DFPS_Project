@@ -19,7 +19,7 @@ public:
 public:
 	HRESULT								Bind_Materials(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType, _uint iIndex);
 	_uint								Get_NumMeshes() const {	return m_iNumMeshes;	}
-
+	_bool								Selete_Model(CTransform& pTransform, _float3& pOut);
 private:
 	const aiScene*						m_pAIScene = { nullptr };
 	Assimp::Importer					m_Importer = {};

@@ -157,6 +157,7 @@
     <ClInclude Include="..\Public\Camera_Free.h" />
     <ClInclude Include="..\Public\Edit_Defines.h" />
     <ClInclude Include="..\Public\Edit_Event.h" />
+    <ClInclude Include="..\Public\Edit_ModelPath.h" />
     <ClInclude Include="..\Public\Imgui\imconfig.h" />
     <ClInclude Include="..\Public\Imgui\imgui.h" />
     <ClInclude Include="..\Public\Imgui\imgui_impl_dx11.h" />
@@ -175,7 +176,7 @@
     <ClInclude Include="..\public\Edit_Mesh.h" />
     <ClInclude Include="..\Public\Edit_MeshMaterial.h" />
     <ClInclude Include="..\Public\Edit_Model.h" />
-    <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="Edit.h" />
     <ClInclude Include="framework.h" />
@@ -196,7 +197,7 @@
     <ClCompile Include="..\private\Edit_Mesh.cpp" />
     <ClCompile Include="..\Private\Edit_MeshMaterial.cpp" />
     <ClCompile Include="..\Private\Edit_Model.cpp" />
-    <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\MapObject.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

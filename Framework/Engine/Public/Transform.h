@@ -53,6 +53,7 @@ public:
 	void Go_Right(_float fTimeDelta);
 	void Go_Backward(_float fTimeDelta);
 	void Rotation(_fvector vAxis, _float fRadian);
+	void Rotation_All(_float3 fRadian);
 	void Turn(_fvector vAxis, _float fTimeDelta);
 	void LookAt(_fvector vAt);
 	void Chase(_fvector vTargetPos, _float fTimeDelta, _float fLimit = 0.f);

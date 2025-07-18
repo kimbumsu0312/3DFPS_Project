@@ -9,4 +9,7 @@ namespace Edit
 
 	typedef struct Clear_Map {
 	}Clear_Map;
+
+	typedef struct Create_Modle {
+	}Create_Modle;
 }

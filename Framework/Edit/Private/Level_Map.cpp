@@ -28,9 +28,7 @@ HRESULT CLevel_Map::Initialize()
 
 void CLevel_Map::Update(_float fTimeDelta)
 {
-	//TCHAR szChar[MAX_PATH];
-	//swprintf_s(szChar, MAX_PATH, L"DeltaTime: %.4f", fTimeDelta);
-	//SetWindowText(g_hWnd, szChar);
+
 	CImgui_Manger::GetInstance()->Update_Map();
 	if (m_bIsNextLevel)
 	{
@@ -41,7 +39,7 @@ void CLevel_Map::Update(_float fTimeDelta)
 
 HRESULT CLevel_Map::Render()
 {
-	SetWindowText(g_hWnd, TEXT("¸Ê ¿¡µ÷"));
+	//SetWindowText(g_hWnd, TEXT("¸Ê ¿¡µ÷"));
 
 	return S_OK;
 }
@@ -91,9 +89,9 @@ HRESULT CLevel_Map::Ready_Layer_BackGround(const _wstring& strLayerTag)
 
 HRESULT CLevel_Map::Ready_Layer_Model(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), strLayerTag,
+	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), strLayerTag,
 		ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"))))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	return S_OK;
 }

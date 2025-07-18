@@ -163,12 +163,19 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 
 	m_iVertexStride = sizeof(VTXNORTEX);
 	m_iNumIndices = (m_iNumverticesX - 1) * (m_iNumverticesZ - 1) * 2 * 3;
+	
+	m_pIndices = new _uint[m_iNumIndices];
+	ZeroMemory(m_pIndices, sizeof(_uint) * m_iNumIndices);
+
+
 	m_iIndexStride = 4;
 	m_iNumVertexBuffers = 1;
 	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
 	m_ePrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	VTXNORTEX* pVertices = new VTXNORTEX[m_iNumVertices];
+	m_pVertexPositions = new _float3[m_iNumVertices];
+	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
 
 	for (_uint i = 0; i < m_iNumverticesZ; i++)
 	{
@@ -176,7 +183,7 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 		{
 			_uint	iIndex = i * m_iNumverticesX + j;
 
-			pVertices[iIndex].vPosition = _float3((float)j, 0.f, (float)i);
+			pVertices[iIndex].vPosition = m_pVertexPositions[iIndex] = _float3((float)j, 0.f, (float)i);
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTexcoord = _float2((float)j / (m_iNumverticesX - 1.f), i / (m_iNumverticesZ - 1.f));
 		}
@@ -224,7 +231,7 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 			XMStoreFloat3(&pVertices[iIndices[3]].vNormal, XMLoadFloat3(&pVertices[iIndices[3]].vNormal) + vNormal);
 		}
 	}
-
+	memcpy(m_pIndices, pIndices, sizeof(_uint) * m_iNumIndices);
 	//pVertices에 담기 vNormal 값을 모두 노말라이즈 시킨다.
 	for (size_t i = 0; i < m_iNumVertices; i++)
 	{

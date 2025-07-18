@@ -6,12 +6,20 @@ class CShader;
 NS_END
 
 NS_BEGIN(Edit)
-class CPlayer final : public CGameObject
+class CMapObject final : public CGameObject
 {
+public:
+
+	typedef struct tagObject : public CGameObject::GAMEOBJECT_DESC
+	{
+		_float4 vPos;
+		_wstring szModelPath;
+	}MODEL_OBJECT_DESC;
+
 private:
-	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CPlayer(const CPlayer& Prototype);
-	virtual ~CPlayer() = default;
+	CMapObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMapObject(const CMapObject& Prototype);
+	virtual ~CMapObject() = default;
 
 public:
 	virtual HRESULT			Initialize_Prototype();
@@ -21,16 +29,21 @@ public:
 	virtual void			Late_Update(_float fTimeDelta);
 	virtual HRESULT			Render();
 
+	_wstring				Get_ModelPath() { return m_szModelPath; }
+	void					SetDead() { m_bIsDead = true; }
 private:
 	class CEdit_Model*		m_pModelCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
+
+	_wstring				m_szModelPath = {};
+	_bool					m_bCreate = { false };
 						
 private:
 	HRESULT					Ready_Components();
 
 	HRESULT					Bind_ShaderResources();
 public:
-	static CPlayer*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMapObject*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg);
 	virtual void			Free();
 };

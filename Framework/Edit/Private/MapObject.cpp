@@ -1,46 +1,69 @@
 #include "pch.h"
-#include "Player.h"
+#include "MapObject.h"
 #include "Edit_Model.h"
-
-CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CGameObject(pDevice, pContext)
+#include "Imgui_Manager.h"
+CMapObject::CMapObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CGameObject(pDevice, pContext)
 {
 }
 
-CPlayer::CPlayer(const CPlayer& Prototype) : CGameObject (Prototype)
+CMapObject::CMapObject(const CMapObject& Prototype) : CGameObject (Prototype)
 {
 }
 
-HRESULT CPlayer::Initialize_Prototype()
+HRESULT CMapObject::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CPlayer::Initialize(void* pArg)
+HRESULT CMapObject::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-
+	if (pArg != nullptr)
+	{
+		MODEL_OBJECT_DESC* pDesc = static_cast<MODEL_OBJECT_DESC*>(pArg);
+		m_szModelPath = pDesc->szModelPath;
+	}
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
+
+	if (pArg != nullptr)
+	{
+		MODEL_OBJECT_DESC* pDesc = static_cast<MODEL_OBJECT_DESC*>(pArg);
+		m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&(pDesc->vPos)));
+	}
 
 	return S_OK;
 }
 
-void CPlayer::Priority_Update(_float fTimeDelta)
+void CMapObject::Priority_Update(_float fTimeDelta)
 {
 }
 
-void CPlayer::Update(_float fTimeDelta)
+void CMapObject::Update(_float fTimeDelta)
 {
+	if (g_SeleteModel)
+	{
+		if (m_pGameInstance->IsMouseHold(MOUSEKEYSTATE::LB))
+		{
+			_float3 vSetModelPos = { 0.f, 0.f, 0.f };
+			if (m_pModelCom->Selete_Model(*m_pTransformCom, vSetModelPos))
+			{
+				CImgui_Manger::GetInstance()->Selete_Object(*this, *m_pTransformCom);
+			}
+		}
+	}
+
+
 }
 
-void CPlayer::Late_Update(_float fTimeDelta)
+void CMapObject::Late_Update(_float fTimeDelta)
 {
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
 		return;
 }
 
-HRESULT CPlayer::Render()
+HRESULT CMapObject::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -57,20 +80,20 @@ HRESULT CPlayer::Render()
 	return S_OK;
 }
 
-HRESULT CPlayer::Ready_Components()
+HRESULT CMapObject::Ready_Components()
 {
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
 		return E_FAIL;
 
-	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Fiona"),
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), m_szModelPath,
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pModelCom), nullptr)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CPlayer::Bind_ShaderResources()
+HRESULT CMapObject::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -99,33 +122,33 @@ HRESULT CPlayer::Bind_ShaderResources()
 	return S_OK;
 }
 
-CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMapObject* CMapObject::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CPlayer* pInstance = new CPlayer(pDevice, pContext);
+	CMapObject* pInstance = new CMapObject(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX(TEXT("Failed to Crated : CPlayer"));
+		MSG_BOX(TEXT("Failed to Crated : CMapObject"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CPlayer::Clone(void* pArg)
+CGameObject* CMapObject::Clone(void* pArg)
 {
-	CPlayer* pInstance = new CPlayer(*this);
+	CMapObject* pInstance = new CMapObject(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX(TEXT("Failed to Clone : CPlayer"));
+		MSG_BOX(TEXT("Failed to Clone : CMapObject"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CPlayer::Free()
+void CMapObject::Free()
 {
 	__super::Free();
 
