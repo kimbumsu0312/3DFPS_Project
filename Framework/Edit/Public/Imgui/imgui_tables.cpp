@@ -1499,7 +1499,7 @@ void    ImGui::EndTable()
     outer_window->DC.ColumnsOffset = temp_data->HostBackupColumnsOffset;
 
     // Layout in outer window
-    // (FIXME: To allow auto-fit and allow desirable effect of SameLine() we dissociate 'used' vs 'ideal' size by overriding
+    // (FIXME: To allow auto-fit and allow desirable effect of ImGui::SameLine() we dissociate 'used' vs 'ideal' size by overriding
     // CursorPosPrevLine and CursorMaxPos manually. That should be a more general layout feature, see same problem e.g. #3414)
     if (inner_window != outer_window)
     {
@@ -1936,8 +1936,8 @@ void ImGui::TableBeginRow(ImGuiTable* table)
     table->RowIndentOffsetX = window->DC.Indent.x - table->HostIndentX; // Lock indent
 
     window->DC.PrevLineTextBaseOffset = 0.0f;
-    window->DC.CursorPosPrevLine = ImVec2(window->DC.CursorPos.x, window->DC.CursorPos.y + table->RowCellPaddingY); // This allows users to call SameLine() to share LineSize between columns.
-    window->DC.PrevLineSize = window->DC.CurrLineSize = ImVec2(0.0f, 0.0f); // This allows users to call SameLine() to share LineSize between columns, and to call it from first column too.
+    window->DC.CursorPosPrevLine = ImVec2(window->DC.CursorPos.x, window->DC.CursorPos.y + table->RowCellPaddingY); // This allows users to call ImGui::SameLine() to share LineSize between columns.
+    window->DC.PrevLineSize = window->DC.CurrLineSize = ImVec2(0.0f, 0.0f); // This allows users to call ImGui::SameLine() to share LineSize between columns, and to call it from first column too.
     window->DC.IsSameLine = window->DC.IsSetPos = false;
     window->DC.CursorMaxPos.y = next_y1;
 
@@ -2185,7 +2185,7 @@ void ImGui::TableBeginCell(ImGuiTable* table, int column_n)
     window->DC.CursorPos.y = table->RowPosY1 + table->RowCellPaddingY;
     window->DC.CursorMaxPos.x = window->DC.CursorPos.x;
     window->DC.ColumnsOffset.x = start_x - window->Pos.x - window->DC.Indent.x; // FIXME-WORKRECT
-    window->DC.CursorPosPrevLine.x = window->DC.CursorPos.x; // PrevLine.y is preserved. This allows users to call SameLine() to share LineSize between columns.
+    window->DC.CursorPosPrevLine.x = window->DC.CursorPos.x; // PrevLine.y is preserved. This allows users to call ImGui::SameLine() to share LineSize between columns.
     window->DC.CurrLineTextBaseOffset = table->RowTextBaseline;
     window->DC.NavLayerCurrent = (ImGuiNavLayer)column->NavLayerCurrent;
 
@@ -3147,7 +3147,7 @@ void ImGui::TableHeadersRow()
 
 // Emit a column header (text + optional sort order)
 // We cpu-clip text here so that all columns headers can be merged into a same draw call.
-// Note that because of how we cpu-clip and display sorting indicators, you _cannot_ use SameLine() after a TableHeader()
+// Note that because of how we cpu-clip and display sorting indicators, you _cannot_ use ImGui::SameLine() after a TableHeader()
 void ImGui::TableHeader(const char* label)
 {
     ImGuiContext& g = *GImGui;
@@ -4033,7 +4033,7 @@ void ImGui::DebugNodeTable(ImGuiTable* table)
     {
         if (DebugBreakButton("**DebugBreak**", "in BeginTable()"))
             g.DebugBreakInTable = table->ID;
-        SameLine();
+        ImGui::SameLine();
     }
 
     bool clear_settings = SmallButton("Clear settings");

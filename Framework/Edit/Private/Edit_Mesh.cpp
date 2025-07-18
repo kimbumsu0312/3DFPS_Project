@@ -31,11 +31,18 @@ HRESULT CEdit_Mesh::Initialize_Prototype(const aiMesh* pAIMesh, _fmatrix PreTran
 	VBDesc.StructureByteStride = m_iVertexStride;
 
 	VTXMESH* pVertices = new VTXMESH[m_iNumVertices];
+	m_pIndices = new _uint[m_iNumIndices];
+	ZeroMemory(m_pIndices, sizeof(_uint) * m_iNumIndices);
+
+	m_pVertexPositions = new _float3[m_iNumVertices];
+	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
+
 
 	for (size_t i = 0; i < m_iNumVertices; i++)
 	{
 		memcpy(&pVertices[i].vPosition, &pAIMesh->mVertices[i], sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PreTransformMatrix));
+		m_pVertexPositions[i] = pVertices[i].vPosition;
 
 		memcpy(&pVertices[i].vNormal, &pAIMesh->mNormals[i], sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vNormal), PreTransformMatrix));
@@ -77,7 +84,7 @@ HRESULT CEdit_Mesh::Initialize_Prototype(const aiMesh* pAIMesh, _fmatrix PreTran
 
 	D3D11_SUBRESOURCE_DATA	IBInitialData{};
 	IBInitialData.pSysMem = pIndices;
-
+	memcpy(m_pIndices, pIndices, sizeof(_uint) * m_iNumIndices);
 	if (FAILED(m_pDevice->CreateBuffer(&IBDesc, &IBInitialData, &m_pIB)))
 		return E_FAIL;
 
@@ -90,6 +97,8 @@ HRESULT CEdit_Mesh::Initialize(void* pArg)
 {
 	return S_OK;
 }
+
+
 
 CEdit_Mesh* CEdit_Mesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const aiMesh* pAIMesh, _fmatrix PreTransformMatrix)
 {

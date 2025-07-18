@@ -1721,7 +1721,7 @@ void ImGui::SeparatorTextEx(ImGuiID id, const char* label, const char* label_end
     const float label_avail_w = ImMax(0.0f, sep2_x2 - sep1_x1 - padding.x * 2.0f);
     const ImVec2 label_pos(pos.x + padding.x + ImMax(0.0f, (label_avail_w - label_size.x - extra_w) * style.SeparatorTextAlign.x), pos.y + text_baseline_y); // FIXME-ALIGN
 
-    // This allows using SameLine() to position something in the 'extra_w'
+    // This allows using ImGui::SameLine() to position something in the 'extra_w'
     window->DC.CursorPosPrevLine.x = label_pos.x + label_size.x;
 
     const ImU32 separator_col = GetColorU32(ImGuiCol_Separator);
@@ -5746,7 +5746,7 @@ bool ImGui::ColorEdit4(const char* label, float col[4], ImGuiColorEditFlags flag
     if (label != label_display_end && !(flags & ImGuiColorEditFlags_NoLabel))
     {
         // Position not necessarily next to last submitted button (e.g. if style.ColorButtonPosition == ImGuiDir_Left),
-        // but we need to use SameLine() to setup baseline correctly. Might want to refactor SameLine() to simplify this.
+        // but we need to use ImGui::SameLine() to setup baseline correctly. Might want to refactor ImGui::SameLine() to simplify this.
         SameLine(0.0f, style.ItemInnerSpacing.x);
         window->DC.CursorPos.x = pos.x + ((flags & ImGuiColorEditFlags_NoInputs) ? w_button : w_full + style.ItemInnerSpacing.x);
         TextEx(label, label_display_end);
@@ -6280,7 +6280,7 @@ bool ImGui::ColorButton(const char* desc_id, const ImVec4& col, ImGuiColorEditFl
         else
             SetDragDropPayload(IMGUI_PAYLOAD_TYPE_COLOR_4F, &col_rgb, sizeof(float) * 4, ImGuiCond_Once);
         ColorButton(desc_id, col, flags);
-        SameLine();
+        ImGui::SameLine();
         TextEx("Color");
         EndDragDropSource();
     }
@@ -6330,7 +6330,7 @@ void ImGui::ColorTooltip(const char* text, const float* col, ImGuiColorEditFlags
     int cr = IM_F32_TO_INT8_SAT(col[0]), cg = IM_F32_TO_INT8_SAT(col[1]), cb = IM_F32_TO_INT8_SAT(col[2]), ca = (flags & ImGuiColorEditFlags_NoAlpha) ? 255 : IM_F32_TO_INT8_SAT(col[3]);
     ImGuiColorEditFlags flags_to_forward = ImGuiColorEditFlags_InputMask_ | ImGuiColorEditFlags_AlphaMask_;
     ColorButton("##preview", cf, (flags & flags_to_forward) | ImGuiColorEditFlags_NoTooltip, sz);
-    SameLine();
+    ImGui::SameLine();
     if ((flags & ImGuiColorEditFlags_InputRGB) || !(flags & ImGuiColorEditFlags_InputMask_))
     {
         if (flags & ImGuiColorEditFlags_NoAlpha)
@@ -7113,7 +7113,7 @@ bool ImGui::CollapsingHeader(const char* label, bool* p_visible, ImGuiTreeNodeFl
 // Tip: pass a non-visible label (e.g. "##hello") then you can use the space to draw other text or image.
 // But you need to make sure the ID is unique, e.g. enclose calls in PushID/PopID or use ##unique_id.
 // With this scheme, ImGuiSelectableFlags_SpanAllColumns and ImGuiSelectableFlags_AllowOverlap are also frequently used flags.
-// FIXME: Selectable() with (size.x == 0.0f) and (SelectableTextAlign.x > 0.0f) followed by SameLine() is currently not supported.
+// FIXME: Selectable() with (size.x == 0.0f) and (SelectableTextAlign.x > 0.0f) followed by ImGui::SameLine() is currently not supported.
 bool ImGui::Selectable(const char* label, bool selected, ImGuiSelectableFlags flags, const ImVec2& size_arg)
 {
     ImGuiWindow* window = GetCurrentWindow();
@@ -9068,7 +9068,7 @@ bool ImGui::BeginMenuEx(const char* label, const char* icon, bool enabled)
         LogSetNextTextDecoration("[", "]");
         RenderText(text_pos, label);
         PopStyleVar();
-        window->DC.CursorPos.x += IM_TRUNC(style.ItemSpacing.x * (-1.0f + 0.5f)); // -1 spacing to compensate the spacing added when Selectable() did a SameLine(). It would also work to call SameLine() ourselves after the PopStyleVar().
+        window->DC.CursorPos.x += IM_TRUNC(style.ItemSpacing.x * (-1.0f + 0.5f)); // -1 spacing to compensate the spacing added when Selectable() did a ImGui::SameLine(). It would also work to call ImGui::SameLine() ourselves after the PopStyleVar().
     }
     else
     {
@@ -9275,7 +9275,7 @@ bool ImGui::MenuItemEx(const char* label, const char* icon, const char* shortcut
         PopStyleVar();
         if (g.LastItemData.StatusFlags & ImGuiItemStatusFlags_Visible)
             RenderText(text_pos, label);
-        window->DC.CursorPos.x += IM_TRUNC(style.ItemSpacing.x * (-1.0f + 0.5f)); // -1 spacing to compensate the spacing added when Selectable() did a SameLine(). It would also work to call SameLine() ourselves after the PopStyleVar().
+        window->DC.CursorPos.x += IM_TRUNC(style.ItemSpacing.x * (-1.0f + 0.5f)); // -1 spacing to compensate the spacing added when Selectable() did a ImGui::SameLine(). It would also work to call ImGui::SameLine() ourselves after the PopStyleVar().
     }
     else
     {

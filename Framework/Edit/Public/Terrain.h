@@ -28,7 +28,7 @@ private:
 	CShader*				m_pShaderCom = { nullptr };
 	CTexture*				m_pTextureCom = { nullptr };
 	CVIBuffer_Terrain*		m_pVIBufferCom = { nullptr };
-
+	_float3					vSetModelPos = {};
 private:
 	HRESULT					Ready_Components(void* pArg);
 	HRESULT					Bind_ShaderResources();

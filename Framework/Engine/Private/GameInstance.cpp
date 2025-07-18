@@ -13,7 +13,7 @@
 #include "Light_Manager.h"
 #include "Pooling_Manager.h"
 #include "Garbage_Collector.h"
-
+#include "Picking.h"
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
@@ -71,6 +71,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pGarbage_Collector)
 		return E_FAIL;
 
+	m_pPicking = CPicking::Create(*ppDevice, *ppContext, EngineDesc.hWnd);
+	if (nullptr == m_pPicking)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -80,6 +84,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 	m_pPipeLine->Update();
+	m_pPicking->Update();
 
 	m_pObject_Manager->Update(fTimeDelta);
 	m_pObject_Manager->Late_Update(fTimeDelta);
@@ -323,9 +328,20 @@ void CGameInstance::Clear_Garbage()
 	m_pGarbage_Collector->Clear_Garbage();
 }
 
+void CGameInstance::TransformToLocalSpace(CTransform& pTransformCom)
+{
+	m_pPicking->TransformToLocalSpace(pTransformCom);
+}
+
+_bool CGameInstance::isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float3& pOut)
+{
+	return m_pPicking->isPickedInLocalSpace(vPointA, vPointB, vPointC, pOut);
+}
+
 void CGameInstance::Release_Engine()
 {
 	Release();
+	Safe_Release(m_pPicking);
 	Safe_Release(m_pGarbage_Collector);
 	Safe_Release(m_pPooling_Manager);
 	Safe_Release(m_pLight_Manager);

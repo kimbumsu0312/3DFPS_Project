@@ -170,7 +170,8 @@ call Copy_Release.bat</Command>
     <ClInclude Include="..\Public\Input_Device.h" />
     <ClInclude Include="..\public\Light.h" />
     <ClInclude Include="..\public\Light_Manager.h" />
-    <ClInclude Include="..\public\Map_Manager.h" />
+    <ClInclude Include="..\public\Picking.h" />
+    <ClInclude Include="..\public\SaveLoader.h" />
     <ClInclude Include="..\public\PipeLine.h" />
     <ClInclude Include="..\public\PoolingObject.h" />
     <ClInclude Include="..\public\Pooling_Manager.h" />
@@ -208,7 +209,8 @@ call Copy_Release.bat</Command>
     <ClCompile Include="..\Private\Input_Device.cpp" />
     <ClCompile Include="..\private\Light.cpp" />
     <ClCompile Include="..\private\Light_Manager.cpp" />
-    <ClCompile Include="..\private\Map_Manager.cpp" />
+    <ClCompile Include="..\private\Picking.cpp" />
+    <ClCompile Include="..\private\SaveLoad_Manager.cpp" />
     <ClCompile Include="..\private\PipeLine.cpp" />
     <ClCompile Include="..\private\PoolingObject.cpp" />
     <ClCompile Include="..\private\Pooling_Manager.cpp" />

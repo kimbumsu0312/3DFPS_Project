@@ -114,9 +114,14 @@ public:
 	HRESULT						Return_Object(class CPoolingObject* pObject, const _wstring& szPoolingPath);
 #pragma endregion
 
-#pragma region POOLING_MANAGER
+#pragma region Garbage_Collector
 	void						GarbageSweep(class CGameObject* pObject);
 	void						Clear_Garbage();
+#pragma endregion
+
+#pragma region Picking
+	void						TransformToLocalSpace(class CTransform& pTransformCom);
+	_bool						isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float3& pOut);
 #pragma endregion
 
 private:
@@ -131,7 +136,7 @@ private:
 	class CLight_Manager*		m_pLight_Manager = { nullptr };
 	class CPooling_Manager*		m_pPooling_Manager = { nullptr };
 	class CGarbage_Collector*	m_pGarbage_Collector = { nullptr };
-
+	class CPicking*				m_pPicking = { nullptr };
 public:
 	void						Release_Engine();
 	virtual void				Free() override;

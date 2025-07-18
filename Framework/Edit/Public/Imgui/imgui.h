@@ -547,7 +547,7 @@ namespace ImGui
     // Layout cursor positioning
     // - By "cursor" we mean the current output position.
     // - The typical widget behavior is to output themselves at the current cursor position, then move the cursor one line down.
-    // - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
+    // - You can call ImGui::SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
     // - YOU CAN DO 99% OF WHAT YOU NEED WITH ONLY GetCursorScreenPos() and GetContentRegionAvail().
     // - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
     //    - Absolute coordinate:        GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions. -> this is the preferred way forward.
@@ -568,13 +568,13 @@ namespace ImGui
     // Other layout functions
     IMGUI_API void          Separator();                                                    // separator, generally horizontal. inside a menu bar or in horizontal layout mode, this becomes a vertical separator.
     IMGUI_API void          SameLine(float offset_from_start_x=0.0f, float spacing=-1.0f);  // call between widgets or groups to layout them horizontally. X position given in window coordinates.
-    IMGUI_API void          NewLine();                                                      // undo a SameLine() or force a new line when in a horizontal-layout context.
+    IMGUI_API void          NewLine();                                                      // undo a ImGui::SameLine() or force a new line when in a horizontal-layout context.
     IMGUI_API void          Spacing();                                                      // add vertical spacing.
     IMGUI_API void          Dummy(const ImVec2& size);                                      // add a dummy item of given size. unlike InvisibleButton(), Dummy() won't take the mouse click or be navigable into.
     IMGUI_API void          Indent(float indent_w = 0.0f);                                  // move content position toward the right, by indent_w, or style.IndentSpacing if indent_w <= 0
     IMGUI_API void          Unindent(float indent_w = 0.0f);                                // move content position back to the left, by indent_w, or style.IndentSpacing if indent_w <= 0
     IMGUI_API void          BeginGroup();                                                   // lock horizontal starting position
-    IMGUI_API void          EndGroup();                                                     // unlock horizontal starting position + capture the whole group bounding box into one "item" (so you can use IsItemHovered() or layout primitives such as SameLine() on whole group, etc.)
+    IMGUI_API void          EndGroup();                                                     // unlock horizontal starting position + capture the whole group bounding box into one "item" (so you can use IsItemHovered() or layout primitives such as ImGui::SameLine() on whole group, etc.)
     IMGUI_API void          AlignTextToFramePadding();                                      // vertically align upcoming text baseline to FramePadding.y so that it will align properly to regularly framed items (call if you have text on a line before a framed item)
     IMGUI_API float         GetTextLineHeight();                                            // ~ FontSize
     IMGUI_API float         GetTextLineHeightWithSpacing();                                 // ~ FontSize + style.ItemSpacing.y (distance in pixels between 2 consecutive lines of text)

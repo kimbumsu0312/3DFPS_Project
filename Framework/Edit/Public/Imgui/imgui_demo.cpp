@@ -4514,7 +4514,7 @@ static void DemoWindowLayout()
     IMGUI_DEMO_MARKER("Layout/Basic Horizontal Layout");
     if (ImGui::TreeNode("Basic Horizontal Layout"))
     {
-        ImGui::TextWrapped("(Use ImGui::SameLine() to keep adding items to the right of the preceding item)");
+        ImGui::TextWrapped("(Use ImGui::ImGui::SameLine() to keep adding items to the right of the preceding item)");
 
         // Text
         IMGUI_DEMO_MARKER("Layout/Basic Horizontal Layout/SameLine");
@@ -4612,7 +4612,7 @@ static void DemoWindowLayout()
         HelpMarker(
             "BeginGroup() basically locks the horizontal position for new line. "
             "EndGroup() bundles the whole group so that you can use \"item\" functions such as "
-            "IsItemHovered()/IsItemActive() or SameLine() etc. on the whole group.");
+            "IsItemHovered()/IsItemActive() or ImGui::SameLine() etc. on the whole group.");
         ImGui::BeginGroup();
         {
             ImGui::BeginGroup();
@@ -4908,7 +4908,7 @@ static void DemoWindowLayout()
         ImGui::BeginChild("scrolling", scrolling_child_size, ImGuiChildFlags_Borders, ImGuiWindowFlags_HorizontalScrollbar);
         for (int line = 0; line < lines; line++)
         {
-            // Display random stuff. For the sake of this trivial demo we are using basic Button() + SameLine()
+            // Display random stuff. For the sake of this trivial demo we are using basic Button() + ImGui::SameLine()
             // If you want to create your own time line for a real application you may be better off manipulating
             // the cursor position yourself, aka using SetCursorPos/SetCursorScreenPos to position the widgets
             // yourself. You may also want to use the lower-level ImDrawList API.
@@ -8271,7 +8271,7 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
         {
             BulletText("Warning: Font scaling will NOT be smooth, because\nImGuiBackendFlags_RendererHasTextures is not set!");
             BulletText("For instructions, see:");
-            SameLine();
+            ImGui::SameLine();
             TextLinkOpenURL("docs/BACKENDS.md", "https://github.com/ocornut/imgui/blob/master/docs/BACKENDS.md");
         }
 
@@ -8291,19 +8291,19 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
         if (SliderFloat("FrameRounding", &style.FrameRounding, 0.0f, 12.0f, "%.0f"))
             style.GrabRounding = style.FrameRounding; // Make GrabRounding always the same value as FrameRounding
         { bool border = (style.WindowBorderSize > 0.0f); if (Checkbox("WindowBorder", &border)) { style.WindowBorderSize = border ? 1.0f : 0.0f; } }
-        SameLine();
+        ImGui::SameLine();
         { bool border = (style.FrameBorderSize > 0.0f);  if (Checkbox("FrameBorder", &border)) { style.FrameBorderSize = border ? 1.0f : 0.0f; } }
-        SameLine();
+        ImGui::SameLine();
         { bool border = (style.PopupBorderSize > 0.0f);  if (Checkbox("PopupBorder", &border)) { style.PopupBorderSize = border ? 1.0f : 0.0f; } }
     }
 
     // Save/Revert button
     if (Button("Save Ref"))
         *ref = ref_saved_style = style;
-    SameLine();
+    ImGui::SameLine();
     if (Button("Revert Ref"))
         style = *ref;
-    SameLine();
+    ImGui::SameLine();
     HelpMarker(
         "Save/Revert in local non-persistent storage. Default Colors definition are not affected. "
         "Use \"Export\" below to save them somewhere.");
@@ -8341,7 +8341,7 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
             SliderFloat("TabBorderSize", &style.TabBorderSize, 0.0f, 1.0f, "%.0f");
             SliderFloat("TabBarBorderSize", &style.TabBarBorderSize, 0.0f, 2.0f, "%.0f");
             SliderFloat("TabBarOverlineSize", &style.TabBarOverlineSize, 0.0f, 3.0f, "%.0f");
-            SameLine(); HelpMarker("Overline is only drawn over the selected tab when ImGuiTabBarFlags_DrawSelectedOverline is set.");
+            ImGui::SameLine(); HelpMarker("Overline is only drawn over the selected tab when ImGuiTabBarFlags_DrawSelectedOverline is set.");
             DragFloat("TabCloseButtonMinWidthSelected", &style.TabCloseButtonMinWidthSelected, 0.1f, -1.0f, 100.0f, (style.TabCloseButtonMinWidthSelected < 0.0f) ? "%.0f (Always)" : "%.0f");
             DragFloat("TabCloseButtonMinWidthUnselected", &style.TabCloseButtonMinWidthUnselected, 0.1f, -1.0f, 100.0f, (style.TabCloseButtonMinWidthUnselected < 0.0f) ? "%.0f (Always)" : "%.0f");
             SliderFloat("TabRounding", &style.TabRounding, 0.0f, 12.0f, "%.0f");
@@ -8353,7 +8353,7 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
 
             SeparatorText("Trees");
             bool combo_open = BeginCombo("TreeLinesFlags", GetTreeLinesFlagsName(style.TreeLinesFlags));
-            SameLine();
+            ImGui::SameLine();
             HelpMarker("[Experimental] Tree lines may not work in all situations (e.g. using a clipper) and may incurs slight traversal overhead.\n\nImGuiTreeNodeFlags_DrawLinesFull is faster than ImGuiTreeNodeFlags_DrawLinesToNode.");
             if (combo_open)
             {
@@ -8376,9 +8376,9 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
             SeparatorText("Widgets");
             Combo("ColorButtonPosition", (int*)&style.ColorButtonPosition, "Left\0Right\0");
             SliderFloat2("ButtonTextAlign", (float*)&style.ButtonTextAlign, 0.0f, 1.0f, "%.2f");
-            SameLine(); HelpMarker("Alignment applies when a button is larger than its text content.");
+            ImGui::SameLine(); HelpMarker("Alignment applies when a button is larger than its text content.");
             SliderFloat2("SelectableTextAlign", (float*)&style.SelectableTextAlign, 0.0f, 1.0f, "%.2f");
-            SameLine(); HelpMarker("Alignment applies when a selectable is larger than its text content.");
+            ImGui::SameLine(); HelpMarker("Alignment applies when a selectable is larger than its text content.");
             SliderFloat("SeparatorTextBorderSize", &style.SeparatorTextBorderSize, 0.0f, 10.0f, "%.0f");
             SliderFloat2("SeparatorTextAlign", (float*)&style.SeparatorTextAlign, 0.0f, 1.0f, "%.2f");
             SliderFloat2("SeparatorTextPadding", (float*)&style.SeparatorTextPadding, 0.0f, 40.0f, "%.0f");
@@ -8399,8 +8399,8 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
                 }
 
             SeparatorText("Misc");
-            SliderFloat2("DisplayWindowPadding", (float*)&style.DisplayWindowPadding, 0.0f, 30.0f, "%.0f"); SameLine(); HelpMarker("Apply to regular windows: amount which we enforce to keep visible when moving near edges of your screen.");
-            SliderFloat2("DisplaySafeAreaPadding", (float*)&style.DisplaySafeAreaPadding, 0.0f, 30.0f, "%.0f"); SameLine(); HelpMarker("Apply to every windows, menus, popups, tooltips: amount where we avoid displaying contents. Adjust if you cannot see the edges of your screen (e.g. on a TV where scaling has not been configured).");
+            SliderFloat2("DisplayWindowPadding", (float*)&style.DisplayWindowPadding, 0.0f, 30.0f, "%.0f"); ImGui::SameLine(); HelpMarker("Apply to regular windows: amount which we enforce to keep visible when moving near edges of your screen.");
+            SliderFloat2("DisplaySafeAreaPadding", (float*)&style.DisplaySafeAreaPadding, 0.0f, 30.0f, "%.0f"); ImGui::SameLine(); HelpMarker("Apply to every windows, menus, popups, tooltips: amount where we avoid displaying contents. Adjust if you cannot see the edges of your screen (e.g. on a TV where scaling has not been configured).");
 
             EndTabItem();
         }
@@ -8426,16 +8426,16 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
                 }
                 LogFinish();
             }
-            SameLine(); SetNextItemWidth(120); Combo("##output_type", &output_dest, "To Clipboard\0To TTY\0");
-            SameLine(); Checkbox("Only Modified Colors", &output_only_modified);
+            ImGui::SameLine(); SetNextItemWidth(120); Combo("##output_type", &output_dest, "To Clipboard\0To TTY\0");
+            ImGui::SameLine(); Checkbox("Only Modified Colors", &output_only_modified);
 
             static ImGuiTextFilter filter;
             filter.Draw("Filter colors", GetFontSize() * 16);
 
             static ImGuiColorEditFlags alpha_flags = 0;
-            if (RadioButton("Opaque", alpha_flags == ImGuiColorEditFlags_AlphaOpaque))       { alpha_flags = ImGuiColorEditFlags_AlphaOpaque; } SameLine();
-            if (RadioButton("Alpha",  alpha_flags == ImGuiColorEditFlags_None))              { alpha_flags = ImGuiColorEditFlags_None; } SameLine();
-            if (RadioButton("Both",   alpha_flags == ImGuiColorEditFlags_AlphaPreviewHalf))  { alpha_flags = ImGuiColorEditFlags_AlphaPreviewHalf; } SameLine();
+            if (RadioButton("Opaque", alpha_flags == ImGuiColorEditFlags_AlphaOpaque))       { alpha_flags = ImGuiColorEditFlags_AlphaOpaque; } ImGui::SameLine();
+            if (RadioButton("Alpha",  alpha_flags == ImGuiColorEditFlags_None))              { alpha_flags = ImGuiColorEditFlags_None; } ImGui::SameLine();
+            if (RadioButton("Both",   alpha_flags == ImGuiColorEditFlags_AlphaPreviewHalf))  { alpha_flags = ImGuiColorEditFlags_AlphaPreviewHalf; } ImGui::SameLine();
             HelpMarker(
                 "In the color list:\n"
                 "Left-click on color square to open color picker,\n"
@@ -8454,7 +8454,7 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
                 if (Button("?"))
                     DebugFlashStyleColor((ImGuiCol)i);
                 SetItemTooltip("Flash given color to identify places where it is used.");
-                SameLine();
+                ImGui::SameLine();
 #endif
                 ColorEdit4("##color", (float*)&style.Colors[i], ImGuiColorEditFlags_AlphaBar | alpha_flags);
                 if (memcmp(&style.Colors[i], &ref->Colors[i], sizeof(ImVec4)) != 0)
@@ -8506,11 +8506,11 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
         if (BeginTabItem("Rendering"))
         {
             Checkbox("Anti-aliased lines", &style.AntiAliasedLines);
-            SameLine();
+            ImGui::SameLine();
             HelpMarker("When disabling anti-aliasing lines, you'll probably want to disable borders in your style as well.");
 
             Checkbox("Anti-aliased lines use texture", &style.AntiAliasedLinesUseTex);
-            SameLine();
+            ImGui::SameLine();
             HelpMarker("Faster lines using texture data. Require backend to render with bilinear filtering (not point/nearest filtering).");
 
             Checkbox("Anti-aliased fill", &style.AntiAliasedFill);
@@ -8555,15 +8555,15 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
                     */
 
                     EndGroup();
-                    SameLine();
+                    ImGui::SameLine();
                 }
                 EndTooltip();
             }
-            SameLine();
+            ImGui::SameLine();
             HelpMarker("When drawing circle primitives with \"num_segments == 0\" tessellation will be calculated automatically.");
 
             DragFloat("Global Alpha", &style.Alpha, 0.005f, 0.20f, 1.0f, "%.2f"); // Not exposing zero here so user doesn't "lose" the UI (zero alpha clips all widgets). But application code could have a toggle to switch between zero and non-zero.
-            DragFloat("Disabled Alpha", &style.DisabledAlpha, 0.005f, 0.0f, 1.0f, "%.2f"); SameLine(); HelpMarker("Additional alpha multiplier for disabled items (multiply over current value of Alpha).");
+            DragFloat("Disabled Alpha", &style.DisabledAlpha, 0.005f, 0.0f, 1.0f, "%.2f"); ImGui::SameLine(); HelpMarker("Additional alpha multiplier for disabled items (multiply over current value of Alpha).");
             PopItemWidth();
 
             EndTabItem();

@@ -61,6 +61,17 @@ HRESULT CEdit_Model::Bind_Materials(CShader* pShader, const _char* pConstantName
 	return m_Materials[iMaterialIndex]->Bind_Shader_Resource(pShader, pConstantName, eTextureType, iIndex);
 }
 
+_bool CEdit_Model::Selete_Model(CTransform& pTransform, _float3& pOut)
+{
+	for (_int i = 0; i < m_Meshes.size(); ++i)
+	{
+		if (m_Meshes[i]->IsPicked(pTransform, pOut))
+			return true;
+	}
+
+	return false;
+}
+
 HRESULT CEdit_Model::Render(_uint iMeshIndex)
 {
 	if (FAILED(m_Meshes[iMeshIndex]->Bind_Resources()))

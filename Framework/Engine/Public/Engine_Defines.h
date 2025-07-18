@@ -5,6 +5,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
+#include <DirectXCollision.h>
 
 //Input 디바이스 헤더
 #define DIRECTINPUT_VERSION 0x0800

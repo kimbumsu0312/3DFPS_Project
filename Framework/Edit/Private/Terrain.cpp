@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Terrain.h"
-
+#include "GameInstance.h"
+#include "MapObject.h"
+#include "Imgui_Manager.h"
 CTerrain::CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CGameObject{pDevice, pContext}
 {
 }
@@ -34,6 +36,28 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 
 void CTerrain::Update(_float fTimeDelta)
 {
+    if (g_CreateModel)
+    {
+        if (m_pGameInstance->IsMouseDown(MOUSEKEYSTATE::LB))
+        {
+            _float3 vSetModelPos = { 0.f, 0.f, 0.f };
+            if (m_pVIBufferCom->IsPicked(*m_pTransformCom, vSetModelPos))
+            {
+                CMapObject::MODEL_OBJECT_DESC Desc{};
+                Desc.vPos.x = vSetModelPos.x;
+                Desc.vPos.y = vSetModelPos.y;
+                Desc.vPos.z = vSetModelPos.z;
+                Desc.vPos.w = 1.f;
+                Desc.szModelPath = CImgui_Manger::GetInstance()->Get_ModelPath();
+
+                if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Model"),
+                    ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"), &Desc)))
+                    return;
+            
+            }
+        }
+    }
+
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)
@@ -44,6 +68,10 @@ void CTerrain::Late_Update(_float fTimeDelta)
 
 HRESULT CTerrain::Render()
 {
+    TCHAR szChar[MAX_PATH];
+    swprintf_s(szChar, MAX_PATH, L"%.1f %.1f %.1f", vSetModelPos.x, vSetModelPos.y, vSetModelPos.z);
+    SetWindowText(g_hWnd, szChar);
+
     if (FAILED(Bind_ShaderResources()))
         return E_FAIL;
 

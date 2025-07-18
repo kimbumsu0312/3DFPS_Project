@@ -593,11 +593,11 @@ IMPLEMENTING SUPPORT for ImGuiBackendFlags_RendererHasTextures:
                            - it shouldn't really affect you unless you had custom shortcut swapping in place for macOS X apps.
                            - removed ImGuiMod_Shortcut which was previously dynamically remapping to Ctrl or Cmd/Super. It is now unnecessary to specific cross-platform idiomatic shortcuts. (#2343, #4084, #5923, #456)
  - 2024/05/14 (1.90.7) - backends: SDL_Renderer2 and SDL_Renderer3 backend now take a SDL_Renderer* in their RenderDrawData() functions.
- - 2024/04/18 (1.90.6) - TreeNode: Fixed a layout inconsistency when using an empty/hidden label followed by a SameLine() call. (#7505, #282)
-                           - old: TreeNode("##Hidden"); SameLine(); Text("Hello");     // <-- This was actually incorrect! BUT appeared to look ok with the default style where ItemSpacing.x == FramePadding.x * 2 (it didn't look aligned otherwise).
+ - 2024/04/18 (1.90.6) - TreeNode: Fixed a layout inconsistency when using an empty/hidden label followed by a ImGui::SameLine() call. (#7505, #282)
+                           - old: TreeNode("##Hidden"); ImGui::SameLine(); Text("Hello");     // <-- This was actually incorrect! BUT appeared to look ok with the default style where ItemSpacing.x == FramePadding.x * 2 (it didn't look aligned otherwise).
                            - new: TreeNode("##Hidden"); SameLine(0, 0); Text("Hello"); // <-- This is correct for all styles values.
-                         with the fix, IF you were successfully using TreeNode("")+SameLine(); you will now have extra spacing between your TreeNode and the following item.
-                         You'll need to change the SameLine() call to SameLine(0,0) to remove this extraneous spacing. This seemed like the more sensible fix that's not making things less consistent.
+                         with the fix, IF you were successfully using TreeNode("")+ImGui::SameLine(); you will now have extra spacing between your TreeNode and the following item.
+                         You'll need to change the ImGui::SameLine() call to SameLine(0,0) to remove this extraneous spacing. This seemed like the more sensible fix that's not making things less consistent.
                          (Note: when using this idiom you are likely to also use ImGuiTreeNodeFlags_SpanAvailWidth).
  - 2024/03/18 (1.90.5) - merged the radius_x/radius_y parameters in ImDrawList::AddEllipse(), AddEllipseFilled() and PathEllipticalArcTo() into a single ImVec2 parameter. Exceptionally, because those functions were added in 1.90, we are not adding inline redirection functions. The transition is easy and should affect few users. (#2743, #7417)
  - 2024/03/08 (1.90.5) - inputs: more formally obsoleted GetKeyIndex() when IMGUI_DISABLE_OBSOLETE_FUNCTIONS is set. It has been unnecessary and a no-op since 1.87 (it returns the same value as passed when used with a 1.87+ backend using io.AddKeyEvent() function). (#4921)
@@ -932,7 +932,7 @@ IMPLEMENTING SUPPORT for ImGuiBackendFlags_RendererHasTextures:
  - 2017/08/15 (1.51) - changed parameter order for BeginPopupContextWindow() from (const char*,int buttons,bool also_over_items) to (const char*,int buttons,bool also_over_items). Note that most calls relied on default parameters completely.
  - 2017/08/13 (1.51) - renamed ImGuiCol_Column to ImGuiCol_Separator, ImGuiCol_ColumnHovered to ImGuiCol_SeparatorHovered, ImGuiCol_ColumnActive to ImGuiCol_SeparatorActive. Kept redirection enums (will obsolete).
  - 2017/08/11 (1.51) - renamed ImGuiSetCond_Always to ImGuiCond_Always, ImGuiSetCond_Once to ImGuiCond_Once, ImGuiSetCond_FirstUseEver to ImGuiCond_FirstUseEver, ImGuiSetCond_Appearing to ImGuiCond_Appearing. Kept redirection enums (will obsolete).
- - 2017/08/09 (1.51) - removed ValueColor() helpers, they are equivalent to calling Text(label) + SameLine() + ColorButton().
+ - 2017/08/09 (1.51) - removed ValueColor() helpers, they are equivalent to calling Text(label) + ImGui::SameLine() + ColorButton().
  - 2017/08/08 (1.51) - removed ColorEditMode() and ImGuiColorEditMode in favor of ImGuiColorEditFlags and parameters to the various Color*() functions. The SetColorEditOptions() allows to initialize default but the user can still change them with right-click context menu.
                      - changed prototype of 'ColorEdit4(const char* label, float col[4], bool show_alpha = true)' to 'ColorEdit4(const char* label, float col[4], ImGuiColorEditFlags flags = 0)', where passing flags = 0x01 is a safe no-op (hello dodgy backward compatibility!). - check and run the demo window, under "Color/Picker Widgets", to understand the various new options.
                      - changed prototype of rarely used 'ColorButton(ImVec4 col, bool small_height = false, bool outline_border = true)' to 'ColorButton(const char* desc_id, ImVec4 col, ImGuiColorEditFlags flags = 0, ImVec2 size = ImVec2(0, 0))'
@@ -979,7 +979,7 @@ IMPLEMENTING SUPPORT for ImGuiBackendFlags_RendererHasTextures:
                      - each ImDrawList now contains both a vertex buffer and an index buffer. For each command, render ElemCount/3 triangles using indices from the index buffer.
                      - if you REALLY cannot render indexed primitives, you can call the draw_data->DeIndexAllBuffers() method to de-index the buffers. This is slow and a waste of CPU/GPU. Prefer using indexed rendering!
                      - refer to code in the examples/ folder or ask on the GitHub if you are unsure of how to upgrade. please upgrade!
- - 2015/07/10 (1.43) - changed SameLine() parameters from int to float.
+ - 2015/07/10 (1.43) - changed ImGui::SameLine() parameters from int to float.
  - 2015/07/02 (1.42) - renamed SetScrollPosHere() to SetScrollFromCursorPos(). Kept inline redirection function (will obsolete).
  - 2015/07/02 (1.42) - renamed GetScrollPosY() to GetScrollY(). Necessary to reduce confusion along with other scrolling functions, because positions (e.g. cursor position) are not equivalent to scrolling amount.
  - 2015/06/14 (1.41) - changed ImageButton() default bg_col parameter from (0,0,0,1) (black) to (0,0,0,0) (transparent) - makes a difference when texture have transparence
@@ -10886,10 +10886,10 @@ void ImGui::ErrorCheckEndFrameFinalizeErrorTooltip()
     {
         Separator();
         Text("(Hold CTRL to:");
-        SameLine();
+        ImGui::SameLine();
         if (SmallButton("Enable Asserts"))
             g.IO.ConfigErrorRecoveryEnableAssert = true;
-        //SameLine();
+        //ImGui::SameLine();
         //if (SmallButton("Hide Error Tooltips"))
         //    g.IO.ConfigErrorRecoveryEnableTooltip = false; // Too dangerous
         SameLine(0, 0);
@@ -11059,7 +11059,7 @@ IM_MSVC_RUNTIME_CHECKS_RESTORE
 // [SECTION] LAYOUT
 //-----------------------------------------------------------------------------
 // - ItemSize()
-// - SameLine()
+// - ImGui::SameLine()
 // - GetCursorScreenPos()
 // - SetCursorScreenPos()
 // - GetCursorPos(), GetCursorPosX(), GetCursorPosY()
@@ -11122,7 +11122,7 @@ void ImGui::ItemSize(const ImVec2& size, float text_baseline_y)
 
     // Horizontal layout mode
     if (window->DC.LayoutType == ImGuiLayoutType_Horizontal)
-        SameLine();
+        ImGui::SameLine();
 }
 IM_MSVC_RUNTIME_CHECKS_RESTORE
 
@@ -11384,7 +11384,7 @@ ImVec2 ImGui::GetWindowContentRegionMax()
 }
 #endif
 
-// Lock horizontal starting position + capture group bounding box into one "item" (so you can use IsItemHovered() or layout primitives such as SameLine() on whole group, etc.)
+// Lock horizontal starting position + capture group bounding box into one "item" (so you can use IsItemHovered() or layout primitives such as ImGui::SameLine() on whole group, etc.)
 // Groups are currently a mishmash of functionalities which should perhaps be clarified and separated.
 // FIXME-OPT: Could we safely early out on ->SkipItems?
 void ImGui::BeginGroup()
@@ -14960,12 +14960,12 @@ void ImGui::LogButtons()
 
     PushID("LogButtons");
 #ifndef IMGUI_DISABLE_TTY_FUNCTIONS
-    const bool log_to_tty = Button("Log To TTY"); SameLine();
+    const bool log_to_tty = Button("Log To TTY"); ImGui::SameLine();
 #else
     const bool log_to_tty = false;
 #endif
-    const bool log_to_file = Button("Log To File"); SameLine();
-    const bool log_to_clipboard = Button("Log To Clipboard"); SameLine();
+    const bool log_to_file = Button("Log To File"); ImGui::SameLine();
+    const bool log_to_clipboard = Button("Log To Clipboard"); ImGui::SameLine();
     PushItemFlag(ImGuiItemFlags_NoTabStop, true);
     SetNextItemWidth(80.0f);
     SliderInt("Default Depth", &g.LogDepthToExpandDefault, 0, 9, NULL);
@@ -15802,14 +15802,14 @@ void ImGui::DebugTextEncoding(const char* str)
         for (int byte_index = 0; byte_index < c_utf8_len; byte_index++)
         {
             if (byte_index > 0)
-                SameLine();
+                ImGui::SameLine();
             Text("0x%02X", (int)(unsigned char)p[byte_index]);
         }
         TableNextColumn();
         TextUnformatted(p, p + c_utf8_len);
         if (!GetFont()->IsGlyphInFont((ImWchar)c))
         {
-            SameLine();
+            ImGui::SameLine();
             TextUnformatted("[missing]");
         }
         TableNextColumn();
@@ -15899,7 +15899,7 @@ void ImGui::ShowFontAtlas(ImFontAtlas* atlas)
     if (DragFloat("FontSizeBase", &style.FontSizeBase, 0.20f, 5.0f, 100.0f, "%.0f"))
         style._NextFrameFontSizeBase = style.FontSizeBase; // FIXME: Temporary hack until we finish remaining work.
     SameLine(0.0f, 0.0f); Text(" (out %.2f)", GetFontSize());
-    SameLine(); MetricsHelpMarker("- This is scaling font only. General scaling will come later.");
+    ImGui::SameLine(); MetricsHelpMarker("- This is scaling font only. General scaling will come later.");
     DragFloat("FontScaleMain", &style.FontScaleMain, 0.02f, 0.5f, 4.0f);
     //BeginDisabled(io.ConfigDpiScaleFonts);
     DragFloat("FontScaleDpi", &style.FontScaleDpi, 0.02f, 0.5f, 4.0f);
@@ -15909,14 +15909,14 @@ void ImGui::ShowFontAtlas(ImFontAtlas* atlas)
     {
         BulletText("Warning: Font scaling will NOT be smooth, because\nImGuiBackendFlags_RendererHasTextures is not set!");
         BulletText("For instructions, see:");
-        SameLine();
+        ImGui::SameLine();
         TextLinkOpenURL("docs/BACKENDS.md", "https://github.com/ocornut/imgui/blob/master/docs/BACKENDS.md");
     }
     BulletText("Load a nice font for better results!");
     BulletText("Please submit feedback:");
-    SameLine(); TextLinkOpenURL("#8465", "https://github.com/ocornut/imgui/issues/8465");
+    ImGui::SameLine(); TextLinkOpenURL("#8465", "https://github.com/ocornut/imgui/issues/8465");
     BulletText("Read FAQ for more details:");
-    SameLine(); TextLinkOpenURL("dearimgui.com/faq", "https://www.dearimgui.com/faq/");
+    ImGui::SameLine(); TextLinkOpenURL("dearimgui.com/faq", "https://www.dearimgui.com/faq/");
     //EndDisabled();
 
     SeparatorText("Font List");
@@ -15939,7 +15939,7 @@ void ImGui::ShowFontAtlas(ImFontAtlas* atlas)
         SetItemTooltip("Requires #define IMGUI_ENABLE_STB_TRUETYPE");
         EndDisabled();
 #endif
-        SameLine();
+        ImGui::SameLine();
 #ifdef IMGUI_ENABLE_FREETYPE
         const ImFontLoader* loader_freetype = ImGuiFreeType::GetFontLoader();
         if (RadioButton("FreeType", loader_current == loader_freetype))
@@ -15978,10 +15978,10 @@ void ImGui::ShowFontAtlas(ImFontAtlas* atlas)
     SeparatorText("Font Atlas");
     if (Button("Compact"))
         atlas->CompactCache();
-    SameLine();
+    ImGui::SameLine();
     if (Button("Grow"))
         ImFontAtlasTextureGrow(atlas);
-    SameLine();
+    ImGui::SameLine();
     if (Button("Clear All"))
         ImFontAtlasBuildClear(atlas);
     SetItemTooltip("Destroy cache and custom rectangles.");
@@ -15990,7 +15990,7 @@ void ImGui::ShowFontAtlas(ImFontAtlas* atlas)
     {
         ImTextureData* tex = atlas->TexList[tex_n];
         if (tex_n > 0)
-            SameLine();
+            ImGui::SameLine();
         Text("Tex: %dx%d", tex->Width, tex->Height);
     }
     const int packed_surface_sqrt = (int)sqrtf((float)atlas->Builder->RectsPackedSurface);
@@ -16094,13 +16094,13 @@ void ImGui::ShowMetricsWindow(bool* p_open)
     Text("Dear ImGui %s (%d)", IMGUI_VERSION, IMGUI_VERSION_NUM);
     if (g.ContextName[0] != 0)
     {
-        SameLine();
+        ImGui::SameLine();
         Text("(Context Name: \"%s\")", g.ContextName);
     }
     Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
     Text("%d vertices, %d indices (%d triangles)", io.MetricsRenderVertices, io.MetricsRenderIndices, io.MetricsRenderIndices / 3);
     Text("%d visible windows, %d current allocations", io.MetricsRenderWindows, g.DebugAllocInfo.TotalAllocCount - g.DebugAllocInfo.TotalFreeCount);
-    //SameLine(); if (SmallButton("GC")) { g.GcCompactAll = true; }
+    //ImGui::SameLine(); if (SmallButton("GC")) { g.GcCompactAll = true; }
 
     Separator();
 
@@ -16161,7 +16161,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
         // Debug Break features
         // The Item Picker tool is super useful to visually select an item and break into the call-stack of where it was submitted.
         SeparatorTextEx(0, "Debug breaks", NULL, CalcTextSize("(?)").x + g.Style.SeparatorTextPadding.x);
-        SameLine();
+        ImGui::SameLine();
         MetricsHelpMarker("Will call the IM_DEBUG_BREAK() macro to break in debugger.\nWarning: If you don't have a debugger attached, this will probably crash.");
         if (Checkbox("Show Item Picker", &g.DebugItemPickerActive) && g.DebugItemPickerActive)
             DebugStartItemPicker();
@@ -16170,16 +16170,16 @@ void ImGui::ShowMetricsWindow(bool* p_open)
         SeparatorText("Visualize");
 
         Checkbox("Show Debug Log", &cfg->ShowDebugLog);
-        SameLine();
+        ImGui::SameLine();
         MetricsHelpMarker("You can also call ImGui::ShowDebugLogWindow() from your code.");
 
         Checkbox("Show ID Stack Tool", &cfg->ShowIDStackTool);
-        SameLine();
+        ImGui::SameLine();
         MetricsHelpMarker("You can also call ImGui::ShowIDStackToolWindow() from your code.");
 
         Checkbox("Show windows begin order", &cfg->ShowWindowsBeginOrder);
         Checkbox("Show windows rectangles", &cfg->ShowWindowsRects);
-        SameLine();
+        ImGui::SameLine();
         SetNextItemWidth(GetFontSize() * 12);
         cfg->ShowWindowsRects |= Combo("##show_windows_rect_type", &cfg->ShowWindowsRectsType, wrt_rects_names, WRT_Count, WRT_Count);
         if (cfg->ShowWindowsRects && g.NavWindow != NULL)
@@ -16195,7 +16195,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
         }
 
         Checkbox("Show tables rectangles", &cfg->ShowTablesRects);
-        SameLine();
+        ImGui::SameLine();
         SetNextItemWidth(GetFontSize() * 12);
         cfg->ShowTablesRects |= Combo("##show_table_rects_type", &cfg->ShowTablesRectsType, trt_rects_names, TRT_Count, TRT_Count);
         if (cfg->ShowTablesRects && g.NavWindow != NULL)
@@ -16243,11 +16243,11 @@ void ImGui::ShowMetricsWindow(bool* p_open)
         SeparatorText("Validate");
 
         Checkbox("Debug Begin/BeginChild return value", &io.ConfigDebugBeginReturnValueLoop);
-        SameLine();
+        ImGui::SameLine();
         MetricsHelpMarker("Some calls to Begin()/BeginChild() will return false.\n\nWill cycle through window depths then repeat. Windows should be flickering while running.");
 
         Checkbox("UTF-8 Encoding viewer", &cfg->ShowTextEncodingViewer);
-        SameLine();
+        ImGui::SameLine();
         MetricsHelpMarker("You can also call ImGui::DebugTextEncoding() from your code with a given string to test that your UTF-8 encoding settings are correct.");
         if (cfg->ShowTextEncodingViewer)
         {
@@ -16396,13 +16396,13 @@ void ImGui::ShowMetricsWindow(bool* p_open)
     {
         if (SmallButton("Clear"))
             ClearIniSettings();
-        SameLine();
+        ImGui::SameLine();
         if (SmallButton("Save to memory"))
             SaveIniSettingsToMemory();
-        SameLine();
+        ImGui::SameLine();
         if (SmallButton("Save to disk"))
             SaveIniSettingsToDisk(g.IO.IniFilename);
-        SameLine();
+        ImGui::SameLine();
         if (g.IO.IniFilename)
             Text("\"%s\"", g.IO.IniFilename);
         else
@@ -16454,7 +16454,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
             BulletText("Frame %06d: %+3d ( %2d alloc, %2d free )", entry->FrameCount, entry->AllocCount - entry->FreeCount, entry->AllocCount, entry->FreeCount);
             if (n == 0)
             {
-                SameLine();
+                ImGui::SameLine();
                 Text("<- %d frames ago", g.FrameCount - entry->FrameCount);
             }
         }
@@ -16467,11 +16467,11 @@ void ImGui::ShowMetricsWindow(bool* p_open)
         {
             // User code should never have to go through such hoops! You can generally iterate between ImGuiKey_NamedKey_BEGIN and ImGuiKey_NamedKey_END.
             Indent();
-            Text("Keys down:");         for (ImGuiKey key = ImGuiKey_NamedKey_BEGIN; key < ImGuiKey_NamedKey_END; key = (ImGuiKey)(key + 1)) { if (!IsKeyDown(key)) continue;     SameLine(); Text(IsNamedKey(key) ? "\"%s\"" : "\"%s\" %d", GetKeyName(key), key); SameLine(); Text("(%.02f)", GetKeyData(key)->DownDuration); }
-            Text("Keys pressed:");      for (ImGuiKey key = ImGuiKey_NamedKey_BEGIN; key < ImGuiKey_NamedKey_END; key = (ImGuiKey)(key + 1)) { if (!IsKeyPressed(key)) continue;  SameLine(); Text(IsNamedKey(key) ? "\"%s\"" : "\"%s\" %d", GetKeyName(key), key); }
-            Text("Keys released:");     for (ImGuiKey key = ImGuiKey_NamedKey_BEGIN; key < ImGuiKey_NamedKey_END; key = (ImGuiKey)(key + 1)) { if (!IsKeyReleased(key)) continue; SameLine(); Text(IsNamedKey(key) ? "\"%s\"" : "\"%s\" %d", GetKeyName(key), key); }
+            Text("Keys down:");         for (ImGuiKey key = ImGuiKey_NamedKey_BEGIN; key < ImGuiKey_NamedKey_END; key = (ImGuiKey)(key + 1)) { if (!IsKeyDown(key)) continue;     ImGui::SameLine(); Text(IsNamedKey(key) ? "\"%s\"" : "\"%s\" %d", GetKeyName(key), key); ImGui::SameLine(); Text("(%.02f)", GetKeyData(key)->DownDuration); }
+            Text("Keys pressed:");      for (ImGuiKey key = ImGuiKey_NamedKey_BEGIN; key < ImGuiKey_NamedKey_END; key = (ImGuiKey)(key + 1)) { if (!IsKeyPressed(key)) continue;  ImGui::SameLine(); Text(IsNamedKey(key) ? "\"%s\"" : "\"%s\" %d", GetKeyName(key), key); }
+            Text("Keys released:");     for (ImGuiKey key = ImGuiKey_NamedKey_BEGIN; key < ImGuiKey_NamedKey_END; key = (ImGuiKey)(key + 1)) { if (!IsKeyReleased(key)) continue; ImGui::SameLine(); Text(IsNamedKey(key) ? "\"%s\"" : "\"%s\" %d", GetKeyName(key), key); }
             Text("Keys mods: %s%s%s%s", io.KeyCtrl ? "CTRL " : "", io.KeyShift ? "SHIFT " : "", io.KeyAlt ? "ALT " : "", io.KeySuper ? "SUPER " : "");
-            Text("Chars queue:");       for (int i = 0; i < io.InputQueueCharacters.Size; i++) { ImWchar c = io.InputQueueCharacters[i]; SameLine(); Text("\'%c\' (0x%04X)", (c > ' ' && c <= 255) ? (char)c : '?', c); } // FIXME: We should convert 'c' to UTF-8 here but the functions are not public.
+            Text("Chars queue:");       for (int i = 0; i < io.InputQueueCharacters.Size; i++) { ImWchar c = io.InputQueueCharacters[i]; ImGui::SameLine(); Text("\'%c\' (0x%04X)", (c > ' ' && c <= 255) ? (char)c : '?', c); } // FIXME: We should convert 'c' to UTF-8 here but the functions are not public.
             DebugRenderKeyboardPreview(GetWindowDrawList());
             Unindent();
         }
@@ -16485,9 +16485,9 @@ void ImGui::ShowMetricsWindow(bool* p_open)
                 Text("Mouse pos: <INVALID>");
             Text("Mouse delta: (%g, %g)", io.MouseDelta.x, io.MouseDelta.y);
             int count = IM_ARRAYSIZE(io.MouseDown);
-            Text("Mouse down:");     for (int i = 0; i < count; i++) if (IsMouseDown(i)) { SameLine(); Text("b%d (%.02f secs)", i, io.MouseDownDuration[i]); }
-            Text("Mouse clicked:");  for (int i = 0; i < count; i++) if (IsMouseClicked(i)) { SameLine(); Text("b%d (%d)", i, io.MouseClickedCount[i]); }
-            Text("Mouse released:"); for (int i = 0; i < count; i++) if (IsMouseReleased(i)) { SameLine(); Text("b%d", i); }
+            Text("Mouse down:");     for (int i = 0; i < count; i++) if (IsMouseDown(i)) { ImGui::SameLine(); Text("b%d (%.02f secs)", i, io.MouseDownDuration[i]); }
+            Text("Mouse clicked:");  for (int i = 0; i < count; i++) if (IsMouseClicked(i)) { ImGui::SameLine(); Text("b%d (%d)", i, io.MouseClickedCount[i]); }
+            Text("Mouse released:"); for (int i = 0; i < count; i++) if (IsMouseReleased(i)) { ImGui::SameLine(); Text("b%d", i); }
             Text("Mouse wheel: %.1f", io.MouseWheel);
             Text("MouseStationaryTimer: %.2f", g.MouseStationaryTimer);
             Text("Mouse source: %s", GetMouseSourceName(io.MouseSource));
@@ -16521,7 +16521,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
             Unindent();
         }
         Text("SHORTCUT ROUTING");
-        SameLine();
+        ImGui::SameLine();
         MetricsHelpMarker("Declared shortcut routes automatically set key owner when mods matches.");
         {
             Indent();
@@ -16537,7 +16537,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
                         DebugLocateItemOnHover(routing_data->RoutingCurr);
                         if (g.IO.ConfigDebugIsDebuggerPresent)
                         {
-                            SameLine();
+                            ImGui::SameLine();
                             if (DebugBreakButton("**DebugBreak**", "in SetShortcutRouting() for this KeyChord"))
                                 g.DebugBreakInShortcutRouting = key_chord;
                         }
@@ -16741,7 +16741,7 @@ void ImGui::DebugNodeDrawList(ImGuiWindow* window, ImGuiViewportP* viewport, con
     bool node_open = TreeNode(draw_list, "%s: '%s' %d vtx, %d indices, %d cmds", label, draw_list->_OwnerName ? draw_list->_OwnerName : "", draw_list->VtxBuffer.Size, draw_list->IdxBuffer.Size, cmd_count);
     if (draw_list == GetWindowDrawList())
     {
-        SameLine();
+        ImGui::SameLine();
         TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), "CURRENTLY APPENDING"); // Can't display stats for active draw list! (we don't have the data double-buffered)
         if (node_open)
             TreePop();
@@ -16896,15 +16896,15 @@ void ImGui::DebugNodeFont(ImFont* font)
     }
     if (SmallButton("Set as default"))
         GetIO().FontDefault = font;
-    SameLine();
+    ImGui::SameLine();
     BeginDisabled(atlas->Fonts.Size <= 1 || atlas->Locked);
     if (SmallButton("Remove"))
         atlas->RemoveFont(font);
     EndDisabled();
-    SameLine();
+    ImGui::SameLine();
     if (SmallButton("Clear bakes"))
         ImFontAtlasFontDiscardBakes(atlas, font, 0);
-    SameLine();
+    ImGui::SameLine();
     if (SmallButton("Clear unused"))
         ImFontAtlasFontDiscardBakes(atlas, font, 2);
 
@@ -16912,7 +16912,7 @@ void ImGui::DebugNodeFont(ImFont* font)
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
     SetNextItemWidth(GetFontSize() * 8);
     DragFloat("Font scale", &font->Scale, 0.005f, 0.3f, 2.0f, "%.1f");
-    /*SameLine(); MetricsHelpMarker(
+    /*ImGui::SameLine(); MetricsHelpMarker(
         "Note that the default embedded font is NOT meant to be scaled.\n\n"
         "Font are currently rendered into bitmaps at a given size at the time of building the atlas. "
         "You may oversample them to get some flexibility with scaling. "
@@ -16972,7 +16972,7 @@ void ImGui::DebugNodeFont(ImFont* font)
                         if (overlap_mask & (1 << src_n))
                         {
                             Text("%d ", src_n);
-                            SameLine();
+                            ImGui::SameLine();
                         }
                     c = c_end - 1;
                 }
@@ -17127,7 +17127,7 @@ void ImGui::DebugNodeTabBar(ImGuiTabBar* tab_bar, const char* label)
             ImGuiTabItem* tab = &tab_bar->Tabs[tab_n];
             PushID(tab);
             if (SmallButton("<")) { TabBarQueueReorder(tab_bar, tab, -1); } SameLine(0, 2);
-            if (SmallButton(">")) { TabBarQueueReorder(tab_bar, tab, +1); } SameLine();
+            if (SmallButton(">")) { TabBarQueueReorder(tab_bar, tab, +1); } ImGui::SameLine();
             Text("%02d%c Tab 0x%08X '%s' Offset: %.2f, Width: %.2f/%.2f",
                 tab_n, (tab->ID == tab_bar->SelectedTabId) ? '*' : ' ', tab->ID, TabBarGetTabName(tab_bar, tab), tab->Offset, tab->Width, tab->ContentWidth);
             PopID();
@@ -17368,10 +17368,10 @@ void ImGui::ShowDebugLogWindow(bool* p_open)
         g.DebugLogIndex.clear();
         g.DebugLogSkippedErrors = 0;
     }
-    SameLine();
+    ImGui::SameLine();
     if (SmallButton("Copy"))
         SetClipboardText(g.DebugLogBuf.c_str());
-    SameLine();
+    ImGui::SameLine();
     if (SmallButton("Configure Outputs.."))
         OpenPopup("Outputs");
     if (BeginPopup("Outputs"))
@@ -17685,14 +17685,14 @@ void ImGui::ShowIDStackToolWindow(bool* p_open)
         }
     }
     Text("0x%08X", tool->QueryId);
-    SameLine();
+    ImGui::SameLine();
     MetricsHelpMarker("Hover an item with the mouse to display elements of the ID Stack leading to the item's final ID.\nEach level of the stack correspond to a PushID() call.\nAll levels of the stack are hashed together to make the final ID of a widget (ID displayed at the bottom level of the stack).\nRead FAQ entry about the ID stack for details.");
 
     // CTRL+C to copy path
     const float time_since_copy = (float)g.Time - tool->CopyToClipboardLastTime;
-    SameLine();
+    ImGui::SameLine();
     PushStyleVarY(ImGuiStyleVar_FramePadding, 0.0f); Checkbox("Ctrl+C: copy path", &tool->CopyToClipboardOnCtrlC); PopStyleVar();
-    SameLine();
+    ImGui::SameLine();
     TextColored((time_since_copy >= 0.0f && time_since_copy < 0.75f && ImFmod(time_since_copy, 0.25f) < 0.25f * 0.5f) ? ImVec4(1.f, 1.f, 0.3f, 1.f) : ImVec4(), "*COPIED*");
     if (tool->CopyToClipboardOnCtrlC && Shortcut(ImGuiMod_Ctrl | ImGuiKey_C, ImGuiInputFlags_RouteGlobal | ImGuiInputFlags_RouteOverFocused))
     {
@@ -17777,7 +17777,7 @@ void ImGui::ShowFontSelector(const char* label)
         }
         EndCombo();
     }
-    SameLine();
+    ImGui::SameLine();
     if (io.BackendFlags & ImGuiBackendFlags_RendererHasTextures)
         MetricsHelpMarker(
             "- Load additional fonts with io.Fonts->AddFontXXX() functions.\n"

@@ -14,6 +14,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 	_uint			Get_MaterialIndex() { return m_iMaterialIndex; }
+
 private:
 	_uint			m_iMaterialIndex = {};
 

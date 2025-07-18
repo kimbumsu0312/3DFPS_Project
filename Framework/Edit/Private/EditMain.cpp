@@ -4,7 +4,7 @@
 #include "Level_Loading.h"
 #include "Camera_Free.h"
 #include "Edit_Model.h"
-#include "Player.h"
+#include "MapObject.h"
 #include "Imgui_Manager.h"
 CEditMain::CEditMain() : m_pGameInstance{ CGameInstance::GetInstance()}
 {
@@ -71,15 +71,18 @@ HRESULT CEditMain::Ready_Prototype_ForStatic()
 		return E_FAIL;
 	_matrix PreTransformMatrix = XMMatrixIdentity();
 
-	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
-
-  	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Fiona"),
-		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/Fiona/Fiona.fbx", PreTransformMatrix))))
+	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+  	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_ForkLift"),
+		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/ForkLift/ForkLift.fbx", PreTransformMatrix))))
 		return E_FAIL;
 
+	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Fiona"),
+		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/Fiona/Fiona.fbx", PreTransformMatrix))))
+		return E_FAIL;
 	/* Prototype_GameObject_Player */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"),
-		CPlayer::Create(m_pDevice, m_pContext))))
+		CMapObject::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	return S_OK;
 }

@@ -117,7 +117,7 @@
     <ClInclude Include="..\Public\Camera_Free.h">
       <Filter>02.Object\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player.h">
+    <ClInclude Include="..\Public\MapObject.h">
       <Filter>02.Object\Model</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Edit_Model.h">
@@ -162,6 +162,9 @@
     <ClInclude Include="..\public\Edit_Bone.h">
       <Filter>03.Component\Model\Bone</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Edit_ModelPath.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -194,7 +197,7 @@
     <ClCompile Include="..\Private\Camera_Free.cpp">
       <Filter>02.Object\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Player.cpp">
+    <ClCompile Include="..\Private\MapObject.cpp">
       <Filter>02.Object\Model</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Edit_Model.cpp">
