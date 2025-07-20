@@ -13,6 +13,20 @@ CTerrain::CTerrain(const CTerrain& Prototype) : CGameObject (Prototype)
 
 HRESULT CTerrain::Initialize_Prototype()
 {
+
+    return S_OK;
+}
+
+HRESULT CTerrain::Initialize_Prototype(void* pArg)
+{
+    if (FAILED(__super::Initialize(pArg)))
+        return E_FAIL;
+
+    if (FAILED(Ready_Components(pArg)))
+        return E_FAIL;
+
+    m_pGameInstance->Subscribe<Clear_Map>([&](const Clear_Map& e) {m_bIsDead = true; });
+
     return S_OK;
 }
 
@@ -57,7 +71,26 @@ void CTerrain::Update(_float fTimeDelta)
             }
         }
     }
+    
+    if (g_MoveModel)
+    {
+        if (m_pGameInstance->IsMouseHold(MOUSEKEYSTATE::LB))
+        {
+            _float3 vSetModelPos = { 0.f, 0.f, 0.f };
+            if (m_pVIBufferCom->IsPicked(*m_pTransformCom, vSetModelPos))
+            {
+                CImgui_Manger::GetInstance()->Move_Model(vSetModelPos);
+            }
+        }
+    }
 
+    if (g_TerrainHight)
+    {
+        if (m_pGameInstance->IsMouseHold(MOUSEKEYSTATE::LB))
+        {
+            m_pVIBufferCom->Terrain_Hight(CImgui_Manger::GetInstance()->Get_HeightUp(), CImgui_Manger::GetInstance()->Get_Brash(), CImgui_Manger::GetInstance()->Get_Height() * fTimeDelta, *m_pTransformCom, CImgui_Manger::GetInstance()->Get_MinMaxHeight());
+        }
+    }
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)
@@ -82,6 +115,12 @@ HRESULT CTerrain::Render()
     m_pVIBufferCom->Render();
 
     return S_OK;
+}
+
+void* CTerrain::GetDesc()
+{
+    m_pVIBufferCom->Save_Terrain(m_Desc);
+    return &m_Desc;
 }
 
 HRESULT CTerrain::Ready_Components(void* pArg)
@@ -138,6 +177,19 @@ CTerrain* CTerrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     CTerrain* pInstance = new CTerrain(pDevice, pContext);
 
     if (FAILED(pInstance->Initialize_Prototype()))
+    {
+        MSG_BOX(TEXT("Failed to Created : CTerrain"));
+        Safe_Release(pInstance);
+    }
+
+    return pInstance;
+}
+
+CTerrain* CTerrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
+{
+    CTerrain* pInstance = new CTerrain(pDevice, pContext);
+
+    if (FAILED(pInstance->Initialize_Prototype(pArg)))
     {
         MSG_BOX(TEXT("Failed to Created : CTerrain"));
         Safe_Release(pInstance);

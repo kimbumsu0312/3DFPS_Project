@@ -25,9 +25,18 @@ public:
 	_wstring				Get_ModelPath();
 	void					Erase_Model();
 
+	void					Move_Model(_float3 fPos);
+
+	_float					Get_Brash() { return m_fBrash; }
+	_float					Get_Height() { return m_fHeight; }
+	_bool					Get_HeightUp() { return m_bIsHeightUP; }
+	_float2					Get_MinMaxHeight() { return m_fMinMaxHeight; }
+
 private:
-	ID3D11Device*			m_pDevice = nullptr;
-	ID3D11DeviceContext*	m_pContext = nullptr;
+	ID3D11Device*			m_pDevice = { nullptr };
+	ID3D11DeviceContext*	m_pContext = { nullptr };
+	ID3D11RasterizerState*	m_pWireframeRS = { nullptr };
+	ID3D11RasterizerState*	m_pSolidframeRS = { nullptr };
 	CGameInstance*			m_pGameInstance = { nullptr };
 
 	bool                    m_SwapChainOccluded = false;
@@ -46,6 +55,24 @@ private:
 
 	_int					m_iCurModel_Index = {};
 	string					m_szModelPath = {};
+
+	_float					m_fBrash = {10.f};
+	_float					m_fHeight = {10.f};
+	_bool					m_bIsHeightUP = { true };
+	_float2					m_fMinMaxHeight = {0.f, 400.f};
+
+	_bool					m_bISWireFream = {false};
+
+	//세이브 타입
+	_int					m_iMapSaveType = {0};
+	const char*				m_szMapSaveType[ENUM_CLASS(DATA_TYPE::END)] = { "파일 타입 선택","TERRAIN", "LEVEL"};
+	
+	DATA_TYPE				m_eSaveType = { DATA_TYPE::END };
+	char					m_szFileName[MAX_PATH] = {};
+
+private:
+	string					OpenFile();
+
 public:
 	virtual void			Free();
 };

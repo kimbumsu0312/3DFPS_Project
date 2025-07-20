@@ -20,6 +20,7 @@ public:
 	HRESULT								Bind_Materials(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType, _uint iIndex);
 	_uint								Get_NumMeshes() const {	return m_iNumMeshes;	}
 	_bool								Selete_Model(CTransform& pTransform, _float3& pOut);
+	const SAVE_MODEL&					Get_ModelData() { return m_ModelData;}
 private:
 	const aiScene*						m_pAIScene = { nullptr };
 	Assimp::Importer					m_Importer = {};
@@ -33,6 +34,7 @@ private:
 	_uint								m_iNumMaterials = {};
 	vector<class CEdit_MeshMaterial*>	m_Materials;
 
+	SAVE_MODEL							m_ModelData = {};
 private:
 	HRESULT								Ready_Meshes();
 	HRESULT								Ready_Materials(const _char* pModelFilePath);

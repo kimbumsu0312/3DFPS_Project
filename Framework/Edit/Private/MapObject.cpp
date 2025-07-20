@@ -52,6 +52,11 @@ void CMapObject::Update(_float fTimeDelta)
 				CImgui_Manger::GetInstance()->Selete_Object(*this, *m_pTransformCom);
 			}
 		}
+
+		if (m_pGameInstance->IsKeyDown(DIK_N))
+		{
+			m_pGameInstance->Save_Object("Wall", m_pModelCom->Get_ModelData());
+		}
 	}
 
 
@@ -74,10 +79,19 @@ HRESULT CMapObject::Render()
 		if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
 			return E_FAIL;
 
-		m_pShaderCom->Begin(0);
+		if(m_bIsSelete)
+			m_pShaderCom->Begin(1);
+		else
+			m_pShaderCom->Begin(0);
+		
 		m_pModelCom->Render(i);
 	}
 	return S_OK;
+}
+
+void* CMapObject::GetDesc()
+{
+	return nullptr;
 }
 
 HRESULT CMapObject::Ready_Components()

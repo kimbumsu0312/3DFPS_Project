@@ -14,6 +14,8 @@ public:
 	void					Update();
 	void					TransformToLocalSpace(class CTransform& pTransformCom);
 	_bool					isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float3& pOut);
+	_vector					Get_LocalRayPos() { return m_vLocalRayPos; }
+	_vector					Get_LocalRayDir() { return m_vLocalRayDir; }
 
 private:
 	ID3D11Device*			m_pDevice = { nullptr };

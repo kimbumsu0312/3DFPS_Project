@@ -31,13 +31,14 @@ public:
 
 	_wstring				Get_ModelPath() { return m_szModelPath; }
 	void					SetDead() { m_bIsDead = true; }
+	void					SetSelete(_bool bSelete) { m_bIsSelete = bSelete; }
+	virtual	void*			GetDesc();
 private:
 	class CEdit_Model*		m_pModelCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
 
 	_wstring				m_szModelPath = {};
-	_bool					m_bCreate = { false };
-						
+	_bool					m_bIsSelete = { false };
 private:
 	HRESULT					Ready_Components();
 

@@ -34,9 +34,6 @@
     <Filter Include="02.Object\Camera">
       <UniqueIdentifier>{c69995d7-35db-42eb-83e6-72b309b8eec5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\Model">
-      <UniqueIdentifier>{87bbf2b5-aacc-431e-848e-d739bd7f7d12}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Object\Terrain">
       <UniqueIdentifier>{3ede5b6f-af6e-4ccf-9c80-83551564152d}</UniqueIdentifier>
     </Filter>
@@ -117,9 +114,6 @@
     <ClInclude Include="..\Public\Camera_Free.h">
       <Filter>02.Object\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MapObject.h">
-      <Filter>02.Object\Model</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Edit_Model.h">
       <Filter>03.Component\Model</Filter>
     </ClInclude>
@@ -165,6 +159,9 @@
     <ClInclude Include="..\Public\Edit_ModelPath.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MapObject.h">
+      <Filter>02.Object\MapObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -196,9 +193,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Free.cpp">
       <Filter>02.Object\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MapObject.cpp">
-      <Filter>02.Object\Model</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Edit_Model.cpp">
       <Filter>03.Component\Model</Filter>
@@ -235,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Edit_Bone.cpp">
       <Filter>03.Component\Model\Bone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MapObject.cpp">
+      <Filter>02.Object\MapObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

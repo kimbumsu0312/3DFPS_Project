@@ -55,6 +55,7 @@ public:
 public:
 	class CComponent*	Find_Component(_uint iLayerLevelIndex, const _wstring& strLayerTag, const _wstring& strComponentTag, _uint iIndex = 0);
 	HRESULT				Add_GameObject_ToLayer(_uint iLayerLevelIndex, const _wstring& strLayerTag, _uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, void* pArg = nullptr);
+	HRESULT				Add_GameObject_ToLayer(_uint iLayerLevelIndex, const _wstring& strLayerTag, _uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, class CGameObject* pGameObject);
 	HRESULT				Add_PoolGameObject_ToLayer(class CPoolingObject* pObject, _uint iLayerLevelIndex, const _wstring& strLayerTag);
 #pragma endregion
 
@@ -104,26 +105,38 @@ public:
 #pragma endregion
 
 #pragma region LIGHT_MANAGER
+public:
 	const LIGHT_DESC*			Get_LightDesc(_uint iIndex);
 	HRESULT						Add_Light(LIGHT_DESC& LightDesc);
 #pragma endregion
 
 #pragma region POOLING_MANAGER
+public:
 	HRESULT						Add_Object_ToPool(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iValue, void* pArg);
 	HRESULT						Add_Pool_ToLayer(const _wstring& szPoolingPath, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg);
 	HRESULT						Return_Object(class CPoolingObject* pObject, const _wstring& szPoolingPath);
 #pragma endregion
 
 #pragma region Garbage_Collector
+public:
 	void						GarbageSweep(class CGameObject* pObject);
 	void						Clear_Garbage();
 #pragma endregion
 
 #pragma region Picking
+public:
 	void						TransformToLocalSpace(class CTransform& pTransformCom);
 	_bool						isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float3& pOut);
 #pragma endregion
 
+#pragma region SaveLoader
+public:
+	_bool						File_Save(DATA_TYPE eData, string szFilename);	
+	HRESULT						Save_Object(string szFilename, const SAVE_MODEL& pData);
+	HRESULT						Load_Terrain(string FilePath, SAVE_TERRAIN& pOut);
+	void						Add_OBjcet(DATA_TYPE eData, CGameObject* pGameObject);
+	void						Clear_Object(DATA_TYPE eData);
+#pragma endregion
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CInput_Device*		m_pInput_Device = { nullptr };
@@ -137,6 +150,7 @@ private:
 	class CPooling_Manager*		m_pPooling_Manager = { nullptr };
 	class CGarbage_Collector*	m_pGarbage_Collector = { nullptr };
 	class CPicking*				m_pPicking = { nullptr };
+	class CSaveLoader*			m_pSaveLoader = { nullptr };
 public:
 	void						Release_Engine();
 	virtual void				Free() override;

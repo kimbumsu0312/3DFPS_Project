@@ -25,6 +25,9 @@ extern HWND g_hWnd;
 extern HINSTANCE g_hInst;
 extern bool g_CreateModel;
 extern bool g_SeleteModel;
+extern bool g_MoveModel;
+extern bool g_TerrainHight;
+
 using namespace Edit;
 using namespace ImGui;
 
