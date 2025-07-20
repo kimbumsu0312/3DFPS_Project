@@ -52,7 +52,7 @@ void CTransform::Go_Straight(_float fTimeDelta)
 	_vector		vLook = Get_State(STATE::LOOK);
 
 	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
-
+	
 	Set_State(STATE::POSITION, vPosition);
 }
 
@@ -99,7 +99,28 @@ void CTransform::Rotation(_fvector vAxis, _float fRadian)
 	Set_State(STATE::RIGHT, XMVector4Transform(vRight, RotationMatrix));
 	Set_State(STATE::UP, XMVector4Transform(vUp, RotationMatrix));
 	Set_State(STATE::LOOK, XMVector4Transform(vLook, RotationMatrix));
+
 }
+
+void CTransform::Rotation_All(_float3 fRadian)
+{
+	_vector vPos = Get_State(STATE::POSITION);
+	_float3 vScaled = { 1.f * Get_Scaled().x, 1.f * Get_Scaled().y, 1.f * Get_Scaled().z };
+	_matrix matScale = XMMatrixScaling(vScaled.x, vScaled.y, vScaled.z);
+	
+
+	_matrix RotX = XMMatrixRotationX(fRadian.x);
+	_matrix RotY = XMMatrixRotationY(fRadian.y);
+	_matrix RotZ = XMMatrixRotationZ(fRadian.z);
+
+	_matrix matRotation = RotX * RotY * RotZ;
+
+	_matrix Worldmat = XMMatrixMultiply(matScale, matRotation);
+	Worldmat.r[3] = vPos;
+
+	XMStoreFloat4x4(&m_WorldMatrix, Worldmat);
+}
+
 
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 {

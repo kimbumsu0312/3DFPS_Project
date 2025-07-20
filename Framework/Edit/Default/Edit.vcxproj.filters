@@ -34,9 +34,6 @@
     <Filter Include="02.Object\Camera">
       <UniqueIdentifier>{c69995d7-35db-42eb-83e6-72b309b8eec5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Object\Model">
-      <UniqueIdentifier>{87bbf2b5-aacc-431e-848e-d739bd7f7d12}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Object\Terrain">
       <UniqueIdentifier>{3ede5b6f-af6e-4ccf-9c80-83551564152d}</UniqueIdentifier>
     </Filter>
@@ -45,6 +42,33 @@
     </Filter>
     <Filter Include="97.ShaderFiles">
       <UniqueIdentifier>{70b72a6e-7d18-4045-a577-3444649b0e54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Component">
+      <UniqueIdentifier>{acf89776-fdce-432d-9214-4f58f6c6ee8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Component\Model">
+      <UniqueIdentifier>{a10369f4-12c4-4b49-8ecb-5064baa080db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Component\Model\Mesh">
+      <UniqueIdentifier>{6eb593d9-7f6a-4ae0-8838-97b2f655bd47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Component\Model\Material">
+      <UniqueIdentifier>{f856d542-2f85-4023-b97e-8e1be488c2a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility">
+      <UniqueIdentifier>{16a338bc-46b0-4d7d-95dd-64b75bcfc40e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\Imgui">
+      <UniqueIdentifier>{cca49efb-f975-4fbb-b8b2-f70115c02767}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Manager">
+      <UniqueIdentifier>{586f6ba7-9a45-4e79-80da-1713d2c80e79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Manager\01.Imgui_Manager">
+      <UniqueIdentifier>{7fa36ebc-bb6b-4078-8ae2-79635aede367}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Component\Model\Bone">
+      <UniqueIdentifier>{c0d63ac5-2c38-420b-a639-c936cfc7cec0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -90,8 +114,53 @@
     <ClInclude Include="..\Public\Camera_Free.h">
       <Filter>02.Object\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player.h">
-      <Filter>02.Object\Model</Filter>
+    <ClInclude Include="..\Public\Edit_Model.h">
+      <Filter>03.Component\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Edit_Mesh.h">
+      <Filter>03.Component\Model\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edit_MeshMaterial.h">
+      <Filter>03.Component\Model\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imconfig.h">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imgui.h">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imgui_internal.h">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imstb_rectpack.h">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imstb_textedit.h">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imstb_truetype.h">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imgui_impl_win32.h">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Imgui\imgui_impl_dx11.h">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Imgui_Manager.h">
+      <Filter>95.Manager\01.Imgui_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edit_Event.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Edit_Bone.h">
+      <Filter>03.Component\Model\Bone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edit_ModelPath.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MapObject.h">
+      <Filter>02.Object\MapObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -125,8 +194,44 @@
     <ClCompile Include="..\Private\Camera_Free.cpp">
       <Filter>02.Object\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Player.cpp">
-      <Filter>02.Object\Model</Filter>
+    <ClCompile Include="..\Private\Edit_Model.cpp">
+      <Filter>03.Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Edit_Mesh.cpp">
+      <Filter>03.Component\Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edit_MeshMaterial.cpp">
+      <Filter>03.Component\Model\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Imgui\imgui.cpp">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Imgui\imgui_demo.cpp">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Imgui\imgui_draw.cpp">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Imgui\imgui_tables.cpp">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Imgui\imgui_widgets.cpp">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Imgui\imgui_impl_dx11.cpp">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Imgui\imgui_impl_win32.cpp">
+      <Filter>96.Utility\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Imgui_Manager.cpp">
+      <Filter>95.Manager\01.Imgui_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Edit_Bone.cpp">
+      <Filter>03.Component\Model\Bone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MapObject.cpp">
+      <Filter>02.Object\MapObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -68,15 +68,15 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-    
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord * 50.f);
+    Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord * 50.f);
+    //vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord * 50.f);
     
     //빛 방향의 역벡터 * 물체의 법선 벡터를 내적해서 cos(세타)를 구해서 빛의 세기를 정함
-    float fShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f);
+    //float fShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f);
     
     //빛의 반사각 : reflect 
     //빛의 반사각 계산식 : 빛의 방향 벡터 + (내적(빛의 방향 벡터(노말) * -1.F, 물체의 법선) * 법선 * 2)
-    vector vReflect = reflect(normalize(g_vLightDir), In.vNormal);
+    //vector vReflect = reflect(normalize(g_vLightDir), In.vNormal);
     
     //vector vLightDirR = normalize(g_vLightDir);
     //vector vReflect = normalize(g_vLightDir) + abs(dot(vLightDirR, normalize(In.vNormal))) * (normalize(In.vNormal) * 2);
@@ -84,15 +84,15 @@ PS_OUT PS_MAIN(PS_IN In)
     //vector vReflect = normalize(g_vLightDir) + dot(vLightDirR, normalize(In.vNormal)) * (normalize(In.vNormal) * 2);
    
     //카메라 보는 방향을 월드 행렬로 전환
-    vector vLook = In.vWorldPos - g_vCamPosition;
+    //vector vLook = In.vWorldPos - g_vCamPosition;
     
     //스펙큘러
-    float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 10.f);
+    //float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 10.f);
     
     //빛 디퓨즈 * 물체 디퓨즈  = 모든 물체가 빛의 색상을 따라감
     //최종 디퓨즈 * (빛의 세기 + 빛의 환경광 * 물체의 환경광) 빛의 세기 및 주위 환경광을 셋팅해줌
-    Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(fShade + (g_vLightAmbient * g_vMtrlAmbient))
-                    + (g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
+    //Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(fShade + (g_vLightAmbient * g_vMtrlAmbient))
+    //                + (g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
     
     
     //빛의 색 * 물체의 색 * (명암 코사인 + 빛의 환경광 * 물체 환경광(1.f)) + 빛의 스펙큘러 * 물체의 스펙큘러 * 스펙큘러 코사인

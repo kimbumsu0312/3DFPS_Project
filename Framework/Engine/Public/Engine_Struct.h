@@ -29,6 +29,7 @@ namespace Engine
 
 	}LIGHT_DESC;
 
+	//쉐이더 관련 구조체
 	typedef struct tagVertexPositionTexcoord
 	{
 		XMFLOAT3	vPosition;
@@ -74,6 +75,56 @@ namespace Engine
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		};
 	}VTXMESH;
+
+	//저장, 불러오기 관련 구조체
+	typedef struct tagSaveTerrain
+	{
+		unsigned int			iNumverticesX;
+		unsigned int			iNumverticesZ;
+		vector<XMFLOAT3>		pVertexData;
+		vector<XMFLOAT2>		pTexcoordData;
+	}SAVE_TERRAIN;
+
+	typedef struct tagSaveMaterial
+	{
+		unsigned int			iTexCount;
+		vector<string>			szFullPath;
+
+	}SAVE_MATERIAL;
+
+	typedef struct tagSaveMeshMaterial
+	{
+		vector<SAVE_MATERIAL>	Materials;
+	}SAVE_MESHMATERIAL;
+
+	struct Face { unsigned int iIndices[3]; };
+	
+	typedef struct tagSaveMesh
+	{
+		unsigned int			iMaterialIndex;
+		unsigned int			iNumVertices;
+		unsigned int			iVertexStride;
+		unsigned int			iNumIndices;
+		unsigned int			iNumFaces;
+		vector<Face>			iFaces;
+
+		vector<XMFLOAT3>		vPosition;
+		vector<XMFLOAT3>		vNormal;
+		vector<XMFLOAT3>		vTangent;
+		vector<XMFLOAT3>		vBinormal;
+		vector<XMFLOAT2>		vTexcoord;
+	}SAVE_MESH;
+
+	typedef struct tagSaveModel
+	{
+		MODELTYPE					eModel;
+		unsigned int				iNumMeshes;
+		vector<SAVE_MESH>			Meshs;
+
+		unsigned int				iNumMaterials;
+		vector<SAVE_MESHMATERIAL>	MeshMaterials;
+	}SAVE_MODEL;
+
 }
 
 
