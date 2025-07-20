@@ -10,7 +10,7 @@ private:
 	virtual ~CEdit_MeshMaterial() = default;
 
 public:
-	HRESULT								Initialize(const _char* pModelFilePath, const aiMaterial* pAIMaterial);
+	HRESULT								Initialize(const _char* pModelFilePath, const aiMaterial* pAIMaterial, SAVE_MODEL* ModelData);
 	HRESULT								Bind_Shader_Resource(CShader* pShader, const _char* pConstantName, aiTextureType eTextureType, _uint iIndex);
 
 private:
@@ -19,7 +19,7 @@ private:
 	vector<ID3D11ShaderResourceView*>	m_SRVs[AI_TEXTURE_TYPE_MAX];
 
 public:
-	static CEdit_MeshMaterial*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const aiMaterial* pAIMaterial);
+	static CEdit_MeshMaterial*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const aiMaterial* pAIMaterial, SAVE_MODEL* ModelData);
 	virtual void						Free() override;
 
 };

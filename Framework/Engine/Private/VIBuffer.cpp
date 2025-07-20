@@ -7,7 +7,7 @@ CVIBuffer::CVIBuffer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CCo
 
 CVIBuffer::CVIBuffer(const CVIBuffer& Prototype) : CComponent(Prototype)
 		, m_pVB { Prototype.m_pVB }, m_pIB { Prototype.m_pIB }
-		, m_iNumVertices { Prototype.m_iNumVertexBuffers }
+		, m_iNumVertices { Prototype.m_iNumVertices }
 		, m_iVertexStride { Prototype.m_iVertexStride }
 		, m_iNumIndices { Prototype.m_iNumIndices }
 		, m_iIndexStride { Prototype.m_iIndexStride }
@@ -16,6 +16,7 @@ CVIBuffer::CVIBuffer(const CVIBuffer& Prototype) : CComponent(Prototype)
 		, m_ePrimitiveType { Prototype.m_ePrimitiveType }
 		, m_pVertexPositions{ Prototype.m_pVertexPositions }
 		, m_pIndices {Prototype.m_pIndices}
+		, m_pVertexTex(Prototype.m_pVertexTex)
 {
 	Safe_AddRef(m_pVB);
 	Safe_AddRef(m_pIB);
@@ -89,7 +90,7 @@ void CVIBuffer::Free()
 	
 	Safe_Delete_Array(m_pIndices);
 	Safe_Delete_Array(m_pVertexPositions);
-
+	Safe_Delete_Array(m_pVertexTex);
 	Safe_Release(m_pIB);
 	Safe_Release(m_pVB);
 }

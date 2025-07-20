@@ -11,12 +11,14 @@ CEdit_Mesh::CEdit_Mesh(const CEdit_Mesh& Prototype)
 {
 }
 
-HRESULT CEdit_Mesh::Initialize_Prototype(const aiMesh* pAIMesh, _fmatrix PreTransformMatrix)
+HRESULT CEdit_Mesh::Initialize_Prototype(const aiMesh* pAIMesh, _fmatrix PreTransformMatrix, SAVE_MODEL* pModelData)
 {
-	m_iMaterialIndex = pAIMesh->mMaterialIndex;
-	m_iNumVertices = pAIMesh->mNumVertices;
-	m_iVertexStride = sizeof(VTXMESH);
-	m_iNumIndices = pAIMesh->mNumFaces * 3;
+	SAVE_MESH Mesh;
+
+	m_iMaterialIndex  = Mesh.iMaterialIndex = pAIMesh->mMaterialIndex;
+	m_iNumVertices = Mesh.iNumVertices = pAIMesh->mNumVertices;
+	m_iVertexStride = Mesh.iVertexStride = sizeof(VTXMESH);
+	m_iNumIndices = Mesh.iNumIndices = pAIMesh->mNumFaces * 3;
 	m_iIndexStride = 4;
 	m_iNumVertexBuffers = 1;
 	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
@@ -43,14 +45,21 @@ HRESULT CEdit_Mesh::Initialize_Prototype(const aiMesh* pAIMesh, _fmatrix PreTran
 		memcpy(&pVertices[i].vPosition, &pAIMesh->mVertices[i], sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PreTransformMatrix));
 		m_pVertexPositions[i] = pVertices[i].vPosition;
+		Mesh.vPosition.push_back(pVertices[i].vPosition);
 
 		memcpy(&pVertices[i].vNormal, &pAIMesh->mNormals[i], sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vNormal), PreTransformMatrix));
+		Mesh.vNormal.push_back(pVertices[i].vNormal);
+
 
 		memcpy(&pVertices[i].vTangent, &pAIMesh->mTangents[i], sizeof(_float3));
+		Mesh.vTangent.push_back(pVertices[i].vTangent);
+
 		memcpy(&pVertices[i].vBinormal, &pAIMesh->mBitangents[i], sizeof(_float3));
+		Mesh.vBinormal.push_back(pVertices[i].vBinormal);
 
 		memcpy(&pVertices[i].vTexcoord, &pAIMesh->mTextureCoords[0][i], sizeof(_float2));
+		Mesh.vTexcoord.push_back(pVertices[i].vTexcoord);
 	}
 
 	D3D11_SUBRESOURCE_DATA	VBInitialData{};
@@ -73,13 +82,17 @@ HRESULT CEdit_Mesh::Initialize_Prototype(const aiMesh* pAIMesh, _fmatrix PreTran
 
 	_uint	iNumIndices = {};
 
+	Mesh.iNumFaces = pAIMesh->mNumFaces;
+
 	for (size_t i = 0; i < pAIMesh->mNumFaces; i++)
 	{
 		aiFace AIFace = pAIMesh->mFaces[i];
+		Face Indices;
 
-		pIndices[iNumIndices++] = AIFace.mIndices[0];
-		pIndices[iNumIndices++] = AIFace.mIndices[1];
-		pIndices[iNumIndices++] = AIFace.mIndices[2];
+		pIndices[iNumIndices++] = Indices.iIndices[0] = AIFace.mIndices[0];
+		pIndices[iNumIndices++] = Indices.iIndices[1] = AIFace.mIndices[1];
+		pIndices[iNumIndices++] = Indices.iIndices[2] = AIFace.mIndices[2];
+		Mesh.iFaces.push_back(Indices);
 	}
 
 	D3D11_SUBRESOURCE_DATA	IBInitialData{};
@@ -89,6 +102,8 @@ HRESULT CEdit_Mesh::Initialize_Prototype(const aiMesh* pAIMesh, _fmatrix PreTran
 		return E_FAIL;
 
 	Safe_Delete_Array(pIndices);
+
+	pModelData->Meshs.push_back(Mesh);
 
 	return S_OK;
 }
@@ -100,11 +115,11 @@ HRESULT CEdit_Mesh::Initialize(void* pArg)
 
 
 
-CEdit_Mesh* CEdit_Mesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const aiMesh* pAIMesh, _fmatrix PreTransformMatrix)
+CEdit_Mesh* CEdit_Mesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const aiMesh* pAIMesh, _fmatrix PreTransformMatrix, SAVE_MODEL* pModelData)
 {
 	CEdit_Mesh* pInstance = new CEdit_Mesh(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(pAIMesh, PreTransformMatrix)))
+	if (FAILED(pInstance->Initialize_Prototype(pAIMesh, PreTransformMatrix, pModelData)))
 	{
 		MSG_BOX(TEXT("Failed to Created : CEdit_Mesh"));
 		Safe_Release(pInstance);

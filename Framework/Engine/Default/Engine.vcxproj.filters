@@ -308,7 +308,7 @@
     <ClCompile Include="..\private\Garbage_Collector.cpp">
       <Filter>01.Utility\97.Garbage_Collector</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\SaveLoad_Manager.cpp">
+    <ClCompile Include="..\private\SaveLoader.cpp">
       <Filter>01.Utility\96.SaveLoader</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Picking.cpp">

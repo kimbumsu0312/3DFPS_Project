@@ -14,6 +14,8 @@
 #include "Pooling_Manager.h"
 #include "Garbage_Collector.h"
 #include "Picking.h"
+#include "SaveLoader.h"
+
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
@@ -73,6 +75,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 
 	m_pPicking = CPicking::Create(*ppDevice, *ppContext, EngineDesc.hWnd);
 	if (nullptr == m_pPicking)
+		return E_FAIL;
+
+	m_pSaveLoader = CSaveLoader::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pSaveLoader)
 		return E_FAIL;
 
 	return S_OK;
@@ -222,6 +228,11 @@ HRESULT CGameInstance::Add_GameObject_ToLayer(_uint iLayerLevelIndex, const _wst
 	return m_pObject_Manager->Add_GameObject_ToLayer(iLayerLevelIndex, strLayerTag, iPrototypeLevelIndex, strPrototypeTag, pArg);
 }
 
+HRESULT CGameInstance::Add_GameObject_ToLayer(_uint iLayerLevelIndex, const _wstring& strLayerTag, _uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, CGameObject* pGameObject)
+{
+	return m_pObject_Manager->Add_GameObject_ToLayer(iLayerLevelIndex, strLayerTag, iPrototypeLevelIndex, strPrototypeTag, pGameObject);;
+}
+
 HRESULT CGameInstance::Add_PoolGameObject_ToLayer(CPoolingObject* pObject, _uint iLayerLevelIndex, const _wstring& strLayerTag)
 {
 	return m_pObject_Manager->Add_PoolGameObject_ToLayer(pObject, iLayerLevelIndex, strLayerTag);
@@ -338,9 +349,35 @@ _bool CGameInstance::isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _flo
 	return m_pPicking->isPickedInLocalSpace(vPointA, vPointB, vPointC, pOut);
 }
 
+_bool CGameInstance::File_Save(DATA_TYPE eData, string szFilename)
+{
+	return m_pSaveLoader->File_Save(eData, szFilename);
+}
+
+HRESULT CGameInstance::Save_Object(string szFilename, const SAVE_MODEL& pData)
+{
+	return m_pSaveLoader->Save_Object(szFilename, pData);
+}
+
+HRESULT CGameInstance::Load_Terrain(string FilePath, SAVE_TERRAIN& pOut)
+{
+	return m_pSaveLoader->Load_Terrain(FilePath, pOut);
+}
+
+void CGameInstance::Add_OBjcet(DATA_TYPE eData, CGameObject* pGameObject)
+{
+	m_pSaveLoader->Add_OBjcet(eData, pGameObject);
+}
+
+void CGameInstance::Clear_Object(DATA_TYPE eData)
+{
+	m_pSaveLoader->Clear_Object(eData);
+}
+
 void CGameInstance::Release_Engine()
 {
 	Release();
+	Safe_Release(m_pSaveLoader);
 	Safe_Release(m_pPicking);
 	Safe_Release(m_pGarbage_Collector);
 	Safe_Release(m_pPooling_Manager);

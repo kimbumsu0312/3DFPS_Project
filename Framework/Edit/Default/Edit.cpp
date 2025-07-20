@@ -12,6 +12,8 @@
 HWND g_hWnd;
 bool g_CreateModel = false;
 bool g_SeleteModel = false;
+bool g_MoveModel = false;
+bool g_TerrainHight = false;
 HINSTANCE g_hInst;                              // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.

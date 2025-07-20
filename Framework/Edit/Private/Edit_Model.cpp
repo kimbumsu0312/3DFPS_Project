@@ -9,6 +9,7 @@ CEdit_Model::CEdit_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) :
 
 CEdit_Model::CEdit_Model(const CEdit_Model& Prototype) : CComponent(Prototype), m_Meshes(Prototype.m_Meshes), m_iNumMeshes(Prototype.m_iNumMeshes), m_eModelType ( Prototype.m_eModelType),
 m_iNumMaterials(Prototype.m_iNumMaterials), m_Materials(Prototype.m_Materials), m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
+, m_ModelData(Prototype.m_ModelData)
 {
 	for (auto& pMesh : m_Meshes)
 		Safe_AddRef(pMesh);
@@ -19,7 +20,7 @@ m_iNumMaterials(Prototype.m_iNumMaterials), m_Materials(Prototype.m_Materials), 
 
 HRESULT CEdit_Model::Initialize_Prototype(MODELTYPE eModelType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
-	m_eModelType = eModelType;
+	m_eModelType = m_ModelData.eModel = eModelType;
 
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
 
@@ -85,11 +86,11 @@ HRESULT CEdit_Model::Render(_uint iMeshIndex)
 
 HRESULT CEdit_Model::Ready_Meshes()
 {
-	m_iNumMeshes = m_pAIScene->mNumMeshes;
+	m_iNumMeshes = m_ModelData.iNumMeshes = m_pAIScene->mNumMeshes;
 	
 	for (size_t i = 0; i < m_iNumMeshes; ++i)
 	{
-		CEdit_Mesh* pMesh = CEdit_Mesh::Create(m_pDevice, m_pContext, m_pAIScene->mMeshes[i], XMLoadFloat4x4(&m_PreTransformMatrix));
+		CEdit_Mesh* pMesh = CEdit_Mesh::Create(m_pDevice, m_pContext, m_pAIScene->mMeshes[i], XMLoadFloat4x4(&m_PreTransformMatrix), &m_ModelData);
 		if (nullptr == pMesh)
 			return E_FAIL;
 
@@ -100,11 +101,11 @@ HRESULT CEdit_Model::Ready_Meshes()
 
 HRESULT CEdit_Model::Ready_Materials(const _char* pModelFilePath)
 {
-	m_iNumMaterials = m_pAIScene->mNumMaterials;
+	m_iNumMaterials = m_ModelData.iNumMaterials = m_pAIScene->mNumMaterials;
 
-	for (_uint i = 0; i < m_iNumMeshes; ++i)
+	for (_uint i = 0; i < m_iNumMaterials; ++i)
 	{
-		CEdit_MeshMaterial* pMeshMaterial = CEdit_MeshMaterial::Create(m_pDevice, m_pContext, pModelFilePath, m_pAIScene->mMaterials[i]);
+		CEdit_MeshMaterial* pMeshMaterial = CEdit_MeshMaterial::Create(m_pDevice, m_pContext, pModelFilePath, m_pAIScene->mMaterials[i], &m_ModelData);
 		if (nullptr == pMeshMaterial)
 			return E_FAIL;
 

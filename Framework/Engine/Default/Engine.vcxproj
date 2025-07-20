@@ -210,7 +210,7 @@ call Copy_Release.bat</Command>
     <ClCompile Include="..\private\Light.cpp" />
     <ClCompile Include="..\private\Light_Manager.cpp" />
     <ClCompile Include="..\private\Picking.cpp" />
-    <ClCompile Include="..\private\SaveLoad_Manager.cpp" />
+    <ClCompile Include="..\private\SaveLoader.cpp" />
     <ClCompile Include="..\private\PipeLine.cpp" />
     <ClCompile Include="..\private\PoolingObject.cpp" />
     <ClCompile Include="..\private\Pooling_Manager.cpp" />

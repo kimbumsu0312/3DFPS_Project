@@ -52,7 +52,7 @@ void CTransform::Go_Straight(_float fTimeDelta)
 	_vector		vLook = Get_State(STATE::LOOK);
 
 	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
-
+	
 	Set_State(STATE::POSITION, vPosition);
 }
 

@@ -31,7 +31,8 @@ protected:
 	D3D_PRIMITIVE_TOPOLOGY	m_ePrimitiveType = {};
 
 	_float3*				m_pVertexPositions = { nullptr };
-	void*					m_pIndices = { nullptr };
+	_float2*				m_pVertexTex = { nullptr };
+	_uint*					m_pIndices = { nullptr };
 public:
 	virtual CComponent*		Clone(void* pArg) = 0;
 	virtual void			Free();
