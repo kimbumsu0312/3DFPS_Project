@@ -63,6 +63,11 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
+void CGameObject::On_Dead()
+{
+	m_pGameInstance->GarbageSweep(this);
+}
+
 HRESULT CGameObject::Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg)
 {
 	if (nullptr != Get_Component(strComponentTag))
