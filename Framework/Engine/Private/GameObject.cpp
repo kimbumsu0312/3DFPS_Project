@@ -33,17 +33,20 @@ HRESULT CGameObject::Initialize_Prototype()
 HRESULT CGameObject::Initialize(void* pArg)
 {
 	GAMEOBJECT_DESC* pDesc = static_cast<GAMEOBJECT_DESC*>(pArg);
-	
-	m_ObjData.szObject_Path = pDesc->szObject_Path;
-	pDesc->LoadObjcet = pDesc->isLoad;
-
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Initialize(pDesc)))
-		return E_FAIL;
-
+	if (pDesc != nullptr && pDesc->isLoad)
+	{
+		if (FAILED(m_pTransformCom->Initialize(pArg, pDesc->WolrdMatrix)))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(m_pTransformCom->Initialize(pArg)))
+			return E_FAIL;
+	}
 	m_Components.emplace(TEXT("Com_Transform"), m_pTransformCom);
 
 	Safe_AddRef(m_pTransformCom);

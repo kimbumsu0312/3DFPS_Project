@@ -107,12 +107,12 @@ void CImgui_Manger::Update_Map()
 	else if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_4) && !g_TerrainHight)
 		g_TerrainHight = true;
 
-	if (m_pGameInstance->IsKeyDown(DIK_5) && m_bISWireFream)
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_5) && m_bISWireFream)
 	{
 		m_pContext->RSSetState(m_pSolidframeRS);
 		m_bISWireFream = false;
 	}
-	else if (m_pGameInstance->IsKeyDown(DIK_5) && !m_bISWireFream)
+	else if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_5) && !m_bISWireFream)
 	{
 		m_pContext->RSSetState(m_pWireframeRS);
 		m_bISWireFream = true;
@@ -151,6 +151,7 @@ void CImgui_Manger::Update_Map()
 			{
 				m_pGameInstance->Publish(Clear_Map{});
 				Safe_Release(m_pTerrain);
+				m_pGameInstance->Clear_Object();
 			}
 			Text("Model List");
 			if (Combo("##Model", &m_iCurModel_Index, g_ModelPath, IM_ARRAYSIZE(g_ModelPath)))

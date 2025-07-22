@@ -9,11 +9,8 @@ class ENGINE_DLL CTransform final : public CComponent
 public:
 	typedef struct tagTransformDesc
 	{
-		_float		fSpeedPerSec;
-		_float		fRotationPerSec;
-		_float4x4   WolrdMatrix;
-
-		_bool		LoadObjcet = false;
+		_float		fSpeedPerSec = 0.f;
+		_float		fRotationPerSec = 0.f;
 	}TRANSFORM_DESC;
 
 private:
@@ -44,7 +41,7 @@ public:
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
-
+	virtual HRESULT Initialize(void* pArg, _float4x4 WorldMat);
 public:
 	HRESULT Bind_Shader_Resource(class CShader* pShader, const _char* pConstantName);
 

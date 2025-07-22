@@ -35,7 +35,10 @@ public:
 	_bool								Selete_Model(CTransform& pTransform, _float3& pOut);
 	SAVE_MODEL*							Get_ModelData() { return &m_ModelData;}
 	MODELTYPE							Get_ModelType() { return m_ModelData.eModel; }
+	_uint								Get_AnimationNum() { return m_iNumAnimations; }
+	void								Set_Animations(_uint iIndex) { m_iCurrentAnimIndex = iIndex; }
 private:
+	SAVE_MODEL							m_ModelData = {};
 	const aiScene*						m_pAIScene = { nullptr };
 	Assimp::Importer					m_Importer = {};
 	_float4x4							m_PreTransformMatrix = {};
@@ -43,12 +46,16 @@ private:
 	vector<class CEdit_Mesh*>			m_Meshes;
 	vector<class CEdit_MeshMaterial*>	m_Materials;
 	vector<class CEdit_Bone*>			m_Bones;
+	vector<class CEdit_Animation*>		m_Animations = {};
 
-	SAVE_MODEL							m_ModelData = {};
+	_uint								m_iCurrentAnimIndex = { 0 };
+	_uint								m_iNumAnimations = { 0 };
+
 private:
 	HRESULT								Ready_Meshes();
 	HRESULT								Ready_Materials(const _char* pModelFilePath);
 	HRESULT								Ready_Bones(const aiNode* pAINode, _int iParentIndex);
+	HRESULT								Ready_Animations();
 
 public:
 	static CEdit_Model*					Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODELTYPE eModelType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, void* pArg);

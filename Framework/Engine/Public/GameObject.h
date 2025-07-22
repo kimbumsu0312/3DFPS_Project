@@ -10,6 +10,7 @@ public:
 	{
 			_wstring	szObject_Path;
 			_wstring	szModel_Path;
+			_float4x4   WolrdMatrix;
 			_bool		isLoad = false;
 	}GAMEOBJECT_DESC;
 
@@ -21,6 +22,7 @@ protected:
 public:
 	class CComponent*		Get_Component(const _wstring& strComponentTag);
 	_bool					IsDead() { return m_bIsDead; }
+	void					SetDead() { m_bIsDead = true; }
 	OBJECTTYPE				IsObjectType() { return m_eObjectType; }
 public:
 	virtual HRESULT			Initialize_Prototype();

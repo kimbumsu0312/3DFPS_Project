@@ -41,9 +41,6 @@ private:
 	CVIBuffer_Terrain*		m_pVIBufferCom = { nullptr };
 	_float3					vSetModelPos = {};
 
-	
-
-
 private:
 	HRESULT					Ready_Components(void* pArg);
 	HRESULT					Bind_ShaderResources();

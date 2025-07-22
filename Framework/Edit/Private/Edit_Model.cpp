@@ -3,6 +3,7 @@
 #include "Edit_Mesh.h"
 #include "Edit_MeshMaterial.h"
 #include "Edit_Bone.h"
+#include "Edit_Animation.h"
 #include "Transform.h"
 
 CEdit_Model::CEdit_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CComponent{ pDevice, pContext}
@@ -11,16 +12,19 @@ CEdit_Model::CEdit_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) :
 
 CEdit_Model::CEdit_Model(const CEdit_Model& Prototype) : CComponent(Prototype), m_Meshes(Prototype.m_Meshes)
 , m_Materials(Prototype.m_Materials), m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
-,m_Bones {Prototype.m_Bones}, m_ModelData(Prototype.m_ModelData)
+,m_Bones {Prototype.m_Bones}, m_ModelData(Prototype.m_ModelData), m_Animations(Prototype. m_Animations), m_iCurrentAnimIndex(Prototype.m_iCurrentAnimIndex), m_iNumAnimations(Prototype.m_iNumAnimations)
 {
-	for (auto& pMesh : m_Bones)
-		Safe_AddRef(pMesh);
+	for (auto& pBone : m_Bones)
+		Safe_AddRef(pBone);
 	
 	for (auto& pMesh : m_Meshes)
 		Safe_AddRef(pMesh);
 
 	for (auto& pMaterial : m_Materials)
 		Safe_AddRef(pMaterial);
+
+	for (auto& pAnimations : m_Animations)
+		Safe_AddRef(pAnimations);
 }
 
 HRESULT CEdit_Model::Initialize_Prototype(MODELTYPE eModelType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, void* pArg)
@@ -45,7 +49,6 @@ HRESULT CEdit_Model::Initialize_Prototype(MODELTYPE eModelType, const _char* pMo
 	if (nullptr == m_pAIScene)
 		return E_FAIL;
 
-	//불러온 파일에 뼈를 생성한다.
 	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))
 		return E_FAIL;
 
@@ -53,6 +56,9 @@ HRESULT CEdit_Model::Initialize_Prototype(MODELTYPE eModelType, const _char* pMo
 		return E_FAIL;
 
 	if (FAILED(Ready_Materials(pModelFilePath)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Animations()))
 		return E_FAIL;
 
 	return S_OK;
@@ -86,6 +92,12 @@ HRESULT CEdit_Model::Bind_BoneMatrices(CShader* pShader, const _char* pConstantN
 
 void CEdit_Model::Play_Animation(_float fTimeDelta)
 {
+	//현재 애니메이션에 뼈 트랜슾폼 매트릭스를 갱신
+	/*if (m_iNumAnimations <= 0)
+		return;*/
+
+	//m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta);
+
 	for (auto& pBone : m_Bones)
 	{
 		//뼈들의 행렬을 부모 뼈의 행렬에 맞게 맞춰준다.
@@ -169,6 +181,25 @@ HRESULT CEdit_Model::Ready_Bones(const aiNode* pAINode, _int iParentIndex)
 	return S_OK;
 }
 
+HRESULT CEdit_Model::Ready_Animations()
+{
+	//파일의 애니메이션 개수를 가져온다.
+	m_iNumAnimations = m_pAIScene->mNumAnimations;
+	
+	for (_int i = 0; i < m_iNumAnimations; ++i)
+	{
+		//i번째 애니메이션을 생성한다.
+		CEdit_Animation* pAnimation = CEdit_Animation::Create(m_pAIScene->mAnimations[i], m_Bones);
+		if (pAnimation == nullptr)
+			return E_FAIL;
+
+		//생성한 애니메이션을 넣어줌
+		m_Animations.push_back(pAnimation);
+	}
+	
+	return S_OK;
+}
+
 CEdit_Model* CEdit_Model::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODELTYPE eModelType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, void* pArg)
 {
 	CEdit_Model* pInstance = new CEdit_Model(pDevice, pContext);
@@ -199,19 +230,20 @@ void CEdit_Model::Free()
 {
 	__super::Free();
 
+	for (auto& pAnim : m_Animations)
+		Safe_Release(pAnim);
+	m_Animations.clear();
+
 	for (auto& pBone : m_Bones)
 		Safe_Release(pBone);
-
 	m_Bones.clear();
 
 	for (auto& pMesh : m_Meshes)
 		Safe_Release(pMesh);
-
 	m_Meshes.clear();
 
 	for (auto& pMaterial : m_Materials)
 		Safe_Release(pMaterial);
-
 	m_Materials.clear();
 
 	m_Importer.FreeScene();

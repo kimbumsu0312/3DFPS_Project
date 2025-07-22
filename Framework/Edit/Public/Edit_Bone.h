@@ -13,6 +13,11 @@ public:
 	_matrix				Get_CombinedTransformationMatrix() const {
 		return XMLoadFloat4x4(&m_CombinedTransformationMatrix);}
 
+	void Set_TransformationMatrix(_fmatrix Matrix) {
+		XMStoreFloat4x4(&m_TransformationMatrix, Matrix);
+	}
+
+public:
 	HRESULT				Initialize(const aiNode* pAINode, _int iParentBoneIndex);
 	void				Update_CombinedTransformationMatrix(const _float4x4& PreTransformMatrix, const vector<CEdit_Bone*>& Bones);
 

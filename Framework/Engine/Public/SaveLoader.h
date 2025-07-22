@@ -19,7 +19,7 @@ public:
 
 	HRESULT						Add_SaveObject(class CGameObject* pObject, _int &pOut);
 	HRESULT						Erase_SaveObject(_int Index);
-	void						Clear_Object(DATA_TYPE eData);
+	void						Clear_Object();
 private:
 	ID3D11Device*				m_pDevice;
 	ID3D11DeviceContext*		m_pContext;

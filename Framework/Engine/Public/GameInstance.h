@@ -140,7 +140,7 @@ public:
 	HRESULT						Load_Terrain(string FilePath, SAVE_TERRAIN& pOut);
 	HRESULT						Load_Level(string FilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex);
 
-	void						Clear_Object(DATA_TYPE eData);
+	void						Clear_Object();
 #pragma endregion
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
