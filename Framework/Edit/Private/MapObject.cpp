@@ -22,7 +22,7 @@ HRESULT CMapObject::Initialize(void* pArg)
 	if (pArg != nullptr)
 	{
 		MODEL_OBJECT_DESC* pDesc = static_cast<MODEL_OBJECT_DESC*>(pArg);
-		m_szModelPath = pDesc->szModelPath;
+		m_ObjData.szModel_Path = m_szModelPath = pDesc->szModel_Path;
 	}
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -30,8 +30,25 @@ HRESULT CMapObject::Initialize(void* pArg)
 	if (pArg != nullptr)
 	{
 		MODEL_OBJECT_DESC* pDesc = static_cast<MODEL_OBJECT_DESC*>(pArg);
-		m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&(pDesc->vPos)));
+		if (!(pDesc->isLoad))
+		{
+		XMVECTOR vPos = { pDesc->vPos.x, pDesc->vPos.y, pDesc->vPos.z, 1.f };
+		m_pTransformCom->Set_State(STATE::POSITION, vPos);
+		}
 	}
+
+	m_pGameInstance->Add_SaveObject(this, m_iIndex);
+
+	m_pGameInstance->Subscribe<Event_Erase_Model>([&](const Event_Erase_Model& e)
+	{
+		if (m_bIsSelete) 
+		{ 
+			m_pGameInstance->Erase_SaveObject(m_iIndex); 
+			m_pGameInstance->Publish(Event_Model_Index_Set{ m_iIndex });
+		} 
+	});
+
+	m_pGameInstance->Subscribe<Event_Model_Index_Set>([&](const Event_Model_Index_Set& e) {if (e.i < m_iIndex) { m_iIndex -= 1; } });
 
 	return S_OK;
 }
@@ -55,10 +72,11 @@ void CMapObject::Update(_float fTimeDelta)
 
 		if (m_pGameInstance->IsKeyDown(DIK_N))
 		{
-			m_pGameInstance->Save_Object("Wall", m_pModelCom->Get_ModelData());
+			SAVE_MODEL* pData = m_pModelCom->Get_ModelData();
+			m_pGameInstance->File_Save_Object(pData->szName, pData->eModel, pData);
 		}
 	}
-
+	m_pModelCom->Play_Animation(fTimeDelta);
 
 }
 
@@ -79,6 +97,9 @@ HRESULT CMapObject::Render()
 		if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
 			return E_FAIL;
 
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
+			return E_FAIL;
+
 		if(m_bIsSelete)
 			m_pShaderCom->Begin(1);
 		else
@@ -89,21 +110,25 @@ HRESULT CMapObject::Render()
 	return S_OK;
 }
 
-void* CMapObject::GetDesc()
-{
-	return nullptr;
-}
 
 HRESULT CMapObject::Ready_Components()
 {
-	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxMesh"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
-		return E_FAIL;
-
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), m_szModelPath,
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pModelCom), nullptr)))
 		return E_FAIL;
 
+	if (m_pModelCom->Get_ModelType() == MODELTYPE::ANIM)
+	{
+		if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
+			TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxMesh"),
+			TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
+			return E_FAIL;
+	}
 	return S_OK;
 }
 

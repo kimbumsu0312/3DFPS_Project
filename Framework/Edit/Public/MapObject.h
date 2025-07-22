@@ -12,8 +12,7 @@ public:
 
 	typedef struct tagObject : public CGameObject::GAMEOBJECT_DESC
 	{
-		_float4 vPos;
-		_wstring szModelPath;
+		_float4 vPos = {0.f, 0.f, 0.f, 1.f};
 	}MODEL_OBJECT_DESC;
 
 private:
@@ -29,16 +28,17 @@ public:
 	virtual void			Late_Update(_float fTimeDelta);
 	virtual HRESULT			Render();
 
-	_wstring				Get_ModelPath() { return m_szModelPath; }
 	void					SetDead() { m_bIsDead = true; }
 	void					SetSelete(_bool bSelete) { m_bIsSelete = bSelete; }
-	virtual	void*			GetDesc();
+	
+	_int&					Get_Index() {return m_iIndex;}
 private:
 	class CEdit_Model*		m_pModelCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
-
 	_wstring				m_szModelPath = {};
 	_bool					m_bIsSelete = { false };
+
+	_int					m_iIndex = {0};
 private:
 	HRESULT					Ready_Components();
 

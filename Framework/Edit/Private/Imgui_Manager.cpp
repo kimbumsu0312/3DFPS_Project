@@ -133,20 +133,24 @@ void CImgui_Manger::Update_Map()
 			if (Button("Create"))
 			{
 
-				CVIBuffer_Terrain::VIBUFFER_TERRAIN_DESC Desc;
+				CTerrain::TERRAIN_DESC Desc;
 				Desc.iNumverticesX = g_iTerrainSizeX;
 				Desc.iNumverticesZ = g_iTerrainSizeZ;
 				Desc.Terrain_Data = nullptr;
+				Desc.szModel_Path = TEXT("Terrain");
+				
 				CTerrain* pTerrain = CTerrain::Create(m_pDevice, m_pContext, &Desc);
 
 				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_BackGround"), ENUM_CLASS(LEVEL::MAP), TEXT("Prototype_GameObject_Terrain"), pTerrain)))
 					MSG_BOX(TEXT("Failed to Created : Terrain"));
-				m_pGameInstance->Add_OBjcet(DATA_TYPE::TERRAIN, pTerrain);
+				m_pTerrain = pTerrain;
+				Safe_AddRef(m_pTerrain);
 
 			}
 			if (Button("Clear"))
 			{
 				m_pGameInstance->Publish(Clear_Map{});
+				Safe_Release(m_pTerrain);
 			}
 			Text("Model List");
 			if (Combo("##Model", &m_iCurModel_Index, g_ModelPath, IM_ARRAYSIZE(g_ModelPath)))
@@ -316,52 +320,70 @@ void CImgui_Manger::Update_Map()
 
 		if (BeginTabItem("SaveLoad"))
 		{
+			InputText("파일 이름: ", m_szFileName, MAX_PATH);
+#pragma region TERRAIN_SAVELOAD
+			if (Button("Terrain Save"))
+			{
+				if (m_pTerrain != nullptr && m_szFileName != "")
+				{
+					string szFileName = m_szFileName;
+					m_pGameInstance->File_Save_TerrainLevel(DATA_TYPE::TERRAIN, szFileName, m_pTerrain->Get_Buffer() );
+				}
+				else
+					MSG_BOX(TEXT("세이브 실패"));
+			}
+			SameLine();
 			if (Button("Terrain Load"))
 			{
-				string path = OpenFile();
-				if (!path.empty())
+				if (m_szFileName != "")
 				{
 					m_pGameInstance->Publish(Clear_Map{});
-					m_pGameInstance->Clear_Object(DATA_TYPE::TERRAIN);
-					SAVE_TERRAIN pData = {};
-					m_pGameInstance->Load_Terrain(path, pData);
+					Safe_Release(m_pTerrain);
 
-					CVIBuffer_Terrain::VIBUFFER_TERRAIN_DESC Desc{};
+					string szFileName = m_szFileName;
+					SAVE_TERRAIN pData = {};
+					m_pGameInstance->Load_Terrain(szFileName, pData);
+
+					CTerrain::TERRAIN_DESC Desc;
 					Desc.iNumverticesX = g_iTerrainSizeX;
 					Desc.iNumverticesZ = g_iTerrainSizeZ;
 					Desc.Terrain_Data = &pData;
+					Desc.szModel_Path = TEXT("Terrain");
+
 					CTerrain* pTerrain = CTerrain::Create(m_pDevice, m_pContext, &Desc);
 
 					if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_BackGround"), ENUM_CLASS(LEVEL::MAP), TEXT("Prototype_GameObject_Terrain"), pTerrain)))
 						MSG_BOX(TEXT("Failed to Created : Terrain"));
-					m_pGameInstance->Add_OBjcet(DATA_TYPE::TERRAIN, pTerrain);
-
-					pData.pTexcoordData.clear();
-					pData.pVertexData.clear();
+					m_pTerrain = pTerrain;
+					Safe_AddRef(m_pTerrain);
 				}
-				
+				else
+					MSG_BOX(TEXT("로드 실패"));
 			}
-			Text("Save Type");
-			if (Combo("##Model", &m_iMapSaveType, m_szMapSaveType, IM_ARRAYSIZE(m_szMapSaveType)))
+#pragma endregion
+#pragma region LEVEL_SAVELOAD
+			if (Button("Level Save"))
 			{
-				if (m_iMapSaveType == 1)
-					m_eSaveType = DATA_TYPE::TERRAIN;
-				else if (m_iMapSaveType == 2)
-					m_eSaveType = DATA_TYPE::LEVEL;
-				else if (m_iMapSaveType == 0)
-					m_eSaveType = DATA_TYPE::END;
-
-				Text("선택된 항목: %s", m_szMapSaveType[m_iMapSaveType]);
+				if (m_szFileName != "")
+				{
+					string szFileName = m_szFileName;
+					m_pGameInstance->File_Save_TerrainLevel(DATA_TYPE::LEVEL, szFileName, nullptr);
+				}
+				else
+					MSG_BOX(TEXT("세이브 실패"));
 			}
-
-			InputText("파일 이름: ", m_szFileName, MAX_PATH);
-
-			if (Button("Save"))
+			SameLine();
+			if (Button("Level Load"))
 			{
-				string szFileName = m_szFileName;
-				m_pGameInstance->File_Save(m_eSaveType, szFileName);
+				if (m_szFileName != "")
+				{
+					string szFileName = m_szFileName;
+					m_pGameInstance->Load_Level(szFileName, ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Object"), ENUM_CLASS(LEVEL::STATIC));
+				}
+				else
+					MSG_BOX(TEXT("로드 실패"));
 			}
-
+#pragma endregion
 			EndTabItem();
 		}
 		EndTabBar();
@@ -418,7 +440,7 @@ void CImgui_Manger::Selete_Object(CMapObject& pObject, CTransform& pTransform)
 	m_pModel = &pObject;
 	m_pModel->SetSelete(true);
 
-	_wstring szPath = m_pModel->Get_ModelPath();
+	_wstring szPath = TEXT("123");
 
 	WideCharToMultiByte(CP_UTF8, 0,	szPath.c_str(), -1,	m_szSeleteModel, MAX_PATH, NULL, NULL );
 	
@@ -430,7 +452,6 @@ void CImgui_Manger::Selete_Object(CMapObject& pObject, CTransform& pTransform)
 	_float4 vRot4;
 	XMStoreFloat4(&vRot4, vRot);
 
-	
 	XMStoreFloat3(&m_vPos, vPos);
 	XMStoreFloat3(&m_vScale, vScale);
 
@@ -483,6 +504,8 @@ _wstring CImgui_Manger::Get_ModelPath()
 
 void CImgui_Manger::Erase_Model()
 {
+	m_pGameInstance->Publish(Event_Erase_Model{});
+
 	m_pModel->SetDead();
 	m_pModel = nullptr;
 	m_pTransform = nullptr;
@@ -502,23 +525,6 @@ void CImgui_Manger::Move_Model(_float3 fPos)
 	XMStoreFloat3(&m_vPos, vPos);
 }
 
-string CImgui_Manger::OpenFile()
-{
-	char szFile[MAX_PATH] = { 0 };
-
-	OPENFILENAMEA ofn = {};
-	ofn.lStructSize = sizeof(ofn);
-	ofn.lpstrFilter = "JSON Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
-	ofn.lpstrFile = szFile;
-	ofn.nMaxFile = sizeof(szFile);
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-
-	if (GetOpenFileNameA(&ofn))
-		return std::string(szFile);
-
-	return "";
-}
-
 void CImgui_Manger::Free()
 {
 	ImGui_ImplDX11_Shutdown();
@@ -531,4 +537,5 @@ void CImgui_Manger::Free()
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 	Safe_Release(m_pGameInstance);
+	Safe_Release(m_pTerrain);
 }

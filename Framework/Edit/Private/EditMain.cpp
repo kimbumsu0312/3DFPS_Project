@@ -65,38 +65,57 @@ HRESULT CEditMain::Ready_Prototype_ForStatic()
    	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxMesh"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
+		return E_FAIL;
+
 	/* Prototype_Component_Shader_VtxNorTex */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxNorTex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
 		return E_FAIL;
 
+	CEdit_Model::MODEl_DESC Desc{};
+
 	_matrix PreTransformMatrix = XMMatrixIdentity();
 
+	Desc.szModelName = "Wall1";
+	Desc.szModelPath = "Prototype_Component_Model_Wall1";
 	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Wall1"),
-		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/Map/Wall/Wall1/Wall1.fbx", PreTransformMatrix))))
+		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/Map/Wall/Wall1/Wall1.fbx", PreTransformMatrix, &Desc))))
 		return E_FAIL;
 
+	Desc.szModelName = "Wall2";
+	Desc.szModelPath = "Prototype_Component_Model_Wall2";
 	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Wall2"),
-		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/Map/Wall/Wall2/Wall2.fbx", PreTransformMatrix))))
+		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/Map/Wall/Wall2/Wall2.fbx", PreTransformMatrix, &Desc))))
 		return E_FAIL;
 
+	Desc.szModelName = "Wall3";
+	Desc.szModelPath = "Prototype_Component_Model_Wall3";
 	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Wall3"),
-		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/Map/Wall/Wall3/Wall3.fbx", PreTransformMatrix))))
+		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/Map/Wall/Wall3/Wall3.fbx", PreTransformMatrix, &Desc))))
 		return E_FAIL;
 
+	Desc.szModelName = "ForkLift";
+	Desc.szModelPath = "Prototype_Component_Model_ForkLift";
 	PreTransformMatrix = XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
   	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_ForkLift"),
-		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/ForkLift/Boat.fbx", PreTransformMatrix))))
+		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/ForkLift/Boat.fbx", PreTransformMatrix, &Desc))))
 		return E_FAIL;
 
+	Desc.szModelName = "Fiona";
+	Desc.szModelPath = "Prototype_Component_Model_Fiona";
 	PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Fiona"),
-		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/Fiona/Fiona.fbx", PreTransformMatrix))))
+		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/Fiona/Fiona.fbx", PreTransformMatrix, &Desc))))
 		return E_FAIL;
+
 	/* Prototype_GameObject_Player */
+	
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"),
 		CMapObject::Create(m_pDevice, m_pContext))))
 		return E_FAIL;

@@ -26,11 +26,11 @@ public:
 	virtual HRESULT				Initialize(void* pArg) override;
 	
 	void						Terrain_Hight(bool raise, _float brushRadius, _float intensity, class CTransform& pTransformCom, _float2 vMinMax);
-	void						Save_Terrain(SAVE_TERRAIN& pArg);
-private:
-	_uint						m_iNumverticesX = {};
-	_uint						m_iNumverticesZ = {};
+	const SAVE_TERRAIN&			Save_Terrain();
 
+	_bool						IsPicked(class CTransform& pTransform, _float3& pOut);
+private:
+	SAVE_TERRAIN				m_TerrainData = {};
 private:
 	void						UpdateTerrain();
 

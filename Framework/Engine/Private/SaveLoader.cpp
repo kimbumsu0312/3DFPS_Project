@@ -10,98 +10,166 @@ CSaveLoader::CSaveLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) :
 	Safe_AddRef(m_pGameInstance);
 }
 
-HRESULT CSaveLoader::File_Save(DATA_TYPE eData, string szFilename)
+HRESULT CSaveLoader::File_Save_TerrainLevel(DATA_TYPE eData, string szFilename, CVIBuffer* pVIBuffer)
 {
 	string FilePath;
 	switch (eData)
 	{
 	case Engine::DATA_TYPE::TERRAIN:
-		FilePath = "../Bin/Data/Terrain/" + szFilename + ".json";
-		break;
-	case Engine::DATA_TYPE::OBJECT:
-		FilePath = "../Bin/Data/Object/" + szFilename + ".json";
-		break;
-	case Engine::DATA_TYPE::CHARTER:
-		FilePath = "../Bin/Data/Charter/" + szFilename + ".json";
+		FilePath = "../Bin/Data/Terrain/" + szFilename + ".dat";
 		break;
 	case Engine::DATA_TYPE::LEVEL:
-		FilePath = "../Bin/Data/Level/" + szFilename + ".json";
+		FilePath = "../Bin/Data/Level/" + szFilename + ".dat";
 		break;
 	}
 
 	switch (eData)
 	{
 	case Engine::DATA_TYPE::TERRAIN:
-		if (Save_Terrain(FilePath))
+		if (FAILED(TerrainSave(FilePath, pVIBuffer)))
 			return E_FAIL;
 		break;
-	case Engine::DATA_TYPE::OBJECT:
-		FilePath = "../Bin/Data/Object/" + szFilename + ".json";
-		break;
-	case Engine::DATA_TYPE::CHARTER:
-		FilePath = "../Bin/Data/Charter/" + szFilename + ".json";
-		break;
 	case Engine::DATA_TYPE::LEVEL:
-		FilePath = "../Bin/Data/Level/" + szFilename + ".json";
+		if (FAILED(LevelSave(FilePath)))
+			return E_FAIL;
 		break;
 	}
 
 	return S_OK;
 }
 
-HRESULT CSaveLoader::Save_Object(string szFilename, const SAVE_MODEL& pData)
+void CSaveLoader::Clear_Object(DATA_TYPE eData)
+{
+	for (auto& pObject : m_Objects)
+		Safe_Release(pObject);
+
+	m_Objects.clear();
+}
+
+HRESULT CSaveLoader::TerrainSave(string FileName, CVIBuffer* pVIBuffer)
+{
+	SAVE_TERRAIN SaveData = static_cast<CVIBuffer_Terrain*>(pVIBuffer)->Save_Terrain();
+
+	ofstream out(FileName, ios::binary);
+
+	if (!out)
+	{
+		MSG_BOX(TEXT("로드 실패"));
+		return E_FAIL;
+	}
+	out.write((_char*)&SaveData.iNumverticesX, sizeof(_uint));
+	out.write((_char*)&SaveData.iNumverticesZ, sizeof(_uint));
+
+	_uint	iPosSize = SaveData.pVertexPositions.size();
+	out.write((_char*)&iPosSize, sizeof(_uint));
+	out.write((_char*)SaveData.pVertexPositions.data(), sizeof(XMFLOAT3) * iPosSize);
+
+	_uint	iTexSize = SaveData.pVertexTex.size();
+	out.write((_char*)&iTexSize, sizeof(_uint));
+	out.write((_char*)SaveData.pVertexTex.data(), sizeof(XMFLOAT2) * iTexSize);
+
+	out.close();
+	MSG_BOX(TEXT("Save"));
+
+	return S_OK;
+}
+
+HRESULT CSaveLoader::File_Save_Object(string szFilename, MODELTYPE eType, SAVE_MODEL* pData)
+{
+	if (MODELTYPE::NONANIM == eType)
+		Save_NonAnimMesh(szFilename, pData);
+	else
+		Save_AnimMesh(szFilename, pData);
+
+	return S_OK;
+}
+
+HRESULT CSaveLoader::LevelSave(string szFilename)
+{
+	ofstream out(szFilename, ios::binary);
+
+	for (_int i = 0; i < m_Objects.size(); ++i)
+	{
+		OBJCET_DATA Data = m_Objects[i]->Get_Data();
+
+		size_t szNameSize = Data.szObject_Path.size();
+		out.write(reinterpret_cast<const char*>(&szNameSize), sizeof(size_t));
+		out.write(reinterpret_cast<const char*>(Data.szObject_Path.c_str()), szNameSize * sizeof(wchar_t));
+
+		szNameSize = Data.szModel_Path.size();
+		out.write(reinterpret_cast<const char*>(&szNameSize), sizeof(size_t));
+		out.write(reinterpret_cast<const char*>(Data.szModel_Path.c_str()), szNameSize * sizeof(wchar_t));
+
+		XMFLOAT4X4 matrix;
+		XMStoreFloat4x4(&matrix, Data.objmat);
+		out.write(reinterpret_cast<const char*>(&matrix), sizeof(DirectX::XMFLOAT4X4));
+	}
+
+	out.close();
+	MSG_BOX(TEXT("Save"));
+
+	return S_OK;
+}
+
+HRESULT CSaveLoader::Save_NonAnimMesh(string szFilename, SAVE_MODEL* pData)
 {
 	string FilePath = "../Bin/Data/Object/" + szFilename + ".json";
+	string MeshFilePath = "../Bin/Data/Object/" + szFilename + "Data.dat";
+
+	ofstream out(MeshFilePath, ios::binary);
+
+	if (!out)
+	{
+		MSG_BOX(TEXT("저장 파일 열기 실패"));
+		return E_FAIL;
+	}
+
+	out.write(reinterpret_cast<const char*>(&pData->PreTransformMatrix), sizeof(XMFLOAT4X4));
+	size_t iMeshCount = pData->iNumMeshes;
+	out.write(reinterpret_cast<const char*>(&iMeshCount), sizeof(iMeshCount));
+	
+	for (const auto& mesh : pData->Meshs) 
+	{
+		size_t iNameSize = mesh.szName.size();
+		out.write(reinterpret_cast<const char*>(&iNameSize), sizeof(iNameSize));
+		out.write(reinterpret_cast<const char*>(mesh.szName.c_str()), iNameSize * sizeof(wchar_t));
+
+		out.write(reinterpret_cast<const char*>(&mesh.iMaterialIndex), sizeof(mesh.iMaterialIndex));
+		out.write(reinterpret_cast<const char*>(&mesh.iNumVertices), sizeof(mesh.iNumVertices));
+		out.write(reinterpret_cast<const char*>(&mesh.iVertexStride), sizeof(mesh.iVertexStride));
+		out.write(reinterpret_cast<const char*>(&mesh.iNumIndices), sizeof(mesh.iNumIndices));
+		out.write(reinterpret_cast<const char*>(&mesh.iNumFaces), sizeof(mesh.iNumFaces));
+		size_t ifaceCount = mesh.iFaces.size();
+		out.write(reinterpret_cast<const char*>(&ifaceCount), sizeof(ifaceCount));
+		out.write(reinterpret_cast<const char*>(mesh.iFaces.data()), ifaceCount * sizeof(Face));
+
+		size_t ivertexCount = mesh.NonAnimVertex.size();
+		out.write(reinterpret_cast<const char*>(&ivertexCount), sizeof(ivertexCount));
+		out.write(reinterpret_cast<const char*>(mesh.NonAnimVertex.data()), ivertexCount * sizeof(VTXMESH));
+	}
+	out.close();
+
 	json jData;
 
-	jData["MODELTYPE"] = pData.eModel;
-	jData["iNumMeshes"] = pData.iNumMeshes;
-	jData["iNumMaterials"] = pData.iNumMaterials;
+	jData["Model_name"] = pData->szName;
+	jData["Model_path"] = pData->szModelPath;
+	jData["Model_type"] = pData->eModel;
+	jData["Mesh_Path"] = MeshFilePath;
+	jData["iNumMeshes"] = pData->iNumMeshes;
+	jData["iNumMaterials"] = pData->iNumMaterials;
 
-	for (_int i = 0; i < pData.iNumMeshes; ++i)
-	{
-		json jMesh;
-		jMesh["iMaterialIndex"] = pData.Meshs[i].iMaterialIndex;
-		jMesh["iNumVertices"] = pData.Meshs[i].iNumVertices;
-		jMesh["iVertexStride"] = pData.Meshs[i].iVertexStride;
-		jMesh["iNumIndices"] = pData.Meshs[i].iNumIndices;
-		jMesh["iNumFaces"] = pData.Meshs[i].iNumFaces;
-		for (_int j = 0; j < pData.Meshs[i].iNumFaces; ++j)
-		{
-			json Face;
-			Face["iIndices"] = { {"0", pData.Meshs[i].iFaces[j].iIndices[0]}, {"1", pData.Meshs[i].iFaces[j].iIndices[1]}, {"2", pData.Meshs[i].iFaces[j].iIndices[2]} };
-			jMesh["iFaces"].push_back(Face);
-		}
-
-		for (_uint j = 0; j < pData.Meshs[i].iNumVertices; ++j)
-		{
-			json jPos, jNor, jTan, jBinor, jTex;
-			jPos["Pos"] = { {"x", pData.Meshs[i].vPosition[j].x}, {"y", pData.Meshs[i].vPosition[j].y}, {"z", pData.Meshs[i].vPosition[j].z}};
-			jNor["Nor"] = { {"x", pData.Meshs[i].vNormal[j].x}, {"y", pData.Meshs[i].vNormal[j].y}, {"z", pData.Meshs[i].vNormal[j].z} };
-			jTan["Tan"] = { {"x", pData.Meshs[i].vTangent[j].x}, {"y", pData.Meshs[i].vTangent[j].y}, {"z", pData.Meshs[i].vTangent[j].z} };
-			jBinor["BiNor"] = { {"x", pData.Meshs[i].vBinormal[j].x}, {"y", pData.Meshs[i].vBinormal[j].y}, {"z", pData.Meshs[i].vBinormal[j].z} };
-			jTex["Tex"] = { {"x", pData.Meshs[i].vTexcoord[j].x}, {"y", pData.Meshs[i].vTexcoord[j].y} };
-
-			jMesh["vPosition"].push_back(jPos);
-			jMesh["vNormal"].push_back(jNor);
-			jMesh["vTangent"].push_back(jTan);
-			jMesh["vBinormal"].push_back(jBinor);
-			jMesh["vTexcoord"].push_back(jTex);
-		}
-		jData["Meshs"].push_back(jMesh);
-	}
-	for (_int i = 0; i < pData.iNumMaterials; ++i)
+	for (_int i = 0; i < pData->iNumMaterials; ++i)
 	{
 		json jMeshMaterial;
-		for (_uint j = 0; j < pData.MeshMaterials[i].Materials.size(); ++j)
+		for (_uint j = 0; j < pData->MeshMaterials[i].Materials.size(); ++j)
 		{
 			json jMaterial;
-			jMaterial["iTexCount"] = pData.MeshMaterials[i].Materials[j].iTexCount;
+			jMaterial["iTexCount"] = pData->MeshMaterials[i].Materials[j].iTexCount;
 
-			for (_uint k = 0; k < pData.MeshMaterials[i].Materials[j].iTexCount; ++j)
+			for (_uint k = 0; k < pData->MeshMaterials[i].Materials[j].iTexCount; ++j)
 			{
 				json szFullPath;
-				szFullPath["Path"] = pData.MeshMaterials[i].Materials[j].szFullPath[k];
+				szFullPath["Path"] = pData->MeshMaterials[i].Materials[j].szFullPath[k];
 
 				jMaterial["szFullPath"].push_back(szFullPath);
 			}
@@ -109,7 +177,7 @@ HRESULT CSaveLoader::Save_Object(string szFilename, const SAVE_MODEL& pData)
 			jMeshMaterial["Materials"].push_back(jMaterial);
 		}
 
-		jData["MeshMaterials"].push_back(jMeshMaterial);
+		jData["MeshMaterial"].push_back(jMeshMaterial);
 	}
 
 	ofstream file(FilePath);
@@ -128,119 +196,123 @@ HRESULT CSaveLoader::Save_Object(string szFilename, const SAVE_MODEL& pData)
 	return S_OK;
 }
 
-void CSaveLoader::Add_OBjcet(DATA_TYPE eData, CGameObject* pGameObject)
+HRESULT CSaveLoader::Save_AnimMesh(string szFilename, SAVE_MODEL* pData)
 {
-	if (pGameObject == nullptr)
-		return;
-
-	m_vecObject[ENUM_CLASS(eData)].push_back(pGameObject);
-	Safe_AddRef(pGameObject);
+	return S_OK;
 }
 
-void CSaveLoader::Clear_Object(DATA_TYPE eData)
+HRESULT CSaveLoader::Load_Terrain(string FilePath, SAVE_TERRAIN& pOut)
 {
-	for (auto& pObject : m_vecObject[ENUM_CLASS(eData)])
-		Safe_Release(pObject);
+	string szFilePath;
 
-	m_vecObject[ENUM_CLASS(eData)].clear();
-}
+	szFilePath = "../Bin/Data/Terrain/" + FilePath + ".dat";
 
-HRESULT CSaveLoader::Save_Terrain(string FilePath)
-{
-	if (m_vecObject[ENUM_CLASS(DATA_TYPE::TERRAIN)].size() <= 0)
-		return E_FAIL;
-	
-	SAVE_TERRAIN* SaveData = static_cast<SAVE_TERRAIN*>(m_vecObject[ENUM_CLASS(DATA_TYPE::TERRAIN)].front()->GetDesc());
+	ifstream file(szFilePath, ios::binary);
 
-	json jData2;
-	jData2["iNumverticesX"] = SaveData->iNumverticesX;
-	jData2["iNumverticesZ"] = SaveData->iNumverticesZ;
+	file.read((_char*)&pOut.iNumverticesX, sizeof(_uint));
+	file.read((_char*)&pOut.iNumverticesZ, sizeof(_uint));
 
-	_uint iNumVertices = SaveData->iNumverticesX * SaveData->iNumverticesZ;
+	_uint iPosSize = 0;
+	file.read((_char*)&iPosSize, sizeof(_uint));
+	pOut.pVertexPositions.resize(iPosSize);
+	file.read((_char*)pOut.pVertexPositions.data(), sizeof(XMFLOAT3) * iPosSize);
 
-	for (_uint i = 0; i < iNumVertices; ++i)
-	{
+	_uint iTexSize = 0;
+	file.read((_char*)&iTexSize, sizeof(_uint));
+	pOut.pVertexTex.resize(iTexSize);
+	file.read((_char*)pOut.pVertexTex.data(), sizeof(XMFLOAT2) * iTexSize);
 
-		json jVertex;
-		jVertex["Position"] = { {"x", SaveData->pVertexData[i].x}, {"y", SaveData->pVertexData[i].y}, {"z", SaveData->pVertexData[i].z} };
-		jVertex["Texcoord"] = { {"u", SaveData->pTexcoordData[i].x}, {"v", SaveData->pTexcoordData[i].y}};
-
-		jData2["VertexPos"].push_back(jVertex);
-	}
-	
-	ofstream file(FilePath);
-	if (file.is_open())
-	{
-		file << jData2.dump(4);
-		file.close();
-		MSG_BOX(TEXT("데이터 저장 완료"));
-	}
-	else
-	{
-		MSG_BOX(TEXT("데이터 저장 실패"));
-		return E_FAIL;
-	}
+	file.close();
 
 	return S_OK;
 }
 
-
-HRESULT CSaveLoader::Load_Terrain(string FilePath, SAVE_TERRAIN& pOut)
+HRESULT CSaveLoader::Load_Level(string FilePath, _uint LevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex)
 {
-	ifstream file(FilePath);
+	string szFilePath;
+
+	szFilePath = "../Bin/Data/Level/" + FilePath + ".dat";
+
+	ifstream file(szFilePath, ios::binary);
 	if (!file.is_open())
-	{
-		MSG_BOX(TEXT("파일 열기 실패"));
 		return E_FAIL;
+
+	vector<OBJCET_DATA> OBjects_Data;
+
+	while (!file.eof())
+	{
+		OBJCET_DATA Data;
+		size_t szNameSize = 0;
+		file.read(reinterpret_cast<char*>(&szNameSize), sizeof(size_t));
+		if (szNameSize > 0)
+		{
+			wstring szObjPath;
+			szObjPath.resize(szNameSize);
+			file.read(reinterpret_cast<char*>(&szObjPath[0]), szNameSize * sizeof(wchar_t));
+			Data.szObject_Path = szObjPath;
+		}
+
+		file.read(reinterpret_cast<char*>(&szNameSize), sizeof(size_t));
+		if (szNameSize > 0)
+		{
+			wstring szModelPath;
+			szModelPath.resize(szNameSize);
+			file.read(reinterpret_cast<char*>(&szModelPath[0]), szNameSize * sizeof(wchar_t));
+			Data.szModel_Path = szModelPath;
+		}
+
+		XMFLOAT4X4 matrix;
+		file.read(reinterpret_cast<char*>(&matrix), sizeof(XMFLOAT4X4));
+		Data.objmat = XMLoadFloat4x4(&matrix);
+
+		OBjects_Data.push_back(Data);
 	}
-	
-	string szData((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
 	file.close();
 
-	try
+	for (_int i = 0; i < OBjects_Data.size(); ++i)
 	{
-		json jData = json::parse(szData);
+		CGameObject::GAMEOBJECT_DESC Desc{};
 
-		pOut.iNumverticesX = jData["iNumverticesX"];
-		pOut.iNumverticesZ = jData["iNumverticesZ"];
+		Desc.isLoad = true;
+		Desc.szObject_Path = OBjects_Data[i].szObject_Path;
+		Desc.szModel_Path = OBjects_Data[i].szModel_Path;
+		XMStoreFloat4x4(&Desc.WolrdMatrix, OBjects_Data[i].objmat);
 
-		_uint iNumVertices = pOut.iNumverticesX * pOut.iNumverticesZ;
-		
-		if (jData["VertexPos"].size() != iNumVertices)
-		{
-			MSG_BOX(TEXT("사이즈 불일치"));
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(LevelIndex, szLayerTag,
+			iPrototypeLevelIndex, OBjects_Data[i].szObject_Path, &Desc)))
 			return E_FAIL;
-		}
-
-		pOut.pVertexData.clear();
-		pOut.pTexcoordData.clear();
-		pOut.pVertexData.reserve(iNumVertices);
-		pOut.pTexcoordData.reserve(iNumVertices);
-
-		for (_uint i = 0; i < iNumVertices; ++i)
-		{
-			const json& vertex = jData["VertexPos"][i];
-
-			_float3 Pos = {};
-			Pos.x = vertex["Position"]["x"];
-			Pos.y = vertex["Position"]["y"];
-			Pos.z = vertex["Position"]["z"];
-			pOut.pVertexData.push_back(Pos);
-
-			_float2 Tex = {};
-			Tex.x = vertex["Texcoord"]["u"];
-			Tex.y = vertex["Texcoord"]["v"];
-			pOut.pTexcoordData.push_back(Tex);
-		}
-		
-		return S_OK;
 	}
-	catch (json::parse_error& e)
-	{
-		MSG_BOX(TEXT("Json 파싱 오류"));
+	return S_OK;
+}
+
+HRESULT CSaveLoader::Load_Objcet(string FilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex)
+{
+
+	return E_NOTIMPL;
+}
+
+HRESULT CSaveLoader::Add_SaveObject(CGameObject* pObject, _int& pOut)
+{
+	if (pObject == nullptr)
 		return E_FAIL;
-	}
+
+	m_Objects.push_back(pObject);
+	Safe_AddRef(pObject);
 	
+	pOut = m_Objects.size() - 1;
+	return S_OK;
+}
+
+HRESULT CSaveLoader::Erase_SaveObject(_int Index)
+{
+	Safe_Release(m_Objects[Index]);
+
+	if (Index >= 0 && Index < m_Objects.size())
+		m_Objects.erase(m_Objects.begin() + Index);
+	else
+		return E_FAIL;
+
+	return S_OK;
 }
 
 CSaveLoader* CSaveLoader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -251,13 +323,12 @@ CSaveLoader* CSaveLoader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 void CSaveLoader::Free()
 {
 	__super::Free();
-	for (size_t i = 0; i < ENUM_CLASS(DATA_TYPE::END); i++)
-	{
-		for (auto& pObject : m_vecObject[i])
-			Safe_Release(pObject);
 
-		m_vecObject[i].clear();
-	}
+	for (auto& pObject : m_Objects)
+		Safe_Release(pObject);
+
+	m_Objects.clear();
+	
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 	Safe_Release(m_pGameInstance);

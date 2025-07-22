@@ -11,6 +11,9 @@ public:
 	{
 		_float		fSpeedPerSec;
 		_float		fRotationPerSec;
+		_float4x4   WolrdMatrix;
+
+		_bool		LoadObjcet = false;
 	}TRANSFORM_DESC;
 
 private:

@@ -1,16 +1,21 @@
 #include "pch.h"
-#include "Engine_Defines.h"
 #include "Edit_Model.h"
 #include "Edit_Mesh.h"
 #include "Edit_MeshMaterial.h"
+#include "Edit_Bone.h"
+#include "Transform.h"
+
 CEdit_Model::CEdit_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CComponent{ pDevice, pContext}
 {
 }
 
-CEdit_Model::CEdit_Model(const CEdit_Model& Prototype) : CComponent(Prototype), m_Meshes(Prototype.m_Meshes), m_iNumMeshes(Prototype.m_iNumMeshes), m_eModelType ( Prototype.m_eModelType),
-m_iNumMaterials(Prototype.m_iNumMaterials), m_Materials(Prototype.m_Materials), m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
-, m_ModelData(Prototype.m_ModelData)
+CEdit_Model::CEdit_Model(const CEdit_Model& Prototype) : CComponent(Prototype), m_Meshes(Prototype.m_Meshes)
+, m_Materials(Prototype.m_Materials), m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
+,m_Bones {Prototype.m_Bones}, m_ModelData(Prototype.m_ModelData)
 {
+	for (auto& pMesh : m_Bones)
+		Safe_AddRef(pMesh);
+	
 	for (auto& pMesh : m_Meshes)
 		Safe_AddRef(pMesh);
 
@@ -18,21 +23,30 @@ m_iNumMaterials(Prototype.m_iNumMaterials), m_Materials(Prototype.m_Materials), 
 		Safe_AddRef(pMaterial);
 }
 
-HRESULT CEdit_Model::Initialize_Prototype(MODELTYPE eModelType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
+HRESULT CEdit_Model::Initialize_Prototype(MODELTYPE eModelType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, void* pArg)
 {
-	m_eModelType = m_ModelData.eModel = eModelType;
+	MODEl_DESC* pDesc = static_cast<MODEl_DESC*>(pArg);
 
+	m_ModelData.szName = pDesc->szModelName;
+	m_ModelData.szModelPath = pDesc->szModelPath;
+	m_ModelData.eModel = eModelType;
+
+	
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
-
+	m_ModelData.PreTransformMatrix = m_PreTransformMatrix;
 	//파일을 어떻게 불러올지 플래그 셋팅
 	_uint iFlag = { aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast };
 	
-	if (MODELTYPE::NONANIM == m_eModelType)
+	if (MODELTYPE::NONANIM == m_ModelData.eModel)
 		iFlag |= aiProcess_PreTransformVertices;
 
 	//파일 로드
 	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
 	if (nullptr == m_pAIScene)
+		return E_FAIL;
+
+	//불러온 파일에 뼈를 생성한다.
+	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Meshes()))
@@ -51,22 +65,39 @@ HRESULT CEdit_Model::Initialize(void* pArg)
 
 HRESULT CEdit_Model::Bind_Materials(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType, _uint iIndex)
 {
-	if (iMeshIndex >= m_iNumMeshes)
+	if (iMeshIndex >= m_ModelData.iNumMeshes)
 		return E_FAIL;
 
 	_uint iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
 
-	if (m_iNumMaterials <= iMaterialIndex)
+	if (m_ModelData.iNumMaterials <= iMaterialIndex)
 		return E_FAIL;
 
 	return m_Materials[iMaterialIndex]->Bind_Shader_Resource(pShader, pConstantName, eTextureType, iIndex);
+}
+
+HRESULT CEdit_Model::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, _uint iMeshIndex)
+{
+	if (iMeshIndex >= m_ModelData.iNumMeshes)
+		return E_FAIL;
+
+	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones);
+}
+
+void CEdit_Model::Play_Animation(_float fTimeDelta)
+{
+	for (auto& pBone : m_Bones)
+	{
+		//뼈들의 행렬을 부모 뼈의 행렬에 맞게 맞춰준다.
+		pBone->Update_CombinedTransformationMatrix(m_PreTransformMatrix, m_Bones);
+	}
 }
 
 _bool CEdit_Model::Selete_Model(CTransform& pTransform, _float3& pOut)
 {
 	for (_int i = 0; i < m_Meshes.size(); ++i)
 	{
-		if (m_Meshes[i]->IsPicked(pTransform, pOut))
+		if (m_Meshes[i]->IsPicked(m_ModelData.eModel, pTransform, pOut))
 			return true;
 	}
 
@@ -86,11 +117,12 @@ HRESULT CEdit_Model::Render(_uint iMeshIndex)
 
 HRESULT CEdit_Model::Ready_Meshes()
 {
-	m_iNumMeshes = m_ModelData.iNumMeshes = m_pAIScene->mNumMeshes;
+	//매쉬 이름 복사
+	m_ModelData.iNumMeshes = m_pAIScene->mNumMeshes;
 	
-	for (size_t i = 0; i < m_iNumMeshes; ++i)
+	for (_uint i = 0; i < m_ModelData.iNumMeshes; ++i)
 	{
-		CEdit_Mesh* pMesh = CEdit_Mesh::Create(m_pDevice, m_pContext, m_pAIScene->mMeshes[i], XMLoadFloat4x4(&m_PreTransformMatrix), &m_ModelData);
+		CEdit_Mesh* pMesh = CEdit_Mesh::Create(m_pDevice, m_pContext, m_ModelData.eModel, m_pAIScene->mMeshes[i], m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix), &m_ModelData);
 		if (nullptr == pMesh)
 			return E_FAIL;
 
@@ -101,26 +133,47 @@ HRESULT CEdit_Model::Ready_Meshes()
 
 HRESULT CEdit_Model::Ready_Materials(const _char* pModelFilePath)
 {
-	m_iNumMaterials = m_ModelData.iNumMaterials = m_pAIScene->mNumMaterials;
+	m_ModelData.iNumMaterials = m_pAIScene->mNumMaterials;
 
-	for (_uint i = 0; i < m_iNumMaterials; ++i)
+	for (size_t i = 0; i < m_ModelData.iNumMaterials; i++)
 	{
+
 		CEdit_MeshMaterial* pMeshMaterial = CEdit_MeshMaterial::Create(m_pDevice, m_pContext, pModelFilePath, m_pAIScene->mMaterials[i], &m_ModelData);
 		if (nullptr == pMeshMaterial)
 			return E_FAIL;
 
 		m_Materials.push_back(pMeshMaterial);
+	}
 
+
+	return S_OK;
+}
+
+HRESULT CEdit_Model::Ready_Bones(const aiNode* pAINode, _int iParentIndex)
+{
+	
+	CEdit_Bone* pBone = CEdit_Bone::Create(pAINode, iParentIndex);
+	if (nullptr == pBone)
+		return E_FAIL;
+
+	m_Bones.push_back(pBone);
+
+	//부모 뼈 인덱스
+	_int   iIndex = m_Bones.size() - 1;
+
+	for (size_t i = 0; i < pAINode->mNumChildren; i++)
+	{
+		Ready_Bones(pAINode->mChildren[i], iIndex);
 	}
 
 	return S_OK;
 }
 
-CEdit_Model* CEdit_Model::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODELTYPE eModelType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
+CEdit_Model* CEdit_Model::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODELTYPE eModelType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, void* pArg)
 {
 	CEdit_Model* pInstance = new CEdit_Model(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(eModelType, pModelFilePath, PreTransformMatrix)))
+	if (FAILED(pInstance->Initialize_Prototype(eModelType, pModelFilePath, PreTransformMatrix, pArg)))
 	{
 		MSG_BOX(TEXT("Failed to Created : CEdit_Model"));
 		Safe_Release(pInstance);
@@ -145,6 +198,11 @@ CComponent* CEdit_Model::Clone(void* pArg)
 void CEdit_Model::Free()
 {
 	__super::Free();
+
+	for (auto& pBone : m_Bones)
+		Safe_Release(pBone);
+
+	m_Bones.clear();
 
 	for (auto& pMesh : m_Meshes)
 		Safe_Release(pMesh);

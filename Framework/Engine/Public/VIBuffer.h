@@ -16,7 +16,7 @@ public:
 public:
 	HRESULT					Bind_Resources();
 	HRESULT					Render();
-	_bool					IsPicked(class CTransform& pTransform, _float3& pOut);
+	virtual _bool			IsPicked(class CTransform& pTransform, _float3& pOut);
 
 protected:
 	ID3D11Buffer*			m_pVB = { nullptr };
@@ -30,8 +30,6 @@ protected:
 	DXGI_FORMAT				m_eIndexFormat = {};
 	D3D_PRIMITIVE_TOPOLOGY	m_ePrimitiveType = {};
 
-	_float3*				m_pVertexPositions = { nullptr };
-	_float2*				m_pVertexTex = { nullptr };
 	_uint*					m_pIndices = { nullptr };
 public:
 	virtual CComponent*		Clone(void* pArg) = 0;

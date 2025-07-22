@@ -24,6 +24,9 @@ HRESULT CTransform::Initialize(void* pArg)
 	m_fSpeedPerSec = pDesc->fSpeedPerSec;
 	m_fRotationPerSec = pDesc->fRotationPerSec;
 
+	if(pDesc->LoadObjcet)
+		m_WorldMatrix = pDesc->WolrdMatrix;
+
 	return S_OK;
 }
 
