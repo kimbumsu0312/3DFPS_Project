@@ -24,9 +24,20 @@ HRESULT CTransform::Initialize(void* pArg)
 	m_fSpeedPerSec = pDesc->fSpeedPerSec;
 	m_fRotationPerSec = pDesc->fRotationPerSec;
 
-	if(pDesc->LoadObjcet)
-		m_WorldMatrix = pDesc->WolrdMatrix;
+	return S_OK;
+}
 
+HRESULT CTransform::Initialize(void* pArg, _float4x4 WorldMat)
+{
+	if (nullptr == pArg)
+		return S_OK;
+
+	TRANSFORM_DESC* pDesc = static_cast<TRANSFORM_DESC*>(pArg);
+
+	m_fSpeedPerSec = pDesc->fSpeedPerSec;
+	m_fRotationPerSec = pDesc->fRotationPerSec;
+
+	m_WorldMatrix = WorldMat;
 	return S_OK;
 }
 

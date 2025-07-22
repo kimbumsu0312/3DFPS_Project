@@ -38,11 +38,13 @@ HRESULT CSaveLoader::File_Save_TerrainLevel(DATA_TYPE eData, string szFilename, 
 	return S_OK;
 }
 
-void CSaveLoader::Clear_Object(DATA_TYPE eData)
+void CSaveLoader::Clear_Object()
 {
 	for (auto& pObject : m_Objects)
+	{
+		pObject->SetDead();
 		Safe_Release(pObject);
-
+	}
 	m_Objects.clear();
 }
 
@@ -198,6 +200,86 @@ HRESULT CSaveLoader::Save_NonAnimMesh(string szFilename, SAVE_MODEL* pData)
 
 HRESULT CSaveLoader::Save_AnimMesh(string szFilename, SAVE_MODEL* pData)
 {
+	string FilePath = "../Bin/Data/Object/" + szFilename + ".json";
+	string MeshFilePath = "../Bin/Data/Object/" + szFilename + "Data.dat";
+
+	ofstream out(MeshFilePath, ios::binary);
+
+	if (!out)
+	{
+		MSG_BOX(TEXT("저장 파일 열기 실패"));
+		return E_FAIL;
+	}
+
+	out.write(reinterpret_cast<const char*>(&pData->PreTransformMatrix), sizeof(XMFLOAT4X4));
+	size_t iMeshCount = pData->iNumMeshes;
+	out.write(reinterpret_cast<const char*>(&iMeshCount), sizeof(iMeshCount));
+
+	for (const auto& mesh : pData->Meshs)
+	{
+		size_t iNameSize = mesh.szName.size();
+		out.write(reinterpret_cast<const char*>(&iNameSize), sizeof(iNameSize));
+		out.write(reinterpret_cast<const char*>(mesh.szName.c_str()), iNameSize * sizeof(wchar_t));
+
+		out.write(reinterpret_cast<const char*>(&mesh.iMaterialIndex), sizeof(mesh.iMaterialIndex));
+		out.write(reinterpret_cast<const char*>(&mesh.iNumVertices), sizeof(mesh.iNumVertices));
+		out.write(reinterpret_cast<const char*>(&mesh.iVertexStride), sizeof(mesh.iVertexStride));
+		out.write(reinterpret_cast<const char*>(&mesh.iNumIndices), sizeof(mesh.iNumIndices));
+		out.write(reinterpret_cast<const char*>(&mesh.iNumFaces), sizeof(mesh.iNumFaces));
+		size_t ifaceCount = mesh.iFaces.size();
+		out.write(reinterpret_cast<const char*>(&ifaceCount), sizeof(ifaceCount));
+		out.write(reinterpret_cast<const char*>(mesh.iFaces.data()), ifaceCount * sizeof(Face));
+
+		size_t ivertexCount = mesh.AnimVertex.size();
+		out.write(reinterpret_cast<const char*>(&ivertexCount), sizeof(ivertexCount));
+		out.write(reinterpret_cast<const char*>(mesh.AnimVertex.data()), ivertexCount * sizeof(VTXANIMMESH));
+	}
+	out.close();
+
+	json jData;
+
+	jData["Model_name"] = pData->szName;
+	jData["Model_path"] = pData->szModelPath;
+	jData["Model_type"] = pData->eModel;
+	jData["Mesh_Path"] = MeshFilePath;
+	jData["iNumMeshes"] = pData->iNumMeshes;
+	jData["iNumMaterials"] = pData->iNumMaterials;
+
+	for (_int i = 0; i < pData->iNumMaterials; ++i)
+	{
+		json jMeshMaterial;
+		for (_uint j = 0; j < pData->MeshMaterials[i].Materials.size(); ++j)
+		{
+			json jMaterial;
+			jMaterial["iTexCount"] = pData->MeshMaterials[i].Materials[j].iTexCount;
+
+			for (_uint k = 0; k < pData->MeshMaterials[i].Materials[j].iTexCount; ++j)
+			{
+				json szFullPath;
+				szFullPath["Path"] = pData->MeshMaterials[i].Materials[j].szFullPath[k];
+
+				jMaterial["szFullPath"].push_back(szFullPath);
+			}
+
+			jMeshMaterial["Materials"].push_back(jMaterial);
+		}
+
+		jData["MeshMaterial"].push_back(jMeshMaterial);
+	}
+
+	ofstream file(FilePath);
+	if (file.is_open())
+	{
+		file << jData.dump(4);
+		file.close();
+		MSG_BOX(TEXT("데이터 저장 완료"));
+	}
+	else
+	{
+		MSG_BOX(TEXT("데이터 저장 실패"));
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 

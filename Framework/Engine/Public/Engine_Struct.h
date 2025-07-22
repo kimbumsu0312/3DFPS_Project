@@ -29,6 +29,15 @@ namespace Engine
 
 	}LIGHT_DESC;
 
+	typedef struct tagKeyFrame
+	{
+		XMFLOAT3	vScale;
+		XMFLOAT4	vRotation;
+		XMFLOAT3	vTranslation;
+
+		float		fTrackPosition;
+	}KEYFRAME;
+
 	//쉐이더 관련 구조체
 	typedef struct tagVertexPositionTexcoord
 	{

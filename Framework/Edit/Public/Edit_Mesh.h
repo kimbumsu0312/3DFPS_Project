@@ -23,6 +23,7 @@ private:
 	_uint					m_iMaterialIndex = {};
 	vector<_int>			m_BoneIndices;
 	_float4x4				m_BoneMatrices[g_iMaxNumBones] = {};
+	XMMATRIX				m_PreTransformMatrix;
 
 	vector<_float4x4>		m_OffsetMatrices;
 

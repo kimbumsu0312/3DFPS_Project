@@ -22,6 +22,7 @@ HRESULT CMapObject::Initialize(void* pArg)
 	if (pArg != nullptr)
 	{
 		MODEL_OBJECT_DESC* pDesc = static_cast<MODEL_OBJECT_DESC*>(pArg);
+		m_ObjData.szObject_Path = pDesc->szObject_Path;
 		m_ObjData.szModel_Path = m_szModelPath = pDesc->szModel_Path;
 	}
 	if (FAILED(Ready_Components()))
@@ -50,6 +51,8 @@ HRESULT CMapObject::Initialize(void* pArg)
 
 	m_pGameInstance->Subscribe<Event_Model_Index_Set>([&](const Event_Model_Index_Set& e) {if (e.i < m_iIndex) { m_iIndex -= 1; } });
 
+	if(m_pModelCom->Get_AnimationNum() > 0)
+		m_pModelCom->Set_Animations(1);
 	return S_OK;
 }
 

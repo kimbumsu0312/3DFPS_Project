@@ -17,7 +17,7 @@ HRESULT CEdit_Mesh::Initialize_Prototype(MODELTYPE eType, const aiMesh* pAIMesh,
 {
 	//매쉬 이름 복사
 	strcpy_s(m_szName, pAIMesh->mName.data);
-
+	m_PreTransformMatrix = PreTransformMatrix;
 	int iLength = MultiByteToWideChar(CP_ACP, 0, m_szName, -1, NULL, 0);
 
 	wstring szMeshName(iLength, L'\0');
@@ -54,6 +54,8 @@ HRESULT CEdit_Mesh::Initialize_Prototype(MODELTYPE eType, const aiMesh* pAIMesh,
 	_uint	iNumIndices = {};
 
 	m_MeshData.iNumFaces = pAIMesh->mNumFaces;
+	m_pIndices = new _uint[m_iNumIndices];
+	ZeroMemory(m_pIndices, sizeof(_uint) * m_iNumIndices);
 
 	for (size_t i = 0; i < pAIMesh->mNumFaces; i++)
 	{
@@ -68,8 +70,6 @@ HRESULT CEdit_Mesh::Initialize_Prototype(MODELTYPE eType, const aiMesh* pAIMesh,
 
 	D3D11_SUBRESOURCE_DATA	IBInitialData{};
 	IBInitialData.pSysMem = pIndices;
-	m_pIndices = new _uint[m_iNumIndices];
-	ZeroMemory(m_pIndices, sizeof(_uint) * m_iNumIndices);
 	
 	memcpy(m_pIndices, pIndices, sizeof(_uint) * m_iNumIndices);
 	if (FAILED(m_pDevice->CreateBuffer(&IBDesc, &IBInitialData, &m_pIB)))
@@ -121,8 +121,15 @@ _bool CEdit_Mesh::IsPicked(MODELTYPE eType, CTransform& pTransform, _float3& pOu
 		if(MODELTYPE::NONANIM == eType)
 			IsPicked = m_pGameInstance->isPickedInLocalSpace(m_MeshData.NonAnimVertex[i0].vPosition, m_MeshData.NonAnimVertex[i1].vPosition, m_MeshData.NonAnimVertex[i2].vPosition, vLocalPickPos);
 		else
-			IsPicked = m_pGameInstance->isPickedInLocalSpace(m_MeshData.AnimVertex[i0].vPosition, m_MeshData.AnimVertex[i1].vPosition, m_MeshData.AnimVertex[i2].vPosition, vLocalPickPos);
+		{
+			_float3 vPos0{}, vPos1{}, vPos2{};
+			
+			XMStoreFloat3(&vPos0, XMVector3TransformCoord(XMLoadFloat3(&m_MeshData.AnimVertex[i0].vPosition), m_PreTransformMatrix));
+			XMStoreFloat3(&vPos1, XMVector3TransformCoord(XMLoadFloat3(&m_MeshData.AnimVertex[i1].vPosition), m_PreTransformMatrix));
+			XMStoreFloat3(&vPos2, XMVector3TransformCoord(XMLoadFloat3(&m_MeshData.AnimVertex[i2].vPosition), m_PreTransformMatrix));
 
+			IsPicked = m_pGameInstance->isPickedInLocalSpace(vPos0, vPos1, vPos2, vLocalPickPos);
+		}
 		if (IsPicked)
 		{
 			XMVECTOR vWorldPos = XMVector3TransformCoord(XMLoadFloat3(&vLocalPickPos), pTransform.Get_WorldMatrix());
@@ -133,6 +140,8 @@ _bool CEdit_Mesh::IsPicked(MODELTYPE eType, CTransform& pTransform, _float3& pOu
 	}
 
 	return IsPicked;
+
+
 }
 
 HRESULT CEdit_Mesh::Ready_Vertices_For_NonAnim(const aiMesh* pAIMesh, _fmatrix PreTransformMatrix)
@@ -157,10 +166,10 @@ HRESULT CEdit_Mesh::Ready_Vertices_For_NonAnim(const aiMesh* pAIMesh, _fmatrix P
 		memcpy(&pVertices[i].vBinormal, &pAIMesh->mBitangents[i], sizeof(_float3));
 		memcpy(&pVertices[i].vTexcoord, &pAIMesh->mTextureCoords[0][i], sizeof(_float2));
 
-		m_MeshData.NonAnimVertex.push_back(pVertices[i]);
 
 		XMStoreFloat3(&pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PreTransformMatrix));
 		XMStoreFloat3(&pVertices[i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vNormal), PreTransformMatrix));
+		m_MeshData.NonAnimVertex.push_back(pVertices[i]);
 	}
 
 	D3D11_SUBRESOURCE_DATA	VBInitialData{};

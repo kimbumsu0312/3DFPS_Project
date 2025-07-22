@@ -114,6 +114,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 			XMStoreFloat3(&pVertices[iIndices[3]].vNormal, XMLoadFloat3(&pVertices[iIndices[3]].vNormal) + vNormal);
 		}
 	}
+
 	memcpy(m_pIndices, pIndices, sizeof(_uint) * m_iNumIndices);
 	//pVertices에 담기 vNormal 값을 모두 노말라이즈 시킨다.
 	for (size_t i = 0; i < m_iNumVertices; i++)

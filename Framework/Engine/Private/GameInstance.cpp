@@ -379,9 +379,9 @@ HRESULT CGameInstance::Load_Level(string FilePath, _uint iLevelIndex, _wstring s
 	return m_pSaveLoader->Load_Level(FilePath, iLevelIndex, szLayerTag, iPrototypeLevelIndex);
 }
 
-void CGameInstance::Clear_Object(DATA_TYPE eData)
+void CGameInstance::Clear_Object()
 {
-	m_pSaveLoader->Clear_Object(eData);
+	m_pSaveLoader->Clear_Object();
 }
 
 void CGameInstance::Release_Engine()
