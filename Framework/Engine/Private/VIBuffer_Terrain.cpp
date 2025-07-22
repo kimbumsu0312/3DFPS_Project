@@ -6,7 +6,7 @@ CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext*
 {
 }
 
-CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain& Prototype) : CVIBuffer(Prototype), m_iNumverticesX (Prototype.m_iNumverticesX), m_iNumverticesZ(Prototype.m_iNumverticesZ)
+CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain& Prototype) : CVIBuffer(Prototype), m_TerrainData(Prototype.m_TerrainData)
 {
 
 }
@@ -35,9 +35,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 	if (!ReadFile(hFile, &ih, sizeof ih, &dwByte, nullptr))
 		return E_FAIL;
 
-	m_iNumverticesX = ih.biWidth;
-	m_iNumverticesZ = ih.biHeight;
-	m_iNumVertices = m_iNumverticesX * m_iNumverticesZ;
+	m_TerrainData.iNumverticesX = ih.biWidth;
+	m_TerrainData.iNumverticesZ = ih.biHeight;
+	m_iNumVertices = m_TerrainData.iNumverticesX * m_TerrainData.iNumverticesZ;
 
 	_uint* pPixels = new _uint[m_iNumVertices];
 
@@ -47,7 +47,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 	CloseHandle(hFile);
 
 	m_iVertexStride = sizeof(VTXNORTEX);
-	m_iNumIndices = (m_iNumverticesX - 1) * (m_iNumverticesZ - 1) * 2 * 3;
+	m_iNumIndices = (m_TerrainData.iNumverticesX - 1) * (m_TerrainData.iNumverticesZ - 1) * 2 * 3;
 	m_iIndexStride = 4;
 	m_iNumVertexBuffers = 1;
 	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
@@ -55,36 +55,34 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 
 	m_pIndices = new _uint[m_iNumIndices];
 	ZeroMemory(m_pIndices, sizeof(_uint) * m_iNumIndices);
-	m_pVertexPositions = new _float3[m_iNumVertices];
-	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
-	m_pVertexTex = new _float2[m_iNumVertices];
-	ZeroMemory(m_pVertexTex, sizeof(_float2) * m_iNumVertices);
 
 	VTXNORTEX* pVertices = new VTXNORTEX[m_iNumVertices];
 
-	for (_uint i = 0; i < m_iNumverticesZ; i++)
+	for (_uint i = 0; i < m_TerrainData.iNumverticesZ; i++)
 	{
-		for (_uint j = 0; j < m_iNumverticesX; j++)
+		for (_uint j = 0; j < m_TerrainData.iNumverticesX; j++)
 		{
-			_uint	iIndex = i * m_iNumverticesX + j;
+			_uint	iIndex = i * m_TerrainData.iNumverticesX + j;
 
-			pVertices[iIndex].vPosition = m_pVertexPositions[iIndex] = _float3((float)j, (pPixels[iIndex] & 0x000000ff) / 10.0f, (float)i);
+			pVertices[iIndex].vPosition = _float3((float)j, (pPixels[iIndex] & 0x000000ff) / 10.0f, (float)i);
+			m_TerrainData.pVertexPositions.push_back(pVertices[iIndex].vPosition);
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
-			pVertices[iIndex].vTexcoord = m_pVertexTex[iIndex] = _float2((float)j / (m_iNumverticesX - 1.f), i / (m_iNumverticesZ - 1.f));
+			pVertices[iIndex].vTexcoord = _float2((float)j / (m_TerrainData.iNumverticesX - 1.f), i / (m_TerrainData.iNumverticesZ - 1.f));
+			m_TerrainData.pVertexTex.push_back(pVertices[iIndex].vTexcoord);
 		}
 	}
 
 	_uint* pIndices = new _uint[m_iNumIndices];
 	_uint iNumIndices = {};
 
-	for (_uint i = 0; i < m_iNumverticesZ - 1; ++i)
+	for (_uint i = 0; i < m_TerrainData.iNumverticesZ - 1; ++i)
 	{
-		for (_uint j = 0; j < m_iNumverticesX - 1; ++j)
+		for (_uint j = 0; j < m_TerrainData.iNumverticesX - 1; ++j)
 		{
-			_uint iIndex = i * m_iNumverticesX + j;
+			_uint iIndex = i * m_TerrainData.iNumverticesX + j;
 			_uint iIndices[] = {
-				iIndex + m_iNumverticesX,
-				iIndex + m_iNumverticesX + 1,
+				iIndex + m_TerrainData.iNumverticesX,
+				iIndex + m_TerrainData.iNumverticesX + 1,
 				iIndex + 1,
 				iIndex
 			};
@@ -168,19 +166,19 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 
 	if (pDesc->Terrain_Data == nullptr)
 	{
-		m_iNumverticesX = pDesc->iNumverticesX;
-		m_iNumverticesZ = pDesc->iNumverticesZ;
+		m_TerrainData.iNumverticesX = pDesc->iNumverticesX;
+		m_TerrainData.iNumverticesZ = pDesc->iNumverticesZ;
 	}
 	else
 	{
-		m_iNumverticesX = pDesc->Terrain_Data->iNumverticesX;
-		m_iNumverticesZ = pDesc->Terrain_Data->iNumverticesZ;
+		m_TerrainData.iNumverticesX = pDesc->Terrain_Data->iNumverticesX;
+		m_TerrainData.iNumverticesZ = pDesc->Terrain_Data->iNumverticesZ;
 	}
 
-	m_iNumVertices = m_iNumverticesX * m_iNumverticesZ;
+	m_iNumVertices = m_TerrainData.iNumverticesX * m_TerrainData.iNumverticesZ;
 
 	m_iVertexStride = sizeof(VTXNORTEX);
-	m_iNumIndices = (m_iNumverticesX - 1) * (m_iNumverticesZ - 1) * 2 * 3;
+	m_iNumIndices = (m_TerrainData.iNumverticesX - 1) * (m_TerrainData.iNumverticesZ - 1) * 2 * 3;
 	
 	m_iIndexStride = 4;
 	m_iNumVertexBuffers = 1;
@@ -190,37 +188,43 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 	VTXNORTEX* pVertices = new VTXNORTEX[m_iNumVertices];
 	m_pIndices = new _uint[m_iNumIndices];
 	ZeroMemory(m_pIndices, sizeof(_uint) * m_iNumIndices);
-	m_pVertexPositions = new _float3[m_iNumVertices];
-	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
-	m_pVertexTex = new _float2[m_iNumVertices];
-	ZeroMemory(m_pVertexTex, sizeof(_float2) * m_iNumVertices);
 
-	for (_uint i = 0; i < m_iNumverticesZ; i++)
+	for (_uint i = 0; i < m_TerrainData.iNumverticesZ; i++)
 	{
-		for (_uint j = 0; j < m_iNumverticesX; j++)
+		for (_uint j = 0; j < m_TerrainData.iNumverticesX; j++)
 		{
-			_uint	iIndex = i * m_iNumverticesX + j;
+			_uint	iIndex = i * m_TerrainData.iNumverticesX + j;
 			if (pDesc->Terrain_Data == nullptr)
-				pVertices[iIndex].vPosition = m_pVertexPositions[iIndex] = _float3((float)j, 0.f, (float)i);
+			{
+				pVertices[iIndex].vPosition = _float3((float)j, 0.f, (float)i);
+				m_TerrainData.pVertexPositions.push_back(pVertices[iIndex].vPosition);
+				pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
+				pVertices[iIndex].vTexcoord = _float2(j / (m_TerrainData.iNumverticesX - 1.f), i / (m_TerrainData.iNumverticesZ - 1.f));
+				m_TerrainData.pVertexTex.push_back(pVertices[iIndex].vTexcoord);
+			}
 			else
-				pVertices[iIndex].vPosition = m_pVertexPositions[iIndex] = _float3((float)j, pDesc->Terrain_Data->pVertexData[iIndex].y, (float)i);
-	
-			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
-			pVertices[iIndex].vTexcoord = m_pVertexTex[iIndex] = _float2((float)j / (m_iNumverticesX - 1.f), i / (m_iNumverticesZ - 1.f));
+			{
+				pVertices[iIndex].vPosition = pDesc->Terrain_Data->pVertexPositions[iIndex];
+				m_TerrainData.pVertexPositions.push_back(pVertices[iIndex].vPosition);
+				pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
+				pVertices[iIndex].vTexcoord = pDesc->Terrain_Data->pVertexTex[iIndex];
+				m_TerrainData.pVertexTex.push_back(pVertices[iIndex].vTexcoord);
+			}
+
 		}
 	}
 
 	_uint* pIndices = new _uint[m_iNumIndices];
 	_uint iNumIndices = {};
 
-	for (_uint i = 0; i < m_iNumverticesZ - 1; ++i)
+	for (_uint i = 0; i < m_TerrainData.iNumverticesZ - 1; ++i)
 	{
-		for (_uint j = 0; j < m_iNumverticesX - 1; ++j)
+		for (_uint j = 0; j < m_TerrainData.iNumverticesX - 1; ++j)
 		{
-			_uint iIndex = i * m_iNumverticesX + j;
+			_uint iIndex = i * m_TerrainData.iNumverticesX + j;
 			_uint iIndices[] = {
-				iIndex + m_iNumverticesX,
-				iIndex + m_iNumverticesX + 1,
+				iIndex + m_TerrainData.iNumverticesX,
+				iIndex + m_TerrainData.iNumverticesX + 1,
 				iIndex + 1,
 				iIndex
 			};
@@ -330,25 +334,25 @@ void CVIBuffer_Terrain::Terrain_Hight(bool raise, _float brushRadius, _float int
 			_int gridZ = (_int)((worldPos.z) / 1.f);
 
 			// 경계 체크
-			if (gridX < 0 || gridX >= m_iNumverticesX || gridZ < 0 || gridZ >= m_iNumverticesZ)
+			if (gridX < 0 || gridX >= m_TerrainData.iNumverticesX || gridZ < 0 || gridZ >= m_TerrainData.iNumverticesZ)
 				continue;
 
 			// 정점 인덱스 계산
-			_uint idx = gridZ * m_iNumverticesX + gridX;
+			_uint idx = gridZ * m_TerrainData.iNumverticesX + gridX;
 
 			// 높이 변경 (Y축만 조정)
 			_float fHeight = (raise ? 1.0f : -1.0f) * intensity * falloff;
-			if (m_pVertexPositions[idx].y + fHeight <= vMinMax.x )
+			if (m_TerrainData.pVertexPositions[idx].y + fHeight <= vMinMax.x )
 			{
-				m_pVertexPositions[idx].y = vMinMax.x;
+				m_TerrainData.pVertexPositions[idx].y = vMinMax.x;
 			}
-			else if (m_pVertexPositions[idx].y + fHeight >= vMinMax.y)
+			else if (m_TerrainData.pVertexPositions[idx].y + fHeight >= vMinMax.y)
 			{
-				m_pVertexPositions[idx].y = vMinMax.y;
+				m_TerrainData.pVertexPositions[idx].y = vMinMax.y;
 			}
 			else
 			{
-				m_pVertexPositions[idx].y += fHeight;
+				m_TerrainData.pVertexPositions[idx].y += fHeight;
 			}
 		}
 	}
@@ -356,24 +360,41 @@ void CVIBuffer_Terrain::Terrain_Hight(bool raise, _float brushRadius, _float int
 	UpdateTerrain();
 }
 
-void CVIBuffer_Terrain::Save_Terrain(SAVE_TERRAIN& pArg)
+const SAVE_TERRAIN& CVIBuffer_Terrain::Save_Terrain()
 {
-	pArg.pVertexData.clear();
-	pArg.pTexcoordData.clear();
+	return m_TerrainData;
+}
 
-	pArg.iNumverticesX = m_iNumverticesX;
-	pArg.iNumverticesZ = m_iNumverticesZ;
+_bool CVIBuffer_Terrain::IsPicked(CTransform& pTransform, _float3& pOut)
+{
+	_float3	vLocalPickPos = { pOut };
 
-	for (_uint i = 0; i < m_iNumVertices; ++i)
+	_vector vWolrdPickPos = {};
+	_bool	IsPicked = false;
+
+	if (D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST != m_ePrimitiveType)
+		return false;
+
+	m_pGameInstance->TransformToLocalSpace(pTransform);
+	_uint* pIndices = reinterpret_cast<_uint*>(m_pIndices);
+
+	for (_int i = 0; i < m_iNumIndices / 3; i++)
 	{
-		_float3 Pos = {};
-		_float2 Tex = {};
+		_uint i0 = pIndices[i * 3 + 0];
+		_uint i1 = pIndices[i * 3 + 1];
+		_uint i2 = pIndices[i * 3 + 2];
 
-		Pos = m_pVertexPositions[i];
-		Tex = m_pVertexTex[i];
-		pArg.pVertexData.push_back(Pos);
-		pArg.pTexcoordData.push_back(Tex);
+		IsPicked = m_pGameInstance->isPickedInLocalSpace(m_TerrainData.pVertexPositions[i0], m_TerrainData.pVertexPositions[i1], m_TerrainData.pVertexPositions[i2], vLocalPickPos);
+		if (IsPicked)
+		{
+			XMVECTOR vWorldPos = XMVector3TransformCoord(XMLoadFloat3(&vLocalPickPos), pTransform.Get_WorldMatrix());
+			XMStoreFloat3(&pOut, vWorldPos);
+			break;
+		}
+
 	}
+
+	return IsPicked;
 }
 
 void CVIBuffer_Terrain::UpdateTerrain()
@@ -387,8 +408,8 @@ void CVIBuffer_Terrain::UpdateTerrain()
 
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
-		pVertexData[i].vPosition = m_pVertexPositions[i];
-		pVertexData[i].vTexcoord = m_pVertexTex[i];
+		pVertexData[i].vPosition = m_TerrainData.pVertexPositions[i];
+		pVertexData[i].vTexcoord = m_TerrainData.pVertexTex[i];
 	}
 
 	m_pContext->Unmap(m_pVB, 0);

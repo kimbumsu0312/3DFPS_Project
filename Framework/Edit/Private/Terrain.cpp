@@ -19,10 +19,17 @@ HRESULT CTerrain::Initialize_Prototype()
 
 HRESULT CTerrain::Initialize_Prototype(void* pArg)
 {
+    TERRAIN_DESC* pDesc = static_cast<TERRAIN_DESC*>(pArg);
+    CVIBuffer_Terrain::VIBUFFER_TERRAIN_DESC Desc{};
+
+    Desc.iNumverticesX = pDesc->iNumverticesX;
+    Desc.iNumverticesZ = pDesc->iNumverticesZ;
+    Desc.Terrain_Data = pDesc->Terrain_Data;
+
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-    if (FAILED(Ready_Components(pArg)))
+    if (FAILED(Ready_Components(&Desc)))
         return E_FAIL;
 
     m_pGameInstance->Subscribe<Clear_Map>([&](const Clear_Map& e) {m_bIsDead = true; });
@@ -32,10 +39,18 @@ HRESULT CTerrain::Initialize_Prototype(void* pArg)
 
 HRESULT CTerrain::Initialize(void* pArg)
 {
+    TERRAIN_DESC* pDesc = static_cast<TERRAIN_DESC*>(pArg);
+
+    CVIBuffer_Terrain::VIBUFFER_TERRAIN_DESC Desc{};
+
+    Desc.iNumverticesX = pDesc->iNumverticesX;
+    Desc.iNumverticesZ = pDesc->iNumverticesZ;
+    Desc.Terrain_Data = pDesc->Terrain_Data;
+
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-    if (FAILED(Ready_Components(pArg)))
+    if (FAILED(Ready_Components(&Desc)))
         return E_FAIL;
 
     m_pGameInstance->Subscribe<Clear_Map>([&](const Clear_Map& e) {m_bIsDead = true; });
@@ -62,7 +77,8 @@ void CTerrain::Update(_float fTimeDelta)
                 Desc.vPos.y = vSetModelPos.y;
                 Desc.vPos.z = vSetModelPos.z;
                 Desc.vPos.w = 1.f;
-                Desc.szModelPath = CImgui_Manger::GetInstance()->Get_ModelPath();
+                Desc.szModel_Path = CImgui_Manger::GetInstance()->Get_ModelPath();
+                Desc.szObject_Path = TEXT("Prototype_GameObject_Player");
 
                 if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Model"),
                     ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"), &Desc)))
@@ -115,12 +131,6 @@ HRESULT CTerrain::Render()
     m_pVIBufferCom->Render();
 
     return S_OK;
-}
-
-void* CTerrain::GetDesc()
-{
-    m_pVIBufferCom->Save_Terrain(m_Desc);
-    return &m_Desc;
 }
 
 HRESULT CTerrain::Ready_Components(void* pArg)

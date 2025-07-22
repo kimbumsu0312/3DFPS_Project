@@ -9,11 +9,16 @@ private:
 	virtual ~CSaveLoader() = default;
 
 public:
-	HRESULT						File_Save(DATA_TYPE eData, string szFilename);
+	HRESULT						File_Save_TerrainLevel(DATA_TYPE eData, string szFilename, CVIBuffer* pVIBuffer);
+	HRESULT						File_Save_Object(string szFilename, MODELTYPE eType, SAVE_MODEL* pData);
+
 	HRESULT						Load_Terrain(string FilePath, SAVE_TERRAIN& pOut);
-	
-	HRESULT						Save_Object(string szFilename, const SAVE_MODEL& pData);
-	void						Add_OBjcet(DATA_TYPE eData, CGameObject* pGameObject);
+	HRESULT						Load_Level(string FilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex );
+	HRESULT						Load_Objcet(string FilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex);
+
+
+	HRESULT						Add_SaveObject(class CGameObject* pObject, _int &pOut);
+	HRESULT						Erase_SaveObject(_int Index);
 	void						Clear_Object(DATA_TYPE eData);
 private:
 	ID3D11Device*				m_pDevice;
@@ -21,11 +26,13 @@ private:
 	
 	class CGameInstance*		m_pGameInstance = { nullptr };
 
+	vector<class CGameObject*>	m_Objects;
+private:
+	HRESULT						TerrainSave(string szFilename, CVIBuffer* pVIBuffer);
+	HRESULT						LevelSave(string szFilename);
 
-	vector<class CGameObject*>	m_vecObject[ENUM_CLASS(DATA_TYPE::END)];
-
-	HRESULT						Save_Terrain(string FilePath);
-
+	HRESULT						Save_NonAnimMesh(string szFilename, SAVE_MODEL* pData);
+	HRESULT						Save_AnimMesh(string szFilename, SAVE_MODEL* pData);
 public:
 	static CSaveLoader*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void				Free() override;

@@ -32,11 +32,16 @@ HRESULT CGameObject::Initialize_Prototype()
 
 HRESULT CGameObject::Initialize(void* pArg)
 {
+	GAMEOBJECT_DESC* pDesc = static_cast<GAMEOBJECT_DESC*>(pArg);
+	
+	m_ObjData.szObject_Path = pDesc->szObject_Path;
+	pDesc->LoadObjcet = pDesc->isLoad;
+
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Initialize(pArg)))
+	if (FAILED(m_pTransformCom->Initialize(pDesc)))
 		return E_FAIL;
 
 	m_Components.emplace(TEXT("Com_Transform"), m_pTransformCom);
@@ -66,6 +71,13 @@ HRESULT CGameObject::Render()
 void CGameObject::On_Dead()
 {
 	m_pGameInstance->GarbageSweep(this);
+}
+
+const OBJCET_DATA& CGameObject::Get_Data()
+{
+	m_ObjData.objmat = m_pTransformCom->Get_WorldMatrix();
+
+	return m_ObjData;
 }
 
 HRESULT CGameObject::Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg)

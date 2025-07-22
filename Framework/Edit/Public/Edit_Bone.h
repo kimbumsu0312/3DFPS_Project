@@ -10,15 +10,21 @@ private:
 	virtual ~CEdit_Bone() = default;
 
 public:
-	HRESULT				Initialize(const aiNode* pAINode);
-	
+	_matrix				Get_CombinedTransformationMatrix() const {
+		return XMLoadFloat4x4(&m_CombinedTransformationMatrix);}
+
+	HRESULT				Initialize(const aiNode* pAINode, _int iParentBoneIndex);
+	void				Update_CombinedTransformationMatrix(const _float4x4& PreTransformMatrix, const vector<CEdit_Bone*>& Bones);
+
+	_bool				Compare_Name(const _char* pName) {	return !strcmp(pName, m_szName);}
 private:
 	_char				m_szName[MAX_PATH] = {};
 	_float4x4			m_TransformationMatrix = {};
 	_float4x4			m_CombinedTransformationMatrix = {};
 
+	_int				m_iParentBoneIndex = { -1 };
 public:
-	static CEdit_Bone*	Create(const aiNode* pAINode);
+	static CEdit_Bone*	Create(const aiNode* pAINode, _int iParentBoneIndex);
 	virtual void		Free() override;
 };
 NS_END

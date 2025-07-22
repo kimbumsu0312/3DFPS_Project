@@ -131,10 +131,15 @@ public:
 
 #pragma region SaveLoader
 public:
-	_bool						File_Save(DATA_TYPE eData, string szFilename);	
-	HRESULT						Save_Object(string szFilename, const SAVE_MODEL& pData);
+	HRESULT						File_Save_TerrainLevel(DATA_TYPE eData, string szFilename, CVIBuffer* pVIBuffer);
+	HRESULT						File_Save_Object(string szFilename, MODELTYPE eType, SAVE_MODEL* pData);
+
+	HRESULT						Add_SaveObject(class CGameObject* pObject, _int& pOut);
+	HRESULT						Erase_SaveObject(_int iIndex);
+
 	HRESULT						Load_Terrain(string FilePath, SAVE_TERRAIN& pOut);
-	void						Add_OBjcet(DATA_TYPE eData, CGameObject* pGameObject);
+	HRESULT						Load_Level(string FilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex);
+
 	void						Clear_Object(DATA_TYPE eData);
 #pragma endregion
 private:
