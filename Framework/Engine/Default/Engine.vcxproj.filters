@@ -106,6 +106,24 @@
     <Filter Include="01.Utility\07.Picking">
       <UniqueIdentifier>{137a9212-7708-4ad7-98d9-f116815eaeae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Component\Model">
+      <UniqueIdentifier>{14af6afa-6c4e-413c-88ac-9e8a5c4e959e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Component\Model\Mesh">
+      <UniqueIdentifier>{dd189e4d-3595-4084-8277-277425c14f38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Component\Model\Material">
+      <UniqueIdentifier>{cc3369ca-5830-444c-8e93-ad1d5744a9b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Component\Model\Bone">
+      <UniqueIdentifier>{f7f9397d-41ef-4a7f-823f-5c71c0080fac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Component\Model\Animation">
+      <UniqueIdentifier>{fe14afe6-b8af-4eaa-9923-6a11457f8a54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Component\Model\Animation\Channel">
+      <UniqueIdentifier>{8b896f33-1275-4e25-b183-d5bd434b70bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -219,6 +237,24 @@
     <ClInclude Include="..\public\Picking.h">
       <Filter>01.Utility\07.Picking</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Model.h">
+      <Filter>01.Utility\03.Component\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Mesh.h">
+      <Filter>01.Utility\03.Component\Model\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MeshMaterial.h">
+      <Filter>01.Utility\03.Component\Model\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bone.h">
+      <Filter>01.Utility\03.Component\Model\Bone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Animation.h">
+      <Filter>01.Utility\03.Component\Model\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Channel.h">
+      <Filter>01.Utility\03.Component\Model\Animation\Channel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -313,6 +349,24 @@
     </ClCompile>
     <ClCompile Include="..\private\Picking.cpp">
       <Filter>01.Utility\07.Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Model.cpp">
+      <Filter>01.Utility\03.Component\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Mesh.cpp">
+      <Filter>01.Utility\03.Component\Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MeshMaterial.cpp">
+      <Filter>01.Utility\03.Component\Model\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bone.cpp">
+      <Filter>01.Utility\03.Component\Model\Bone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Animation.cpp">
+      <Filter>01.Utility\03.Component\Model\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Channel.cpp">
+      <Filter>01.Utility\03.Component\Model\Animation\Channel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

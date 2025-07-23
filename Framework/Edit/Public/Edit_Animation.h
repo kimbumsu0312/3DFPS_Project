@@ -10,7 +10,7 @@ private:
 	virtual ~CEdit_Animation() = default;
 
 public:
-	HRESULT							Initialize(const aiAnimation* pAIAnimation, const vector<class CEdit_Bone*>& Bones);
+	HRESULT							Initialize(const aiAnimation* pAIAnimation, const vector<class CEdit_Bone*>& Bones, SAVE_MODEL* pModelData);
 	void							Update_TransformationMatrices(const vector<class CEdit_Bone*>& Bones, _float fTimeDelta);
 
 private:
@@ -21,7 +21,7 @@ private:
 	vector<class CEdit_Channel*>	m_Channels;
 
 public:
-	static CEdit_Animation*			Create(const aiAnimation* pAiAnimation, const vector<class CEdit_Bone*> Bones);
+	static CEdit_Animation*			Create(const aiAnimation* pAiAnimation, const vector<class CEdit_Bone*> Bones, SAVE_MODEL* pModelData);
 	virtual void					Free() override;
 };
 

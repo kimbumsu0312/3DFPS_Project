@@ -354,7 +354,7 @@ HRESULT CGameInstance::File_Save_TerrainLevel(DATA_TYPE eData, string szFilename
 	return m_pSaveLoader->File_Save_TerrainLevel(eData, szFilename, pVIBuffer);
 }
 
-HRESULT CGameInstance::File_Save_Object(string szFilename, MODELTYPE eType, SAVE_MODEL* pData)
+HRESULT CGameInstance::File_Save_Object(string szFilename, MODELTYPE eType, const SAVE_MODEL& pData)
 {
 	return m_pSaveLoader->File_Save_Object(szFilename, eType, pData);
 }
@@ -377,6 +377,11 @@ HRESULT CGameInstance::Load_Terrain(string FilePath, SAVE_TERRAIN& pOut)
 HRESULT CGameInstance::Load_Level(string FilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex)
 {
 	return m_pSaveLoader->Load_Level(FilePath, iLevelIndex, szLayerTag, iPrototypeLevelIndex);
+}
+
+HRESULT CGameInstance::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _wstring szPrototypeTag)
+{
+	return m_pSaveLoader->Load_Objcet(FilePath, iPrototypeLevelIndex, szPrototypeTag);
 }
 
 void CGameInstance::Clear_Object()

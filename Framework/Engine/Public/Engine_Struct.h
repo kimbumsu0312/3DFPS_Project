@@ -159,34 +159,54 @@ namespace Engine
 		vector<VTXANIMMESH>		AnimVertex;
 
 		unsigned int			iNumBones;
+		vector<int>				BoneIndices;
 
 	}SAVE_MESH;
 
 	typedef struct tagSaveBone
 	{
 		wstring					szName;
-		XMMATRIX				matBone;
-		XMMATRIX				matOffset;
-		unsigned int			iParentBoneIndex;
-		vector<tagSaveBone>		Children;
+		XMFLOAT4X4				TransformationMatrix;
+		int						iParentBoneIndex;
+		XMFLOAT4X4				matOffset;				
 	}SAVE_BONE;
 
+	typedef struct tagChannels
+	{
+		unsigned int			iBoneIndex;
+		unsigned int			iNumKeyFrames;
+		vector<KEYFRAME>		KeyFrames;
+
+	}SAVE_CHANNEL;
+
+	typedef struct tagSaveAnimation
+	{
+		unsigned int			iNumChannels;
+		float					fDuration;
+		float					fTickPerSecond;
+
+		vector<SAVE_CHANNEL>	Channels;
+	}SAVE_ANIM;
+
 	//모델 정보 저장
-	typedef struct tagSaveAnimModel
+	typedef struct tagSaveModel
 	{
 		string						szName;
-		string						szModelPath;
 		MODELTYPE					eModel;
 		XMFLOAT4X4					PreTransformMatrix;
-
-		unsigned int				iNumMeshes;
-		vector<SAVE_MESH>			Meshs;
 
 		unsigned int				iNumMaterials;
 		vector<SAVE_MESHMATERIAL>	MeshMaterials;
 
 		unsigned int				iNumBone;
 		vector<SAVE_BONE>			Bones;
+
+		unsigned int				iNumMeshes;
+		vector<SAVE_MESH>			Meshs;
+
+		unsigned int				iNumAnimations;
+		vector<SAVE_ANIM>			Animations;
+
 	}SAVE_MODEL;
 }
 

@@ -15,13 +15,17 @@ CEdit_Mesh::CEdit_Mesh(const CEdit_Mesh& Prototype)
 
 HRESULT CEdit_Mesh::Initialize_Prototype(MODELTYPE eType, const aiMesh* pAIMesh, const vector<class CEdit_Bone*>& Bones, _fmatrix PreTransformMatrix, SAVE_MODEL* pModelData)
 {
+	m_PreTransformMatrix = PreTransformMatrix;
 	//매쉬 이름 복사
 	strcpy_s(m_szName, pAIMesh->mName.data);
-	m_PreTransformMatrix = PreTransformMatrix;
-	int iLength = MultiByteToWideChar(CP_ACP, 0, m_szName, -1, NULL, 0);
-
+	
+	int iLength = MultiByteToWideChar(CP_ACP, 0, m_szName, -1, nullptr, 0);
 	wstring szMeshName(iLength, L'\0');
 	MultiByteToWideChar(CP_ACP, 0, m_szName, -1, &szMeshName[0], iLength);
+
+	if (!szMeshName.empty() && szMeshName.back() == L'\0')
+		szMeshName.pop_back();
+
 	m_MeshData.szName = szMeshName;
 
 	//매쉬 재질 인덱스 가져오기
@@ -36,7 +40,7 @@ HRESULT CEdit_Mesh::Initialize_Prototype(MODELTYPE eType, const aiMesh* pAIMesh,
 	//모델 타입에 따라 버텍스 셋팅
 	HRESULT	hr = MODELTYPE::NONANIM == eType ?
 		Ready_Vertices_For_NonAnim(pAIMesh, PreTransformMatrix) :
-		Ready_Vertices_For_Anim(pAIMesh, Bones);
+		Ready_Vertices_For_Anim(pAIMesh, Bones, pModelData);
 
 	if (FAILED(hr))
 		return E_FAIL;
@@ -183,7 +187,7 @@ HRESULT CEdit_Mesh::Ready_Vertices_For_NonAnim(const aiMesh* pAIMesh, _fmatrix P
 	return S_OK;
 }
 
-HRESULT CEdit_Mesh::Ready_Vertices_For_Anim(const aiMesh* pAIMesh, const vector<class CEdit_Bone*>& Bones)
+HRESULT CEdit_Mesh::Ready_Vertices_For_Anim(const aiMesh* pAIMesh, const vector<class CEdit_Bone*>& Bones, SAVE_MODEL* pModelData)
 {
 	m_iVertexStride = sizeof(VTXANIMMESH);
 
@@ -210,7 +214,7 @@ HRESULT CEdit_Mesh::Ready_Vertices_For_Anim(const aiMesh* pAIMesh, const vector<
 	}
 
 	//현재 메쉬에 연결된 뼈 개수를 가져옴
-	m_MeshData.iNumBones = pAIMesh->mNumBones;
+	_int iNumBone = m_MeshData.iNumBones = pAIMesh->mNumBones;
 	
 	for (size_t i = 0; i < m_MeshData.iNumBones; i++)
 	{
@@ -218,6 +222,7 @@ HRESULT CEdit_Mesh::Ready_Vertices_For_Anim(const aiMesh* pAIMesh, const vector<
 
 		//뼈의 오프셋 매트릭스를 가져온다
 		_float4x4	OffsetMatrix;
+	
 		memcpy(&OffsetMatrix, &pAIBone->mOffsetMatrix, sizeof(_float4x4));
 
 		//뼈의 오프셋 매트릭스 전치
@@ -235,7 +240,8 @@ HRESULT CEdit_Mesh::Ready_Vertices_For_Anim(const aiMesh* pAIMesh, const vector<
 
 				return false;
 			});
-
+		pModelData->Bones[iBoneIndex].matOffset = OffsetMatrix;
+		m_MeshData.BoneIndices.push_back(iBoneIndex);
 		m_BoneIndices.push_back(iBoneIndex);
 
 		//뼈의 인덱스와 가중치를 받아온다.
@@ -245,32 +251,32 @@ HRESULT CEdit_Mesh::Ready_Vertices_For_Anim(const aiMesh* pAIMesh, const vector<
 
 			if (0.f == pVertices[AIVertexWeight.mVertexId].vBlendWeight.x)
 			{
-				pVertices[AIVertexWeight.mVertexId].vBlendIndex.x = i;
-				pVertices[AIVertexWeight.mVertexId].vBlendWeight.x = AIVertexWeight.mWeight;
+				pVertices[AIVertexWeight.mVertexId].vBlendIndex.x = m_MeshData.AnimVertex[AIVertexWeight.mVertexId].vBlendIndex.x = i;
+				pVertices[AIVertexWeight.mVertexId].vBlendWeight.x = m_MeshData.AnimVertex[AIVertexWeight.mVertexId].vBlendWeight.x = AIVertexWeight.mWeight;
 			}
 			else if (0.f == pVertices[AIVertexWeight.mVertexId].vBlendWeight.y)
 			{
-				pVertices[AIVertexWeight.mVertexId].vBlendIndex.y = i;
-				pVertices[AIVertexWeight.mVertexId].vBlendWeight.y = AIVertexWeight.mWeight;
+				pVertices[AIVertexWeight.mVertexId].vBlendIndex.y = m_MeshData.AnimVertex[AIVertexWeight.mVertexId].vBlendIndex.y = i;
+				pVertices[AIVertexWeight.mVertexId].vBlendWeight.y = m_MeshData.AnimVertex[AIVertexWeight.mVertexId].vBlendWeight.y =  AIVertexWeight.mWeight;
 			}
 			else if (0.f == pVertices[AIVertexWeight.mVertexId].vBlendWeight.z)
 			{
-				pVertices[AIVertexWeight.mVertexId].vBlendIndex.z = i;
-				pVertices[AIVertexWeight.mVertexId].vBlendWeight.z = AIVertexWeight.mWeight;
+				pVertices[AIVertexWeight.mVertexId].vBlendIndex.z = m_MeshData.AnimVertex[AIVertexWeight.mVertexId].vBlendIndex.z = i;
+				pVertices[AIVertexWeight.mVertexId].vBlendWeight.z = m_MeshData.AnimVertex[AIVertexWeight.mVertexId].vBlendWeight.z =  AIVertexWeight.mWeight;
 			}
 			else
 			{
-				pVertices[AIVertexWeight.mVertexId].vBlendIndex.w = i;
-				pVertices[AIVertexWeight.mVertexId].vBlendWeight.w = AIVertexWeight.mWeight;
+				pVertices[AIVertexWeight.mVertexId].vBlendIndex.w = m_MeshData.AnimVertex[AIVertexWeight.mVertexId].vBlendIndex.w = i;
+				pVertices[AIVertexWeight.mVertexId].vBlendWeight.w = m_MeshData.AnimVertex[AIVertexWeight.mVertexId].vBlendWeight.w = AIVertexWeight.mWeight;
 			}
 		}
 	}
 
 	//매쉬에 뼈가 0개인 경우
-	if (0 == m_MeshData.iNumBones)
+	if (0 == iNumBone)
 	{
 		//임의에 뼈를 1개 만들어줌
-		m_MeshData.iNumBones = 1;
+		iNumBone = 1;
 
 		_uint	iBoneIndex = { 0 };
 		

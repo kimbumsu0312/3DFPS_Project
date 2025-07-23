@@ -33,7 +33,7 @@ public:
 
 	_uint								Get_NumMeshes() const {	return m_ModelData.iNumMeshes;	}
 	_bool								Selete_Model(CTransform& pTransform, _float3& pOut);
-	SAVE_MODEL*							Get_ModelData() { return &m_ModelData;}
+	const SAVE_MODEL&					Get_ModelData() { return m_ModelData;}
 	MODELTYPE							Get_ModelType() { return m_ModelData.eModel; }
 	_uint								Get_AnimationNum() { return m_iNumAnimations; }
 	void								Set_Animations(_uint iIndex) { m_iCurrentAnimIndex = iIndex; }
