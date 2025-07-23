@@ -51,8 +51,6 @@ HRESULT CMapObject::Initialize(void* pArg)
 
 	m_pGameInstance->Subscribe<Event_Model_Index_Set>([&](const Event_Model_Index_Set& e) {if (e.i < m_iIndex) { m_iIndex -= 1; } });
 
-	if(m_pModelCom->Get_AnimationNum() > 0)
-		m_pModelCom->Set_Animations(1);
 	return S_OK;
 }
 
@@ -75,8 +73,7 @@ void CMapObject::Update(_float fTimeDelta)
 
 		if (m_pGameInstance->IsKeyDown(DIK_N))
 		{
-			SAVE_MODEL* pData = m_pModelCom->Get_ModelData();
-			m_pGameInstance->File_Save_Object(pData->szName, pData->eModel, pData);
+			m_pGameInstance->File_Save_Object(m_pModelCom->Get_ModelData().szName, m_pModelCom->Get_ModelData().eModel, m_pModelCom->Get_ModelData());
 		}
 	}
 	m_pModelCom->Play_Animation(fTimeDelta);

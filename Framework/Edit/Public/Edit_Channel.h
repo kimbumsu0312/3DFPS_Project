@@ -11,7 +11,7 @@ private:
 	virtual ~CEdit_Channel() = default;
 
 public:
-	HRESULT							Initialize(const aiNodeAnim* pAIChannel, const vector<class CEdit_Bone*>& Bones);
+	HRESULT							Initialize(const aiNodeAnim* pAIChannel, const vector<class CEdit_Bone*>& Bones, SAVE_ANIM* pAnim);
 	void							Update_TransformationMatrix(const vector<class CEdit_Bone*>& Bones, _float fCurrentTrackPosition);
 private:
 	_char							m_szName[MAX_PATH] = { };
@@ -21,7 +21,7 @@ private:
 	vector<KEYFRAME>				m_KeyFrames;
 
 public:
-	static CEdit_Channel*			Create(const aiNodeAnim* pAIChannel, const vector<class CEdit_Bone*>& Bones);
+	static CEdit_Channel*			Create(const aiNodeAnim* pAIChannel, const vector<class CEdit_Bone*>& Bones, SAVE_ANIM* pAnim);
 	virtual void					Free() override;
 };
 

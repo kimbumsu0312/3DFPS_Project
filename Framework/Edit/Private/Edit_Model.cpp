@@ -32,9 +32,7 @@ HRESULT CEdit_Model::Initialize_Prototype(MODELTYPE eModelType, const _char* pMo
 	MODEl_DESC* pDesc = static_cast<MODEl_DESC*>(pArg);
 
 	m_ModelData.szName = pDesc->szModelName;
-	m_ModelData.szModelPath = pDesc->szModelPath;
 	m_ModelData.eModel = eModelType;
-
 	
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
 	m_ModelData.PreTransformMatrix = m_PreTransformMatrix;
@@ -92,11 +90,10 @@ HRESULT CEdit_Model::Bind_BoneMatrices(CShader* pShader, const _char* pConstantN
 
 void CEdit_Model::Play_Animation(_float fTimeDelta)
 {
+	if (m_ModelData.eModel != MODELTYPE::ANIM)
+		return;
 	//현재 애니메이션에 뼈 트랜슾폼 매트릭스를 갱신
-	/*if (m_iNumAnimations <= 0)
-		return;*/
-
-	//m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta);
+	m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta);
 
 	for (auto& pBone : m_Bones)
 	{
@@ -164,7 +161,7 @@ HRESULT CEdit_Model::Ready_Materials(const _char* pModelFilePath)
 HRESULT CEdit_Model::Ready_Bones(const aiNode* pAINode, _int iParentIndex)
 {
 	
-	CEdit_Bone* pBone = CEdit_Bone::Create(pAINode, iParentIndex);
+	CEdit_Bone* pBone = CEdit_Bone::Create(pAINode, iParentIndex, &m_ModelData );
 	if (nullptr == pBone)
 		return E_FAIL;
 
@@ -178,6 +175,7 @@ HRESULT CEdit_Model::Ready_Bones(const aiNode* pAINode, _int iParentIndex)
 		Ready_Bones(pAINode->mChildren[i], iIndex);
 	}
 
+	m_ModelData.iNumBone = m_Bones.size();
 	return S_OK;
 }
 
@@ -189,14 +187,14 @@ HRESULT CEdit_Model::Ready_Animations()
 	for (_int i = 0; i < m_iNumAnimations; ++i)
 	{
 		//i번째 애니메이션을 생성한다.
-		CEdit_Animation* pAnimation = CEdit_Animation::Create(m_pAIScene->mAnimations[i], m_Bones);
+		CEdit_Animation* pAnimation = CEdit_Animation::Create(m_pAIScene->mAnimations[i], m_Bones, &m_ModelData);
 		if (pAnimation == nullptr)
 			return E_FAIL;
 
 		//생성한 애니메이션을 넣어줌
 		m_Animations.push_back(pAnimation);
 	}
-	
+	m_ModelData.iNumAnimations = m_Animations.size();
 	return S_OK;
 }
 

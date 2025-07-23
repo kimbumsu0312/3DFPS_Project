@@ -6,10 +6,19 @@ CEdit_Bone::CEdit_Bone()
 }
 
 
-HRESULT CEdit_Bone::Initialize(const aiNode* pAINode, _int iParentBoneIndex)
+HRESULT CEdit_Bone::Initialize(const aiNode* pAINode, _int iParentBoneIndex, SAVE_MODEL* pModelData)
 {
 	//뼈 이름을 복사
 	strcpy_s(m_szName, pAINode->mName.data);
+
+	int iLength = MultiByteToWideChar(CP_ACP, 0, m_szName, -1, nullptr, 0);
+	wstring szBoneName(iLength, L'\0');
+	MultiByteToWideChar(CP_ACP, 0, m_szName, -1, &szBoneName[0], iLength);
+
+	if (!szBoneName.empty() && szBoneName.back() == L'\0')
+		szBoneName.pop_back();
+
+	m_Bone.szName = szBoneName;
 
 	//뼈 행렬을 가져온다.
 	memcpy(&m_TransformationMatrix, &pAINode->mTransformation, sizeof(_float4x4));
@@ -17,12 +26,14 @@ HRESULT CEdit_Bone::Initialize(const aiNode* pAINode, _int iParentBoneIndex)
 	//aissmp 행렬이 콜 매이저로 되어 있어서 전치 해줌
 	XMStoreFloat4x4(&m_TransformationMatrix, XMMatrixTranspose(XMLoadFloat4x4(&m_TransformationMatrix)));
 
+	m_Bone.TransformationMatrix = m_TransformationMatrix;
 	//항등 행렬로 초기화
 	XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());
 
 	//부모 뼈 인덱스를 받아온다.
-	m_iParentBoneIndex = iParentBoneIndex;
+	m_Bone.iParentBoneIndex = m_iParentBoneIndex = iParentBoneIndex;
 
+	pModelData->Bones.push_back(m_Bone);
 	return S_OK;
 }
 
@@ -42,11 +53,11 @@ void CEdit_Bone::Update_CombinedTransformationMatrix(const _float4x4& PreTransfo
 		XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(&Bones[m_iParentBoneIndex]->m_CombinedTransformationMatrix));
 }
 
-CEdit_Bone* CEdit_Bone::Create(const aiNode* pAINode, _int iParentBoneIndex)
+CEdit_Bone* CEdit_Bone::Create(const aiNode* pAINode, _int iParentBoneIndex, SAVE_MODEL* pModelData)
 {
 	CEdit_Bone* pInstance = new CEdit_Bone();
 
-	if (FAILED(pInstance->Initialize(pAINode, iParentBoneIndex)))
+	if (FAILED(pInstance->Initialize(pAINode, iParentBoneIndex, pModelData)))
 	{
 		MSG_BOX(TEXT("Failed to Created : CEdit_Bone"));
 		Safe_Release(pInstance);

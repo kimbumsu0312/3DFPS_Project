@@ -18,7 +18,7 @@ public:
 	}
 
 public:
-	HRESULT				Initialize(const aiNode* pAINode, _int iParentBoneIndex);
+	HRESULT				Initialize(const aiNode* pAINode, _int iParentBoneIndex, SAVE_MODEL* pModelData);
 	void				Update_CombinedTransformationMatrix(const _float4x4& PreTransformMatrix, const vector<CEdit_Bone*>& Bones);
 
 	_bool				Compare_Name(const _char* pName) {	return !strcmp(pName, m_szName);}
@@ -28,8 +28,9 @@ private:
 	_float4x4			m_CombinedTransformationMatrix = {};
 
 	_int				m_iParentBoneIndex = { -1 };
+	SAVE_BONE			m_Bone;
 public:
-	static CEdit_Bone*	Create(const aiNode* pAINode, _int iParentBoneIndex);
+	static CEdit_Bone*	Create(const aiNode* pAINode, _int iParentBoneIndex, SAVE_MODEL* pModelData);
 	virtual void		Free() override;
 };
 NS_END
