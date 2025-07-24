@@ -66,6 +66,11 @@ CEdit_Bone* CEdit_Bone::Create(const aiNode* pAINode, _int iParentBoneIndex, SAV
 	return pInstance;
 }
 
+CEdit_Bone* CEdit_Bone::Clone()
+{
+	return new CEdit_Bone(*this);
+}
+
 void CEdit_Bone::Free()
 {
 	__super::Free();

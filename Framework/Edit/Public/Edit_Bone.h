@@ -31,6 +31,7 @@ private:
 	SAVE_BONE			m_Bone;
 public:
 	static CEdit_Bone*	Create(const aiNode* pAINode, _int iParentBoneIndex, SAVE_MODEL* pModelData);
+	CEdit_Bone*			Clone();
 	virtual void		Free() override;
 };
 NS_END

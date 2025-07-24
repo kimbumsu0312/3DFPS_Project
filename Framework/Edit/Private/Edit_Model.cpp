@@ -12,10 +12,11 @@ CEdit_Model::CEdit_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) :
 
 CEdit_Model::CEdit_Model(const CEdit_Model& Prototype) : CComponent(Prototype), m_Meshes(Prototype.m_Meshes)
 , m_Materials(Prototype.m_Materials), m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
-,m_Bones {Prototype.m_Bones}, m_ModelData(Prototype.m_ModelData), m_Animations(Prototype. m_Animations), m_iCurrentAnimIndex(Prototype.m_iCurrentAnimIndex), m_iNumAnimations(Prototype.m_iNumAnimations)
+, m_ModelData(Prototype.m_ModelData), m_Animations(Prototype. m_Animations)
+, m_iCurrentAnimIndex(Prototype.m_iCurrentAnimIndex), m_iNumAnimations(Prototype.m_iNumAnimations)
 {
-	for (auto& pBone : m_Bones)
-		Safe_AddRef(pBone);
+	for (auto& pPrototypeBone : Prototype.m_Bones)
+		m_Bones.push_back(pPrototypeBone->Clone());
 	
 	for (auto& pMesh : m_Meshes)
 		Safe_AddRef(pMesh);
@@ -88,18 +89,23 @@ HRESULT CEdit_Model::Bind_BoneMatrices(CShader* pShader, const _char* pConstantN
 	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones);
 }
 
-void CEdit_Model::Play_Animation(_float fTimeDelta)
+_bool CEdit_Model::Play_Animation(_float fTimeDelta)
 {
 	if (m_ModelData.eModel != MODELTYPE::ANIM)
-		return;
+		return false;
+	
+	m_bisFinished = false;
+
 	//현재 애니메이션에 뼈 트랜슾폼 매트릭스를 갱신
-	m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta);
+	m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta,m_bisLoop, &m_bisFinished);
 
 	for (auto& pBone : m_Bones)
 	{
 		//뼈들의 행렬을 부모 뼈의 행렬에 맞게 맞춰준다.
 		pBone->Update_CombinedTransformationMatrix(m_PreTransformMatrix, m_Bones);
 	}
+
+	return m_bisFinished;
 }
 
 _bool CEdit_Model::Selete_Model(CTransform& pTransform, _float3& pOut)
@@ -111,6 +117,15 @@ _bool CEdit_Model::Selete_Model(CTransform& pTransform, _float3& pOut)
 	}
 
 	return false;
+}
+
+void CEdit_Model::Set_Animations(_uint iIndex, _bool IsLoop)
+{
+	if (m_ModelData.eModel != MODELTYPE::ANIM || iIndex >= m_iNumAnimations)
+		return;
+	
+	m_iCurrentAnimIndex = iIndex; 
+	m_bisLoop = IsLoop;
 }
 
 HRESULT CEdit_Model::Render(_uint iMeshIndex)

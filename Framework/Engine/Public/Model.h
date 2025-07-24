@@ -15,14 +15,12 @@ public:
 	virtual HRESULT					Render(_uint iMeshIndex);
 
 public:
-	void							Set_Animation(_uint iIndex);
-
-public:
 	HRESULT							Bind_Materials(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _int iTexIndex, _uint iIndex);
 	HRESULT							Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
-	void							Play_Animation(_float fTimeDelta);
+	_bool							Play_Animation(_float fTimeDelta);
 
 	_uint							Get_NumMeshes() const { return m_iNumMeshes; }
+	void							Set_Animations(_uint AnimiIndex, _bool IsLoop = false);
 
 private:
 
@@ -41,6 +39,8 @@ private:
 	_uint							m_iNumAnimations = { 0 };
 	vector<class CAnimation*>		m_Animations;
 
+	_bool							m_bisLoop = {};
+	_bool							m_bisFinished = {};
 private:
 	HRESULT							Ready_Meshes(const SAVE_MODEL& pModelData);
 	HRESULT							Ready_Materials(const SAVE_MODEL& pModelData);

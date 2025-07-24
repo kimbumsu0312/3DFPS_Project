@@ -64,14 +64,6 @@ HRESULT CModel::Render(_uint iMeshIndex)
     return S_OK;
 }
 
-void CModel::Set_Animation(_uint iIndex)
-{
-    if (iIndex >= m_iNumAnimations)
-        return;
-
-    m_iCurrentAnimIndex = iIndex;
-}
-
 HRESULT CModel::Bind_Materials(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _int iTexIndex, _uint iIndex)
 {
     if (iMeshIndex >= m_iNumMeshes)
@@ -93,18 +85,32 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, 
     return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones);
 }
 
-void CModel::Play_Animation(_float fTimeDelta)
+_bool CModel::Play_Animation(_float fTimeDelta)
 {
     if (m_eModelType != MODELTYPE::ANIM)
-        return;
+        return false;
+
+    m_bisFinished = false;
+
     //현재 애니메이션에 뼈 트랜슾폼 매트릭스를 갱신
-    m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta);
+    m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, &m_bisFinished);
 
     for (auto& pBone : m_Bones)
     {
         //뼈들의 행렬을 부모 뼈의 행렬에 맞게 맞춰준다.
         pBone->Update_CombinedTransformationMatrix(m_PreTransformMatrix, m_Bones);
     }
+
+    return m_bisFinished;
+}
+
+void CModel::Set_Animations(_uint AnimiIndex, _bool IsLoop)
+{
+    if (m_eModelType != MODELTYPE::ANIM || AnimiIndex >= m_iNumAnimations)
+        return;
+
+    m_iCurrentAnimIndex = AnimiIndex;
+    m_bisLoop = IsLoop;
 }
 
 HRESULT CModel::Ready_Meshes(const SAVE_MODEL& pModelData)

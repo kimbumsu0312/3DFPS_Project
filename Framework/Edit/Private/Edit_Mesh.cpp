@@ -92,7 +92,7 @@ HRESULT CEdit_Mesh::Initialize(void* pArg)
 
 HRESULT CEdit_Mesh::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, const vector<class CEdit_Bone*>& Bones)
 {
-	for (size_t i = 0; i < m_MeshData.iNumBones; i++)
+	for (size_t i = 0; i < m_iNumBons; i++)
 	{
 		//매쉬에 연결된 뼈들의 행렬을 구해준다.
 		//초기 오프셋 행렬 * 뼈의 콤바인드 행렬
@@ -100,7 +100,7 @@ HRESULT CEdit_Mesh::Bind_BoneMatrices(CShader* pShader, const _char* pConstantNa
 	}
 
 	//계산 해준 뼈의 행렬들을 바인드시킨다.
-	return pShader->Bind_Matrices(pConstantName, m_BoneMatrices, m_MeshData.iNumBones);
+	return pShader->Bind_Matrices(pConstantName, m_BoneMatrices, m_iNumBons);
 }
 
 _bool CEdit_Mesh::IsPicked(MODELTYPE eType, CTransform& pTransform, _float3& pOut)
@@ -214,9 +214,9 @@ HRESULT CEdit_Mesh::Ready_Vertices_For_Anim(const aiMesh* pAIMesh, const vector<
 	}
 
 	//현재 메쉬에 연결된 뼈 개수를 가져옴
-	_int iNumBone = m_MeshData.iNumBones = pAIMesh->mNumBones;
+	m_iNumBons = m_MeshData.iNumBones = pAIMesh->mNumBones;
 	
-	for (size_t i = 0; i < m_MeshData.iNumBones; i++)
+	for (size_t i = 0; i < m_iNumBons; i++)
 	{
 		aiBone* pAIBone = pAIMesh->mBones[i];
 
@@ -273,10 +273,10 @@ HRESULT CEdit_Mesh::Ready_Vertices_For_Anim(const aiMesh* pAIMesh, const vector<
 	}
 
 	//매쉬에 뼈가 0개인 경우
-	if (0 == iNumBone)
+	if (0 == m_iNumBons)
 	{
 		//임의에 뼈를 1개 만들어줌
-		iNumBone = 1;
+		m_iNumBons = 1;
 
 		_uint	iBoneIndex = { 0 };
 		
