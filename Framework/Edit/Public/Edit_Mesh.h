@@ -21,12 +21,13 @@ public:
 private:
 	_char					m_szName[MAX_PATH] = {};
 	_uint					m_iMaterialIndex = {};
+	_uint					m_iNumBons = {};
 	vector<_int>			m_BoneIndices;
 	_float4x4				m_BoneMatrices[g_iMaxNumBones] = {};
-	XMMATRIX				m_PreTransformMatrix;
+	_matrix					m_PreTransformMatrix = {};
 
 	vector<_float4x4>		m_OffsetMatrices;
-
+	
 	SAVE_MESH				m_MeshData = {};
 
 private:

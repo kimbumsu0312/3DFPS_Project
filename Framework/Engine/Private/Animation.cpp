@@ -24,14 +24,25 @@ HRESULT CAnimation::Initialize(const SAVE_ANIM& pAnimation, const vector<class C
     return S_OK;
 }
 
-void CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta)
+void CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta, _bool isLoop, _bool* pFinished)
 {
     //현재 키프레임
     m_fCurrentTrackPosition += m_fTickPerSecond * fTimeDelta;
 
+    //현재 트랙 포지션이 마지막에 도달했는지 체크
     if (m_fCurrentTrackPosition >= m_fDuration)
-        m_fCurrentTrackPosition = 0;
+    {
+        if (false == isLoop)
+        {
+            //루프가 아니면 끝났다고 알려줌
+            *pFinished = true;
+            m_fCurrentTrackPosition = m_fDuration;
+            return;
+        }
+        else //루프면 0부터 다시 시작
+            m_fCurrentTrackPosition = 0.f;
 
+    }
     for (auto& pChannel : m_Channels)
     {
         //움직여야 될 뼈들에 키프레임을 전달

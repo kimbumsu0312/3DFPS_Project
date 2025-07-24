@@ -31,29 +31,31 @@ HRESULT CChannel::Initialize(const SAVE_CHANNEL& pChannel, const vector<class CB
 
 void CChannel::Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fCurrentTrackPosition)
 {
-    _float fCurrentTrackPos = fCurrentTrackPosition;
+    if (fCurrentTrackPosition == 0.f)
+        m_iCurrentKeyFrameIndex = 0;
 
-    //현재 뼈들의 행렬을 구해온다.
     _vector vScale, vRotation, vTranslation;
+    KEYFRAME        LastKeyFrame = m_KeyFrames.back();
 
-    _int iCulIndex = (_int)fCurrentTrackPos;
-    _int iNextIndex = iCulIndex + 1;
-    _float fFrame = fCurrentTrackPos - iCulIndex;
-
-    if (iNextIndex < m_KeyFrames.size() - 1)
+    if (fCurrentTrackPosition >= LastKeyFrame.fTrackPosition)
     {
-        vScale = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[iCulIndex].vScale), XMLoadFloat3(&m_KeyFrames[iNextIndex].vScale), fFrame);
-        vTranslation = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[iCulIndex].vTranslation), XMLoadFloat3(&m_KeyFrames[iNextIndex].vTranslation), fFrame);
-        vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_KeyFrames[iCulIndex].vRotation), XMLoadFloat4(&m_KeyFrames[iNextIndex].vRotation), fFrame);
+        vScale = XMLoadFloat3(&LastKeyFrame.vScale);
+        vRotation = XMLoadFloat4(&LastKeyFrame.vRotation);
+        vTranslation = XMVectorSetW(XMLoadFloat3(&LastKeyFrame.vTranslation), 1.f);
     }
     else
     {
-        vScale = XMLoadFloat3(&m_KeyFrames[m_KeyFrames.size() - 1].vScale);
-        vTranslation = XMLoadFloat3(&m_KeyFrames[m_KeyFrames.size() - 1].vTranslation);
-        vRotation = XMLoadFloat4(&m_KeyFrames[m_KeyFrames.size() - 1].vRotation);
+        while (fCurrentTrackPosition >= m_KeyFrames[m_iCurrentKeyFrameIndex + 1].fTrackPosition)
+            ++m_iCurrentKeyFrameIndex;
+
+        _float fRatio = (fCurrentTrackPosition - m_KeyFrames[m_iCurrentKeyFrameIndex].fTrackPosition) / (m_KeyFrames[m_iCurrentKeyFrameIndex + 1].fTrackPosition - m_KeyFrames[m_iCurrentKeyFrameIndex].fTrackPosition);
+
+        vScale = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex].vScale), XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex + 1].vScale), fRatio);
+        vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_KeyFrames[m_iCurrentKeyFrameIndex].vRotation), XMLoadFloat4(&m_KeyFrames[m_iCurrentKeyFrameIndex + 1].vRotation), fRatio);
+        vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex].vTranslation), XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex + 1].vTranslation), fRatio), 1.f);
     }
 
-    _matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), vRotation, vTranslation);
+    _matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.0f, 0.0f, 0.0f, 1.f), vRotation, vTranslation);
 
     Bones[m_iBoneIndex]->Set_TransformationMatrix(TransformationMatrix);
 }

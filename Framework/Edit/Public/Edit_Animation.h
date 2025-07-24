@@ -11,11 +11,12 @@ private:
 
 public:
 	HRESULT							Initialize(const aiAnimation* pAIAnimation, const vector<class CEdit_Bone*>& Bones, SAVE_MODEL* pModelData);
-	void							Update_TransformationMatrices(const vector<class CEdit_Bone*>& Bones, _float fTimeDelta);
+	void							Update_TransformationMatrices(const vector<class CEdit_Bone*>& Bones, _float fTimeDelta, _bool isLoop, _bool* pFinished);
 
 private:
 	_float							m_fDuration = {};
 	_float							m_fTickPerSecond = {};
+
 	_float							m_fCurrentTrackPosition = {};
 	_uint							m_iNumChannels = {};
 	vector<class CEdit_Channel*>	m_Channels;
