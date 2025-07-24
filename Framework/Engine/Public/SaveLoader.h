@@ -31,6 +31,10 @@ private:
 
 	HRESULT						Save_NonAnimMesh(string szFilename, const SAVE_MODEL& pData);
 	HRESULT						Save_AnimMesh(string szFilename, const SAVE_MODEL& pData);
+
+	HRESULT						Load_NonAnimData(string DataFilePath, SAVE_MODEL& ModelData);
+	HRESULT						Load_AnimData(string DataFilePath, SAVE_MODEL& ModelData);
+
 public:
 	static CSaveLoader*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void				Free() override;
