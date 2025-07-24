@@ -115,13 +115,14 @@ HRESULT CEditMain::Ready_Prototype_ForStatic()
 	//	return E_FAIL;
 
 	m_pGameInstance->Load_Objcet("../Bin/Data/Charter/Fiona.json", ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Fiona"));
+	m_pGameInstance->Load_Objcet("../Bin/Data/Object/ForkLift.json", ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Fiona2"));
 
-	Desc.szModelName = "Player";
-	Desc.szModelPath = "Prototype_Component_Model_Player";
-	PreTransformMatrix = XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Player"),
-		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/Player/Player.fbx", PreTransformMatrix, &Desc))))
-		return E_FAIL;
+	//Desc.szModelName = "Player";
+	//Desc.szModelPath = "Prototype_Component_Model_Player";
+	//PreTransformMatrix = XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Player"),
+	//	CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/Player/Player.fbx", PreTransformMatrix, &Desc))))
+	//	return E_FAIL;
 
 	/* Prototype_GameObject_Player */
 	

@@ -155,7 +155,7 @@ HRESULT CSaveLoader::Save_NonAnimMesh(string szFilename, const SAVE_MODEL& pData
 
 	jData["Model_name"] = pData.szName;
 	jData["Model_type"] = pData.eModel;
-	jData["Mesh_Path"] = MeshFilePath;
+	jData["Data_Path"] = MeshFilePath;
 	jData["iNumMeshes"] = pData.iNumMeshes;
 	jData["iNumMaterials"] = pData.iNumMaterials;
 
@@ -492,17 +492,27 @@ HRESULT CSaveLoader::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _w
 		mesh.iFaces.resize(faceCount);
 		DatFile.read(reinterpret_cast<_char*>(mesh.iFaces.data()), faceCount * sizeof(Face));
 
-		size_t vertexCount = 0;
-		DatFile.read(reinterpret_cast<_char*>(&vertexCount), sizeof(size_t));
-		mesh.AnimVertex.resize(vertexCount);
-		DatFile.read(reinterpret_cast<_char*>(mesh.AnimVertex.data()), vertexCount * sizeof(VTXANIMMESH));
+		if (MODELTYPE::ANIM == ModelData.eModel)
+		{
+			size_t vertexCount = 0;
+			DatFile.read(reinterpret_cast<_char*>(&vertexCount), sizeof(size_t));
+			mesh.AnimVertex.resize(vertexCount);
+			DatFile.read(reinterpret_cast<_char*>(mesh.AnimVertex.data()), vertexCount * sizeof(VTXANIMMESH));
 
-		DatFile.read(reinterpret_cast<_char*>(&mesh.iNumBones), sizeof(_uint));
+			DatFile.read(reinterpret_cast<_char*>(&mesh.iNumBones), sizeof(_uint));
 
-		size_t boneIndexCount = 0;
-		DatFile.read(reinterpret_cast<_char*>(&boneIndexCount), sizeof(size_t));
-		mesh.BoneIndices.resize(boneIndexCount);
-		DatFile.read(reinterpret_cast<_char*>(mesh.BoneIndices.data()), boneIndexCount * sizeof(_int));
+			size_t boneIndexCount = 0;
+			DatFile.read(reinterpret_cast<_char*>(&boneIndexCount), sizeof(size_t));
+			mesh.BoneIndices.resize(boneIndexCount);
+			DatFile.read(reinterpret_cast<_char*>(mesh.BoneIndices.data()), boneIndexCount * sizeof(_int));
+		}
+		else
+		{
+			size_t vertexCount = 0;
+			DatFile.read(reinterpret_cast<_char*>(&vertexCount), sizeof(size_t));
+			mesh.NonAnimVertex.resize(vertexCount);
+			DatFile.read(reinterpret_cast<_char*>(mesh.NonAnimVertex.data()), vertexCount * sizeof(VTXMESH));
+		}
 	}
 
 	if (ModelData.eModel != MODELTYPE::ANIM)
@@ -513,8 +523,6 @@ HRESULT CSaveLoader::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _w
 			MSG_BOX(TEXT("모델 로드 실패"));
 			return E_FAIL;
 		}
-
-		MSG_BOX(TEXT("모델 로드 성공"));
 		return S_OK;
 	}
 
@@ -528,10 +536,6 @@ HRESULT CSaveLoader::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _w
 	{
 		size_t nameSize = 0;
 		DatFile.read(reinterpret_cast<_char*>(&nameSize), sizeof(size_t));
-
-		//_wstring name(nameSize, L'\0');
-		//DatFile.read(reinterpret_cast<_char*>(&name[0]), nameSize * sizeof(_tchar));
-		//Bone.szName = name;
 
 		vector<_tchar> buffer(nameSize);
 		DatFile.read(reinterpret_cast<_char*>(buffer.data()), nameSize * sizeof(_tchar));
@@ -578,8 +582,6 @@ HRESULT CSaveLoader::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _w
 		MSG_BOX(TEXT("모델 데이터 로딩 실패"));
 		return E_FAIL;
 	}
-
-	MSG_BOX(TEXT("모델 데이터 로딩 완료"));
 	return S_OK;
 }
 

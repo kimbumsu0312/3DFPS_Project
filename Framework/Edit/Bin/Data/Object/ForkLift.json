@@ -1,4 +1,5 @@
 {
+    "Data_Path": "../Bin/Data/Object/ForkLiftData.dat",
     "MeshMaterial": [
         {
             "Materials": [
@@ -673,9 +674,7 @@
             ]
         }
     ],
-    "Mesh_Path": "../Bin/Data/Object/ForkLiftMesh.dat",
     "Model_name": "ForkLift",
-    "Model_path": "Prototype_Component_Model_ForkLift",
     "Model_type": 0,
     "iNumMaterials": 8,
     "iNumMeshes": 8
