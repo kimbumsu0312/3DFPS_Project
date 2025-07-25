@@ -1,0 +1,40 @@
+{
+    "AnimData": [
+        {
+            "AnimeName": "idle",
+            "EndFrame": 600,
+            "StartFrame": 0,
+            "TickPerSecond": 25.0
+        },
+        {
+            "AnimeName": "idle",
+            "EndFrame": 600,
+            "StartFrame": 0,
+            "TickPerSecond": 25.0
+        },
+        {
+            "AnimeName": "idle",
+            "EndFrame": 600,
+            "StartFrame": 0,
+            "TickPerSecond": 25.0
+        },
+        {
+            "AnimeName": "idle",
+            "EndFrame": 600,
+            "StartFrame": 0,
+            "TickPerSecond": 25.0
+        },
+        {
+            "AnimeName": "idle",
+            "EndFrame": 600,
+            "StartFrame": 0,
+            "TickPerSecond": 25.0
+        },
+        {
+            "AnimeName": "idle",
+            "EndFrame": 600,
+            "StartFrame": 0,
+            "TickPerSecond": 25.0
+        }
+    ]
+}

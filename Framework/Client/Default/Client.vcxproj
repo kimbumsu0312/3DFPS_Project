@@ -163,6 +163,7 @@
     <ClInclude Include="..\public\Aim_Sniper.h" />
     <ClInclude Include="..\public\Announce.h" />
     <ClInclude Include="..\public\BackGround.h" />
+    <ClInclude Include="..\public\Body_Player.h" />
     <ClInclude Include="..\public\Button.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\public\3DItem.h" />
@@ -217,6 +218,7 @@
     <ClCompile Include="..\private\Aim_Sniper.cpp" />
     <ClCompile Include="..\private\Announce.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
+    <ClCompile Include="..\private\Body_Player.cpp" />
     <ClCompile Include="..\private\Button.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\private\3DItem.cpp" />

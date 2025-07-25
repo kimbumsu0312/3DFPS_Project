@@ -315,7 +315,7 @@ void CVIBuffer_Terrain::Terrain_Hight(bool raise, _float brushRadius, _float int
 	if (!(IsPicked(pTransformCom, fMousePos)))
 		return;
 
-	for (_int z = -brushRadius; z <= brushRadius; ++z) {
+	for (_int z = - brushRadius; z <= brushRadius; ++z) {
 		for (_int x = -brushRadius; x <= brushRadius; ++x) {
 			// 거리 계산 (XZ 평면)
 			_float distance = sqrt(x * x + z * z);
@@ -379,7 +379,7 @@ _bool CVIBuffer_Terrain::IsPicked(CTransform& pTransform, _float3& pOut)
 	m_pGameInstance->TransformToLocalSpace(pTransform);
 	_uint* pIndices = reinterpret_cast<_uint*>(m_pIndices);
 
-	for (_int i = 0; i < m_iNumIndices / 3; i++)
+	for (_uint i = 0; i < m_iNumIndices / 3; i++)
 	{
 		_uint i0 = pIndices[i * 3 + 0];
 		_uint i1 = pIndices[i * 3 + 1];
@@ -419,7 +419,7 @@ void CVIBuffer_Terrain::UpdateTerrain()
 
 CVIBuffer_Terrain* CVIBuffer_Terrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pHeightMapFilePath)
 {
-	CVIBuffer_Terrain* pInstance = new CVIBuffer_Terrain(pDevice, pContext);
+ 	CVIBuffer_Terrain* pInstance = new CVIBuffer_Terrain(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(pHeightMapFilePath)))
 	{

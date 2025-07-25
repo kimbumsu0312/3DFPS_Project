@@ -10,9 +10,6 @@
     <Filter Include="01.Utility\99.Base">
       <UniqueIdentifier>{674086bc-344d-45b0-b974-f3170dec72c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Defines">
-      <UniqueIdentifier>{ee0451a2-009f-4aae-956b-712deef8dc33}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00.System\00.Timers">
       <UniqueIdentifier>{ee5782e6-7ba7-437d-8225-e1d387045b05}</UniqueIdentifier>
     </Filter>
@@ -126,6 +123,15 @@
     </Filter>
     <Filter Include="01.Utility\03.Component\Animation_Controller">
       <UniqueIdentifier>{8642fe52-6a73-4b96-847e-ab10bec582f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObject\ContainerObject">
+      <UniqueIdentifier>{4a94c3bd-e518-4064-b365-fa92a4456c33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.GameObject\ContainerObject\PartObject">
+      <UniqueIdentifier>{8807d54b-bd3c-43c0-9e19-e1a49a273191}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Defines">
+      <UniqueIdentifier>{ee0451a2-009f-4aae-956b-712deef8dc33}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -261,6 +267,12 @@
     <ClInclude Include="..\public\Animatio_Controller.h">
       <Filter>01.Utility\03.Component\Animation_Controller</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ContainerObject.h">
+      <Filter>01.Utility\02.GameObject\ContainerObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PartObject.h">
+      <Filter>01.Utility\02.GameObject\ContainerObject\PartObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -376,6 +388,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Animatio_Controller.cpp">
       <Filter>01.Utility\03.Component\Animation_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ContainerObject.cpp">
+      <Filter>01.Utility\02.GameObject\ContainerObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PartObject.cpp">
+      <Filter>01.Utility\02.GameObject\ContainerObject\PartObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
