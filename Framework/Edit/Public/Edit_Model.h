@@ -29,7 +29,8 @@ public:
 public:
 	HRESULT								Bind_Materials(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType, _uint iIndex);
 	HRESULT								Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
-	_bool								Play_Animation(_float fTimeDelta);
+	_bool								Play_Animation(_float fTimeDelta, _bool bIsAnimStop);
+	_bool								Play_Animation(_float fTimeDelta, _bool bIsAnimStop, _int iStartFrame, _int iEndFrame);
 
 	_uint								Get_NumMeshes() const {	return m_ModelData.iNumMeshes;	}
 	_bool								Selete_Model(CTransform& pTransform, _float3& pOut);
@@ -37,6 +38,10 @@ public:
 	MODELTYPE							Get_ModelType() { return m_ModelData.eModel; }
 	_uint								Get_AnimationNum() { return m_iNumAnimations; }
 	void								Set_Animations(_uint AnimiIndex, _bool IsLoop = false);
+
+	void								Set_Animation(_int i, _float fTickPerSecond_float, _float fCurrentTrackPosition);
+	_float								Get_Animation(_int i);
+
 private:
 	SAVE_MODEL							m_ModelData = {};
 	const aiScene*						m_pAIScene = { nullptr };

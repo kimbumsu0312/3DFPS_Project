@@ -3,6 +3,7 @@
 
 namespace Engine
 {
+	enum class ANIM_STATUS {STOP, PLAY, END};
 	enum class DATA_TYPE { TERRAIN, LEVEL, END };
 	enum class MODELTYPE { NONANIM, ANIM};
 	enum class D3DTS { VIEW, PROJ, END};

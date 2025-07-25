@@ -7,7 +7,7 @@
 #include "Terrain.h"
 #include "MapObject.h"
 #include "Engine_Defines.h"
-
+#include "Edit_Model.h"
 IMPLEMENT_SINGLETON(CImgui_Manger)
 
 CImgui_Manger::CImgui_Manger()
@@ -119,6 +119,7 @@ void CImgui_Manger::Update_Map()
 	}
 	static _int g_iTerrainSizeX = 200;
 	static _int g_iTerrainSizeZ = 200;
+	
 	if (BeginTabBar("옵션"))
 	{
 		if (BeginTabItem("Terrain"))
@@ -141,7 +142,7 @@ void CImgui_Manger::Update_Map()
 				
 				CTerrain* pTerrain = CTerrain::Create(m_pDevice, m_pContext, &Desc);
 
-				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_BackGround"), ENUM_CLASS(LEVEL::MAP), TEXT("Prototype_GameObject_Terrain"), pTerrain)))
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_BackGround"), ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Terrain"), pTerrain)))
 					MSG_BOX(TEXT("Failed to Created : Terrain"));
 				m_pTerrain = pTerrain;
 				Safe_AddRef(m_pTerrain);
@@ -321,8 +322,8 @@ void CImgui_Manger::Update_Map()
 
 		if (BeginTabItem("SaveLoad"))
 		{
-			InputText("파일 이름: ", m_szFileName, MAX_PATH);
 #pragma region TERRAIN_SAVELOAD
+			InputText("파일 이름: ", m_szFileName, MAX_PATH);
 			if (Button("Terrain Save"))
 			{
 				if (m_pTerrain != nullptr && m_szFileName != "")
@@ -353,7 +354,7 @@ void CImgui_Manger::Update_Map()
 
 					CTerrain* pTerrain = CTerrain::Create(m_pDevice, m_pContext, &Desc);
 
-					if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_BackGround"), ENUM_CLASS(LEVEL::MAP), TEXT("Prototype_GameObject_Terrain"), pTerrain)))
+					if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_BackGround"), ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Terrain"), pTerrain)))
 						MSG_BOX(TEXT("Failed to Created : Terrain"));
 					m_pTerrain = pTerrain;
 					Safe_AddRef(m_pTerrain);
@@ -394,31 +395,163 @@ void CImgui_Manger::Update_Map()
 
 void CImgui_Manger::Update_Model()
 {
-	Begin("Selete Level!");
-
-	if (Button("EDIT_MAP"))
+	static _int		g_iEreaseData = {};
+	static _char	g_szAnimName[MAX_PATH] = {};
+	static _int		g_iStartFrame = {};
+	static _int		g_iEndFrame = {};
+	static _float   g_fTickPerSecond = {};
+	static _float   g_SetTick = {};
+	static _float   g_SetCulFream = {};
+	static char		g_AnimFilePath = {};
+	static _float   g_CurTrackPositon = {};
+	static _float   g_Duration = {};
+	Begin("ModelData");
+	if (BeginTabBar("옵션"))
 	{
-		m_pGameInstance->Publish(Event_NextLevel{ LEVEL::MAP });
-		m_eLevel = LEVEL::MAP;
+		if (BeginTabItem("Model"))
+		{
+			if (Combo("##Model", &m_iCurModel_Index, g_ModelPath, IM_ARRAYSIZE(g_ModelPath)))
+			{
+				m_szModelPath = g_ModelPath[m_iCurModel_Index];
+				Text("선택된 항목: %s", g_ModelPath[m_iCurModel_Index]);
+			}
+
+			if(Button("Create"))
+			{
+				if(m_pModel != nullptr)
+					Erase_Model();
+				CMapObject::MODEL_OBJECT_DESC Desc{};
+				Desc.vPos = { 0.f, 0.f, 0.f, 1.f };
+				Desc.szModel_Path = Get_ModelPath();
+				Desc.szObject_Path = TEXT("Prototype_GameObject_Model");
+
+				CMapObject* pInstance = static_cast<CMapObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Model"), &Desc));
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MODEL), TEXT("Layer_Model"), ENUM_CLASS(LEVEL::MODEL), TEXT("Prototype_GameObject_Model"), pInstance)))
+					MSG_BOX(TEXT("Failed to Created : Model"));
+				
+				if (pInstance != nullptr)
+				{
+					m_pModel = pInstance;
+					Safe_AddRef(m_pModel);
+					m_pModelCom = m_pModel->Get_Model();
+				}
+			}
+			EndTabItem();
+		}
+
+		if (BeginTabItem("Animation"))
+		{
+			if (m_pModel != nullptr)
+			{
+				g_CurTrackPositon = m_pModelCom->Get_Animation(1);
+				g_Duration = m_pModelCom->Get_Animation(2);
+				Text("TickPerSecond : %.2f", m_pModelCom->Get_Animation(0));
+				Text("CurTrackPositon : %.2f", g_CurTrackPositon);
+
+				if (SliderFloat("##AnimSlider", &g_CurTrackPositon, 0.f, g_Duration))
+					m_pModelCom->Set_Animation(1, 0.f, g_CurTrackPositon);
+
+				if (Button("TickPerSecondAdd"))
+					m_pModelCom->Set_Animation(0, g_SetTick, 0.f);
+				SameLine();
+				InputFloat("##TickPerSecondAddValue", &g_SetTick);
+
+				if (Button("CurTrackPositonAdd"))
+					m_pModelCom->Set_Animation(1, 0.f, g_SetCulFream);
+				SameLine();
+				InputFloat("##CurTrackPositonAddValue", &g_SetCulFream);
+
+				if (Button("-(z)##Frame") || m_pGameInstance->IsKeyHold(DIK_Z))
+					m_pModelCom->Set_Animation(2, 0.f, -1);
+				SameLine();
+				if (Button("Stop(x)") || m_pGameInstance->IsKeyHold(DIK_X))
+					m_pModel->Set_AnimStop();
+
+				SameLine();
+				if (Button("+(c)##Frame") || m_pGameInstance->IsKeyHold(DIK_C))
+					m_pModelCom->Set_Animation(2, 0.f, 1);
+
+				InputText("AnimName", g_szAnimName, MAX_PATH);
+				InputInt("StartFrame", &g_iStartFrame);
+				InputInt("ENDFrame", &g_iEndFrame);
+				InputFloat("TickPerSecond", &g_fTickPerSecond);
+
+				if (Button("DataUpdate"))
+				{
+					SAVE_ANIMDATA Data{};
+					Data.szAnimName = g_szAnimName;
+					Data.iStartFrame = g_iStartFrame;
+					Data.iEndFrame = g_iEndFrame;
+					Data.fTickPerSecond = g_fTickPerSecond;
+
+					m_SaveAnimData.push_back(Data);
+				}
+			}
+			EndTabItem();
+		}
+
+	
+		EndTabBar();
 	}
 	End();
 
-	static _float f = 10.f;
-	static _int counter = 0;
 
-	Begin("Model Tool");
-	Checkbox("AnotherWindow", &show_another_window);
-
-	SliderFloat("float", &f, 0.0f, 1.0f);
-
-	End();
-	if (show_another_window)
+	if (m_SaveAnimData.size() != 0)
 	{
+		Begin("AnimationTable");
+		if (BeginTable("##AnimationTable", 5, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
+		{
+			// 컬럼 헤더 설정
+			TableSetupColumn("Num");
+			TableSetupColumn("Name");
+			TableSetupColumn("Start Frame");
+			TableSetupColumn("End Frame");
+			TableSetupColumn("TickPerSecond");
+			TableHeadersRow();
+			_int i = 0;
+			// 각 행에 데이터 출력
+			for (const auto& Data : m_SaveAnimData)
+			{
+				TableNextRow();
+				TableSetColumnIndex(0);
+				Text("%d", i);
 
-		Begin("Another Window", &show_another_window);  
-		Text("Hello from another window!");
-		if (Button("Close Me"))
-			show_another_window = false;
+				TableSetColumnIndex(1);
+				Text("%s", Data.szAnimName.c_str());
+
+				TableSetColumnIndex(2);
+				Text("%u", Data.iStartFrame);
+
+				TableSetColumnIndex(3);
+				Text("%u", Data.iEndFrame);
+
+				TableSetColumnIndex(4);
+				Text("%.2f", Data.fTickPerSecond);
+				++i;
+			}
+			EndTable();
+
+			InputInt("##EraseIndex", &g_iEreaseData);	
+			SameLine();
+			if(Button("erease"))
+			{ 
+				if (g_iEreaseData < m_SaveAnimData.size())
+					m_SaveAnimData.erase(m_SaveAnimData.begin() + g_iEreaseData);
+			}
+
+			InputText("##jsonDataSave ", m_szFileName, MAX_PATH);
+			SameLine();
+			if (Button("DataSave"))
+			{
+				if (m_SaveAnimData.size() != 0 && m_szFileName != "")
+				{
+					string szFileName = m_szFileName;
+					m_pGameInstance->File_Save_AnimData(m_szFileName, m_SaveAnimData);
+				}
+				else
+					MSG_BOX(TEXT("세이브 실패"));
+			}
+		}
 		End();
 	}
 
@@ -510,6 +643,7 @@ void CImgui_Manger::Erase_Model()
 	m_pModel->SetDead();
 	m_pModel = nullptr;
 	m_pTransform = nullptr;
+	m_pModelCom = nullptr;
 }
 
 void CImgui_Manger::Move_Model(_float3 fPos)
@@ -531,8 +665,9 @@ void CImgui_Manger::Free()
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	DestroyContext();
-	m_pModel = nullptr;
+	m_pModelCom = nullptr;
 	m_pTransform = nullptr;
+	Safe_Release(m_pModel);
 	Safe_Release(m_pWireframeRS);
 	Safe_Release(m_pSolidframeRS);
 	Safe_Release(m_pDevice);

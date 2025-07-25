@@ -51,7 +51,7 @@ HRESULT CMapObject::Initialize(void* pArg)
 
 	m_pGameInstance->Subscribe<Event_Model_Index_Set>([&](const Event_Model_Index_Set& e) {if (e.i < m_iIndex) { m_iIndex -= 1; } });
 
-	m_pModelCom->Set_Animations(rand() % 20, true);
+	m_pModelCom->Set_Animations(0, true);
 	return S_OK;
 }
 
@@ -77,7 +77,8 @@ void CMapObject::Update(_float fTimeDelta)
 			m_pGameInstance->File_Save_Object(m_pModelCom->Get_ModelData().szName, m_pModelCom->Get_ModelData().eModel, m_pModelCom->Get_ModelData());
 		}
 	}
-	if (m_pModelCom->Play_Animation(fTimeDelta))
+
+	if (m_pModelCom->Play_Animation(fTimeDelta, m_bisAnimstop))
 		_int a = 10;
 
 }

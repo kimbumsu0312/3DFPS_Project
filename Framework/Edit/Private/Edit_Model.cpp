@@ -12,8 +12,7 @@ CEdit_Model::CEdit_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) :
 
 CEdit_Model::CEdit_Model(const CEdit_Model& Prototype) : CComponent(Prototype), m_Meshes(Prototype.m_Meshes)
 , m_Materials(Prototype.m_Materials), m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }
-, m_ModelData(Prototype.m_ModelData), m_Animations(Prototype. m_Animations)
-, m_iCurrentAnimIndex(Prototype.m_iCurrentAnimIndex), m_iNumAnimations(Prototype.m_iNumAnimations)
+, m_ModelData(Prototype.m_ModelData), m_iCurrentAnimIndex(Prototype.m_iCurrentAnimIndex), m_iNumAnimations(Prototype.m_iNumAnimations)
 {
 	for (auto& pPrototypeBone : Prototype.m_Bones)
 		m_Bones.push_back(pPrototypeBone->Clone());
@@ -24,8 +23,9 @@ CEdit_Model::CEdit_Model(const CEdit_Model& Prototype) : CComponent(Prototype), 
 	for (auto& pMaterial : m_Materials)
 		Safe_AddRef(pMaterial);
 
-	for (auto& pAnimations : m_Animations)
-		Safe_AddRef(pAnimations);
+	for (auto& pPrototypeAnimation : Prototype.m_Animations)
+		m_Animations.push_back(pPrototypeAnimation->Clone());
+
 }
 
 HRESULT CEdit_Model::Initialize_Prototype(MODELTYPE eModelType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, void* pArg)
@@ -89,7 +89,7 @@ HRESULT CEdit_Model::Bind_BoneMatrices(CShader* pShader, const _char* pConstantN
 	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones);
 }
 
-_bool CEdit_Model::Play_Animation(_float fTimeDelta)
+_bool CEdit_Model::Play_Animation(_float fTimeDelta, _bool bIsAnimStop)
 {
 	if (m_ModelData.eModel != MODELTYPE::ANIM)
 		return false;
@@ -97,11 +97,27 @@ _bool CEdit_Model::Play_Animation(_float fTimeDelta)
 	m_bisFinished = false;
 
 	//현재 애니메이션에 뼈 트랜슾폼 매트릭스를 갱신
-	m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta,m_bisLoop, &m_bisFinished);
+	m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta,m_bisLoop, &m_bisFinished, bIsAnimStop);
 
 	for (auto& pBone : m_Bones)
 	{
 		//뼈들의 행렬을 부모 뼈의 행렬에 맞게 맞춰준다.
+		pBone->Update_CombinedTransformationMatrix(m_PreTransformMatrix, m_Bones);
+	}
+
+	return m_bisFinished;
+}
+
+_bool CEdit_Model::Play_Animation(_float fTimeDelta, _bool bIsAnimStop, _int iStartFrame, _int iEndFrame)
+{
+	if (m_ModelData.eModel != MODELTYPE::ANIM)
+		return false;
+
+	m_bisFinished = false;
+	m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, &m_bisFinished, bIsAnimStop, iStartFrame, iEndFrame);
+
+	for (auto& pBone : m_Bones)
+	{
 		pBone->Update_CombinedTransformationMatrix(m_PreTransformMatrix, m_Bones);
 	}
 
@@ -126,6 +142,26 @@ void CEdit_Model::Set_Animations(_uint iIndex, _bool IsLoop)
 	
 	m_iCurrentAnimIndex = iIndex; 
 	m_bisLoop = IsLoop;
+}
+
+void CEdit_Model::Set_Animation(_int i, _float fTickPerSecond_float, _float fCurrentTrackPosition)
+{
+	if (i == 0)
+		m_Animations[0]->Set_TickPerSecond(fTickPerSecond_float);
+	else if (i == 1)
+		m_Animations[0]->Set_CurTrackPositon(fCurrentTrackPosition);
+	else
+		m_Animations[0]->Add_CurTrackPositon((_int)fCurrentTrackPosition);
+}
+
+_float CEdit_Model::Get_Animation(_int i)
+{
+	if (i == 0)
+		return m_Animations[0]->Get_TickPerSecond();
+	else if (i == 1)
+		return m_Animations[0]->Get_CurTrackPositon();
+	else
+		return m_Animations[0]->Get_Duration();
 }
 
 HRESULT CEdit_Model::Render(_uint iMeshIndex)

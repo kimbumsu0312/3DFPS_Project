@@ -29,6 +29,7 @@ private:
 
 public:
 	static CBone*		Create(const SAVE_BONE& pBone);
+	CBone*				Clone();
 	virtual void		Free() override;
 };
 NS_END

@@ -6,11 +6,22 @@ CAnimation::CAnimation()
 {
 }
 
+CAnimation::CAnimation(const CAnimation& Prototype) : m_fDuration(Prototype.m_fDuration)
+    , m_fTickPerSecond(Prototype.m_fTickPerSecond), m_fCurrentTrackPosition(Prototype.m_fCurrentTrackPosition)
+    , m_iNumChannels(Prototype.m_iNumChannels), m_Channels(Prototype.m_Channels)
+    , m_CurrentKeyFrameIndices(Prototype.m_CurrentKeyFrameIndices)
+{
+    for (auto& pChannel : m_Channels)
+        Safe_AddRef(pChannel);
+}
+
 HRESULT CAnimation::Initialize(const SAVE_ANIM& pAnimation, const vector<class CBone*>& Bones)
 {
     m_iNumChannels = pAnimation.iNumChannels;
     m_fDuration = pAnimation.fDuration;
     m_fTickPerSecond = pAnimation.fTickPerSecond;
+
+    m_CurrentKeyFrameIndices.resize(m_iNumChannels);
 
     for (size_t i = 0; i < m_iNumChannels; i++)
     {
@@ -24,31 +35,31 @@ HRESULT CAnimation::Initialize(const SAVE_ANIM& pAnimation, const vector<class C
     return S_OK;
 }
 
-void CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta, _bool isLoop, _bool* pFinished)
+void CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta, _bool isLoop, ANIM_STATUS eAnimStatus, _bool* pFinished, const ANIMEFRAME& pAnimFrameData)
 {
-    //현재 키프레임
-    m_fCurrentTrackPosition += m_fTickPerSecond * fTimeDelta;
+    if(ANIM_STATUS::PLAY == eAnimStatus )
+        m_fCurrentTrackPosition += pAnimFrameData.fTickPerSecond * fTimeDelta;
 
-    //현재 트랙 포지션이 마지막에 도달했는지 체크
-    if (m_fCurrentTrackPosition >= m_fDuration)
+    if (m_fCurrentTrackPosition >= pAnimFrameData.iEndFrame)
     {
         if (false == isLoop)
         {
-            //루프가 아니면 끝났다고 알려줌
             *pFinished = true;
-            m_fCurrentTrackPosition = m_fDuration;
+            m_fCurrentTrackPosition = pAnimFrameData.iEndFrame;
+            m_fPreTrackPosition = m_fCurrentTrackPosition;
             return;
         }
-        else //루프면 0부터 다시 시작
-            m_fCurrentTrackPosition = 0.f;
+        else
+            m_fCurrentTrackPosition = pAnimFrameData.iStartFrame;
 
     }
-    for (auto& pChannel : m_Channels)
+    for (_uint i = 0; i < m_iNumChannels; ++i)
     {
-        //움직여야 될 뼈들에 키프레임을 전달
-        pChannel->Update_TransformationMatrix(Bones, m_fCurrentTrackPosition);
+        m_Channels[i]->Update_TransformationMatrix(Bones, m_fCurrentTrackPosition, m_fPreTrackPosition, &m_CurrentKeyFrameIndices[i]);
     }
+    m_fPreTrackPosition = m_fCurrentTrackPosition;
 }
+
 
 CAnimation* CAnimation::Create(const SAVE_ANIM& pAnimation, const vector<class CBone*>& Bones)
 {
@@ -61,6 +72,11 @@ CAnimation* CAnimation::Create(const SAVE_ANIM& pAnimation, const vector<class C
     }
 
     return pInstance;
+}
+
+CAnimation* CAnimation::Clone()
+{
+    return new CAnimation(*this);
 }
 
 void CAnimation::Free()

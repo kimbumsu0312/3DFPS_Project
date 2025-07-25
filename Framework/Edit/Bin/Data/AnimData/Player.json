@@ -1,0 +1,34 @@
+{
+    "AnimData": [
+        {
+            "AnimeName": "Idle",
+            "EndFrame": 50,
+            "StartFrame": 0,
+            "TickPerSecond": 25.0
+        },
+        {
+            "AnimeName": "attack",
+            "EndFrame": 80,
+            "StartFrame": 0,
+            "TickPerSecond": 25.0
+        },
+        {
+            "AnimeName": "attack",
+            "EndFrame": 80,
+            "StartFrame": 0,
+            "TickPerSecond": 25.0
+        },
+        {
+            "AnimeName": "attack",
+            "EndFrame": 80,
+            "StartFrame": 0,
+            "TickPerSecond": 25.0
+        },
+        {
+            "AnimeName": "attack",
+            "EndFrame": 80,
+            "StartFrame": 0,
+            "TickPerSecond": 25.0
+        }
+    ]
+}

@@ -86,6 +86,41 @@ HRESULT CSaveLoader::File_Save_Object(string szFilename, MODELTYPE eType, const 
 	return S_OK;
 }
 
+HRESULT CSaveLoader::File_Save_AnimData(string szFilename, const vector<SAVE_ANIMDATA>& AnimDatas)
+{
+	string FilePath = "../Bin/Data/AnimData/" + szFilename + ".json";
+
+
+	json jAnimData;
+
+	for (auto& AnimData : AnimDatas)
+	{
+		json jData;
+
+		jData["AnimeName"] = AnimData.szAnimName;
+		jData["StartFrame"] = AnimData.iStartFrame;
+		jData["EndFrame"] = AnimData.iEndFrame;
+		jData["TickPerSecond"] = AnimData.fTickPerSecond;
+
+		jAnimData["AnimData"].push_back(jData);
+	}
+
+	ofstream file(FilePath);
+	if (file.is_open())
+	{
+		file << jAnimData.dump(4);
+		file.close();
+		MSG_BOX(TEXT("데이터 저장 완료"));
+	}
+	else
+	{
+		MSG_BOX(TEXT("데이터 저장 실패"));
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 HRESULT CSaveLoader::LevelSave(string szFilename)
 {
 	ofstream out(szFilename, ios::binary);

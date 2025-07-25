@@ -124,6 +124,9 @@
     <Filter Include="01.Utility\03.Component\Model\Animation\Channel">
       <UniqueIdentifier>{8b896f33-1275-4e25-b183-d5bd434b70bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Component\Animation_Controller">
+      <UniqueIdentifier>{8642fe52-6a73-4b96-847e-ab10bec582f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -255,6 +258,9 @@
     <ClInclude Include="..\public\Channel.h">
       <Filter>01.Utility\03.Component\Model\Animation\Channel</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Animatio_Controller.h">
+      <Filter>01.Utility\03.Component\Animation_Controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -367,6 +373,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Channel.cpp">
       <Filter>01.Utility\03.Component\Model\Animation\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Animatio_Controller.cpp">
+      <Filter>01.Utility\03.Component\Animation_Controller</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

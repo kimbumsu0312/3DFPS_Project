@@ -4,7 +4,7 @@
 #include "Camera_Free.h"
 #include "Imgui_Manager.h"
 #include "Level_Loading.h"
-
+#include "Terrain.h"
 CLevel_Model::CLevel_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CLevel{ pDevice, pContext }
 {
 }
@@ -17,10 +17,7 @@ HRESULT CLevel_Model::Initialize()
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
-		return E_FAIL;
-
-	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
 	m_pGameInstance->Subscribe<Event_NextLevel>([&](const Event_NextLevel& e) {m_bIsNextLevel = true; m_eNextLevel = e.eLevel; });
@@ -65,7 +62,7 @@ HRESULT CLevel_Model::Ready_Layer_Camera(const _wstring& strLayerTag)
 {
 	CCamera_Free::CAMERA_FREE_DESC CameraDesc{};
 
-	CameraDesc.vEye = _float4(0.f, 0.f, -5.f, 1.f);
+	CameraDesc.vEye = _float4(0.f, 5.f, -5.f, 1.f);
 	CameraDesc.vAt = _float4(0.f, 0.f, 0.f, 1.f);
 	CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.fNear = 0.1f;
@@ -81,20 +78,22 @@ HRESULT CLevel_Model::Ready_Layer_Camera(const _wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_Model::Ready_Layer_Player(const _wstring& strLayerTag)
+HRESULT CLevel_Model::Ready_Layer_BackGround(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MODEL), strLayerTag,
-		ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"))))
-		return E_FAIL;
+	CTerrain::TERRAIN_DESC Desc;
+	Desc.iNumverticesX = 10;
+	Desc.iNumverticesZ = 10;
+	Desc.Terrain_Data = nullptr;
+	Desc.szModel_Path = TEXT("Prototype_Component_VIBuffer_Terrain");
+
+	CTerrain* pTerrain = CTerrain::Create(m_pDevice, m_pContext, &Desc);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MODEL), TEXT("Layer_BackGround"), ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Terrain"), pTerrain)))
+		MSG_BOX(TEXT("Failed to Created : Terrain"));
+
 
 	return S_OK;
 }
-
-HRESULT CLevel_Model::Ready_Layer_Monster(const _wstring& strLayerTag)
-{
-	return S_OK;
-}
-
 
 CLevel_Model* CLevel_Model::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

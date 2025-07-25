@@ -133,6 +133,7 @@ public:
 public:
 	HRESULT						File_Save_TerrainLevel(DATA_TYPE eData, string szFilename, CVIBuffer* pVIBuffer);
 	HRESULT						File_Save_Object(string szFilename, MODELTYPE eType, const SAVE_MODEL& pData);
+	HRESULT						File_Save_AnimData(string szFilename, const vector<SAVE_ANIMDATA>& AnimDatas);
 
 	HRESULT						Add_SaveObject(class CGameObject* pObject, _int& pOut);
 	HRESULT						Erase_SaveObject(_int iIndex);

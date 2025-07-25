@@ -17,7 +17,7 @@ public:
 public:
 	HRESULT							Bind_Materials(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _int iTexIndex, _uint iIndex);
 	HRESULT							Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
-	_bool							Play_Animation(_float fTimeDelta);
+	_bool							Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData);
 
 	_uint							Get_NumMeshes() const { return m_iNumMeshes; }
 	void							Set_Animations(_uint AnimiIndex, _bool IsLoop = false);
