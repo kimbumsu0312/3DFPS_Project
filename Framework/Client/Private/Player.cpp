@@ -1,12 +1,15 @@
 #include "pch.h"
 #include "Player.h"
+#include "Body_Player.h"
 
-CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CGameObject(pDevice, pContext)
+CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CContainerObject(pDevice, pContext)
 {
+
 }
 
-CPlayer::CPlayer(const CPlayer& Prototype) : CGameObject (Prototype)
+CPlayer::CPlayer(const CPlayer& Prototype) : CContainerObject (Prototype)
 {
+
 }
 
 HRESULT CPlayer::Initialize_Prototype()
@@ -22,11 +25,15 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	if (FAILED(Ready_PartObjects()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
+
 }
 
 void CPlayer::Update(_float fTimeDelta)
@@ -35,35 +42,27 @@ void CPlayer::Update(_float fTimeDelta)
 
 void CPlayer::Late_Update(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
-		return;
+
 }
 
 HRESULT CPlayer::Render()
 {
-	if (FAILED(m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW))))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ))))
-		return E_FAIL;
-
-	//m_pModel->Render(m_pShaderCom, "g_DiffuseTexture", 1, 0);
-		
 	return S_OK;
 }
 
 HRESULT CPlayer::Ready_Components()
 {
-	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxMesh"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
-		return E_FAIL;
+	return S_OK;
+}
 
-//	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Fiona"),
-//		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pModel), nullptr)))
-//		return E_FAIL;
+HRESULT CPlayer::Ready_PartObjects()
+{
+	CBody_Player::BODY_DESC BodyDesc{};
+	BodyDesc.pState = &m_iState;
+	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+
+	//if(FAILED(__super::Add_PartObject(TEXT("Part_Body"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Player"), &BodyDesc)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -97,8 +96,4 @@ CGameObject* CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
-
-//	Safe_Release(m_pModel);
-	Safe_Release(m_pShaderCom);
-
 }

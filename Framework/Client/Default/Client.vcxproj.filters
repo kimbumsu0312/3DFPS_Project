@@ -157,6 +157,9 @@
     <Filter Include="02.GameObject\Mouse\Click_FX">
       <UniqueIdentifier>{4bf151f8-6fe8-49d8-b287-df51579ead6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Player\Body">
+      <UniqueIdentifier>{4d644ce2-40e6-4369-8b77-e4db68e45346}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -318,6 +321,9 @@
     <ClInclude Include="..\public\Mouse_Click_Fx.h">
       <Filter>02.GameObject\Mouse\Click_FX</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Body_Player.h">
+      <Filter>02.GameObject\Player\Body</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -473,6 +479,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Mouse_Click_Fx.cpp">
       <Filter>02.GameObject\Mouse\Click_FX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Body_Player.cpp">
+      <Filter>02.GameObject\Player\Body</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
