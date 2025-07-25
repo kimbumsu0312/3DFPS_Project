@@ -93,7 +93,7 @@ HRESULT CLevel_Map::Ready_Layer_BackGround(const _wstring& strLayerTag)
 HRESULT CLevel_Map::Ready_Layer_Model(const _wstring& strLayerTag)
 {
 	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), strLayerTag,
-	//	ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"))))
+	//	ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Model"))))
 	//	return E_FAIL;
 
 	return S_OK;

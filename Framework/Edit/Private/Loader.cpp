@@ -84,9 +84,7 @@ HRESULT CLoader::Loading_For_Map_Level()
 {
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐를 로딩중입니다."));
 	/* Prototype_Component_Texture_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAP), TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile%d.dds"), 2))))
-		return E_FAIL;
+
 
 
 
@@ -96,17 +94,11 @@ HRESULT CLoader::Loading_For_Map_Level()
 	//	CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp")))))
 	//	return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAP), TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("쉐이더를 로딩중입니다."));
 
 	lstrcpy(m_szLoadingText, TEXT("게임오브젝트원형를 로딩중입니다."));
 	/* Prototype_GameObject_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAP), TEXT("Prototype_GameObject_Terrain"),
-		CTerrain::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("맵 로딩중"));
 	m_isFinished = true;
@@ -115,8 +107,11 @@ HRESULT CLoader::Loading_For_Map_Level()
 
 HRESULT CLoader::Loading_For_Model_Level()
 {
-	m_isFinished = true;
+
 	lstrcpy(m_szLoadingText, TEXT("모델 로딩중"));
+
+
+
 	m_isFinished = true;
 	return S_OK;
 }

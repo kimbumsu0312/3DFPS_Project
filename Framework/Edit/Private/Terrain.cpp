@@ -78,10 +78,10 @@ void CTerrain::Update(_float fTimeDelta)
                 Desc.vPos.z = vSetModelPos.z;
                 Desc.vPos.w = 1.f;
                 Desc.szModel_Path = CImgui_Manger::GetInstance()->Get_ModelPath();
-                Desc.szObject_Path = TEXT("Prototype_GameObject_Player");
+                Desc.szObject_Path = TEXT("Prototype_GameObject_Model");
 
                 if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Model"),
-                    ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"), &Desc)))
+                    ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Model"), &Desc)))
                     return;
             
             }
@@ -139,11 +139,11 @@ HRESULT CTerrain::Ready_Components(void* pArg)
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
         return E_FAIL;
 
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::MAP), TEXT("Prototype_Component_VIBuffer_Terrain"),
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Terrain"),
         TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), pArg)))
         return E_FAIL;
 
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::MAP), TEXT("Prototype_Component_Texture_Terrain"),
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Terrain"),
         TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
         return E_FAIL;
 

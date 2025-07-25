@@ -359,6 +359,11 @@ HRESULT CGameInstance::File_Save_Object(string szFilename, MODELTYPE eType, cons
 	return m_pSaveLoader->File_Save_Object(szFilename, eType, pData);
 }
 
+HRESULT CGameInstance::File_Save_AnimData(string szFilename, const vector<SAVE_ANIMDATA>& AnimDatas)
+{
+	return m_pSaveLoader->File_Save_AnimData(szFilename, AnimDatas);
+}
+
 HRESULT CGameInstance::Add_SaveObject(CGameObject* pObject, _int& pOut)
 {
 	return m_pSaveLoader->Add_SaveObject(pObject, pOut);

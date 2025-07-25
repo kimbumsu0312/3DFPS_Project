@@ -163,6 +163,7 @@ call Copy_Release.bat</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Animation.h" />
+    <ClInclude Include="..\public\Animatio_Controller.h" />
     <ClInclude Include="..\public\Base.h" />
     <ClInclude Include="..\public\Bone.h" />
     <ClInclude Include="..\Public\Camera.h" />
@@ -208,6 +209,7 @@ call Copy_Release.bat</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Animation.cpp" />
+    <ClCompile Include="..\private\Animatio_Controller.cpp" />
     <ClCompile Include="..\private\Base.cpp" />
     <ClCompile Include="..\private\Bone.cpp" />
     <ClCompile Include="..\Private\Camera.cpp" />

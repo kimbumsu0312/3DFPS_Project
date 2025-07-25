@@ -55,12 +55,6 @@
     <Filter Include="03.Component\Model\Material">
       <UniqueIdentifier>{f856d542-2f85-4023-b97e-8e1be488c2a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96.Utility">
-      <UniqueIdentifier>{16a338bc-46b0-4d7d-95dd-64b75bcfc40e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96.Utility\Imgui">
-      <UniqueIdentifier>{cca49efb-f975-4fbb-b8b2-f70115c02767}</UniqueIdentifier>
-    </Filter>
     <Filter Include="95.Manager">
       <UniqueIdentifier>{586f6ba7-9a45-4e79-80da-1713d2c80e79}</UniqueIdentifier>
     </Filter>
@@ -75,6 +69,12 @@
     </Filter>
     <Filter Include="03.Component\Model\Animation\Channel">
       <UniqueIdentifier>{11e5a1bd-23ad-4ebe-9b55-a0eb6ee2b6aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility">
+      <UniqueIdentifier>{16a338bc-46b0-4d7d-95dd-64b75bcfc40e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\Imgui">
+      <UniqueIdentifier>{cca49efb-f975-4fbb-b8b2-f70115c02767}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

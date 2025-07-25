@@ -11,11 +11,11 @@ CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CComponen
 
 CModel::CModel(const CModel& Prototype) : CComponent(Prototype), m_Meshes(Prototype.m_Meshes), m_iNumMeshes(Prototype.m_iNumMeshes)
 , m_Materials(Prototype.m_Materials), m_iNumMaterials(Prototype.m_iNumMaterials), m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }, m_eModelType(Prototype.m_eModelType)
-, m_Bones{ Prototype.m_Bones },m_Animations(Prototype.m_Animations), m_iCurrentAnimIndex(Prototype.m_iCurrentAnimIndex), m_iNumAnimations(Prototype.m_iNumAnimations)
+, m_iCurrentAnimIndex(Prototype.m_iCurrentAnimIndex), m_iNumAnimations(Prototype.m_iNumAnimations)
 {
-    
-    for (auto& pBone : m_Bones)
-        Safe_AddRef(pBone);
+    for (auto& pPrototypeBone : Prototype.m_Bones)
+        m_Bones.push_back(pPrototypeBone->Clone());
+
 
     for (auto& pMesh : m_Meshes)
         Safe_AddRef(pMesh);
@@ -23,8 +23,9 @@ CModel::CModel(const CModel& Prototype) : CComponent(Prototype), m_Meshes(Protot
     for (auto& pMaterial : m_Materials)
         Safe_AddRef(pMaterial);
 
-    for (auto& pAnim : m_Animations)
-        Safe_AddRef(pAnim);
+    for (auto& pPrototypeAnimation : Prototype.m_Animations)
+        m_Animations.push_back(pPrototypeAnimation->Clone());
+
 }
 
 HRESULT CModel::Initialize_Prototype(const SAVE_MODEL& pModelData)
@@ -85,19 +86,16 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, 
     return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones);
 }
 
-_bool CModel::Play_Animation(_float fTimeDelta)
+_bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData)
 {
     if (m_eModelType != MODELTYPE::ANIM)
         return false;
 
     m_bisFinished = false;
-
-    //현재 애니메이션에 뼈 트랜슾폼 매트릭스를 갱신
-    m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, &m_bisFinished);
+    m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &m_bisFinished, pAnimFrameData);
 
     for (auto& pBone : m_Bones)
     {
-        //뼈들의 행렬을 부모 뼈의 행렬에 맞게 맞춰준다.
         pBone->Update_CombinedTransformationMatrix(m_PreTransformMatrix, m_Bones);
     }
 

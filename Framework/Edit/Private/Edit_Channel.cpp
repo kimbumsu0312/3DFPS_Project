@@ -74,37 +74,50 @@ HRESULT CEdit_Channel::Initialize(const aiNodeAnim* pAIChannel, const vector<cla
     return S_OK;
 }
 
-void CEdit_Channel::Update_TransformationMatrix(const vector<class CEdit_Bone*>& Bones, _float fCurrentTrackPosition)
+void CEdit_Channel::Update_TransformationMatrix(const vector<class CEdit_Bone*>& Bones, _float fCurrentTrackPosition, _float fPreTrackPosition, _uint* iCurrentKeyFrameIndex)
 {
     //트랙 포지션 값을 0을 받으면 키 프레임 인덱스를 0으로 초기화 시킨다.
     if (fCurrentTrackPosition == 0.f)
-        m_iCurrentKeyFrameIndex = 0;
+        *iCurrentKeyFrameIndex = 0;
 
     //현재 뼈들의 행렬을 구해온다.
     _vector vScale, vRotation, vTranslation; 
 
     KEYFRAME        LastKeyFrame = m_KeyFrames.back();
 
-    //현재 받아온 트랙포지션이 마지막 키 프레임 트랙포지션보다 크거나 같으면 마지막 트랙 포지션 위치로 출력
     if (fCurrentTrackPosition >= LastKeyFrame.fTrackPosition)
     {
+        //현재 받아온 트랙포지션이 마지막 키 프레임 트랙포지션보다 크거나 같으면 마지막 트랙 포지션 위치로 출력
         vScale = XMLoadFloat3(&LastKeyFrame.vScale);
         vRotation = XMLoadFloat4(&LastKeyFrame.vRotation);
         vTranslation = XMVectorSetW(XMLoadFloat3(&LastKeyFrame.vTranslation), 1.f);
     }
+    else if (fPreTrackPosition > fCurrentTrackPosition)
+    {
+        if (fCurrentTrackPosition == 0.f || fPreTrackPosition > fCurrentTrackPosition)
+            *iCurrentKeyFrameIndex = 0;
+
+        while (*iCurrentKeyFrameIndex + 1 < m_KeyFrames.size() && fCurrentTrackPosition >= m_KeyFrames[*iCurrentKeyFrameIndex + 1].fTrackPosition)
+        {
+            ++*iCurrentKeyFrameIndex;
+        }
+        vScale = XMLoadFloat3(&m_KeyFrames[*iCurrentKeyFrameIndex].vScale);
+        vRotation = XMLoadFloat4(&m_KeyFrames[*iCurrentKeyFrameIndex].vRotation);
+        vTranslation = XMVectorSetW(XMLoadFloat3(&m_KeyFrames[*iCurrentKeyFrameIndex].vTranslation), 1.f);
+    }
     else
     {
         ////현재 트랙 포지션이 현재 키프레임 트랙포지션 +1 이상이면 현재 키프레임 트랙 포지션 값을 올려준다.
-        while (fCurrentTrackPosition >= m_KeyFrames[m_iCurrentKeyFrameIndex + 1].fTrackPosition)
-            ++m_iCurrentKeyFrameIndex;
+        while (fCurrentTrackPosition >= m_KeyFrames[*iCurrentKeyFrameIndex + 1].fTrackPosition)
+            ++*iCurrentKeyFrameIndex;
     
         ////현재 트랙 포지션 - 현재 키프레임의 트래 포지션 / 다음 키프레임의 트랙 포지션 - 다음 키프레임의 트랙 포지션
-        _float fRatio = (fCurrentTrackPosition - m_KeyFrames[m_iCurrentKeyFrameIndex].fTrackPosition) / (m_KeyFrames[m_iCurrentKeyFrameIndex + 1].fTrackPosition - m_KeyFrames[m_iCurrentKeyFrameIndex].fTrackPosition);
+        _float fRatio = (fCurrentTrackPosition - m_KeyFrames[*iCurrentKeyFrameIndex].fTrackPosition) / (m_KeyFrames[*iCurrentKeyFrameIndex + 1].fTrackPosition - m_KeyFrames[*iCurrentKeyFrameIndex].fTrackPosition);
 
         ////현재 키프레임에 각 값들을 fRatio 만큼 보간 시킨다.
-        vScale = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex].vScale), XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex + 1].vScale), fRatio);
-        vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_KeyFrames[m_iCurrentKeyFrameIndex].vRotation), XMLoadFloat4(&m_KeyFrames[m_iCurrentKeyFrameIndex + 1].vRotation), fRatio);
-        vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex].vTranslation), XMLoadFloat3(&m_KeyFrames[m_iCurrentKeyFrameIndex + 1].vTranslation), fRatio), 1.f);
+        vScale = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[*iCurrentKeyFrameIndex].vScale), XMLoadFloat3(&m_KeyFrames[*iCurrentKeyFrameIndex + 1].vScale), fRatio);
+        vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_KeyFrames[*iCurrentKeyFrameIndex].vRotation), XMLoadFloat4(&m_KeyFrames[*iCurrentKeyFrameIndex + 1].vRotation), fRatio);
+        vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_KeyFrames[*iCurrentKeyFrameIndex].vTranslation), XMLoadFloat3(&m_KeyFrames[*iCurrentKeyFrameIndex + 1].vTranslation), fRatio), 1.f);
     }
 
     _matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.0f, 0.0f, 0.0f, 1.f), vRotation, vTranslation);

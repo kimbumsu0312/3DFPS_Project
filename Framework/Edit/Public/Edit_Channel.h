@@ -12,12 +12,12 @@ private:
 
 public:
 	HRESULT							Initialize(const aiNodeAnim* pAIChannel, const vector<class CEdit_Bone*>& Bones, SAVE_ANIM* pAnim);
-	void							Update_TransformationMatrix(const vector<class CEdit_Bone*>& Bones, _float fCurrentTrackPosition);
+	void							Update_TransformationMatrix(const vector<class CEdit_Bone*>& Bones, _float fCurrentTrackPosition, _float fPreTrackPosition, _uint* iCurrentKeyFrameIndex);
+
 private:
 	_char							m_szName[MAX_PATH] = { };
-
 	_uint							m_iBoneIndex = {};
-	_uint							m_iCurrentKeyFrameIndex = {};
+	
 	_uint							m_iNumKeyFrames = {};
 	vector<KEYFRAME>				m_KeyFrames;
 

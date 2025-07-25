@@ -38,6 +38,14 @@ namespace Engine
 		float		fTrackPosition;
 	}KEYFRAME;
 
+	typedef struct tagAnimFrame
+	{
+		unsigned int	iStartFrame;
+		unsigned int	iEndFrame;
+		float			fTickPerSecond;
+
+	}ANIMEFRAME;
+
 	//쉐이더 관련 구조체
 	typedef struct tagVertexPositionTexcoord
 	{
@@ -208,7 +216,16 @@ namespace Engine
 		vector<SAVE_ANIM>			Animations;
 
 	}SAVE_MODEL;
-}
 
+	//애니메이션 정보 저장
+	typedef struct tagSaveAnimData
+	{
+		string			szAnimName;
+		unsigned int	iStartFrame;
+		unsigned int	iEndFrame;
+		float			fTickPerSecond;
+
+	}SAVE_ANIMDATA;
+}
 
 #endif // Engine_Struct_h__

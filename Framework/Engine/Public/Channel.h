@@ -11,11 +11,10 @@ private:
 
 public:
 	HRESULT							Initialize(const SAVE_CHANNEL& pChannel, const vector<class CBone*>& Bones);
-	void							Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fCurrentTrackPosition);
+	void							Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _float fPreTrackPosition, _uint* m_iCurrentKeyFrameIndex);
 private:
 	_char							m_szName[MAX_PATH] = { };
 	_uint							m_iBoneIndex = {};
-	_uint							m_iCurrentKeyFrameIndex = {};
 	_uint							m_iNumKeyFrames = {};
 	vector<KEYFRAME>				m_KeyFrames;
 

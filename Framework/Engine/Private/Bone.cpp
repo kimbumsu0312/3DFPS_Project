@@ -40,6 +40,11 @@ CBone* CBone::Create(const SAVE_BONE& pBone)
     return pInstance;
 }
 
+CBone* CBone::Clone()
+{
+    return new CBone(*this);
+}
+
 void CBone::Free()
 {
     __super::Free();

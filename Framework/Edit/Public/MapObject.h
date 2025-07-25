@@ -31,12 +31,16 @@ public:
 	void					SetDead() { m_bIsDead = true; }
 	void					SetSelete(_bool bSelete) { m_bIsSelete = bSelete; }
 	
+	class CEdit_Model*		Get_Model() {return m_pModelCom; }
 	_int&					Get_Index() {return m_iIndex;}
+
+	void					Set_AnimStop() { m_bisAnimstop == true ? m_bisAnimstop = false : m_bisAnimstop = true; }
 private:
 	class CEdit_Model*		m_pModelCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
 	_wstring				m_szModelPath = {};
 	_bool					m_bIsSelete = { false };
+	_bool					m_bisAnimstop = { false };
 
 	_int					m_iIndex = {0};
 private:
