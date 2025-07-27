@@ -12,6 +12,7 @@ public:
 	HRESULT					Open_Level(_uint iLevelID, class CLevel* pNewLevel);
 	void					Update(_float fTimeDelta);
 	HRESULT					Render();
+	_uint					Get_CulLevelID() { return m_iCurrentLevelID; }
 
 private:
 	class CLevel*			m_pCurrentLevel = { nullptr };

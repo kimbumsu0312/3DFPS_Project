@@ -27,6 +27,20 @@ HRESULT CTransform::Initialize(void* pArg)
 	return S_OK;
 }
 
+HRESULT CTransform::Initialize(void* pArg, _float4x4 WorldMat)
+{
+	if (nullptr == pArg)
+		return S_OK;
+
+	TRANSFORM_DESC* pDesc = static_cast<TRANSFORM_DESC*>(pArg);
+
+	m_fSpeedPerSec = pDesc->fSpeedPerSec;
+	m_fRotationPerSec = pDesc->fRotationPerSec;
+
+	m_WorldMatrix = WorldMat;
+	return S_OK;
+}
+
 HRESULT CTransform::Bind_Shader_Resource(CShader* pShader, const _char* pConstantName)
 {
 	return pShader->Bind_Matrix(pConstantName, &m_WorldMatrix);

@@ -49,6 +49,7 @@ public:
 #pragma region LEVEL_MANAGER
 public:
 	HRESULT			Open_Level(_uint iLevelID, class CLevel* pNewLevel);
+	_uint			Get_CulLevelID();
 #pragma endregion
 
 #pragma region OBJECT_MANAGER
@@ -131,11 +132,18 @@ public:
 
 #pragma region SaveLoader
 public:
-	_bool						File_Save(DATA_TYPE eData, string szFilename);	
-	HRESULT						Save_Object(string szFilename, const SAVE_MODEL& pData);
+	HRESULT						File_Save_TerrainLevel(DATA_TYPE eData, string szFilename, CVIBuffer* pVIBuffer);
+	HRESULT						File_Save_Object(string szFilename, MODELTYPE eType, const SAVE_MODEL& pData);
+	HRESULT						File_Save_AnimData(string szFilename, const vector<vector<SAVE_ANIMDATA>>& AnimDatas);
+
+	HRESULT						Add_SaveObject(class CGameObject* pObject, _int& pOut);
+	HRESULT						Erase_SaveObject(_int iIndex);
+
 	HRESULT						Load_Terrain(string FilePath, SAVE_TERRAIN& pOut);
-	void						Add_OBjcet(DATA_TYPE eData, CGameObject* pGameObject);
-	void						Clear_Object(DATA_TYPE eData);
+	HRESULT						Load_Level(string FilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex);
+	HRESULT						Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _wstring szPrototypeTag);
+
+	void						Clear_Object();
 #pragma endregion
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };

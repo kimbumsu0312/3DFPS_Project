@@ -215,6 +215,11 @@ HRESULT CGameInstance::Open_Level(_uint iLevelID, CLevel* pNewLevel)
 	return m_pLevel_Manager->Open_Level(iLevelID, pNewLevel);
 }
 
+_uint CGameInstance::Get_CulLevelID()
+{
+	return m_pLevel_Manager->Get_CulLevelID();
+}
+
 CComponent* CGameInstance::Find_Component(_uint iLayerLevelIndex, const _wstring& strLayerTag, const _wstring& strComponentTag, _uint iIndex)
 {
 	return m_pObject_Manager->Get_Component(iLayerLevelIndex, strLayerTag, strComponentTag, iIndex);
@@ -349,14 +354,29 @@ _bool CGameInstance::isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _flo
 	return m_pPicking->isPickedInLocalSpace(vPointA, vPointB, vPointC, pOut);
 }
 
-_bool CGameInstance::File_Save(DATA_TYPE eData, string szFilename)
+HRESULT CGameInstance::File_Save_TerrainLevel(DATA_TYPE eData, string szFilename, CVIBuffer* pVIBuffer)
 {
-	return m_pSaveLoader->File_Save(eData, szFilename);
+	return m_pSaveLoader->File_Save_TerrainLevel(eData, szFilename, pVIBuffer);
 }
 
-HRESULT CGameInstance::Save_Object(string szFilename, const SAVE_MODEL& pData)
+HRESULT CGameInstance::File_Save_Object(string szFilename, MODELTYPE eType, const SAVE_MODEL& pData)
 {
-	return m_pSaveLoader->Save_Object(szFilename, pData);
+	return m_pSaveLoader->File_Save_Object(szFilename, eType, pData);
+}
+
+HRESULT CGameInstance::File_Save_AnimData(string szFilename, const vector<vector<SAVE_ANIMDATA>>& AnimDatas)
+{
+	return m_pSaveLoader->File_Save_AnimData(szFilename, AnimDatas);
+}
+
+HRESULT CGameInstance::Add_SaveObject(CGameObject* pObject, _int& pOut)
+{
+	return m_pSaveLoader->Add_SaveObject(pObject, pOut);
+}
+
+HRESULT CGameInstance::Erase_SaveObject(_int iIndex)
+{
+	return m_pSaveLoader->Erase_SaveObject(iIndex);
 }
 
 HRESULT CGameInstance::Load_Terrain(string FilePath, SAVE_TERRAIN& pOut)
@@ -364,14 +384,19 @@ HRESULT CGameInstance::Load_Terrain(string FilePath, SAVE_TERRAIN& pOut)
 	return m_pSaveLoader->Load_Terrain(FilePath, pOut);
 }
 
-void CGameInstance::Add_OBjcet(DATA_TYPE eData, CGameObject* pGameObject)
+HRESULT CGameInstance::Load_Level(string FilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex)
 {
-	m_pSaveLoader->Add_OBjcet(eData, pGameObject);
+	return m_pSaveLoader->Load_Level(FilePath, iLevelIndex, szLayerTag, iPrototypeLevelIndex);
 }
 
-void CGameInstance::Clear_Object(DATA_TYPE eData)
+HRESULT CGameInstance::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _wstring szPrototypeTag)
 {
-	m_pSaveLoader->Clear_Object(eData);
+	return m_pSaveLoader->Load_Objcet(FilePath, iPrototypeLevelIndex, szPrototypeTag);
+}
+
+void CGameInstance::Clear_Object()
+{
+	m_pSaveLoader->Clear_Object();
 }
 
 void CGameInstance::Release_Engine()

@@ -20,6 +20,7 @@ void CGarbage_Collector::Clear_Garbage()
         Safe_Release(m_Garbage.front());
         m_Garbage.pop();
     }
+   
 }
 
 CGarbage_Collector* CGarbage_Collector::Create()

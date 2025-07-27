@@ -55,12 +55,6 @@
     <Filter Include="03.Component\Model\Material">
       <UniqueIdentifier>{f856d542-2f85-4023-b97e-8e1be488c2a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96.Utility">
-      <UniqueIdentifier>{16a338bc-46b0-4d7d-95dd-64b75bcfc40e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96.Utility\Imgui">
-      <UniqueIdentifier>{cca49efb-f975-4fbb-b8b2-f70115c02767}</UniqueIdentifier>
-    </Filter>
     <Filter Include="95.Manager">
       <UniqueIdentifier>{586f6ba7-9a45-4e79-80da-1713d2c80e79}</UniqueIdentifier>
     </Filter>
@@ -69,6 +63,18 @@
     </Filter>
     <Filter Include="03.Component\Model\Bone">
       <UniqueIdentifier>{c0d63ac5-2c38-420b-a639-c936cfc7cec0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Component\Model\Animation">
+      <UniqueIdentifier>{00342dc6-8967-4068-bfb2-8ffb267ab003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Component\Model\Animation\Channel">
+      <UniqueIdentifier>{11e5a1bd-23ad-4ebe-9b55-a0eb6ee2b6aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility">
+      <UniqueIdentifier>{16a338bc-46b0-4d7d-95dd-64b75bcfc40e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.Utility\Imgui">
+      <UniqueIdentifier>{cca49efb-f975-4fbb-b8b2-f70115c02767}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +168,12 @@
     <ClInclude Include="..\Public\MapObject.h">
       <Filter>02.Object\MapObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Edit_Animation.h">
+      <Filter>03.Component\Model\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Edit_Channel.h">
+      <Filter>03.Component\Model\Animation\Channel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -233,6 +245,12 @@
     <ClCompile Include="..\Private\MapObject.cpp">
       <Filter>02.Object\MapObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Edit_Animation.cpp">
+      <Filter>03.Component\Model\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Edit_Channel.cpp">
+      <Filter>03.Component\Model\Animation\Channel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -252,6 +270,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

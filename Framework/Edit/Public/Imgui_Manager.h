@@ -31,7 +31,7 @@ public:
 	_float					Get_Height() { return m_fHeight; }
 	_bool					Get_HeightUp() { return m_bIsHeightUP; }
 	_float2					Get_MinMaxHeight() { return m_fMinMaxHeight; }
-
+	
 private:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
@@ -42,12 +42,14 @@ private:
 	bool                    m_SwapChainOccluded = false;
 	_uint                   m_ResizeWidth = 0, g_ResizeHeight = 0;
 
-	bool					show_another_window = false;
-	
-	class CMapObject*			m_pModel = { nullptr };
+	//저장할 파일들
+	class CMapObject*		m_pModel = { nullptr };
 	char					m_szSeleteModel[MAX_PATH];
-
 	class CTransform*		m_pTransform = { nullptr };
+	class CEdit_Model*		m_pModelCom = { nullptr };
+	class CTerrain*			m_pTerrain = {nullptr };
+
+	_wstring				m_pSaveLoader;
 	_float3					m_vPos = {};
 	_float3					m_vScale = {};
 	_float3					m_vRot = {};
@@ -65,13 +67,13 @@ private:
 
 	//세이브 타입
 	_int					m_iMapSaveType = {0};
-	const char*				m_szMapSaveType[ENUM_CLASS(DATA_TYPE::END)] = { "파일 타입 선택","TERRAIN", "LEVEL"};
+	const char*				m_szMapSaveType[ENUM_CLASS(DATA_TYPE::END)] = { "TERRAIN", "LEVEL"};
 	
 	DATA_TYPE				m_eSaveType = { DATA_TYPE::END };
 	char					m_szFileName[MAX_PATH] = {};
 
-private:
-	string					OpenFile();
+	vector<
+		vector<SAVE_ANIMDATA>>	m_SaveAnimData;
 
 public:
 	virtual void			Free();
