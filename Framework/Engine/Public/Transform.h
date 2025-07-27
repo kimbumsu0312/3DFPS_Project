@@ -27,6 +27,7 @@ public:
 
 	void					Set_State(STATE eState, _fvector vState) {	XMStoreFloat4(reinterpret_cast<_float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]), vState); }
 	_vector					Get_State(STATE eState) const {	return XMLoadFloat4(reinterpret_cast<const _float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]));}
+	void					Set_WorldMatrix(_float4x4 WorldMat) { m_WorldMatrix = WorldMat; }
 	_matrix					Get_WorldMatrix(){ return XMLoadFloat4x4(&m_WorldMatrix);}
 	_matrix					Get_WorldMatrix_Inverse() {	return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)); }
 	const _float4x4*		Get_WorldMatrixPtr() { return &m_WorldMatrix; }

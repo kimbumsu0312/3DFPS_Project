@@ -36,19 +36,15 @@ HRESULT CGameObject::Initialize(void* pArg)
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pTransformCom)
 		return E_FAIL;
-
+	
+	if (FAILED(m_pTransformCom->Initialize(pArg)))
+		return E_FAIL;
+	
 	if (pDesc != nullptr && pDesc->isLoad)
-	{
-		if (FAILED(m_pTransformCom->Initialize(pArg, pDesc->WolrdMatrix)))
-			return E_FAIL;
-	}
-	else
-	{
-		if (FAILED(m_pTransformCom->Initialize(pArg)))
-			return E_FAIL;
-	}
+		m_pTransformCom->Set_WorldMatrix(pDesc->WolrdMatrix);
 	m_Components.emplace(TEXT("Com_Transform"), m_pTransformCom);
 
+	
 	Safe_AddRef(m_pTransformCom);
 
 	return S_OK;

@@ -11,7 +11,7 @@ private:
 public:
 	HRESULT						File_Save_TerrainLevel(DATA_TYPE eData, string szFilename, CVIBuffer* pVIBuffer);
 	HRESULT						File_Save_Object(string szFilename, MODELTYPE eType, const SAVE_MODEL& pData);
-	HRESULT						File_Save_AnimData(string szFilename, const vector<SAVE_ANIMDATA>& AnimDatas);
+	HRESULT						File_Save_AnimData(string szFilename, const vector<vector<SAVE_ANIMDATA>>& AnimDatas);
 
 	HRESULT						Load_Terrain(string FilePath, SAVE_TERRAIN& pOut);
 	HRESULT						Load_Level(string FilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex );

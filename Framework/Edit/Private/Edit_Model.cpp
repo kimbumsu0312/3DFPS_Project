@@ -147,21 +147,21 @@ void CEdit_Model::Set_Animations(_uint iIndex, _bool IsLoop)
 void CEdit_Model::Set_Animation(_int i, _float fTickPerSecond_float, _float fCurrentTrackPosition)
 {
 	if (i == 0)
-		m_Animations[0]->Set_TickPerSecond(fTickPerSecond_float);
+		m_Animations[m_iCurrentAnimIndex]->Set_TickPerSecond(fTickPerSecond_float);
 	else if (i == 1)
-		m_Animations[0]->Set_CurTrackPositon(fCurrentTrackPosition);
+		m_Animations[m_iCurrentAnimIndex]->Set_CurTrackPositon(fCurrentTrackPosition);
 	else
-		m_Animations[0]->Add_CurTrackPositon((_int)fCurrentTrackPosition);
+		m_Animations[m_iCurrentAnimIndex]->Add_CurTrackPositon((_int)fCurrentTrackPosition);
 }
 
 _float CEdit_Model::Get_Animation(_int i)
 {
 	if (i == 0)
-		return m_Animations[0]->Get_TickPerSecond();
+		return m_Animations[m_iCurrentAnimIndex]->Get_TickPerSecond();
 	else if (i == 1)
-		return m_Animations[0]->Get_CurTrackPositon();
+		return m_Animations[m_iCurrentAnimIndex]->Get_CurTrackPositon();
 	else
-		return m_Animations[0]->Get_Duration();
+		return m_Animations[m_iCurrentAnimIndex]->Get_Duration();
 }
 
 HRESULT CEdit_Model::Render(_uint iMeshIndex)

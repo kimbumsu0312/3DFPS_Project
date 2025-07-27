@@ -12,6 +12,9 @@ private:
 public:
 	HRESULT							Initialize(const SAVE_CHANNEL& pChannel, const vector<class CBone*>& Bones);
 	void							Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _float fPreTrackPosition, _uint* m_iCurrentKeyFrameIndex);
+	void							Update_TransformationMatirx_AnimChange(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex, const KEYFRAME& preKeyFrame, _float fRatio);
+
+	KEYFRAME&						Get_PreKeyFream(_uint iPreKeyFreamIndex) { return m_KeyFrames[iPreKeyFreamIndex]; }
 private:
 	_char							m_szName[MAX_PATH] = { };
 	_uint							m_iBoneIndex = {};

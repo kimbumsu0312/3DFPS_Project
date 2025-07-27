@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Body_Player.h"
 #include "GameInstance.h"
-
+#include "Player.h"
 CBody_Player::CBody_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CPartObject { pDevice, pContext}
 {
 }
@@ -17,6 +17,11 @@ HRESULT CBody_Player::Initialize_Prototype()
 
 HRESULT CBody_Player::Initialize(void* pArg)
 {
+
+    BODY_DESC* pDesc = static_cast<BODY_DESC*>(pArg);
+    
+    m_pState = pDesc->pState;
+
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
@@ -24,6 +29,8 @@ HRESULT CBody_Player::Initialize(void* pArg)
         return E_FAIL;
 
     m_pModelCom->Set_Animations(0, true);
+
+    m_iRootLodeIndex = 36;
     return S_OK;
 }
 
@@ -33,6 +40,25 @@ void CBody_Player::Priority_Update(_float fTimeDelta)
 
 void CBody_Player::Update(_float fTimeDelta)
 {
+    //Crouch_loop
+    switch (*m_pState)
+    {
+    case ENUM_CLASS(CPlayer::PLAYER_STATE::IDLE):
+        m_pAnimCom->Player_Animation("Hand_Idle", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
+        break;
+    case ENUM_CLASS(CPlayer::PLAYER_STATE::JOG_F):
+        m_pAnimCom->Player_Animation("Hand_Jog_Front", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
+        break;
+    case ENUM_CLASS(CPlayer::PLAYER_STATE::JOG_R):
+        m_pAnimCom->Player_Animation("Hand_Jog_Right", m_pModelCom, fTimeDelta , m_iRootLodeIndex, m_pTransformCom);
+        break;
+    case ENUM_CLASS(CPlayer::PLAYER_STATE::JOG_L):
+        m_pAnimCom->Player_Animation("Hand_Jog_Left", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
+        break;
+    case ENUM_CLASS(CPlayer::PLAYER_STATE::WALK_B):
+        m_pAnimCom->Player_Animation("Hand_Walk_Back", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
+        break;
+    }
 }
 
 void CBody_Player::Late_Update(_float fTimeDelta)
@@ -43,6 +69,7 @@ void CBody_Player::Late_Update(_float fTimeDelta)
 
 HRESULT CBody_Player::Render()
 {
+   
     if (FAILED(Bind_ShaderResources()))
         return E_FAIL;
 
@@ -51,10 +78,10 @@ HRESULT CBody_Player::Render()
     for (_uint i = 0; i < iNumMeshes; i++)
     {
         if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_DiffuseTexture", i, 0, 0)))
-            return E_FAIL;
+            continue;
 
         if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
-            return E_FAIL;
+            continue;
 
         m_pShaderCom->Begin(0);
 
@@ -66,14 +93,21 @@ HRESULT CBody_Player::Render()
 
 HRESULT CBody_Player::Ready_Components()
 {
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
         return E_FAIL;
 
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Fiona"),
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Player"),
         TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom), nullptr)))
         return E_FAIL;
 
+    CAnimatio_Controller::ANIMTION_DESC Desc;
+    Desc.szFile_Path = "../Bin/Resources/Models/Player/PlayerAnim.Json";
+    Desc.szCulAnimName = "Hand_Idle";
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Animatio_Controller"),
+        TEXT("Com_AnimCom"), reinterpret_cast<CComponent**>(&m_pAnimCom), &Desc)))
+        return E_FAIL;
+ 
     return S_OK;
 }
 
@@ -135,7 +169,8 @@ CGameObject* CBody_Player::Clone(void* pArg)
 void CBody_Player::Free()
 {
     __super::Free();
-
+    //m_pState = nullptr;
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
+    Safe_Release(m_pAnimCom);
 }

@@ -17,11 +17,11 @@ public:
 public:
 	HRESULT							Bind_Materials(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _int iTexIndex, _uint iIndex);
 	HRESULT							Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
-	_bool							Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData);
+	_bool							Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex, class CTransform* pTransform, _bool IsAnimChange);
 
 	_uint							Get_NumMeshes() const { return m_iNumMeshes; }
 	void							Set_Animations(_uint AnimiIndex, _bool IsLoop = false);
-
+	void							AnimChage();
 private:
 
 	MODELTYPE						m_eModelType = {};
@@ -32,15 +32,23 @@ private:
 
 	_uint							m_iNumMaterials = {};
 	vector<class CMeshMaterial*>	m_Materials;
-
 	vector<class CBone*>			m_Bones;
 
 	_uint							m_iCurrentAnimIndex = { 0 };
+	_uint							m_iNextAnimIndex = { 0 };
 	_uint							m_iNumAnimations = { 0 };
 	vector<class CAnimation*>		m_Animations;
 
 	_bool							m_bisLoop = {};
 	_bool							m_bisFinished = {};
+	_bool							m_bisMotionChange = { false };
+
+	_vector							m_vPreRootPos = {};
+	_vector							m_vRootMotionOffset = {};
+	_float							m_fBlendWeight = 0.f;
+	_float							m_fBlendDuration = 0.2f;
+	_float							m_fBlendTime = 0.f;
+
 private:
 	HRESULT							Ready_Meshes(const SAVE_MODEL& pModelData);
 	HRESULT							Ready_Materials(const SAVE_MODEL& pModelData);

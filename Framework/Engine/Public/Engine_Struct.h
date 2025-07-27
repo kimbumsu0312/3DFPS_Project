@@ -226,6 +226,7 @@ namespace Engine
 		float			fTickPerSecond;
 
 	}SAVE_ANIMDATA;
+
 }
 
 #endif // Engine_Struct_h__

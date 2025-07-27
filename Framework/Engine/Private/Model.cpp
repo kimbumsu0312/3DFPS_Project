@@ -11,7 +11,7 @@ CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CComponen
 
 CModel::CModel(const CModel& Prototype) : CComponent(Prototype), m_Meshes(Prototype.m_Meshes), m_iNumMeshes(Prototype.m_iNumMeshes)
 , m_Materials(Prototype.m_Materials), m_iNumMaterials(Prototype.m_iNumMaterials), m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }, m_eModelType(Prototype.m_eModelType)
-, m_iCurrentAnimIndex(Prototype.m_iCurrentAnimIndex), m_iNumAnimations(Prototype.m_iNumAnimations)
+, m_iCurrentAnimIndex(Prototype.m_iCurrentAnimIndex), m_iNumAnimations(Prototype.m_iNumAnimations), m_bisFinished{false}
 {
     for (auto& pPrototypeBone : Prototype.m_Bones)
         m_Bones.push_back(pPrototypeBone->Clone());
@@ -34,7 +34,7 @@ HRESULT CModel::Initialize_Prototype(const SAVE_MODEL& pModelData)
 
     m_PreTransformMatrix = pModelData.PreTransformMatrix;
 
-    if (FAILED(Ready_Bones(pModelData)))
+     if (FAILED(Ready_Bones(pModelData)))
         return E_FAIL;
 
     if (FAILED(Ready_Meshes(pModelData)))
@@ -86,18 +86,50 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, 
     return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones);
 }
 
-_bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData)
+_bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex, class CTransform* pTransform, _bool IsAnimChange)
 {
     if (m_eModelType != MODELTYPE::ANIM)
         return false;
-
     m_bisFinished = false;
-    m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &m_bisFinished, pAnimFrameData);
 
-    for (auto& pBone : m_Bones)
+    m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &m_bisFinished, pAnimFrameData, IsAnimChange);
+
+    _vector vCurPos= {};
+    
+    for (_int i = 0; i < m_Bones.size(); ++i)
     {
-        pBone->Update_CombinedTransformationMatrix(m_PreTransformMatrix, m_Bones);
+        m_Bones[i]->Update_CombinedTransformationMatrix(m_PreTransformMatrix, m_Bones);
+        if (RootNodeIndex == i)
+        {
+            vCurPos = m_Bones[RootNodeIndex]->Get_CombinedTransformationMatrix().r[3];
+            m_Bones[i]->Set_CombindMationMatinMatrix_PosReset();
+         }
     }
+
+
+    if (m_bisFinished || IsAnimChange)
+    {
+        _vector vAdjustment = XMVectorSetY(vCurPos - m_vPreRootPos, 0.f) * 0.5f;
+        m_vPreRootPos = vCurPos;
+        m_bisMotionChange = true;
+        return m_bisFinished;
+    }
+    
+    _vector vMovePos{};
+    if (m_Animations[m_iCurrentAnimIndex]->IsAnimChange())
+    {
+        vMovePos = { 0.f, 0.f, 0.f };
+    }
+    else
+    {
+        m_bisMotionChange = false;
+        vMovePos = vCurPos - m_vPreRootPos;
+    }
+    vMovePos = XMVectorSetY(vMovePos, 0.f);
+    _vector vWolrdPos = pTransform->Get_State(STATE::POSITION) + vMovePos;
+    pTransform->Set_State(STATE::POSITION, XMVectorSetW(vWolrdPos, 1.f));
+
+    m_vPreRootPos = vCurPos;
 
     return m_bisFinished;
 }
@@ -109,6 +141,11 @@ void CModel::Set_Animations(_uint AnimiIndex, _bool IsLoop)
 
     m_iCurrentAnimIndex = AnimiIndex;
     m_bisLoop = IsLoop;
+}
+
+void CModel::AnimChage()
+{
+    m_Animations[m_iCurrentAnimIndex]->Anim_Change_Reset();
 }
 
 HRESULT CModel::Ready_Meshes(const SAVE_MODEL& pModelData)
@@ -153,7 +190,7 @@ HRESULT CModel::Ready_Bones(const SAVE_MODEL& pModelData)
         if (pBone == nullptr)
             return E_FAIL;
 
-        m_Bones.push_back(pBone);
+         m_Bones.push_back(pBone);
     }
 
     return S_OK;

@@ -37,6 +37,7 @@ public:
 	const SAVE_MODEL&					Get_ModelData() { return m_ModelData;}
 	MODELTYPE							Get_ModelType() { return m_ModelData.eModel; }
 	_uint								Get_AnimationNum() { return m_iNumAnimations; }
+	_uint								Get_CulAnimIndex() { return m_iCurrentAnimIndex; }
 	void								Set_Animations(_uint AnimiIndex, _bool IsLoop = false);
 
 	void								Set_Animation(_int i, _float fTickPerSecond_float, _float fCurrentTrackPosition);

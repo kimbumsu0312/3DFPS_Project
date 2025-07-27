@@ -82,33 +82,33 @@ void CCamera_Free::KeyInput(_float fTimeDelta)
     else if (m_pGameInstance->IsKeyDown(DIK_Q) && m_bIsCameraRot)
         m_bIsCameraRot = false;
 
-    if (m_pGameInstance->IsKeyHold(DIK_W))
+    if (m_pGameInstance->IsKeyHold(DIK_UP))
     {
         m_pTransformCom->Go_Straight(fTimeDelta);
     }
 
-    if (m_pGameInstance->IsKeyHold(DIK_S))
+    if (m_pGameInstance->IsKeyHold(DIK_DOWN))
     {
         m_pTransformCom->Go_Backward(fTimeDelta);
     }
-    if (m_pGameInstance->IsKeyHold(DIK_A))
+    if (m_pGameInstance->IsKeyHold(DIK_LEFT))
     {
         m_pTransformCom->Go_Left(fTimeDelta);
     }
-    if (m_pGameInstance->IsKeyHold(DIK_D))
+    if (m_pGameInstance->IsKeyHold(DIK_RIGHT))
     {
         m_pTransformCom->Go_Right(fTimeDelta);
     }
 
-    if (m_pGameInstance->IsKeyHold(DIK_8))
-    {
-        m_fFovy += XMConvertToRadians(10.f) * fTimeDelta;
-    }
+    //if (m_pGameInstance->IsKeyHold(DIK_8))
+    //{
+    //    m_fFovy += XMConvertToRadians(10.f) * fTimeDelta;
+    //}
 
-    if (m_pGameInstance->IsKeyHold(DIK_9))
-    {
-        m_fFovy -= XMConvertToRadians(10.f) * fTimeDelta;
-    }
+    //if (m_pGameInstance->IsKeyHold(DIK_9))
+    //{
+    //    m_fFovy -= XMConvertToRadians(10.f) * fTimeDelta;
+    //}
 
     if (m_bIsCameraRot)
     {

@@ -72,7 +72,8 @@ private:
 	DATA_TYPE				m_eSaveType = { DATA_TYPE::END };
 	char					m_szFileName[MAX_PATH] = {};
 
-	vector<SAVE_ANIMDATA>	m_SaveAnimData;
+	vector<
+		vector<SAVE_ANIMDATA>>	m_SaveAnimData;
 
 public:
 	virtual void			Free();

@@ -7,6 +7,8 @@ NS_END
 NS_BEGIN(Client)
 class CPlayer final : public CContainerObject
 {
+public:
+	enum class PLAYER_STATE{IDLE, JOG_F, JOG_R, JOG_L, WALK_B, END};
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);

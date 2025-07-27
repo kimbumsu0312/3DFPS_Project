@@ -72,7 +72,7 @@ void CMapObject::Update(_float fTimeDelta)
 			}
 		}
 
-		if (m_pGameInstance->IsKeyDown(DIK_N))
+		if (m_pGameInstance->IsKeyDown(DIK_TAB))
 		{
 			m_pGameInstance->File_Save_Object(m_pModelCom->Get_ModelData().szName, m_pModelCom->Get_ModelData().eModel, m_pModelCom->Get_ModelData());
 		}
@@ -81,6 +81,13 @@ void CMapObject::Update(_float fTimeDelta)
 	if (m_pModelCom->Play_Animation(fTimeDelta, m_bisAnimstop))
 		_int a = 10;
 
+	if (m_pGameInstance->Get_CulLevelID() == ENUM_CLASS(LEVEL::MODEL))
+	{
+		if (m_pGameInstance->IsKeyDown(DIK_TAB))
+		{
+			m_pGameInstance->File_Save_Object(m_pModelCom->Get_ModelData().szName, m_pModelCom->Get_ModelData().eModel, m_pModelCom->Get_ModelData());
+		}
+	}
 }
 
 void CMapObject::Late_Update(_float fTimeDelta)
@@ -98,7 +105,7 @@ HRESULT CMapObject::Render()
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
 		if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
-			return E_FAIL;
+			continue;
 
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
 			return E_FAIL;

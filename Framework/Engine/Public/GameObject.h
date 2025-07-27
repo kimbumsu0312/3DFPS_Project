@@ -11,7 +11,10 @@ public:
 			_wstring	szObject_Path;
 			_wstring	szModel_Path;
 			_float4x4   WolrdMatrix;
-			_bool		isLoad = false;
+			_bool		isLoad;
+
+
+			tagGameObject() : isLoad(false) {}
 	}GAMEOBJECT_DESC;
 
 protected:
@@ -45,8 +48,8 @@ protected:
 		class CComponent*>	m_Components;
 	
 	_bool					m_bIsDead = {};
-
 	OBJCET_DATA				m_ObjData = {};
+
 protected:
 	HRESULT					Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag,
 											const _wstring& strComponentTag, CComponent** ppOut, void* pArg = nullptr);

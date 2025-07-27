@@ -215,6 +215,11 @@ HRESULT CGameInstance::Open_Level(_uint iLevelID, CLevel* pNewLevel)
 	return m_pLevel_Manager->Open_Level(iLevelID, pNewLevel);
 }
 
+_uint CGameInstance::Get_CulLevelID()
+{
+	return m_pLevel_Manager->Get_CulLevelID();
+}
+
 CComponent* CGameInstance::Find_Component(_uint iLayerLevelIndex, const _wstring& strLayerTag, const _wstring& strComponentTag, _uint iIndex)
 {
 	return m_pObject_Manager->Get_Component(iLayerLevelIndex, strLayerTag, strComponentTag, iIndex);
@@ -359,7 +364,7 @@ HRESULT CGameInstance::File_Save_Object(string szFilename, MODELTYPE eType, cons
 	return m_pSaveLoader->File_Save_Object(szFilename, eType, pData);
 }
 
-HRESULT CGameInstance::File_Save_AnimData(string szFilename, const vector<SAVE_ANIMDATA>& AnimDatas)
+HRESULT CGameInstance::File_Save_AnimData(string szFilename, const vector<vector<SAVE_ANIMDATA>>& AnimDatas)
 {
 	return m_pSaveLoader->File_Save_AnimData(szFilename, AnimDatas);
 }

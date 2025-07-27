@@ -86,29 +86,34 @@ HRESULT CSaveLoader::File_Save_Object(string szFilename, MODELTYPE eType, const 
 	return S_OK;
 }
 
-HRESULT CSaveLoader::File_Save_AnimData(string szFilename, const vector<SAVE_ANIMDATA>& AnimDatas)
+HRESULT CSaveLoader::File_Save_AnimData(string szFilename, const vector<vector<SAVE_ANIMDATA>>& AnimDatas)
 {
 	string FilePath = "../Bin/Data/AnimData/" + szFilename + ".json";
 
 
-	json jAnimData;
+	json jAnim;
 
-	for (auto& AnimData : AnimDatas)
+	for (auto& Anim : AnimDatas)
 	{
-		json jData;
+		json jAnimData;
+		for (auto& AnimData : Anim)
+		{
+			json jData;
 
-		jData["AnimeName"] = AnimData.szAnimName;
-		jData["StartFrame"] = AnimData.iStartFrame;
-		jData["EndFrame"] = AnimData.iEndFrame;
-		jData["TickPerSecond"] = AnimData.fTickPerSecond;
+			jData["AnimeName"] = AnimData.szAnimName;
+			jData["StartFrame"] = AnimData.iStartFrame;
+			jData["EndFrame"] = AnimData.iEndFrame;
+			jData["TickPerSecond"] = AnimData.fTickPerSecond;
 
-		jAnimData["AnimData"].push_back(jData);
+			jAnimData["Anim"].push_back(jData);
+		}
+		jAnim["Animetions"].push_back(jAnimData);
 	}
 
 	ofstream file(FilePath);
 	if (file.is_open())
 	{
-		file << jAnimData.dump(4);
+		file << jAnim.dump(4);
 		file.close();
 		MSG_BOX(TEXT("데이터 저장 완료"));
 	}
@@ -612,7 +617,7 @@ HRESULT CSaveLoader::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _w
 
 	DatFile.close();
 
-	if (FAILED(m_pGameInstance->Add_Prototype(iPrototypeLevelIndex, szPrototypeTag, CModel::Create(m_pDevice, m_pContext, ModelData))))
+ 	if (FAILED(m_pGameInstance->Add_Prototype(iPrototypeLevelIndex, szPrototypeTag, CModel::Create(m_pDevice, m_pContext, ModelData))))
 	{
 		MSG_BOX(TEXT("모델 데이터 로딩 실패"));
 		return E_FAIL;

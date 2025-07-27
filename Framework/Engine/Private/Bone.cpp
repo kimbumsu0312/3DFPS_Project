@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Bone.h"
-
+#include "Transform.h"
 CBone::CBone()
 {
 }

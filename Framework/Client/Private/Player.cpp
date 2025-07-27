@@ -37,12 +37,33 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 }
 
 void CPlayer::Update(_float fTimeDelta)
-{
+ {
+ 	if (m_pGameInstance->IsKeyHold(DIK_W))
+	{
+		m_iState = ENUM_CLASS(PLAYER_STATE::JOG_F);
+	}
+	else if (m_pGameInstance->IsKeyHold(DIK_A))
+	{
+		m_iState = ENUM_CLASS(PLAYER_STATE::JOG_L);
+	}
+	else if (m_pGameInstance->IsKeyHold(DIK_D))
+	{
+		m_iState = ENUM_CLASS(PLAYER_STATE::JOG_R);
+	}
+	else if (m_pGameInstance->IsKeyHold(DIK_S))
+	{
+		m_iState = ENUM_CLASS(PLAYER_STATE::WALK_B);
+	}
+	else
+	{
+		m_iState = ENUM_CLASS(PLAYER_STATE::IDLE);
+	}
+	m_PartObjects.at(TEXT("Part_Body"))->Update(fTimeDelta);
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
 {
-
+	m_PartObjects.at(TEXT("Part_Body"))->Late_Update(fTimeDelta);
 }
 
 HRESULT CPlayer::Render()
@@ -61,8 +82,8 @@ HRESULT CPlayer::Ready_PartObjects()
 	BodyDesc.pState = &m_iState;
 	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 
-	//if(FAILED(__super::Add_PartObject(TEXT("Part_Body"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Player"), &BodyDesc)))
-	//	return E_FAIL;
+	if(FAILED(__super::Add_PartObject(TEXT("Part_Body"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Player"), &BodyDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }

@@ -43,6 +43,7 @@ private:
 	_bool					m_bisAnimstop = { false };
 
 	_int					m_iIndex = {0};
+	_bool					m_bIsSave = {};
 private:
 	HRESULT					Ready_Components();
 

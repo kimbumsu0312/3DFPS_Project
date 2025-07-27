@@ -395,6 +395,7 @@ void CImgui_Manger::Update_Map()
 
 void CImgui_Manger::Update_Model()
 {
+	static _int		g_iEreaseAnim = {};
 	static _int		g_iEreaseData = {};
 	static _char	g_szAnimName[MAX_PATH] = {};
 	static _int		g_iStartFrame = {};
@@ -405,6 +406,8 @@ void CImgui_Manger::Update_Model()
 	static char		g_AnimFilePath = {};
 	static _float   g_CurTrackPositon = {};
 	static _float   g_Duration = {};
+	static _int		g_AnimIndex = {};
+	static _int     g_AnimIndexSet = {};
 	Begin("ModelData");
 	if (BeginTabBar("옵션"))
 	{
@@ -443,8 +446,17 @@ void CImgui_Manger::Update_Model()
 		{
 			if (m_pModel != nullptr)
 			{
+				g_AnimIndex = m_pModelCom->Get_CulAnimIndex();
+			
+
 				g_CurTrackPositon = m_pModelCom->Get_Animation(1);
 				g_Duration = m_pModelCom->Get_Animation(2);
+				Text("CulAnimIndex : %d", g_AnimIndex);
+		
+				if (Button("SetAnimIndex"))
+					m_pModelCom->Set_Animations(g_AnimIndexSet, true);
+				InputInt("##AnimIndexValue", &g_AnimIndexSet);
+
 				Text("TickPerSecond : %.2f", m_pModelCom->Get_Animation(0));
 				Text("CurTrackPositon : %.2f", g_CurTrackPositon);
 
@@ -464,7 +476,7 @@ void CImgui_Manger::Update_Model()
 				if (Button("-(z)##Frame") || m_pGameInstance->IsKeyHold(DIK_Z))
 					m_pModelCom->Set_Animation(2, 0.f, -1);
 				SameLine();
-				if (Button("Stop(x)") || m_pGameInstance->IsKeyHold(DIK_X))
+				if (Button("Stop(x)") || m_pGameInstance->IsKeyDown(DIK_X))
 					m_pModel->Set_AnimStop();
 
 				SameLine();
@@ -484,7 +496,10 @@ void CImgui_Manger::Update_Model()
 					Data.iEndFrame = g_iEndFrame;
 					Data.fTickPerSecond = g_fTickPerSecond;
 
-					m_SaveAnimData.push_back(Data);
+					if (m_SaveAnimData.size() < g_AnimIndex + 1)
+						m_SaveAnimData.resize(g_AnimIndex + 1);
+
+					m_SaveAnimData[g_AnimIndex].push_back(Data);
 				}
 			}
 			EndTabItem();
@@ -499,9 +514,11 @@ void CImgui_Manger::Update_Model()
 	if (m_SaveAnimData.size() != 0)
 	{
 		Begin("AnimationTable");
-		if (BeginTable("##AnimationTable", 5, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
+		if (BeginTable("##AnimationTable", 6, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
 		{
+
 			// 컬럼 헤더 설정
+			TableSetupColumn("AnimIndex");
 			TableSetupColumn("Num");
 			TableSetupColumn("Name");
 			TableSetupColumn("Start Frame");
@@ -510,33 +527,45 @@ void CImgui_Manger::Update_Model()
 			TableHeadersRow();
 			_int i = 0;
 			// 각 행에 데이터 출력
-			for (const auto& Data : m_SaveAnimData)
+			for (const auto& Animation : m_SaveAnimData)
 			{
-				TableNextRow();
-				TableSetColumnIndex(0);
-				Text("%d", i);
+				_int j = 0;
+				for (const auto& Data : Animation)
+				{
+					TableNextRow();
+					TableSetColumnIndex(0);
+					Text("%d", i);
 
-				TableSetColumnIndex(1);
-				Text("%s", Data.szAnimName.c_str());
+					TableSetColumnIndex(1);
+					Text("%d", j);
 
-				TableSetColumnIndex(2);
-				Text("%u", Data.iStartFrame);
+					TableSetColumnIndex(2);
+					Text("%s", Data.szAnimName.c_str());
 
-				TableSetColumnIndex(3);
-				Text("%u", Data.iEndFrame);
+					TableSetColumnIndex(3);
+					Text("%u", Data.iStartFrame);
 
-				TableSetColumnIndex(4);
-				Text("%.2f", Data.fTickPerSecond);
+					TableSetColumnIndex(4);
+					Text("%u", Data.iEndFrame);
+
+					TableSetColumnIndex(5);
+					Text("%.2f", Data.fTickPerSecond);
+					++j;
+				}
 				++i;
 			}
 			EndTable();
 
+			InputInt("##EraseAnimIndex", &g_iEreaseAnim);
 			InputInt("##EraseIndex", &g_iEreaseData);	
 			SameLine();
 			if(Button("erease"))
 			{ 
-				if (g_iEreaseData < m_SaveAnimData.size())
-					m_SaveAnimData.erase(m_SaveAnimData.begin() + g_iEreaseData);
+				if (g_iEreaseAnim < m_SaveAnimData.size())
+				{
+					if(g_iEreaseData < m_SaveAnimData[g_iEreaseAnim].size())
+						m_SaveAnimData[g_iEreaseAnim].erase(m_SaveAnimData[g_iEreaseAnim].begin() + g_iEreaseData);
+				}
 			}
 
 			InputText("##jsonDataSave ", m_szFileName, MAX_PATH);

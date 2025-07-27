@@ -4,30 +4,41 @@
 NS_BEGIN(Engine)
 class ENGINE_DLL CAnimatio_Controller final : public CComponent
 {
+public:
+	typedef struct tagAnimtioDesc
+	{
+		string szFile_Path = {};
+		string szCulAnimName = {};
+	}ANIMTION_DESC;
 private:
 	CAnimatio_Controller(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CAnimatio_Controller() = default;
 
 public:
-	virtual HRESULT					Initialize_Prototype(const string* pAnimFilePath);
+	virtual HRESULT					Initialize_Prototype();
 	virtual HRESULT					Initialize(void* pArg);
 
-	_bool							Player_Animation(string szAnimName, class CModel* pModel, _float fTimeDelta);
+	_bool							Player_Animation(string szAnimName, class CModel* pModel, _float fTimeDelta, _int RootNodeIndex, class CTransform* pTransform);
 	void							Set_AnimStatus(ANIM_STATUS eStatus);
+	void							Set_Animetion(class CModel* pModel,_int iAnimIndex, _bool IsLoop);
+
 private:
+	_int							m_iCulAnimIndex = {};
+	_bool							m_bIsLoop = { false };
+
 	string							m_szPreAnimName = {};
 	string							m_szCulAnimName = {};
-	ANIMEFRAME						m_CulAnim = {};
+	ANIMEFRAME						m_CulAnimFrame = {};
 
 	ANIM_STATUS						m_eAnim_Status = { ANIM_STATUS::PLAY };
-	unordered_map<string, 
-		ANIMEFRAME>					m_AnimDatas;
+	vector<unordered_map<string, 
+		ANIMEFRAME>>				m_AnimDatas;
 
 private:
-	HRESULT							Load_AnimData(const string* pAnimFilePath);
+	HRESULT							Load_AnimData(const string pAnimFilePath);
 	ANIMEFRAME						Find_Anim(const string pAnimName);
 public:
-	static CAnimatio_Controller*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const string* pAnimFilePath);
+	static CAnimatio_Controller*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent*				Clone(void* pArg) override;
 	virtual void					Free() override;
 };

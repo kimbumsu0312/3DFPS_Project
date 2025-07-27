@@ -133,6 +133,9 @@
     <Filter Include="99.Defines">
       <UniqueIdentifier>{ee0451a2-009f-4aae-956b-712deef8dc33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\02.GameObject\ContainerObject\StateObject">
+      <UniqueIdentifier>{9527a4fa-7a35-4e0c-ad79-e9ebda9ffd15}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -273,6 +276,9 @@
     <ClInclude Include="..\public\PartObject.h">
       <Filter>01.Utility\02.GameObject\ContainerObject\PartObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\StateObject.h">
+      <Filter>01.Utility\02.GameObject\ContainerObject\StateObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -394,6 +400,9 @@
     </ClCompile>
     <ClCompile Include="..\private\PartObject.cpp">
       <Filter>01.Utility\02.GameObject\ContainerObject\PartObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StateObject.cpp">
+      <Filter>01.Utility\02.GameObject\ContainerObject\StateObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
