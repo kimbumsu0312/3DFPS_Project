@@ -23,7 +23,6 @@ using namespace DirectX;
 #include <fstream>
 #include "nlohmann/json.hpp"
 using namespace nlohmann;
-
 #include <vector>
 #include <list>
 #include <map>

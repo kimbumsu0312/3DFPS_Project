@@ -51,6 +51,9 @@ void CCamera_Free::Priority_Update(_float fTimeDelta)
     KeyInput(fTimeDelta);
     Zoom_In(fTimeDelta);
     Zoom_Out(fTimeDelta);
+    if (m_pGameInstance->IsKeyHold(DIK_Q))
+        return;
+
     __super::Update_PipeLines();
 }
 

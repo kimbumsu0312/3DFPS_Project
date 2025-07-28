@@ -35,11 +35,36 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Start_Level(LEVEL::LOGO)))
 		return E_FAIL;
 
+	D3D11_RASTERIZER_DESC Desc = {};
+
+	Desc.FillMode = D3D11_FILL_WIREFRAME;
+	Desc.CullMode = D3D11_CULL_NONE;
+	Desc.FrontCounterClockwise = false;
+	Desc.DepthClipEnable = true;
+
+	m_pDevice->CreateRasterizerState(&Desc, &m_pWireframeRS);
+
+	Desc.FillMode = D3D11_FILL_SOLID;
+	Desc.CullMode = D3D11_CULL_BACK;
+	Desc.FrontCounterClockwise = false;
+	Desc.DepthClipEnable = true;
+ 	m_pDevice->CreateRasterizerState(&Desc, &m_pSolidframeRS);
+
 	return S_OK;
 }
 
 void CMainApp::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_L) && m_bISWireFream)
+	{
+		m_pContext->RSSetState(m_pSolidframeRS);
+		m_bISWireFream = false;
+	}
+	else if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_L) && !m_bISWireFream)
+	{
+		m_pContext->RSSetState(m_pWireframeRS);
+		m_bISWireFream = true;
+	}
 	m_pGameInstance->Update_Engine(fTimeDelta);
 }
 
@@ -137,10 +162,13 @@ void CMainApp::Free()
 	__super::Free();
 	CPlayer_Manager::GetInstance()->Free();
 	CPlayer_Manager::GetInstance()->DestroyInstance();
+	Safe_Release(m_pWireframeRS);
+	Safe_Release(m_pSolidframeRS);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 
 	m_pGameInstance->Release_Engine();
 
 	Safe_Release(m_pGameInstance);
+
 }

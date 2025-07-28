@@ -39,7 +39,6 @@ private:
 	ID3D11RasterizerState*	m_pSolidframeRS = { nullptr };
 	CGameInstance*			m_pGameInstance = { nullptr };
 
-	bool                    m_SwapChainOccluded = false;
 	_uint                   m_ResizeWidth = 0, g_ResizeHeight = 0;
 
 	//저장할 파일들

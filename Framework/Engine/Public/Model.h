@@ -20,6 +20,8 @@ public:
 	_bool							Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex, class CTransform* pTransform, _bool IsAnimChange);
 
 	_uint							Get_NumMeshes() const { return m_iNumMeshes; }
+	_float4x4*						Get_BoneMatrix(const _wstring pBoneName);
+	_float3*						Get_PtrMovePos() {return &m_vMovePos;}
 	void							Set_Animations(_uint AnimiIndex, _bool IsLoop = false);
 	void							AnimChage();
 private:
@@ -40,14 +42,8 @@ private:
 	vector<class CAnimation*>		m_Animations;
 
 	_bool							m_bisLoop = {};
-	_bool							m_bisFinished = {};
-	_bool							m_bisMotionChange = { false };
-
+	_float3							m_vMovePos = {};
 	_vector							m_vPreRootPos = {};
-	_vector							m_vRootMotionOffset = {};
-	_float							m_fBlendWeight = 0.f;
-	_float							m_fBlendDuration = 0.2f;
-	_float							m_fBlendTime = 0.f;
 
 private:
 	HRESULT							Ready_Meshes(const SAVE_MODEL& pModelData);

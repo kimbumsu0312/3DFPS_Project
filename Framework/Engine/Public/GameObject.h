@@ -10,11 +10,11 @@ public:
 	{
 			_wstring	szObject_Path;
 			_wstring	szModel_Path;
-			_float4x4   WolrdMatrix;
+			_matrix		WolrdMatrix;
 			_bool		isLoad;
 
 
-			tagGameObject() : isLoad(false) {}
+			tagGameObject() : isLoad(false), WolrdMatrix(XMMatrixIdentity()) {}
 	}GAMEOBJECT_DESC;
 
 protected:

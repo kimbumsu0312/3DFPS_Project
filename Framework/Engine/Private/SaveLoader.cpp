@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "VIBuffer_Terrain.h"
 #include "Model.h"
+
 CSaveLoader::CSaveLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_pDevice(pDevice), m_pContext(pContext), m_pGameInstance(CGameInstance::GetInstance())
 {
 	Safe_AddRef(m_pDevice);
@@ -446,7 +447,7 @@ HRESULT CSaveLoader::Load_Level(string FilePath, _uint LevelIndex, _wstring szLa
 		Desc.isLoad = true;
 		Desc.szObject_Path = OBjects_Data[i].szObject_Path;
 		Desc.szModel_Path = OBjects_Data[i].szModel_Path;
-		XMStoreFloat4x4(&Desc.WolrdMatrix, OBjects_Data[i].objmat);
+		Desc.WolrdMatrix = OBjects_Data[i].objmat;
 
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(LevelIndex, szLayerTag,
 			iPrototypeLevelIndex, OBjects_Data[i].szObject_Path, &Desc)))
@@ -498,6 +499,7 @@ HRESULT CSaveLoader::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _w
 		ModelData.MeshMaterials.push_back(MeshMaterial);
 	}
 	
+
 	ifstream DatFile(DataFilePath, ios::binary);
 	if (!DatFile)
 	{

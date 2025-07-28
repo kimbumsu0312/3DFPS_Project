@@ -145,6 +145,12 @@ HRESULT CEditMain::Ready_Prototype_ForStatic()
 		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/Player/Player.fbx", PreTransformMatrix, &Desc))))
 		return E_FAIL;
 
+	Desc.szModelName = "Knife";
+	Desc.szModelPath = "Prototype_Component_Model_Knife";
+	PreTransformMatrix = XMMatrixScaling(1.f, 1.f, 1.f);
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Knife"),
+		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/Knife/Knife.fbx", PreTransformMatrix, &Desc))))
+		return E_FAIL;
 	/* Prototype_GameObject_Model */
 	
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Model"),

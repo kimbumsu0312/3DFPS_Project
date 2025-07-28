@@ -31,6 +31,7 @@ HRESULT CBody_Player::Initialize(void* pArg)
     m_pModelCom->Set_Animations(0, true);
 
     m_iRootLodeIndex = 36;
+
     return S_OK;
 }
 
@@ -40,11 +41,10 @@ void CBody_Player::Priority_Update(_float fTimeDelta)
 
 void CBody_Player::Update(_float fTimeDelta)
 {
-    //Crouch_loop
     switch (*m_pState)
     {
     case ENUM_CLASS(CPlayer::PLAYER_STATE::IDLE):
-        m_pAnimCom->Player_Animation("Hand_Idle", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
+        m_pAnimCom->Player_Animation("Knife_Idle_Loop", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
         break;
     case ENUM_CLASS(CPlayer::PLAYER_STATE::JOG_F):
         m_pAnimCom->Player_Animation("Hand_Jog_Front", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
@@ -58,7 +58,12 @@ void CBody_Player::Update(_float fTimeDelta)
     case ENUM_CLASS(CPlayer::PLAYER_STATE::WALK_B):
         m_pAnimCom->Player_Animation("Hand_Walk_Back", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
         break;
+    case ENUM_CLASS(CPlayer::PLAYER_STATE::ATTACK):
+        m_pAnimCom->Player_Animation("Knife_Attack_1", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
+        break;
     }
+
+    Update_CombinedMatrix();
 }
 
 void CBody_Player::Late_Update(_float fTimeDelta)
@@ -91,6 +96,16 @@ HRESULT CBody_Player::Render()
     return S_OK;
 }
 
+_float4x4* CBody_Player::Get_BoneMatrix(const _wstring pBoneName)
+{
+    return m_pModelCom->Get_BoneMatrix(pBoneName);
+}
+
+_float3* CBody_Player::Get_MovePos()
+{
+    return m_pModelCom->Get_PtrMovePos();
+}
+
 HRESULT CBody_Player::Ready_Components()
 {
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
@@ -113,7 +128,7 @@ HRESULT CBody_Player::Ready_Components()
 
 HRESULT CBody_Player::Bind_ShaderResources()
 {
-    if (FAILED(m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix")))
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
         return E_FAIL;
 
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW))))
@@ -169,7 +184,6 @@ CGameObject* CBody_Player::Clone(void* pArg)
 void CBody_Player::Free()
 {
     __super::Free();
-    //m_pState = nullptr;
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
     Safe_Release(m_pAnimCom);

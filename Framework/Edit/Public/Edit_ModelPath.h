@@ -10,6 +10,7 @@ namespace Edit
 		"Prototype_Component_Model_Wall2",
 		"Prototype_Component_Model_Wall3",
 		"Prototype_Component_Model_Player",
-		"Prototype_Component_Model_Normal_Mon_1"
+		"Prototype_Component_Model_Normal_Mon_1",
+		"Prototype_Component_Model_Knife"
 	};
 }

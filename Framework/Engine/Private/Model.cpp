@@ -11,7 +11,7 @@ CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CComponen
 
 CModel::CModel(const CModel& Prototype) : CComponent(Prototype), m_Meshes(Prototype.m_Meshes), m_iNumMeshes(Prototype.m_iNumMeshes)
 , m_Materials(Prototype.m_Materials), m_iNumMaterials(Prototype.m_iNumMaterials), m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }, m_eModelType(Prototype.m_eModelType)
-, m_iCurrentAnimIndex(Prototype.m_iCurrentAnimIndex), m_iNumAnimations(Prototype.m_iNumAnimations), m_bisFinished{false}
+, m_iCurrentAnimIndex(Prototype.m_iCurrentAnimIndex), m_iNumAnimations(Prototype.m_iNumAnimations)
 {
     for (auto& pPrototypeBone : Prototype.m_Bones)
         m_Bones.push_back(pPrototypeBone->Clone());
@@ -40,12 +40,12 @@ HRESULT CModel::Initialize_Prototype(const SAVE_MODEL& pModelData)
     if (FAILED(Ready_Meshes(pModelData)))
         return E_FAIL;
 
-    if (FAILED(Ready_Materials(pModelData)))
+     if (FAILED(Ready_Materials(pModelData)))
         return E_FAIL;
-
+    
     if (FAILED(Ready_Animations(pModelData)))
         return E_FAIL;
-
+    
     return S_OK;
 }
 
@@ -90,9 +90,9 @@ _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const A
 {
     if (m_eModelType != MODELTYPE::ANIM)
         return false;
-    m_bisFinished = false;
+    _bool bisFinished = false;
 
-    m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &m_bisFinished, pAnimFrameData, IsAnimChange);
+    m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &bisFinished, pAnimFrameData, IsAnimChange);
 
     _vector vCurPos= {};
     
@@ -107,31 +107,39 @@ _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const A
     }
 
 
-    if (m_bisFinished || IsAnimChange)
+    if (bisFinished || IsAnimChange)
     {
         _vector vAdjustment = XMVectorSetY(vCurPos - m_vPreRootPos, 0.f) * 0.5f;
         m_vPreRootPos = vCurPos;
-        m_bisMotionChange = true;
-        return m_bisFinished;
+        return bisFinished;
     }
     
-    _vector vMovePos{};
     if (m_Animations[m_iCurrentAnimIndex]->IsAnimChange())
     {
-        vMovePos = { 0.f, 0.f, 0.f };
+        m_vMovePos = { 0.f, 0.f, 0.f };
     }
     else
     {
-        m_bisMotionChange = false;
-        vMovePos = vCurPos - m_vPreRootPos;
+        XMStoreFloat3(&m_vMovePos, vCurPos - m_vPreRootPos);
     }
-    vMovePos = XMVectorSetY(vMovePos, 0.f);
-    _vector vWolrdPos = pTransform->Get_State(STATE::POSITION) + vMovePos;
-    pTransform->Set_State(STATE::POSITION, XMVectorSetW(vWolrdPos, 1.f));
+    m_vMovePos.y = 0.f;
 
     m_vPreRootPos = vCurPos;
 
-    return m_bisFinished;
+    return bisFinished;
+}
+
+_float4x4* CModel::Get_BoneMatrix(const _wstring pBoneName)
+{
+    auto iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone) {
+        if (true == pBone->Compare_Name(pBoneName))
+            return true;
+        return false;
+        });
+    if(iter == m_Bones.end())
+        return nullptr;
+
+    return (*iter)->Get_PtrCombinedTransformationMatrix();
 }
 
 void CModel::Set_Animations(_uint AnimiIndex, _bool IsLoop)

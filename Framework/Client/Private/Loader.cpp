@@ -1,24 +1,11 @@
 #include "pch.h"
 #include "Loader.h"
-
 #include "BackGround.h"
 #include "Terrain.h"
-#include "Logo_UI.h"
-#include "Inventory.h"
 #include "Camera_Free.h"
-#include "Aim_Pistol.h"
-#include "Aim_Shotgun.h"
-#include "Aim_Line.h"
-#include "Aim_Sniper.h"
-#include "Quick_Slot.h"
-#include "Player_Hp.h"
-#include "Player.h"
-#include "UI_Tex.h"
-#include "UI_Slot.h"
-#include "Announce.h"
-#include "Player.h"
-#include "Body_Player.h"
 
+#include "UI_Header.h"
+#include "Player_Header.h"
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_pDevice{ pDevice }, m_pContext { pContext }, m_pGameInstance { CGameInstance::GetInstance()}
 {
 	Safe_AddRef(m_pGameInstance);
@@ -135,8 +122,12 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		return E_FAIL;
 
 	/* Player_Model_Prototype*/
-    	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Player/Player.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Player"))))
+    if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Player/Player.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Player"))))
 		return E_FAIL;
+
+	/* Player_Model_Knife*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Knife/Knife.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Knife"))))
+			return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("게임오브젝트원형를 로딩중입니다."));
 
@@ -147,7 +138,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
 		CCamera_Free::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-
+#pragma region Player_Object
 	if(FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Player"),
 		CPlayer::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -156,8 +147,15 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CBody_Player::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	
-#pragma region UIOBJ
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Player"),
+		CCamera_Player::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Knife_Player"),
+		CKnife::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+#pragma endregion
+#pragma region UI_Object
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Inventroy"),
 		CInventory::Create(m_pDevice, m_pContext))))
 		return E_FAIL;

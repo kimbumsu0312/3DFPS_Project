@@ -109,9 +109,6 @@
     <Filter Include="96.SuperClass\Item">
       <UniqueIdentifier>{49da3a7c-86c6-461d-ac35-62bef35a2952}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96.SuperClass\Item\2D">
-      <UniqueIdentifier>{db7738aa-552d-4a4b-96ce-ecaaae8c8b90}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96.SuperClass\Item\3D">
       <UniqueIdentifier>{47a6f88c-9a1f-4a30-ac39-7e3454eace8c}</UniqueIdentifier>
     </Filter>
@@ -159,6 +156,15 @@
     </Filter>
     <Filter Include="02.GameObject\Player\Body">
       <UniqueIdentifier>{4d644ce2-40e6-4369-8b77-e4db68e45346}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\Camera">
+      <UniqueIdentifier>{826dbe28-068e-4e06-be8f-5195901f8d9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="94.LevelHead">
+      <UniqueIdentifier>{4370c40f-386a-498b-b7b8-7fb9f3a06f3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\Weapon">
+      <UniqueIdentifier>{f7e05c40-6fcd-4f74-8402-b915ec60eaeb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -270,14 +276,8 @@
     <ClInclude Include="..\public\Item.h">
       <Filter>96.SuperClass\Item</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\2DItem.h">
-      <Filter>96.SuperClass\Item\2D</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\3DItem.h">
       <Filter>96.SuperClass\Item\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Item_2D_Render.h">
-      <Filter>02.GameObject\Item\Render_Item</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Inventory_Node.h">
       <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
@@ -323,6 +323,18 @@
     </ClInclude>
     <ClInclude Include="..\public\Body_Player.h">
       <Filter>02.GameObject\Player\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Camera_Player.h">
+      <Filter>02.GameObject\Player\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Header.h">
+      <Filter>94.LevelHead</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Header.h">
+      <Filter>94.LevelHead</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Knife.h">
+      <Filter>02.GameObject\Player\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -429,14 +441,8 @@
     <ClCompile Include="..\private\Item.cpp">
       <Filter>96.SuperClass\Item</Filter>
     </ClCompile>
-    <ClCompile Include="..\public\2DItem.cpp">
-      <Filter>96.SuperClass\Item\2D</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\3DItem.cpp">
       <Filter>96.SuperClass\Item\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Item_2D_Render.cpp">
-      <Filter>02.GameObject\Item\Render_Item</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Inventory_Node.cpp">
       <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
@@ -482,6 +488,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Body_Player.cpp">
       <Filter>02.GameObject\Player\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera_Player.cpp">
+      <Filter>02.GameObject\Player\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Knife.cpp">
+      <Filter>02.GameObject\Player\Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

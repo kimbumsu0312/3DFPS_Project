@@ -176,7 +176,7 @@ namespace Engine
 		wstring					szName;
 		XMFLOAT4X4				TransformationMatrix;
 		int						iParentBoneIndex;
-		XMFLOAT4X4				matOffset;				
+		XMFLOAT4X4				matOffset;		
 	}SAVE_BONE;
 
 	typedef struct tagChannels
