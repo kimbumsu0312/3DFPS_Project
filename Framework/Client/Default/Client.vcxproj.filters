@@ -154,17 +154,29 @@
     <Filter Include="02.GameObject\Mouse\Click_FX">
       <UniqueIdentifier>{4bf151f8-6fe8-49d8-b287-df51579ead6c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Player\Body">
-      <UniqueIdentifier>{4d644ce2-40e6-4369-8b77-e4db68e45346}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Player\Camera">
-      <UniqueIdentifier>{826dbe28-068e-4e06-be8f-5195901f8d9a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="94.LevelHead">
       <UniqueIdentifier>{4370c40f-386a-498b-b7b8-7fb9f3a06f3a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Player\Weapon">
+    <Filter Include="02.GameObject\Player\Object">
+      <UniqueIdentifier>{3df73299-8555-465b-b7b3-973a007ad728}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\Object\Weapon">
       <UniqueIdentifier>{f7e05c40-6fcd-4f74-8402-b915ec60eaeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\Object\Camera">
+      <UniqueIdentifier>{826dbe28-068e-4e06-be8f-5195901f8d9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\Object\Body">
+      <UniqueIdentifier>{4d644ce2-40e6-4369-8b77-e4db68e45346}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State">
+      <UniqueIdentifier>{3bede824-e979-478f-a8a3-484e328807f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Idle">
+      <UniqueIdentifier>{c0130ec4-ab65-4846-b2b8-0b09ef91dfb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Move">
+      <UniqueIdentifier>{0f4a17f4-4815-4b24-b58b-3c260f90be07}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -322,10 +334,10 @@
       <Filter>02.GameObject\Mouse\Click_FX</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Body_Player.h">
-      <Filter>02.GameObject\Player\Body</Filter>
+      <Filter>02.GameObject\Player\Object\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Camera_Player.h">
-      <Filter>02.GameObject\Player\Camera</Filter>
+      <Filter>02.GameObject\Player\Object\Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Header.h">
       <Filter>94.LevelHead</Filter>
@@ -334,7 +346,13 @@
       <Filter>94.LevelHead</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Knife.h">
-      <Filter>02.GameObject\Player\Weapon</Filter>
+      <Filter>02.GameObject\Player\Object\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Idle_Player.h">
+      <Filter>02.GameObject\Player\State\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Move_Player.h">
+      <Filter>02.GameObject\Player\State\Move</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -487,13 +505,19 @@
       <Filter>02.GameObject\Mouse\Click_FX</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Body_Player.cpp">
-      <Filter>02.GameObject\Player\Body</Filter>
+      <Filter>02.GameObject\Player\Object\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Camera_Player.cpp">
-      <Filter>02.GameObject\Player\Camera</Filter>
+      <Filter>02.GameObject\Player\Object\Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Knife.cpp">
-      <Filter>02.GameObject\Player\Weapon</Filter>
+      <Filter>02.GameObject\Player\Object\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Idle_Player.cpp">
+      <Filter>02.GameObject\Player\State\Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Move_Player.cpp">
+      <Filter>02.GameObject\Player\State\Move</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

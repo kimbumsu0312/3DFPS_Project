@@ -24,8 +24,6 @@ HRESULT CCamera_Player::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-    m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.0f));
-
     return S_OK;
 }
 
@@ -89,7 +87,7 @@ void CCamera_Player::Update_CamraPos()
         ParentMatrix.r[i] = XMVector3Normalize(ParentMatrix.r[i]);
     }
 
-    XMStoreFloat4x4(&m_CombinedWorldMatrix,  BoneMatrix * RotaionY * XMLoadFloat4x4(m_pParentMatrix));
+    XMStoreFloat4x4(&m_CombinedWorldMatrix, RotaionY * BoneMatrix * XMLoadFloat4x4(m_pParentMatrix));
     m_pTransformCom->Set_WorldMatrix(m_CombinedWorldMatrix);
 }
 

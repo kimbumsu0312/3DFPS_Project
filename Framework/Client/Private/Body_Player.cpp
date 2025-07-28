@@ -61,6 +61,9 @@ void CBody_Player::Update(_float fTimeDelta)
     case ENUM_CLASS(CPlayer::PLAYER_STATE::ATTACK):
         m_pAnimCom->Player_Animation("Knife_Attack_1", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
         break;
+    case ENUM_CLASS(CPlayer::PLAYER_STATE::DIE):
+        m_pAnimCom->Player_Animation("Die", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
+        break;
     }
 
     Update_CombinedMatrix();

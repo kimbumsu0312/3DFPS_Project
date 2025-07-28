@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ContainerObject.h"
 #include "PartObject.h"
-
+#include "StateObject.h"
 CContainerObject::CContainerObject(ID3D11Device* pDeivec, ID3D11DeviceContext* pContext) : CGameObject{pDeivec, pContext}
 {
 }
@@ -64,6 +64,28 @@ CPartObject* CContainerObject::Find_PartObject(const _wstring& strPartObjectTag)
 {
 	auto    iter = m_PartObjects.find(strPartObjectTag);
 	if (iter == m_PartObjects.end())
+		return nullptr;
+
+	return iter->second;
+}
+
+HRESULT CContainerObject::Add_StateObject(const _wstring& strStateObjectTag, CStateObject* pStateObject)
+{
+	if (nullptr != Find_PartObject(strStateObjectTag))
+		return E_FAIL;
+
+	if (nullptr == pStateObject)
+		return E_FAIL;
+
+	m_StateObjects.emplace(strStateObjectTag, pStateObject);
+
+	return S_OK;
+}
+
+CStateObject* CContainerObject::Find_StateObject(const _wstring& strStateObjectTag)
+{
+	auto    iter = m_StateObjects.find(strStateObjectTag);
+	if (iter == m_StateObjects.end())
 		return nullptr;
 
 	return iter->second;

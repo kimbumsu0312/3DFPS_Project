@@ -4,6 +4,9 @@
 #include "Camera_Player.h"
 #include "Model.h"
 #include "Knife.h"
+
+#include "Idle_Player.h"
+#include "Move_Player.h"
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CContainerObject(pDevice, pContext)
 {
 
@@ -30,6 +33,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_PartObjects()))
 		return E_FAIL;
 
+	if (FAILED(Ready_StateObjects()))
+		return E_FAIL;
 	m_pMovePos = static_cast<CBody_Player*>(m_PartObjects.at(TEXT("Part_Body")))->Get_MovePos();
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 3.f, 0.f, 1.f));
@@ -40,34 +45,20 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
 	m_pCamera->Priority_Update(fTimeDelta);
+
+	if (m_iState == ENUM_CLASS(PLAYER_STATE::IDLE))
+	{
+		m_CulStateObject = Find_StateObject(TEXT("Idle"));
+	}
+	else
+	{
+		m_CulStateObject = Find_StateObject(TEXT("Move"));
+	}
 }
 
 void CPlayer::Update(_float fTimeDelta)
  {
- 	if (m_pGameInstance->IsKeyHold(DIK_W))
-	{
-		m_iState = ENUM_CLASS(PLAYER_STATE::JOG_F);
-	}
-	else if (m_pGameInstance->IsKeyHold(DIK_A))
-	{
-		m_iState = ENUM_CLASS(PLAYER_STATE::JOG_L);
-	}
-	else if (m_pGameInstance->IsKeyHold(DIK_D))
-	{
-		m_iState = ENUM_CLASS(PLAYER_STATE::JOG_R);
-	}
-	else if (m_pGameInstance->IsKeyHold(DIK_S))
-	{
-		m_iState = ENUM_CLASS(PLAYER_STATE::WALK_B);
-	}
-	else if (m_pGameInstance->IsMouseHold(MOUSEKEYSTATE::LB))
-	{
-		m_iState = ENUM_CLASS(PLAYER_STATE::ATTACK);
-	}
-	else
-	{
-		m_iState = ENUM_CLASS(PLAYER_STATE::IDLE);
-	}
+	m_CulStateObject->Update(this, fTimeDelta);
 	__super::Update(fTimeDelta);
 	m_pCamera->Update(fTimeDelta);
 	//Update_RootMove();
@@ -82,6 +73,10 @@ void CPlayer::Late_Update(_float fTimeDelta)
 HRESULT CPlayer::Render()
 {
 	return S_OK;
+}
+
+void CPlayer::Move(_float fMoveValue)
+{
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -123,6 +118,28 @@ HRESULT CPlayer::Ready_PartObjects()
 	CameraDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("Cam"));
 	CameraDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 	m_pCamera = dynamic_cast<CCamera_Player*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Player"), &CameraDesc));
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Ready_StateObjects()
+{
+	CStateObject::STATE_DESC Desc{};
+	Desc.pState = &m_iState;
+
+	CIdle_Player* pInstance = CIdle_Player::Create(&Desc);
+	if (pInstance == nullptr)
+		return E_FAIL;
+
+	__super::Add_StateObject(TEXT("Idle"), pInstance);
+	m_CulStateObject = pInstance;
+	Safe_AddRef(pInstance);
+
+	CMove_Player::MOVE_PLAYER_DESC MoveDesc{};
+	MoveDesc.pTransForm = m_pTransformCom;
+	MoveDesc.pState = &m_iState;
+
+	__super::Add_StateObject(TEXT("Move"), CMove_Player::Create(&MoveDesc));
 
 	return S_OK;
 }

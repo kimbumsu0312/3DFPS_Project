@@ -21,9 +21,17 @@ protected:
 	unordered_map<_wstring,
 		class CPartObject*>			m_PartObjects;
 
+	unordered_map<_wstring,
+		class CStateObject*>		m_StateObjects;
+
+	CStateObject*					m_CulStateObject;
+
 protected:
 	HRESULT							Add_PartObject(const _wstring& strPartObjectTag, _uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, void* pArg = nullptr);
 	class CPartObject*				Find_PartObject(const _wstring& strPartObjectTag);
+
+	HRESULT							Add_StateObject(const _wstring& strStateObjectTag, CStateObject* pStateObject);
+	class CStateObject*				Find_StateObject(const _wstring& strPartObjectTag);
 
 public:
 	virtual CGameObject*			Clone(void* pArg) = 0;
