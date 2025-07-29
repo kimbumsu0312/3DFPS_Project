@@ -1,5 +1,5 @@
 {
-    "Data_Path": "../Bin/Resources/Models/Player/PlayerData.dat",
+    "Data_Path": "../Bin/Data/Charter/PlayerData.dat",
     "MeshMaterial": [
         {
             "Materials": [

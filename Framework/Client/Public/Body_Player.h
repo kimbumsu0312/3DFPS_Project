@@ -12,7 +12,11 @@ class CBody_Player final : public CPartObject
 {
 public:
 	typedef struct tagBodyPlayerDesc : public CPartObject::PARTOBJECT_DESC {
-		_uint* pState = { nullptr };
+		_uint*	pState = { nullptr };
+		_uint*	pWeaponState = { nullptr };
+		string* pAnimTag = { nullptr };
+		_bool*	pIsAnimLoop = { nullptr };
+		_bool*	pIsAnimFinsh = { nullptr };
 	}BODY_DESC;
 
 private:
@@ -36,12 +40,16 @@ private:
 	CModel*					m_pModelCom = { nullptr };
 	CAnimatio_Controller*	m_pAnimCom = { nullptr };
 	_uint*					m_pState = { nullptr };
+	_uint*					m_pWeaponState = { nullptr };
+	string*					m_pAnimTag = { nullptr };
+	_bool*					m_pIsAnimLoop = { nullptr };
+	_bool*					m_pIsAnimFinsh = { nullptr };
 	_uint					m_iRootLodeIndex = {};
-	
 private:
 	HRESULT					Ready_Components();
 	HRESULT					Bind_ShaderResources();
 
+	void					Anim_State(_float fTimeDelta);
 public:
 	static CBody_Player*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg) override;

@@ -26,9 +26,11 @@ HRESULT CKnife::Initialize(void* pArg)
     if (FAILED(Ready_Components()))
         return E_FAIL;
 
-    m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-0.02f, -0.02f, 0.f, 1.f));
-    m_pTransformCom->Rotation_All(_float3{ XMConvertToRadians(90.0f), XMConvertToRadians(0.f), XMConvertToRadians(45.f) });
-    m_pTransformCom->Scale(_float3{ 100.f, 100.f, 100.f });
+    //m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-0.02f, -0.02f, 0.f, 1.f));
+    m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+
+    //m_pTransformCom->Rotation_All(_float3{ XMConvertToRadians(90.0f), XMConvertToRadians(0.f), XMConvertToRadians(45.f) });
+    m_pTransformCom->Scale(_float3{ 1000.f, 1000.f, 1000.f });
     return S_OK;
 }
 
@@ -39,11 +41,13 @@ void CKnife::Priority_Update(_float fTimeDelta)
 void CKnife::Update(_float fTimeDelta)
 {
     _matrix     BoneMatrix = XMLoadFloat4x4(m_pSocketMatrix);
-
+    _matrix     ParentMatrix = XMLoadFloat4x4(m_pParentMatrix);
     for (size_t i = 0; i < 3; i++)
+    {
         BoneMatrix.r[i] = XMVector3Normalize(BoneMatrix.r[i]);
-
-    XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_WorldMatrix() * BoneMatrix * XMLoadFloat4x4(m_pParentMatrix)); 
+        ParentMatrix.r[i] =  XMVector3Normalize(ParentMatrix.r[i]);
+    }
+    XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_WorldMatrix());
 }
 
 void CKnife::Late_Update(_float fTimeDelta)
@@ -91,8 +95,8 @@ HRESULT CKnife::Bind_ShaderResources()
 {
     if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
         return E_FAIL;
-    //if (FAILED(m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix")))
-    //    return E_FAIL;
+    if (FAILED(m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix")))
+        return E_FAIL;
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW))))
         return E_FAIL;
 

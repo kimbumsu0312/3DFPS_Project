@@ -46,7 +46,7 @@ HRESULT CModel::Initialize_Prototype(const SAVE_MODEL& pModelData)
     if (FAILED(Ready_Animations(pModelData)))
         return E_FAIL;
     
-    return S_OK;
+       return S_OK;
 }
 
 HRESULT CModel::Initialize(void* pArg)
@@ -86,7 +86,7 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, 
     return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones);
 }
 
-_bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex, class CTransform* pTransform, _bool IsAnimChange)
+_bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex, _bool IsAnimChange)
 {
     if (m_eModelType != MODELTYPE::ANIM)
         return false;

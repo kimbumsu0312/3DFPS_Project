@@ -29,7 +29,8 @@ HRESULT CCamera_Player::Initialize(void* pArg)
 
 void CCamera_Player::Priority_Update(_float fTimeDelta)
 {
-    if(m_pGameInstance->IsKeyHold(DIK_Q))
+    if (m_pGameInstance->IsKeyHold(DIK_Q))
+        return;
         __super::Update_PipeLines();
 }
 
@@ -81,13 +82,14 @@ void CCamera_Player::Update_CamraPos()
     _matrix     BoneMatrix = XMLoadFloat4x4(m_pSocketMatrix);
     _matrix     ParentMatrix = XMLoadFloat4x4(m_pParentMatrix);
     _matrix     RotaionY = XMMatrixRotationY(XMConvertToRadians(180.f));
+    RotaionY.r[3] = { 0.f, 0.f, -0.f ,1.f };
     for (size_t i = 0; i < 3; i++)
     {
         BoneMatrix.r[i] = XMVector3Normalize(BoneMatrix.r[i]);
         ParentMatrix.r[i] = XMVector3Normalize(ParentMatrix.r[i]);
     }
 
-    XMStoreFloat4x4(&m_CombinedWorldMatrix, RotaionY * BoneMatrix * XMLoadFloat4x4(m_pParentMatrix));
+    XMStoreFloat4x4(&m_CombinedWorldMatrix, BoneMatrix * RotaionY * XMLoadFloat4x4(m_pParentMatrix));
     m_pTransformCom->Set_WorldMatrix(m_CombinedWorldMatrix);
 }
 

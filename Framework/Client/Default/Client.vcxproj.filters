@@ -175,7 +175,22 @@
     <Filter Include="02.GameObject\Player\State\Idle">
       <UniqueIdentifier>{c0130ec4-ab65-4846-b2b8-0b09ef91dfb0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Player\State\Move">
+    <Filter Include="96.SuperClass\StateObject">
+      <UniqueIdentifier>{3e6dd77c-61cb-435b-b5f3-640e46383aa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Attack">
+      <UniqueIdentifier>{017e5d35-1f22-41ef-b9ef-078584f6bec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Aim">
+      <UniqueIdentifier>{ba1f2610-4302-4794-ad99-fc5528f9369f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Guard">
+      <UniqueIdentifier>{73195018-432f-4243-bba1-7fe1455e3363}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Reload">
+      <UniqueIdentifier>{1d851e46-3185-497b-a86a-82ffa43770bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Walk">
       <UniqueIdentifier>{0f4a17f4-4815-4b24-b58b-3c260f90be07}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -351,8 +366,26 @@
     <ClInclude Include="..\public\Idle_Player.h">
       <Filter>02.GameObject\Player\State\Idle</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Move_Player.h">
-      <Filter>02.GameObject\Player\State\Move</Filter>
+    <ClInclude Include="..\public\Walk_Player.h">
+      <Filter>02.GameObject\Player\State\Walk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Enum.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\StateObject.h">
+      <Filter>96.SuperClass\StateObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Aim_Player.h">
+      <Filter>02.GameObject\Player\State\Aim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Guard_Player.h">
+      <Filter>02.GameObject\Player\State\Guard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Reload_Player.h">
+      <Filter>02.GameObject\Player\State\Reload</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Attack_Player.h">
+      <Filter>02.GameObject\Player\State\Attack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -516,8 +549,23 @@
     <ClCompile Include="..\private\Idle_Player.cpp">
       <Filter>02.GameObject\Player\State\Idle</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Move_Player.cpp">
-      <Filter>02.GameObject\Player\State\Move</Filter>
+    <ClCompile Include="..\private\Walk_Player.cpp">
+      <Filter>02.GameObject\Player\State\Walk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\StateObject.cpp">
+      <Filter>96.SuperClass\StateObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Aim_Player.cpp">
+      <Filter>02.GameObject\Player\State\Aim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Guard_Player.cpp">
+      <Filter>02.GameObject\Player\State\Guard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Reload_Player.cpp">
+      <Filter>02.GameObject\Player\State\Reload</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Attack_Player.cpp">
+      <Filter>02.GameObject\Player\State\Attack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

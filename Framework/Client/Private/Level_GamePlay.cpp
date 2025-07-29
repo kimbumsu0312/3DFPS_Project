@@ -121,7 +121,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _wstring& strLayerTag)
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 {
 	CGameObject::GAMEOBJECT_DESC Desc;
-	Desc.fSpeedPerSec = 10.f;
+	Desc.fSpeedPerSec = 1.f;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Player"), &Desc)))

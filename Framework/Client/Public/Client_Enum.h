@@ -1,0 +1,10 @@
+#pragma once
+
+namespace Client
+{
+	enum PLAYER_WEAPON { HANDGUN = 0, KNIFE = 2 , SHOTGUN = 3, SNIPER = 4, WEAPONCHANGE = 5, PLAYER_WEAPON_END };
+	enum PLAYER_STATE { IDLE, WALK, JOG, ATTACK, AIM, GUARD, RELOAD, DIE, PLAYER_STATE_END };
+
+	enum class STATE_ANIM { START, LOOP, END};
+}
+

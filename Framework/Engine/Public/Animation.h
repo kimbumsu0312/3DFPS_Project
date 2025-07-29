@@ -28,7 +28,7 @@ private:
 	vector<_uint>				m_CurrentKeyFrameIndices;
 
 	_float						m_fTransitionTime = { 1.f };
-	_float						m_fTransitionDuration = { 0.2f };
+	_float						m_fTransitionDuration = { 0.4f };
 	vector<KEYFRAME>			m_KeyFrames;
 	_bool						m_bIsAnimChange = { false };
 public:

@@ -157,16 +157,20 @@
   <ItemGroup>
     <ClInclude Include="..\public\Aim_Pistol.h" />
     <ClInclude Include="..\public\Aim_Line.h" />
+    <ClInclude Include="..\public\Aim_Player.h" />
     <ClInclude Include="..\public\Aim_Shotgun.h" />
     <ClInclude Include="..\public\Aim_Shotgun_Line.h" />
     <ClInclude Include="..\public\Aim_Sniper.h" />
     <ClInclude Include="..\public\Announce.h" />
+    <ClInclude Include="..\Public\Attack_Player.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\Body_Player.h" />
     <ClInclude Include="..\public\Button.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\public\3DItem.h" />
     <ClInclude Include="..\public\Camera_Player.h" />
+    <ClInclude Include="..\Public\Client_Enum.h" />
+    <ClInclude Include="..\public\Guard_Player.h" />
     <ClInclude Include="..\public\Idle_Player.h" />
     <ClInclude Include="..\public\Item_Penal.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
@@ -178,7 +182,9 @@
     <ClInclude Include="..\public\Knife.h" />
     <ClInclude Include="..\public\Mouse.h" />
     <ClInclude Include="..\public\Mouse_Click_Fx.h" />
-    <ClInclude Include="..\public\Move_Player.h" />
+    <ClInclude Include="..\public\Reload_Player.h" />
+    <ClInclude Include="..\Public\StateObject.h" />
+    <ClInclude Include="..\public\Walk_Player.h" />
     <ClInclude Include="..\Public\Player_Header.h" />
     <ClInclude Include="..\Public\UI_Header.h" />
     <ClInclude Include="..\public\UI_Tex.h" />
@@ -217,16 +223,19 @@
   <ItemGroup>
     <ClCompile Include="..\private\Aim_Pistol.cpp" />
     <ClCompile Include="..\private\Aim_Line.cpp" />
+    <ClCompile Include="..\private\Aim_Player.cpp" />
     <ClCompile Include="..\private\Aim_Shotgun.cpp" />
     <ClCompile Include="..\private\Aim_Shotgun_Line.cpp" />
     <ClCompile Include="..\private\Aim_Sniper.cpp" />
     <ClCompile Include="..\private\Announce.cpp" />
+    <ClCompile Include="..\Private\Attack_Player.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\Body_Player.cpp" />
     <ClCompile Include="..\private\Button.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\private\3DItem.cpp" />
     <ClCompile Include="..\private\Camera_Player.cpp" />
+    <ClCompile Include="..\private\Guard_Player.cpp" />
     <ClCompile Include="..\private\Idle_Player.cpp" />
     <ClCompile Include="..\private\Item_Penal.cpp" />
     <ClCompile Include="..\private\Create_Penal.cpp" />
@@ -237,7 +246,9 @@
     <ClCompile Include="..\private\Knife.cpp" />
     <ClCompile Include="..\private\Mouse.cpp" />
     <ClCompile Include="..\private\Mouse_Click_Fx.cpp" />
-    <ClCompile Include="..\private\Move_Player.cpp" />
+    <ClCompile Include="..\private\Reload_Player.cpp" />
+    <ClCompile Include="..\Private\StateObject.cpp" />
+    <ClCompile Include="..\private\Walk_Player.cpp" />
     <ClCompile Include="..\private\UI_Tex.cpp" />
     <ClCompile Include="..\private\Inventory_Node.cpp" />
     <ClCompile Include="..\private\Item.cpp" />

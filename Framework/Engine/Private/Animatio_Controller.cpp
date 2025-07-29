@@ -13,39 +13,36 @@ HRESULT CAnimatio_Controller::Initialize_Prototype()
 HRESULT CAnimatio_Controller::Initialize(void* pArg)
 {
 	ANIMTION_DESC* pDesc = static_cast<ANIMTION_DESC*>(pArg);
-
+	
 	if (FAILED(Load_AnimData(pDesc->szFile_Path)))
 		return E_FAIL;
 
+	m_iCulAnimIndex = pDesc->iAnimIndex;
 	m_szCulAnimName = pDesc->szCulAnimName;
 	m_CulAnimFrame = Find_Anim(m_szCulAnimName);
+	pDesc->pModel->Set_Animations(m_iCulAnimIndex, pDesc->IsLoop);
 	return S_OK;
 }
 
-_bool CAnimatio_Controller::Player_Animation(string szAnimName, CModel* pModel, _float fTimeDelta, _int iRootNodeIndex, class CTransform* pTransform)
+_bool CAnimatio_Controller::Player_Animation(_int iAnimIndex, string szAnimName, _bool IsLoop, CModel* pModel, _float fTimeDelta, _int iRootNodeIndex)
 {
 	_bool isAnimChange = false;
-	if (m_szCulAnimName != szAnimName)
+
+	if (m_szCulAnimName != szAnimName || m_iCulAnimIndex != iAnimIndex)
 	{
+		m_iCulAnimIndex = iAnimIndex;
 		m_szCulAnimName = szAnimName;
 		m_CulAnimFrame = Find_Anim(szAnimName);
+		pModel->Set_Animations(m_iCulAnimIndex, IsLoop);
 		isAnimChange = true;
-		//pModel->AnimChage();
 	}
-	return pModel->Play_Animation(fTimeDelta, m_eAnim_Status, m_CulAnimFrame, iRootNodeIndex, pTransform, isAnimChange);
+	return pModel->Play_Animation(fTimeDelta, m_eAnim_Status, m_CulAnimFrame, iRootNodeIndex, isAnimChange);
 }
 
 void CAnimatio_Controller::Set_AnimStatus(ANIM_STATUS eStatus)
 {
 	m_eAnim_Status = eStatus;
 }
-
-void CAnimatio_Controller::Set_Animetion(CModel* pModel, _int iAnimIndex, _bool IsLoop)
-{
-	m_iCulAnimIndex = iAnimIndex;
-	pModel->Set_Animations(m_iCulAnimIndex, IsLoop);
-}
-
 
 HRESULT CAnimatio_Controller::Load_AnimData(string pAnimFilePath)
 {

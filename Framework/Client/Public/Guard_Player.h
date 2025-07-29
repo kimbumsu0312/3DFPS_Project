@@ -2,13 +2,11 @@
 #include "StateObject.h"
 
 NS_BEGIN(Client)
-class CIdle_Player final : public CStateObject
+class CGuard_Player final : public CStateObject
 {
 private:
-	enum class INPUT_ENUM { MOVE_KEY, GUARD, AIM, RELOAD, ATTACK, END };
-private:
-	CIdle_Player();
-	virtual ~CIdle_Player() = default;
+	CGuard_Player();
+	virtual ~CGuard_Player() = default;
 
 public:
 	virtual HRESULT				Initalize(void* pArg) override;
@@ -18,12 +16,11 @@ public:
 
 private:
 	STATE_ANIM					m_eAnimState = STATE_ANIM::END;
-	INPUT_ENUM					m_eInputKey = INPUT_ENUM::END;
 
 private:
 	void						KeyInput();
 public:
-	static CIdle_Player*		Create(void* pArg);
+	static CGuard_Player* Create(void* pArg);
 	virtual void				Free() override;
 };
 NS_END

@@ -2,13 +2,13 @@
 #include "StateObject.h"
 
 NS_BEGIN(Client)
-class CIdle_Player final : public CStateObject
+class CReload_Player final : public CStateObject
 {
 private:
-	enum class INPUT_ENUM { MOVE_KEY, GUARD, AIM, RELOAD, ATTACK, END };
+	enum class RELOAD_TYPE{ BULLET, MAGAZINE, END};
 private:
-	CIdle_Player();
-	virtual ~CIdle_Player() = default;
+	CReload_Player();
+	virtual ~CReload_Player() = default;
 
 public:
 	virtual HRESULT				Initalize(void* pArg) override;
@@ -18,12 +18,11 @@ public:
 
 private:
 	STATE_ANIM					m_eAnimState = STATE_ANIM::END;
-	INPUT_ENUM					m_eInputKey = INPUT_ENUM::END;
-
+	RELOAD_TYPE					m_eReload_Type = RELOAD_TYPE::END;
 private:
 	void						KeyInput();
 public:
-	static CIdle_Player*		Create(void* pArg);
+	static CReload_Player* Create(void* pArg);
 	virtual void				Free() override;
 };
 NS_END

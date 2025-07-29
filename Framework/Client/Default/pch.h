@@ -7,4 +7,5 @@
 #include "Client_Defines.h"
 #include "GameInstance.h"
 #include "Client_Event.h"
+#include "Client_Enum.h"
 #endif //PCH_H

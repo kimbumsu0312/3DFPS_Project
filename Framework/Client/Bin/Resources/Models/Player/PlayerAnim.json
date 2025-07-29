@@ -3,157 +3,519 @@
         {
             "Anim": [
                 {
-                    "AnimeName": "Knife_Idle_Loop",
-                    "EndFrame": 269,
+                    "AnimeName": "Guard_Damage",
+                    "EndFrame": 49,
                     "StartFrame": 0,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Knife_Walk_Loop",
-                    "EndFrame": 303,
-                    "StartFrame": 270,
+                    "AnimeName": "Idle_Start",
+                    "EndFrame": 87,
+                    "StartFrame": 50,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Knife_Jog_Loop",
-                    "EndFrame": 403,
-                    "StartFrame": 304,
+                    "AnimeName": "Idle_Loop",
+                    "EndFrame": 325,
+                    "StartFrame": 88,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Knife_Sprint_Loop",
-                    "EndFrame": 474,
-                    "StartFrame": 404,
+                    "AnimeName": "Jog_Loop",
+                    "EndFrame": 362,
+                    "StartFrame": 326,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Knife_Guard_Loop",
-                    "EndFrame": 623,
-                    "StartFrame": 475,
+                    "AnimeName": "Jog_End",
+                    "EndFrame": 396,
+                    "StartFrame": 363,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Knife_Guard_Walk",
-                    "EndFrame": 710,
-                    "StartFrame": 624,
+                    "AnimeName": "Idle_End",
+                    "EndFrame": 404,
+                    "StartFrame": 397,
+                    "TickPerSecond":50.0
+                },
+                {
+                    "AnimeName": "GetWep",
+                    "EndFrame": 566,
+                    "StartFrame": 405,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Knife_Attack_1",
-                    "EndFrame": 786,
-                    "StartFrame": 735,
+                    "AnimeName": "Walk_Loop",
+                    "EndFrame": 637,
+                    "StartFrame": 567,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Knife_Attack_2",
-                    "EndFrame": 838,
-                    "StartFrame": 787,
+                    "AnimeName": "Aim_Loop",
+                    "EndFrame": 785,
+                    "StartFrame": 638,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "HandGun_Idle_Start",
-                    "EndFrame": 920,
-                    "StartFrame": 890,
+                    "AnimeName": "Aim_Start",
+                    "EndFrame": 820,
+                    "StartFrame": 786,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "HandGun_Idle_Loop",
-                    "EndFrame": 998,
-                    "StartFrame": 921,
+                    "AnimeName": "Aim_End",
+                    "EndFrame": 853,
+                    "StartFrame": 821,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_Loop",
+                    "EndFrame": 1002,
+                    "StartFrame": 854,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_Walk",
+                    "EndFrame": 1056,
+                    "StartFrame": 1003,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_Start",
+                    "EndFrame": 1090,
+                    "StartFrame": 1057,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_End",
+                    "EndFrame": 1100,
+                    "StartFrame": 1091,
                     "TickPerSecond": 25.0
                 },
                 {
                     "AnimeName": "Aim_Shoot",
-                    "EndFrame": 1021,
-                    "StartFrame": 1007,
+                    "EndFrame": 1155,
+                    "StartFrame": 1101,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "AimGuard_Loop",
-                    "EndFrame": 1058,
-                    "StartFrame": 1041,
+                    "AnimeName": "Reload",
+                    "EndFrame": 1415,
+                    "StartFrame": 1156,
+                    "TickPerSecond": 25.0
+                }                
+            ]        
+        },
+           {
+            "Anim": [
+                {
+                    "AnimeName": "Idle_Loop",
+                    "EndFrame": 240,
+                    "StartFrame": 0,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Handgun_Reload",
-                    "EndFrame": 1495,
-                    "StartFrame": 1375,
+                    "AnimeName": "Stand_Damage",
+                    "EndFrame": 482,
+                    "StartFrame": 242,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Hand_Idle",
-                    "EndFrame": 1874,
-                    "StartFrame": 1635,
+                    "AnimeName": "Walk_B",
+                    "EndFrame": 547,
+                    "StartFrame": 483,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Hand_Walk_Back",
-                    "EndFrame": 2180,
-                    "StartFrame": 2115,
+                    "AnimeName": "Walk_R",
+                    "EndFrame": 605,
+                    "StartFrame": 548,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Hand_Walk_RIght",
-                    "EndFrame": 2237,
-                    "StartFrame": 2182,
+                    "AnimeName": "Walk_Loop",
+                    "EndFrame": 655,
+                    "StartFrame": 606,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Hand_Walk_Left",
-                    "EndFrame": 2294,
-                    "StartFrame": 2239,
+                    "AnimeName": "Walk_L",
+                    "EndFrame": 712,
+                    "StartFrame": 656,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Hand_Jog_Right",
-                    "EndFrame": 2334,
-                    "StartFrame": 2295,
+                    "AnimeName": "Jog_B",
+                    "EndFrame": 749,
+                    "StartFrame": 713,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Hand_Jog_Front",
-                    "EndFrame": 2375,
-                    "StartFrame": 2335,
+                    "AnimeName": "Jog_R",
+                    "EndFrame": 789,
+                    "StartFrame": 750,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Hand_Jog_Left",
-                    "EndFrame": 2415,
-                    "StartFrame": 2377,
+                    "AnimeName": "Jog_F",
+                    "EndFrame": 831,
+                    "StartFrame": 790,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Damage_Cam",
-                    "EndFrame": 2457,
-                    "StartFrame": 2424,
+                    "AnimeName": "Jog_L",
+                    "EndFrame": 871,
+                    "StartFrame": 832,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "Die",
-                    "EndFrame": 2663,
-                    "StartFrame": 2458,
+                    "AnimeName": "Damage_Small",
+                    "EndFrame": 913,
+                    "StartFrame": 872,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "WeaponChange_HandGun_Put",
-                    "EndFrame": 2680,
-                    "StartFrame": 2665,
+                    "AnimeName": "Damage_Large",
+                    "EndFrame": 1041,
+                    "StartFrame": 914,
                     "TickPerSecond": 25.0
                 },
                 {
-                    "AnimeName": "WeaponChange_ShotGun_Put",
-                    "EndFrame": 2695,
-                    "StartFrame": 2681,
-                    "TickPerSecond": 25.0
-                },
-                {
-                    "AnimeName": "WeaponChange_Sniper_Put",
-                    "EndFrame": 2712,
-                    "StartFrame": 2698,
+                    "AnimeName": "Get_Item",
+                    "EndFrame": 1077,
+                    "StartFrame": 1042,
                     "TickPerSecond": 25.0
                 }
-            ]
+            ]        
+        },
+        {
+            "Anim": [
+                {
+                    "AnimeName": "Guard_Damage",
+                    "EndFrame": 50,
+                    "StartFrame": 0,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Idle_Start",
+                    "EndFrame": 83,
+                    "StartFrame": 51,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Idle_Loop",
+                    "EndFrame": 121,
+                    "StartFrame": 84,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Jog_Loop",
+                    "EndFrame": 153,
+                    "StartFrame": 122,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Jog_End",
+                    "EndFrame": 162,
+                    "StartFrame": 154,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Idle_End",
+                    "EndFrame": 165,
+                    "StartFrame": 163,
+                    "TickPerSecond": 50.0
+                },
+                {
+                    "AnimeName": "Walk_Loop",
+                    "EndFrame": 216,
+                    "StartFrame": 166,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_Loop",
+                    "EndFrame": 366,
+                    "StartFrame": 217,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_Walk",
+                    "EndFrame": 422,
+                    "StartFrame": 367,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_Start",
+                    "EndFrame": 440,
+                    "StartFrame": 423,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_End",
+                    "EndFrame": 453,
+                    "StartFrame": 441,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Attack_1",
+                    "EndFrame": 530,
+                    "StartFrame": 492,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Attack_2",
+                    "EndFrame": 581,
+                    "StartFrame": 531,
+                    "TickPerSecond": 25.0
+                }
+            ]        
+        },
+         {
+            "Anim": [
+                     {
+                    "AnimeName": "Guard_Damage",
+                    "EndFrame": 49,
+                    "StartFrame": 0,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Idle_Start",
+                    "EndFrame": 96,
+                    "StartFrame": 50,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Idle_Loop",
+                    "EndFrame": 330,
+                    "StartFrame": 97,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Jog_End",
+                    "EndFrame": 364,
+                    "StartFrame": 331,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Idle_End",
+                    "EndFrame": 385,
+                    "StartFrame": 365,
+                    "TickPerSecond": 50.0
+                },
+                {
+                    "AnimeName": "GetWep",
+                    "EndFrame": 551,
+                    "StartFrame": 386,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Walk_Loop",
+                    "EndFrame": 608,
+                    "StartFrame": 552,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "AIM_Loop",
+                    "EndFrame": 757,
+                    "StartFrame": 609,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "AIM_Start",
+                    "EndFrame": 779,
+                    "StartFrame": 758,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "AIM_End",
+                    "EndFrame": 834,
+                    "StartFrame": 780,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_Loop",
+                    "EndFrame": 983,
+                    "StartFrame": 835,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_Walk",
+                    "EndFrame": 1044,
+                    "StartFrame": 984,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_Start",
+                    "EndFrame": 1075,
+                    "StartFrame": 1045,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_End",
+                    "EndFrame": 1105,
+                    "StartFrame": 1076,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Aim_Shoot",
+                    "EndFrame": 1163,
+                    "StartFrame": 1106,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Reload_Start",
+                    "EndFrame": 1202,
+                    "StartFrame": 1164,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Reload_Loop",
+                    "EndFrame": 1284,
+                    "StartFrame": 1203,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Reload_End",
+                    "EndFrame": 1305,
+                    "StartFrame": 1285,
+                    "TickPerSecond": 25.0
+                }  
+            ]        
+        },
+        {
+            "Anim": [
+                     {
+                    "AnimeName": "Guard_Damage",
+                    "EndFrame": 49,
+                    "StartFrame": 0,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Idle_Start",
+                    "EndFrame": 96,
+                    "StartFrame": 50,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Idle_Loop",
+                    "EndFrame": 331,
+                    "StartFrame": 97,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Jog_End",
+                    "EndFrame": 381,
+                    "StartFrame": 332,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Idle_End",
+                    "EndFrame": 384,
+                    "StartFrame": 382,
+                    "TickPerSecond": 50.0
+                },
+                {
+                    "AnimeName": "GetWep",
+                    "EndFrame": 580,
+                    "StartFrame": 385,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Walk_Loop",
+                    "EndFrame": 637,
+                    "StartFrame": 581,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Jog_Loop",
+                    "EndFrame": 674,
+                    "StartFrame": 638,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Aim_Loop",
+                    "EndFrame": 823,
+                    "StartFrame": 675,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Aim_Start",
+                    "EndFrame": 847,
+                    "StartFrame": 824,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Aim_End",
+                    "EndFrame": 899,
+                    "StartFrame": 848,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_Loop",
+                    "EndFrame": 1044,
+                    "StartFrame": 900,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_Walk",
+                    "EndFrame": 1108,
+                    "StartFrame": 1045,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_Start",
+                    "EndFrame": 1141,
+                    "StartFrame": 1109,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Guard_End",
+                    "EndFrame": 1164,
+                    "StartFrame": 1142,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Aim_Shoot",
+                    "EndFrame": 1256,
+                    "StartFrame": 1165,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Reload",
+                    "EndFrame": 1389,
+                    "StartFrame": 1257,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Reload_Empty",
+                    "EndFrame": 1585,
+                    "StartFrame": 1390,
+                    "TickPerSecond": 25.0
+                }  
+            ]        
+        },
+        {
+            "Anim": [
+                {
+                    "AnimeName": "Weapon_Change_HandGun",
+                    "EndFrame": 15,
+                    "StartFrame": 0,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Weapon_Change_ShotGun",
+                    "EndFrame": 32,
+                    "StartFrame": 16,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Weapon_Change_Sniper",
+                    "EndFrame": 50,
+                    "StartFrame": 33,
+                    "TickPerSecond": 25.0
+                }
         
+            ]        
         }
     ]
 }

@@ -10,7 +10,11 @@ HRESULT CStateObject::Initalize(void* pArg)
 	STATE_DESC* pDesc = static_cast<STATE_DESC*>(pArg);
 
 	m_pState = pDesc->pState;
-
+	m_pWeaponState = pDesc->pWeaponState;
+	m_pAnimTag = pDesc->pAnimTag;
+	m_pStateTag = pDesc->pStateTag;
+	m_pIsAnimFinsh = pDesc->pIsAnimFinsh;
+	m_pIsAnimLoop = pDesc->pIsAnimLoop;
 	return S_OK;
 }
 

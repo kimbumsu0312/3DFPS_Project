@@ -21,16 +21,17 @@ HRESULT CBody_Player::Initialize(void* pArg)
     BODY_DESC* pDesc = static_cast<BODY_DESC*>(pArg);
     
     m_pState = pDesc->pState;
-
+    m_pWeaponState = pDesc->pWeaponState;
+    m_pAnimTag = pDesc->pAnimTag;
+    m_pIsAnimFinsh = pDesc->pIsAnimFinsh;
+    m_pIsAnimLoop = pDesc->pIsAnimLoop;
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
     if (FAILED(Ready_Components()))
         return E_FAIL;
 
-    m_pModelCom->Set_Animations(0, true);
-
-    m_iRootLodeIndex = 36;
+    m_iRootLodeIndex = 35;
 
     return S_OK;
 }
@@ -41,31 +42,8 @@ void CBody_Player::Priority_Update(_float fTimeDelta)
 
 void CBody_Player::Update(_float fTimeDelta)
 {
-    switch (*m_pState)
-    {
-    case ENUM_CLASS(CPlayer::PLAYER_STATE::IDLE):
-        m_pAnimCom->Player_Animation("Knife_Idle_Loop", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
-        break;
-    case ENUM_CLASS(CPlayer::PLAYER_STATE::JOG_F):
-        m_pAnimCom->Player_Animation("Hand_Jog_Front", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
-        break;
-    case ENUM_CLASS(CPlayer::PLAYER_STATE::JOG_R):
-        m_pAnimCom->Player_Animation("Hand_Jog_Right", m_pModelCom, fTimeDelta , m_iRootLodeIndex, m_pTransformCom);
-        break;
-    case ENUM_CLASS(CPlayer::PLAYER_STATE::JOG_L):
-        m_pAnimCom->Player_Animation("Hand_Jog_Left", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
-        break;
-    case ENUM_CLASS(CPlayer::PLAYER_STATE::WALK_B):
-        m_pAnimCom->Player_Animation("Hand_Walk_Back", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
-        break;
-    case ENUM_CLASS(CPlayer::PLAYER_STATE::ATTACK):
-        m_pAnimCom->Player_Animation("Knife_Attack_1", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
-        break;
-    case ENUM_CLASS(CPlayer::PLAYER_STATE::DIE):
-        m_pAnimCom->Player_Animation("Die", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
-        break;
-    }
 
+    *m_pIsAnimFinsh = m_pAnimCom->Player_Animation(*m_pWeaponState, *m_pAnimTag, m_pIsAnimLoop, m_pModelCom, fTimeDelta, m_iRootLodeIndex);
     Update_CombinedMatrix();
 }
 
@@ -121,7 +99,11 @@ HRESULT CBody_Player::Ready_Components()
 
     CAnimatio_Controller::ANIMTION_DESC Desc;
     Desc.szFile_Path = "../Bin/Resources/Models/Player/PlayerAnim.Json";
-    Desc.szCulAnimName = "Hand_Idle";
+    Desc.szCulAnimName = *m_pAnimTag;
+    Desc.iAnimIndex = *m_pWeaponState;
+    Desc.pModel = m_pModelCom;
+ 
+    Desc.IsLoop = true;
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Animatio_Controller"),
         TEXT("Com_AnimCom"), reinterpret_cast<CComponent**>(&m_pAnimCom), &Desc)))
         return E_FAIL;
@@ -156,6 +138,11 @@ HRESULT CBody_Player::Bind_ShaderResources()
         return E_FAIL;
 
     return S_OK;
+}
+
+void CBody_Player::Anim_State(_float fTimeDelta)
+{
+    m_pAnimCom->Player_Animation(*m_pWeaponState, *m_pAnimTag, true, m_pModelCom, fTimeDelta, m_iRootLodeIndex);
 }
 
 CBody_Player* CBody_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -122,7 +122,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		return E_FAIL;
 
 	/* Player_Model_Prototype*/
-    if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Player/Player.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Player"))))
+      if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Player/Player.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Player"))))
 		return E_FAIL;
 
 	/* Player_Model_Knife*/

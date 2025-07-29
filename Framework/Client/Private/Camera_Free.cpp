@@ -48,11 +48,11 @@ HRESULT CCamera_Free::Initialize(void* pArg)
 
 void CCamera_Free::Priority_Update(_float fTimeDelta)
 {
+    if (!m_pGameInstance->IsKeyHold(DIK_Q))
+        return;
     KeyInput(fTimeDelta);
     Zoom_In(fTimeDelta);
     Zoom_Out(fTimeDelta);
-    if (m_pGameInstance->IsKeyHold(DIK_Q))
-        return;
 
     __super::Update_PipeLines();
 }
