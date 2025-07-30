@@ -20,7 +20,7 @@ HRESULT CAnimatio_Controller::Initialize(void* pArg)
 	m_iCulAnimIndex = pDesc->iAnimIndex;
 	m_szCulAnimName = pDesc->szCulAnimName;
 	m_CulAnimFrame = Find_Anim(m_szCulAnimName);
-	pDesc->pModel->Set_Animations(m_iCulAnimIndex, pDesc->IsLoop);
+	pDesc->pModel->Set_Animations(m_iCulAnimIndex, pDesc->IsLoop, m_CulAnimFrame);
 	return S_OK;
 }
 
@@ -33,10 +33,10 @@ _bool CAnimatio_Controller::Player_Animation(_int iAnimIndex, string szAnimName,
 		m_iCulAnimIndex = iAnimIndex;
 		m_szCulAnimName = szAnimName;
 		m_CulAnimFrame = Find_Anim(szAnimName);
-		pModel->Set_Animations(m_iCulAnimIndex, IsLoop);
+		pModel->Set_Animations(m_iCulAnimIndex, IsLoop, m_CulAnimFrame);
 		isAnimChange = true;
 	}
-	return pModel->Play_Animation(fTimeDelta, m_eAnim_Status, m_CulAnimFrame, iRootNodeIndex, isAnimChange);
+	return pModel->Play_Animation(fTimeDelta, m_eAnim_Status, m_CulAnimFrame, iRootNodeIndex , isAnimChange);
 }
 
 void CAnimatio_Controller::Set_AnimStatus(ANIM_STATUS eStatus)

@@ -11,10 +11,11 @@ private:
 public:
 	HRESULT						Initialize();
 	HRESULT						Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
-	HRESULT						Add_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates, const void* pDesc);
-	HRESULT						Switching_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates);
 	HRESULT						Draw();
 
+	//랜더 스테이트 매니저 용 함수
+	//HRESULT						Add_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates, const void* pDesc);
+	//HRESULT						Switching_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates);
 private:
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };
@@ -24,8 +25,9 @@ private:
 	
 	_uint						m_iNumRederStates = {};
 
-	map<const _wstring,
-		ID3D11DeviceChild*>		m_pRenderState[ENUM_CLASS(RENDERSTATE::END)];
+	//랜더 스테이트 맵
+	//map<const _wstring,
+	//	ID3D11DeviceChild*>		m_pRenderState[ENUM_CLASS(RENDERSTATE::END)];
 
 private:
 	HRESULT						Render_Priority();
@@ -35,9 +37,10 @@ private:
 	HRESULT						Render_UI_Effect();
 	HRESULT						Render_Last();
 
-	ID3D11DeviceChild*			Find_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates);
 
-	HRESULT						Ready_RenderState();
+	//랜더 스테이트 매니저 용 함수//
+	//ID3D11DeviceChild*			Find_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates);
+	//HRESULT						Ready_RenderState();
 public:
 	static CRenderer*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void				Free() override;

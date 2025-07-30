@@ -1,11 +1,9 @@
+#include "Engine_Shader_Defines.hlsli"
+
 //사용할 데이터를 전역 변수로 선언
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 float4 g_Vector;
 Texture2D g_Texture;
-sampler DefaultSampler = sampler_state
-{
-    filter = min_mag_mip_linear;
-};
 
 struct VS_IN
 {
@@ -89,12 +87,20 @@ technique11 DefaultTechnique
 {
     pass DefaultPass
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
     pass ColorPass
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN_COLOR();
     }

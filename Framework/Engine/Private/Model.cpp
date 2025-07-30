@@ -88,14 +88,12 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, 
 
 _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex, _bool IsAnimChange)
 {
-    if (m_eModelType != MODELTYPE::ANIM)
-        return false;
-    _bool bisFinished = false;
+    _bool m_bisFinished = false;
 
-    m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &bisFinished, pAnimFrameData, IsAnimChange);
+    m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &m_bisFinished, IsAnimChange, pAnimFrameData);
 
-    _vector vCurPos= {};
-    
+    _vector vCurPos = {};
+
     for (_int i = 0; i < m_Bones.size(); ++i)
     {
         m_Bones[i]->Update_CombinedTransformationMatrix(m_PreTransformMatrix, m_Bones);
@@ -103,30 +101,67 @@ _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const A
         {
             vCurPos = m_Bones[RootNodeIndex]->Get_CombinedTransformationMatrix().r[3];
             m_Bones[i]->Set_CombindMationMatinMatrix_PosReset();
-         }
+        }
     }
 
+    //if (m_bisFinished)
+    //{
+    //    m_vPreRootPos = vCurPos;
+    //    return m_bisFinished;
+    //}
 
-    if (bisFinished || IsAnimChange)
-    {
-        _vector vAdjustment = XMVectorSetY(vCurPos - m_vPreRootPos, 0.f) * 0.5f;
-        m_vPreRootPos = vCurPos;
-        return bisFinished;
-    }
+    //XMStoreFloat3(&m_vMovePos, vCurPos - m_vPreRootPos);
+    //m_vMovePos.y = 0.f;
+
+    //m_vPreRootPos = vCurPos;
     
-    if (m_Animations[m_iCurrentAnimIndex]->IsAnimChange())
-    {
-        m_vMovePos = { 0.f, 0.f, 0.f };
-    }
-    else
-    {
-        XMStoreFloat3(&m_vMovePos, vCurPos - m_vPreRootPos);
-    }
-    m_vMovePos.y = 0.f;
+    return m_bisFinished;
+    
+    //if (m_fTransitionTime <= m_fTransitionDuration || m_bisFinished)
+    //{
+    //    //애니메이션 변경 동작 보간
+    //    Update_Transition(fTimeDelta);
 
-    m_vPreRootPos = vCurPos;
+    //    //뼈 컴바인드 업데이트
+    //    for (_int i = 0; i < m_Bones.size(); ++i)
+    //    {
+    //        m_Bones[i]->Update_CombinedTransformationMatrix(m_PreTransformMatrix, m_Bones);
+    //    }
 
-    return bisFinished;
+    //    if (m_fTransitionTime > m_fTransitionDuration)
+    //        m_bisFinished = false;
+    //}
+    //else
+    //{
+    //    _bool m_bisFinished = false;
+
+    //    m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &m_bisFinished, pAnimFrameData);
+
+    //    _vector vCurPos = {};
+
+    //    for (_int i = 0; i < m_Bones.size(); ++i)
+    //    {
+    //        m_Bones[i]->Update_CombinedTransformationMatrix(m_PreTransformMatrix, m_Bones);
+    //        if (RootNodeIndex == i)
+    //        {
+    //            vCurPos = m_Bones[RootNodeIndex]->Get_CombinedTransformationMatrix().r[3];
+    //            m_Bones[i]->Set_CombindMationMatinMatrix_PosReset();
+    //        }
+    //    }
+
+    //    if (m_bisFinished)
+    //    {
+    //        _vector vAdjustment = XMVectorSetY(vCurPos - m_vPreRootPos, 0.f) * 0.5f;
+    //        m_vPreRootPos = vCurPos;
+    //        return m_bisFinished;
+    //    }
+
+    //    XMStoreFloat3(&m_vMovePos, vCurPos - m_vPreRootPos);
+    //    m_vMovePos.y = 0.f;
+
+    //    m_vPreRootPos = vCurPos;
+    //}
+    //return m_bisFinished;
 }
 
 _float4x4* CModel::Get_BoneMatrix(const _wstring pBoneName)
@@ -142,19 +177,23 @@ _float4x4* CModel::Get_BoneMatrix(const _wstring pBoneName)
     return (*iter)->Get_PtrCombinedTransformationMatrix();
 }
 
-void CModel::Set_Animations(_uint AnimiIndex, _bool IsLoop)
+void CModel::Set_Animations(_uint AnimiIndex, _bool IsLoop, const ANIMEFRAME& pAnimFrameData)
 {
     if (m_eModelType != MODELTYPE::ANIM || AnimiIndex >= m_iNumAnimations)
         return;
 
     m_iCurrentAnimIndex = AnimiIndex;
     m_bisLoop = IsLoop;
+
+    m_fTransitionTime = 0.f;
+    for (auto Bone : m_Bones)
+    {
+        Bone->Anim_Change_Set();
+    }
+
+    m_Animations[m_iCurrentAnimIndex]->Anim_Change_Set(m_Bones, pAnimFrameData);
 }
 
-void CModel::AnimChage()
-{
-    m_Animations[m_iCurrentAnimIndex]->Anim_Change_Reset();
-}
 
 HRESULT CModel::Ready_Meshes(const SAVE_MODEL& pModelData)
 {
@@ -218,6 +257,35 @@ HRESULT CModel::Ready_Animations(const SAVE_MODEL& pModelData)
     }
 
     return S_OK;
+}
+
+void CModel::Update_Transition(_float fTimeDelta)
+{
+    m_fTransitionTime += fTimeDelta;
+    _float fRatio = min(m_fTransitionTime / m_fTransitionDuration, 1.f);
+
+    for (auto Bone : m_Bones)
+    {
+        _vector vScale, vRotation, vTranslation;
+
+        _matrix OldKeyFrame = Bone->Get_OldTransitionTransformationMatrix();
+        _matrix NewKeyFrame = Bone->Get_NewTransitionTransformationMatrix();
+
+        _vector vOldScale, vOldRotation, vOldTranslation;
+        _vector vNewScale, vNewRotation, vNewTranslation;
+
+        XMMatrixDecompose(&vOldScale, &vOldRotation, &vOldTranslation, OldKeyFrame);
+        XMMatrixDecompose(&vNewScale, &vNewRotation, &vNewTranslation, OldKeyFrame);
+
+
+        vScale = XMVectorLerp(vOldScale, vNewScale, fRatio);
+        vRotation = XMQuaternionSlerp(vOldRotation, vNewRotation, fRatio);
+        vTranslation = XMVectorSetW(XMVectorLerp(vOldTranslation, vNewTranslation, fRatio), 1.f);
+
+        _matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.0f, 0.0f, 0.0f, 1.f), vRotation, vTranslation);
+
+        Bone->Set_TransformationMatrix(TransformationMatrix);
+    }
 }
 
 CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const SAVE_MODEL& pModelData)

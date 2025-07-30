@@ -9,8 +9,9 @@ public:
 	typedef struct tagCameraPlayerDesc : public CCamera::CAMERA_DESC
 	{
 		_float				fMouseSensor;
-		const _float4x4*	pSocketMatrix = { nullptr };
-		const _float4x4*	pParentMatrix;
+		const _float4x4*	pSocketMatrix1 = { nullptr };
+		const _float4x4*	pSocketMatrix2 = { nullptr };
+		const _float4x4*	pParentMatrix = { nullptr };
 	}CAMERA_PLAYER_DESC;
 
 public:
@@ -38,7 +39,9 @@ private:
 	_bool					m_bIsZoomout = { false };
 
 	const _float4x4*		m_pParentMatrix = { nullptr };
-	const _float4x4*		m_pSocketMatrix = { nullptr };
+	const _float4x4*		m_pSocketMatrix1 = { nullptr };
+	const _float4x4*		m_pSocketMatrix2 = { nullptr };
+	_matrix					m_DefultWorldMatrix = {};
 	_float4x4				m_CombinedWorldMatrix = {};
 private:
 	void					Zoom_In(_float fTimeDelta);

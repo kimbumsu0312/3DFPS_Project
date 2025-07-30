@@ -264,16 +264,6 @@ HRESULT CGameInstance::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pR
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
-HRESULT CGameInstance::Add_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates, const void* pDesc)
-{
-	return m_pRenderer->Add_RenderState(szRenderTag, eRenderStates, pDesc);
-}
-
-HRESULT CGameInstance::Switching_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates)
-{
-	return m_pRenderer->Switching_RenderState(szRenderTag, eRenderStates);
-}
-
 _matrix CGameInstance::Get_Transform_Matrix(D3DTS eTransformState) const
 {
 	return m_pPipeLine->Get_Transform_Matrix(eTransformState);

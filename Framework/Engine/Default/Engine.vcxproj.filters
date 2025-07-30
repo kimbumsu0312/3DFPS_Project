@@ -133,6 +133,12 @@
     <Filter Include="99.Defines">
       <UniqueIdentifier>{ee0451a2-009f-4aae-956b-712deef8dc33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Component\VIBuffer\Cube">
+      <UniqueIdentifier>{973d7a4b-aeaa-48b1-99e7-8b6e309b5656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.ShaderFiles">
+      <UniqueIdentifier>{c09a625f-7062-42af-a4ec-59231599357f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -273,6 +279,9 @@
     <ClInclude Include="..\public\PartObject.h">
       <Filter>01.Utility\02.GameObject\ContainerObject\PartObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Cube.h">
+      <Filter>01.Utility\03.Component\VIBuffer\Cube</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -395,5 +404,13 @@
     <ClCompile Include="..\private\PartObject.cpp">
       <Filter>01.Utility\02.GameObject\ContainerObject\PartObject</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Cube.cpp">
+      <Filter>01.Utility\03.Component\VIBuffer\Cube</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\ShaderFiles\Engine_Shader_Defines.hlsli">
+      <Filter>97.ShaderFiles</Filter>
+    </None>
   </ItemGroup>
 </Project>

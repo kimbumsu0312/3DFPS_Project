@@ -11,8 +11,6 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_p
 
 HRESULT CRenderer::Initialize()
 {
-    if (FAILED(Ready_RenderState()))
-        return E_FAIL;
 
     return S_OK;
 }
@@ -28,7 +26,7 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pRende
     
     return S_OK;
 }
-
+/*
 HRESULT CRenderer::Add_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates, const void* pDesc)
 {
     ID3D11DeviceChild* pRenderState = Find_RenderState(szRenderTag, eRenderStates);
@@ -77,7 +75,7 @@ HRESULT CRenderer::Switching_RenderState(_wstring szRenderTag, RENDERSTATE eRend
         break;
     }
     return S_OK;
-}
+}*/
 
 HRESULT CRenderer::Draw()
 {
@@ -143,14 +141,6 @@ HRESULT CRenderer::Render_Blend()
 
 HRESULT CRenderer::Render_UI()
 {
-    //m_pContext->OMSetDepthStencilState(m_pDepthStencil_Off, 0);
-    //m_pContext->OMSetBlendState(m_pAlphablend, nullptr, 0xffffffff);    //nullptr:float4로 특정한 색상값을 곱할 수 있다, 0xffffffff: 특정 색상을 랜더하지 않을 수 있음
-    
-    Switching_RenderState(TEXT("NonDepthTest"), RENDERSTATE::DEPTH_STENCIL);
-    Switching_RenderState(TEXT("AlphaBlend"), RENDERSTATE::BLEND);
-
-    //m_RenderObjects[ENUM_CLASS(RENDERGROUP::UI)].sort([](const RenderObject& a, const RenderObject& b) {return a.vWorldPos.z > b.vWorldPos.z;  });
-
     for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDERGROUP::UI)])
     {
         if (nullptr != pRenderObject)
@@ -193,12 +183,10 @@ HRESULT CRenderer::Render_Last()
 
     m_RenderObjects[ENUM_CLASS(RENDERGROUP::LAST)].clear();
 
-    Switching_RenderState(TEXT("Default_State"), RENDERSTATE::DEPTH_STENCIL);
-    Switching_RenderState(TEXT("NonAlphaBlend"), RENDERSTATE::BLEND);
     return S_OK;
 }
 
-ID3D11DeviceChild* CRenderer::Find_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates)
+/*ID3D11DeviceChild* CRenderer::Find_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates)
 {
     auto iter = m_pRenderState[ENUM_CLASS(eRenderStates)].find(szRenderTag);
 
@@ -252,7 +240,7 @@ HRESULT CRenderer::Ready_RenderState()
         return E_FAIL;
 
     return S_OK;
-}
+}*/
 
 
 CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -278,14 +266,6 @@ void CRenderer::Free()
             Safe_Release(pRenderObject);
 
         m_RenderObjects[i].clear();
-    }
- 
-    for (size_t i = 0; i < ENUM_CLASS(RENDERSTATE::END); ++i)
-    {
-        for (auto Pair : m_pRenderState[i])
-            Safe_Release(Pair.second);
-
-        m_pRenderState[i].clear();
     }
 
     Safe_Release(m_pGameInstance);

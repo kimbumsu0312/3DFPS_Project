@@ -9,7 +9,7 @@ CAnimation::CAnimation()
 CAnimation::CAnimation(const CAnimation& Prototype) : m_fDuration(Prototype.m_fDuration)
     , m_fTickPerSecond(Prototype.m_fTickPerSecond), m_fCurrentTrackPosition(Prototype.m_fCurrentTrackPosition)
     , m_iNumChannels(Prototype.m_iNumChannels), m_Channels(Prototype.m_Channels)
-    , m_CurrentKeyFrameIndices(Prototype.m_CurrentKeyFrameIndices), m_PreKeyFrameIndices{ Prototype.m_PreKeyFrameIndices }, m_KeyFrames{ Prototype.m_KeyFrames }
+    , m_CurrentKeyFrameIndices(Prototype.m_CurrentKeyFrameIndices), m_KeyFrames(Prototype.m_KeyFrames), m_PreKeyFrameIndices(Prototype.m_PreKeyFrameIndices)
 {
     for (auto& pChannel : m_Channels)
         Safe_AddRef(pChannel);
@@ -24,6 +24,7 @@ HRESULT CAnimation::Initialize(const SAVE_ANIM& pAnimation, const vector<class C
     m_CurrentKeyFrameIndices.resize(m_iNumChannels);
     m_PreKeyFrameIndices.resize(m_iNumChannels);
     m_KeyFrames.resize(m_iNumChannels);
+
     for (size_t i = 0; i < m_iNumChannels; i++)
     {
         CChannel* pChannel = CChannel::Create(pAnimation.Channels[i], Bones);
@@ -36,8 +37,10 @@ HRESULT CAnimation::Initialize(const SAVE_ANIM& pAnimation, const vector<class C
     return S_OK;
 }
 
-void CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta, _bool isLoop, ANIM_STATUS eAnimStatus, _bool* pFinished, const ANIMEFRAME& pAnimFrameData, _bool IsAnimChange)
+void CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta, _bool isLoop, ANIM_STATUS eAnimStatus, _bool* pFinished, _bool IsAnimChange, const ANIMEFRAME& pAnimFrameData)
 {
+    if (ANIM_STATUS::PLAY == eAnimStatus)
+        m_fCurrentTrackPosition += pAnimFrameData.fTickPerSecond * fTimeDelta;
     if (IsAnimChange && !m_bIsAnimChange)
     {
         Anim_Change_Reset();
@@ -47,7 +50,7 @@ void CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones
 
     if (m_fTransitionTime < m_fTransitionDuration)
     {
-        
+
         m_fTransitionTime += fTimeDelta;
         _float fRatio = min(m_fTransitionTime / m_fTransitionDuration, 1.f);
 
@@ -60,38 +63,41 @@ void CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones
             m_bIsAnimChange = false;
 
     }
-    else {
-
-        if (ANIM_STATUS::PLAY == eAnimStatus)
-            m_fCurrentTrackPosition += pAnimFrameData.fTickPerSecond * fTimeDelta;
-
-        if (m_fCurrentTrackPosition >= pAnimFrameData.iEndFrame)
+    else if (m_fCurrentTrackPosition >= pAnimFrameData.iEndFrame)
+    {
+        *pFinished = true;
+        if (false == isLoop)
         {
-            *pFinished = true;
-            if (false == isLoop)
-            {
-                m_fCurrentTrackPosition = pAnimFrameData.iEndFrame;
-                m_fPreTrackPosition = m_fCurrentTrackPosition;
-                return;
-            }
-            else
-                m_fCurrentTrackPosition = pAnimFrameData.iStartFrame;
-
+            m_fCurrentTrackPosition = pAnimFrameData.iEndFrame;
+            m_fPreTrackPosition = m_fCurrentTrackPosition;
+            return;
         }
-        else if (m_fCurrentTrackPosition < pAnimFrameData.iStartFrame)
-        {
+        else
             m_fCurrentTrackPosition = pAnimFrameData.iStartFrame;
-        }
-
-        for (_uint i = 0; i < m_iNumChannels; ++i)
-        {
-            m_Channels[i]->Update_TransformationMatrix(Bones, m_fCurrentTrackPosition, m_fPreTrackPosition, &m_CurrentKeyFrameIndices[i]);
-            m_PreKeyFrameIndices[i] = m_CurrentKeyFrameIndices[i];
-        }
-        m_fPreTrackPosition = m_fCurrentTrackPosition;
+    
     }
+    else if (m_fCurrentTrackPosition < pAnimFrameData.iStartFrame)
+    {
+        m_fCurrentTrackPosition = pAnimFrameData.iStartFrame;
+    }
+    
+    for (_uint i = 0; i < m_iNumChannels; ++i)
+    {
+        m_Channels[i]->Update_TransformationMatrix(Bones, m_fCurrentTrackPosition, m_fPreTrackPosition, &m_CurrentKeyFrameIndices[i], pAnimFrameData);
+    }
+    m_fPreTrackPosition = m_fCurrentTrackPosition;
+    
 }
 
+void CAnimation::Anim_Change_Set(const vector<class CBone*>& Bones, const ANIMEFRAME& pAnimFrameData)
+{
+    m_fCurrentTrackPosition = pAnimFrameData.iStartFrame;
+    for (_int i = 0; i < m_iNumChannels; ++i)
+    {
+        m_CurrentKeyFrameIndices[i] = 0;
+        m_Channels[i]->Anim_Change_Set(Bones, m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[i]);
+    }
+}
 void CAnimation::Anim_Change_Reset()
 {
     m_fTransitionTime = 0.f;
@@ -102,7 +108,6 @@ void CAnimation::Anim_Change_Reset()
         m_CurrentKeyFrameIndices[i] = 0;
     }
 }
-
 
 CAnimation* CAnimation::Create(const SAVE_ANIM& pAnimation, const vector<class CBone*>& Bones)
 {

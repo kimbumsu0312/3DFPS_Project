@@ -30,7 +30,7 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void* pArg)
 {
-	m_iWeponState = PLAYER_WEAPON::SNIPER;
+	m_iWeponState = PLAYER_WEAPON::KNIFE;
 	m_szAnimTag = "Idle_Loop";
 	m_szStateTag = TEXT("Idle");
 	m_iCulState = PLAYER_STATE::IDLE;
@@ -70,7 +70,8 @@ void CPlayer::Update(_float fTimeDelta)
 	if (m_pGameInstance->IsKeyDown(DIK_4))
 		m_iWeponState = PLAYER_WEAPON::HANDGUN;
 
-
+	if (m_bIsAnimFinsh)
+		int a = 10; 
  	m_CulStateObject->Update( fTimeDelta);
 	if (m_iPreState != m_iCulState)
 	{
@@ -158,13 +159,14 @@ HRESULT CPlayer::Ready_PartObjects()
 	CCamera_Player::CAMERA_PLAYER_DESC CameraDesc{};
 	CameraDesc.vEye = _float4(0.f, 0.f, 0.f, 1.f);
 	CameraDesc.vAt = _float4(0.f, 0.f, -1.f, 1.f);
-	CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	CameraDesc.fFovy = XMConvertToRadians(45.0f);
 	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 500.f;
 	CameraDesc.fSpeedPerSec = 10.f;
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 	CameraDesc.fMouseSensor = 0.2f;
-	CameraDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("Cam"));
+	CameraDesc.pSocketMatrix1 = pBody->Get_BoneMatrix(TEXT("Cam"));
+	CameraDesc.pSocketMatrix2 = pBody->Get_BoneMatrix(TEXT("CamAdd_A"));
 	CameraDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 	m_pCamera = dynamic_cast<CCamera_Player*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Player"), &CameraDesc));
 

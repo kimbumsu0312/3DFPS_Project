@@ -11,15 +11,18 @@ private:
 
 public:
 	HRESULT							Initialize(const SAVE_CHANNEL& pChannel, const vector<class CBone*>& Bones);
-	void							Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _float fPreTrackPosition, _uint* m_iCurrentKeyFrameIndex);
+	void							Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _float fPreTrackPosition, _uint* m_iCurrentKeyFrameIndex, const ANIMEFRAME& pAnimFrameData);
 	void							Update_TransformationMatirx_AnimChange(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex, const KEYFRAME& preKeyFrame, _float fRatio);
-
+	void							Anim_Change_Set(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex);
 	KEYFRAME&						Get_PreKeyFream(_uint iPreKeyFreamIndex) { return m_KeyFrames[iPreKeyFreamIndex]; }
 private:
 	_char							m_szName[MAX_PATH] = { };
 	_uint							m_iBoneIndex = {};
 	_uint							m_iNumKeyFrames = {};
 	vector<KEYFRAME>				m_KeyFrames;
+
+private:
+	_uint							Finde_KeyFrameIndex(_float fTrackPotion);
 
 public:
 	static CChannel*				Create(const SAVE_CHANNEL& pChannel, const vector<class CBone*>& Bones);

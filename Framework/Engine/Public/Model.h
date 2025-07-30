@@ -22,8 +22,9 @@ public:
 	_uint							Get_NumMeshes() const { return m_iNumMeshes; }
 	_float4x4*						Get_BoneMatrix(const _wstring pBoneName);
 	_float3*						Get_PtrMovePos() {return &m_vMovePos;}
-	void							Set_Animations(_uint AnimiIndex, _bool IsLoop = false);
-	void							AnimChage();
+
+	void							Set_Animations(_uint AnimiIndex, _bool IsLoop, const ANIMEFRAME& pAnimFrameData);
+
 private:
 
 	MODELTYPE						m_eModelType = {};
@@ -37,7 +38,6 @@ private:
 	vector<class CBone*>			m_Bones;
 
 	_uint							m_iCurrentAnimIndex = { 0 };
-	_uint							m_iNextAnimIndex = { 0 };
 	_uint							m_iNumAnimations = { 0 };
 	vector<class CAnimation*>		m_Animations;
 
@@ -45,12 +45,18 @@ private:
 	_float3							m_vMovePos = {};
 	_vector							m_vPreRootPos = {};
 
+	_float							m_fTransitionTime = { 1.f };
+	_float							m_fTransitionDuration = { 0.4f };
+
+	_bool							m_bisFinished = { false };
+
 private:
 	HRESULT							Ready_Meshes(const SAVE_MODEL& pModelData);
 	HRESULT							Ready_Materials(const SAVE_MODEL& pModelData);
 	HRESULT							Ready_Bones(const SAVE_MODEL& pModelData);
 	HRESULT							Ready_Animations(const SAVE_MODEL& pModelData);
 
+	void							Update_Transition(_float fTimeDelta);
 public:
 	static CModel*					Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const SAVE_MODEL& pModelData);
 	virtual CComponent*				Clone(void* pArg) override;

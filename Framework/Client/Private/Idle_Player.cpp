@@ -15,10 +15,8 @@ HRESULT CIdle_Player::Initalize(void* pArg)
 
 void CIdle_Player::Enter()
 {
-    m_eAnimState = STATE_ANIM::START;
-    
-    *m_pAnimTag = "Idle_Start";
-    *m_pIsAnimLoop = false;
+    m_eAnimState = STATE_ANIM::LOOP;
+
 }
 
 void CIdle_Player::Update(_float fDeltatime)
