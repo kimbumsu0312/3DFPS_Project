@@ -204,7 +204,7 @@
                 },
                 {
                     "AnimeName": "Idle_Loop",
-                    "EndFrame": 121,
+                    "EndFrame": 120,
                     "StartFrame": 84,
                     "TickPerSecond": 25.0
                 },

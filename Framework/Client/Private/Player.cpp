@@ -152,12 +152,12 @@ HRESULT CPlayer::Ready_PartObjects()
 	
 	KnifeDesc.pState = &m_iCulState;
 	KnifeDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	KnifeDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_MiddleF3"));
+	KnifeDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_MiddleF1"));
 	if (FAILED(__super::Add_PartObject(TEXT("Part_Knife"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Knife_Player"), &KnifeDesc)))
 		return E_FAIL;
 
 	CCamera_Player::CAMERA_PLAYER_DESC CameraDesc{};
-	CameraDesc.vEye = _float4(0.f, 0.f, 0.f, 1.f);
+	CameraDesc.vEye = _float4(0.f, 0.f, 0.1f, 1.f);
 	CameraDesc.vAt = _float4(0.f, 0.f, -1.f, 1.f);
 	CameraDesc.fFovy = XMConvertToRadians(45.0f);
 	CameraDesc.fNear = 0.1f;

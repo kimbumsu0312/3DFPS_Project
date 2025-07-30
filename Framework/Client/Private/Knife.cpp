@@ -26,11 +26,10 @@ HRESULT CKnife::Initialize(void* pArg)
     if (FAILED(Ready_Components()))
         return E_FAIL;
 
-    //m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-0.02f, -0.02f, 0.f, 1.f));
-    //m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+    m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-0.025f, -0.02f, 0.f, 1.f));
 
-    //m_pTransformCom->Rotation_All(_float3{ XMConvertToRadians(90.0f), XMConvertToRadians(0.f), XMConvertToRadians(45.f) });
-    m_pTransformCom->Scale(_float3{ 100.f, 100.f, 100.f });
+    m_pTransformCom->Rotation_All(_float3{ XMConvertToRadians(0.0f), XMConvertToRadians(0.f), XMConvertToRadians(210.f) });
+    m_pTransformCom->Scale(_float3{ 1.f, 1.f, 1.f });
     return S_OK;
 }
 
@@ -40,14 +39,16 @@ void CKnife::Priority_Update(_float fTimeDelta)
 
 void CKnife::Update(_float fTimeDelta)
 {
+
     _matrix     BoneMatrix = XMLoadFloat4x4(m_pSocketMatrix);
     _matrix     ParentMatrix = XMLoadFloat4x4(m_pParentMatrix);
+    _matrix     WorldMatrix = m_pTransformCom->Get_WorldMatrix();
+
     for (size_t i = 0; i < 3; i++)
     {
         BoneMatrix.r[i] = XMVector3Normalize(BoneMatrix.r[i]);
-        ParentMatrix.r[i] =  XMVector3Normalize(ParentMatrix.r[i]);
     }
-    XMStoreFloat4x4(&m_CombinedWorldMatrix, BoneMatrix * ParentMatrix);
+     XMStoreFloat4x4(&m_CombinedWorldMatrix, WorldMatrix * BoneMatrix * ParentMatrix);
 }
 
 void CKnife::Late_Update(_float fTimeDelta)
@@ -66,7 +67,10 @@ HRESULT CKnife::Render()
     for (size_t i = 0; i < iNumMeshes; i++)
     {
         if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_DiffuseTexture", i, 0, 0)))
-            return E_FAIL;
+            continue;
+
+        if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
+            continue;
 
         m_pShaderCom->Begin(0);
 

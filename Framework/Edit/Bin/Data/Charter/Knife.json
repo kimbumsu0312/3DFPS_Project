@@ -1,0 +1,94 @@
+{
+    "Data_Path": "../Bin/Data/Charter/KnifeData.dat",
+    "MeshMaterial": [
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Knife/it01_000_Blade_Knife_A_Mat_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Knife/it01_000_Blade_Knife_A_Mat_ATOC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        }
+    ],
+    "Model_name": "Knife",
+    "Model_type": 1,
+    "iNumMaterials": 1
+}

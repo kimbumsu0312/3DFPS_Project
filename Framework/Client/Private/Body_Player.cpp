@@ -44,6 +44,7 @@ void CBody_Player::Update(_float fTimeDelta)
 {
 
     *m_pIsAnimFinsh = m_pAnimCom->Player_Animation(*m_pWeaponState, *m_pAnimTag, m_pIsAnimLoop, m_pModelCom, fTimeDelta, m_iRootLodeIndex);
+
     Update_CombinedMatrix();
 }
 
