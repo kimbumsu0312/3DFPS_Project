@@ -171,6 +171,7 @@
     <ClInclude Include="..\public\Camera_Player.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\public\Guard_Player.h" />
+    <ClInclude Include="..\public\HandGun.h" />
     <ClInclude Include="..\public\Idle_Player.h" />
     <ClInclude Include="..\public\Item_Penal.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
@@ -183,7 +184,9 @@
     <ClInclude Include="..\public\Mouse.h" />
     <ClInclude Include="..\public\Mouse_Click_Fx.h" />
     <ClInclude Include="..\public\Reload_Player.h" />
+    <ClInclude Include="..\public\ShotGun.h" />
     <ClInclude Include="..\public\Sky.h" />
+    <ClInclude Include="..\public\Sniper.h" />
     <ClInclude Include="..\Public\StateObject.h" />
     <ClInclude Include="..\public\Walk_Player.h" />
     <ClInclude Include="..\Public\Player_Header.h" />
@@ -237,6 +240,7 @@
     <ClCompile Include="..\private\3DItem.cpp" />
     <ClCompile Include="..\private\Camera_Player.cpp" />
     <ClCompile Include="..\private\Guard_Player.cpp" />
+    <ClCompile Include="..\private\HandGun.cpp" />
     <ClCompile Include="..\private\Idle_Player.cpp" />
     <ClCompile Include="..\private\Item_Penal.cpp" />
     <ClCompile Include="..\private\Create_Penal.cpp" />
@@ -248,7 +252,9 @@
     <ClCompile Include="..\private\Mouse.cpp" />
     <ClCompile Include="..\private\Mouse_Click_Fx.cpp" />
     <ClCompile Include="..\private\Reload_Player.cpp" />
+    <ClCompile Include="..\private\ShotGun.cpp" />
     <ClCompile Include="..\private\Sky.cpp" />
+    <ClCompile Include="..\private\Sniper.cpp" />
     <ClCompile Include="..\Private\StateObject.cpp" />
     <ClCompile Include="..\private\Walk_Player.cpp" />
     <ClCompile Include="..\private\UI_Tex.cpp" />

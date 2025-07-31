@@ -1,0 +1,44 @@
+{
+    "Animetions": [
+        {
+            "Anim": [
+                {
+                    "AnimeName": "Aimshot",
+                    "EndFrame": 56,
+                    "StartFrame": 0,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "GetWep",
+                    "EndFrame": 180,
+                    "StartFrame": 58,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Idle_Loop",
+                    "EndFrame": 240,
+                    "StartFrame": 181,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Reload_Start",
+                    "EndFrame": 245,
+                    "StartFrame": 284,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Reload_Loop",
+                    "EndFrame": 299,
+                    "StartFrame": 284,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Reload_End",
+                    "EndFrame": 348,
+                    "StartFrame": 329,
+                    "TickPerSecond": 25.0
+                }
+            ]
+        }
+    ]
+}

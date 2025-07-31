@@ -196,6 +196,15 @@
     <Filter Include="02.GameObject\Sky">
       <UniqueIdentifier>{02e02894-eeb8-4c99-a244-8bd7f5753671}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Player\Object\Sniper">
+      <UniqueIdentifier>{6f065815-43dc-485c-9f21-5c8c14c838c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\Object\ShotGun">
+      <UniqueIdentifier>{b5ae7f6f-0681-45bd-9c60-a7e0fbc22bc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\Object\HandGun">
+      <UniqueIdentifier>{68f747a9-1aa9-4395-8e8a-7b3ee8f59f57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -393,6 +402,15 @@
     <ClInclude Include="..\public\Sky.h">
       <Filter>02.GameObject\Sky</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Sniper.h">
+      <Filter>02.GameObject\Player\Object\Sniper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ShotGun.h">
+      <Filter>02.GameObject\Player\Object\ShotGun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\HandGun.h">
+      <Filter>02.GameObject\Player\Object\HandGun</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -575,6 +593,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Sky.cpp">
       <Filter>02.GameObject\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Sniper.cpp">
+      <Filter>02.GameObject\Player\Object\Sniper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ShotGun.cpp">
+      <Filter>02.GameObject\Player\Object\ShotGun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\HandGun.cpp">
+      <Filter>02.GameObject\Player\Object\HandGun</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,9 @@
 #include "Camera_Player.h"
 #include "Model.h"
 #include "Knife.h"
+#include "HandGun.h"
+#include "ShotGun.h"
+#include "Sniper.h"
 
 #include "Idle_Player.h"
 #include "Walk_Player.h"
@@ -148,12 +151,32 @@ HRESULT CPlayer::Ready_PartObjects()
 	
 	if (pBody == nullptr)
 		return E_FAIL;
-	CKnife::KNIFE_DESC	KnifeDesc{};
-	
-	KnifeDesc.pState = &m_iCulState;
-	KnifeDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	KnifeDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_MiddleF1"));
-	if (FAILED(__super::Add_PartObject(TEXT("Part_Knife"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Knife_Player"), &KnifeDesc)))
+	//CKnife::KNIFE_DESC	KnifeDesc{};
+	//KnifeDesc.pState = &m_iCulState;
+	//KnifeDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+	//KnifeDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_MiddleF1"));
+	//if (FAILED(__super::Add_PartObject(TEXT("Part_Knife"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Knife_Player"), &KnifeDesc)))
+	//	return E_FAIL;
+
+	//CHandGun::HANDGUN_DESC	HandGunDesc{};
+	//HandGunDesc.pState = &m_iCulState;
+	//HandGunDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+	//HandGunDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_MiddleF1"));
+	//if (FAILED(__super::Add_PartObject(TEXT("Part_HandGun"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_HandGun_Player"), &HandGunDesc)))
+	//	return E_FAIL;
+
+	//CShotGun::SHOTGUN_DESC	ShotGunDesc{};
+	//ShotGunDesc.pState = &m_iCulState;
+	//ShotGunDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+	//ShotGunDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_MiddleF1"));
+	//if (FAILED(__super::Add_PartObject(TEXT("Part_ShotGun"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_ShotGun_Player"), &ShotGunDesc)))
+	//	return E_FAIL;
+
+	CSniper::SNIPER_DESC	SniperDesc{};
+	SniperDesc.pState = &m_iCulState;
+	SniperDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+	SniperDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_Palm"));
+	if (FAILED(__super::Add_PartObject(TEXT("Part_Sniper"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sniper_Player"), &SniperDesc)))
 		return E_FAIL;
 
 	CCamera_Player::CAMERA_PLAYER_DESC CameraDesc{};

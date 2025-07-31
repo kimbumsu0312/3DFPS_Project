@@ -39,6 +39,7 @@ private:
 	CShader*				m_pShaderCom = { nullptr };
 	CModel*					m_pModelCom = { nullptr };
 	CAnimatio_Controller*	m_pAnimCom = { nullptr };
+
 	_uint*					m_pState = { nullptr };
 	_uint*					m_pWeaponState = { nullptr };
 	string*					m_pAnimTag = { nullptr };

@@ -145,12 +145,34 @@ HRESULT CEditMain::Ready_Prototype_ForStatic()
 		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/Player/Player.fbx", PreTransformMatrix, &Desc))))
 		return E_FAIL;
 
-	Desc.szModelName = "Knife";
-	Desc.szModelPath = "Prototype_Component_Model_Knife";
+	//Desc.szModelName = "Knife";
+	//Desc.szModelPath = "Prototype_Component_Model_Knife";
+	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Knife"),
+	//	CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/Knife/Knife.fbx", PreTransformMatrix, &Desc))))
+	//	return E_FAIL;
+
+	//Desc.szModelName = "HandGun";
+	//Desc.szModelPath = "Prototype_Component_Model_HandGun";
+	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_HandGun"),
+	//	CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/HandGun/HandGun.fbx", PreTransformMatrix, &Desc))))
+	//	return E_FAIL;
+
+	//Desc.szModelName = "ShotGun";
+	//Desc.szModelPath = "Prototype_Component_Model_ShotGun";
+	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_ShotGun"),
+	//	CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/ShotGun/ShotGun.fbx", PreTransformMatrix, &Desc))))
+	//	return E_FAIL;
+
+	Desc.szModelName = "Sniper";
+	Desc.szModelPath = "Prototype_Component_Model_Sniper";
 	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Knife"),
-		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/Knife/Knife.fbx", PreTransformMatrix, &Desc))))
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Sniper"),
+		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/Sniper/Sniper.fbx", PreTransformMatrix, &Desc))))
 		return E_FAIL;
+
 	/* Prototype_GameObject_Model */
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Model"),

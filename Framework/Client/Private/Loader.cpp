@@ -127,11 +127,23 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CVIBuffer_Cube::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	/* Player_Model_Prototype*/
-      if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Player/Player.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Player"))))
+    if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Player/Player.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Player"))))
 		return E_FAIL;
 	/* Player_Model_Knife*/
 	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Knife/Knife.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Knife"))))
-			return E_FAIL;
+		return E_FAIL;
+	/* Player_Model_HandGun*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/HandGun/HandGun.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_HandGun"))))
+		return E_FAIL;
+	/* Player_Model_ShotGun*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/ShotGun/ShotGun.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_ShotGun"))))
+		return E_FAIL;
+	/* Player_Model_Sniper*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Sniper/Sniper.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Sniper"))))
+		return E_FAIL;
+
+
+
 
 	lstrcpy(m_szLoadingText, TEXT("쉐이더를 로딩중입니다."));
 	/* Prototype_Component_Shader_VtxNorTex */
@@ -171,6 +183,18 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Knife_Player"),
 		CKnife::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_ShotGun_Player"),
+		CShotGun::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sniper_Player"),
+		CSniper::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_HandGun_Player"),
+		CHandGun::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 #pragma endregion
 #pragma region UI_Object
