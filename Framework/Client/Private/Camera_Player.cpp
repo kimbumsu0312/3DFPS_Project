@@ -25,6 +25,26 @@ HRESULT CCamera_Player::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
     m_DefultWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+
+    //m_pGameInstance->Subscribe<Event_Camera_Zoom>([&](const Event_Camera_Zoom& e) {
+    //    switch (e.eState)
+    //    {
+    //    case CAMERA_STATE::ZOOM_IN:
+    //        m_bIsZoomIn = true;
+    //        break;
+    //    case CAMERA_STATE::ZOOM_OUT:
+    //        m_bIsZoomout = true;
+    //        break;
+    //    case CAMERA_STATE::ZOOM_RESET:
+    //        m_fFovy = m_fResetFovy;
+    //        m_bIsZoomIn = false;
+    //        m_bIsZoomout = false;
+    //        return;
+    //    }
+    //    m_fResetFovy = m_fFovy;
+    //    m_fMoveFovy = e.fZoomFov;
+    //    m_fZoomSpeed = e.fZoomSpeed;
+    //    });
     return S_OK;
 }
 
@@ -32,7 +52,12 @@ void CCamera_Player::Priority_Update(_float fTimeDelta)
 {
     if (m_pGameInstance->IsKeyHold(DIK_Q))
         return;
-        __super::Update_PipeLines();
+
+    Zoom_In(fTimeDelta);
+    Zoom_Out(fTimeDelta);
+    Update_CameraRot(fTimeDelta);
+    Update_CameraPos();
+    __super::Update_PipeLines();
 }
 
 void CCamera_Player::Update(_float fTimeDelta)
@@ -42,7 +67,7 @@ void CCamera_Player::Update(_float fTimeDelta)
 
 void CCamera_Player::Late_Update(_float fTimeDelta)
 {
-    Update_CamraPos();
+
 }
 
 HRESULT CCamera_Player::Render()
@@ -78,21 +103,26 @@ void CCamera_Player::Zoom_Out(_float fTimeDelta)
     }
 }
 
-void CCamera_Player::Update_CamraPos()
+void CCamera_Player::Update_CameraRot(_float fTimeDelta)
 {
+
+}
+
+void CCamera_Player::Update_CameraPos()
+{
+    _matrix matYaw = XMMatrixRotationY(m_fYaw);     // Y축 (좌우)
+    _matrix matPitch = XMMatrixRotationAxis(m_pTransformCom->Get_State(STATE::RIGHT), m_fPitch); // X축 (상하)
+    _matrix matMouseRot = matPitch;
+
     _matrix     MainBoneMatrix = XMLoadFloat4x4(m_pSocketMatrix1);
-    _matrix     SubBoneMatrix = XMLoadFloat4x4(m_pSocketMatrix2);
-    _matrix     ParentMatrix = XMLoadFloat4x4(m_pParentMatrix);
-    _matrix     RotaionY = XMMatrixRotationY(XMConvertToRadians(180.f));
-    RotaionY.r[3] = { 0.f, 0.f, -0.f ,1.f };
+    //_matrix     SubBoneMatrix = XMLoadFloat4x4(m_pSocketMatrix2);
     for (size_t i = 0; i < 3; i++)
     {
         MainBoneMatrix.r[i] = XMVector3Normalize(MainBoneMatrix.r[i]);
-        SubBoneMatrix.r[i] = XMVector3Normalize(SubBoneMatrix.r[i]);
-       
+        //SubBoneMatrix.r[i] = XMVector3Normalize(SubBoneMatrix.r[i]);
     }
 
-    XMStoreFloat4x4(&m_CombinedWorldMatrix, m_DefultWorldMatrix * MainBoneMatrix * XMLoadFloat4x4(m_pParentMatrix));
+    XMStoreFloat4x4(&m_CombinedWorldMatrix, m_DefultWorldMatrix * matMouseRot * MainBoneMatrix * XMLoadFloat4x4(m_pParentMatrix));
     m_pTransformCom->Set_WorldMatrix(m_CombinedWorldMatrix);
 }
 

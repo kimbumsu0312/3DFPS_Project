@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "Knife.h"
 
-CKnife::CKnife(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CPartObject{ pDevice, pContext }
+CKnife::CKnife(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CWeaponObject{ pDevice, pContext }
 {
 }
 
-CKnife::CKnife(const CKnife& Prototype) : CPartObject(Prototype)
+CKnife::CKnife(const CKnife& Prototype) : CWeaponObject(Prototype)
 {
 }
 
@@ -16,10 +16,6 @@ HRESULT CKnife::Initialize_Prototype()
 
 HRESULT CKnife::Initialize(void* pArg)
 {
-    KNIFE_DESC* pDesc = static_cast<KNIFE_DESC*>(pArg);
-    m_pParentState = pDesc->pState;
-    m_pSocketMatrix = pDesc->pSocketMatrix;
-
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
@@ -99,8 +95,7 @@ HRESULT CKnife::Bind_ShaderResources()
 {
     if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
         return E_FAIL;
-    //if (FAILED(m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix")))
-    //    return E_FAIL;
+
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW))))
         return E_FAIL;
 

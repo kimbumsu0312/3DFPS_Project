@@ -1,8 +1,8 @@
 #pragma once
-#include "StateObject.h"
+#include "PlayerState.h"
 
 NS_BEGIN(Client)
-class CGuard_Player final : public CStateObject
+class CGuard_Player final : public CPlayerState
 {
 private:
 	CGuard_Player();
@@ -10,15 +10,13 @@ private:
 
 public:
 	virtual HRESULT				Initalize(void* pArg) override;
-	virtual void				Enter() override;
-	virtual void				Update(_float fDeltatime) override;
+	virtual void				Enter(const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState) override;
+	virtual void				Update(_float fDeltatime, const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState) override;
 	virtual void				Exit() override;
 
 private:
 	STATE_ANIM					m_eAnimState = STATE_ANIM::END;
 
-private:
-	void						KeyInput();
 public:
 	static CGuard_Player* Create(void* pArg);
 	virtual void				Free() override;

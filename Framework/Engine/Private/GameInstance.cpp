@@ -15,6 +15,7 @@
 #include "Garbage_Collector.h"
 #include "Picking.h"
 #include "SaveLoader.h"
+#include "Font_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -79,6 +80,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 
 	m_pSaveLoader = CSaveLoader::Create(*ppDevice, *ppContext);
 	if (nullptr == m_pSaveLoader)
+		return E_FAIL;
+
+	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pFont_Manager)
 		return E_FAIL;
 
 	return S_OK;
@@ -147,6 +152,7 @@ _float CGameInstance::Rand(_float fMin, _float fMax)
 {
 	return fMin + Rand_Normal() * (fMax - fMin);
 }
+
 #pragma endregion
 
 _byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
@@ -389,9 +395,20 @@ void CGameInstance::Clear_Object()
 	m_pSaveLoader->Clear_Object();
 }
 
+HRESULT CGameInstance::Add_Font(const _wstring& strFontTag, const _tchar* pFontFilePath)
+{
+	return m_pFont_Manager->Add_Font(strFontTag, pFontFilePath);
+}
+
+void CGameInstance::DrawText(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float fRadian, const _float2& vOrigin, const _float2& vScale)
+{
+	m_pFont_Manager->DrawText(strFontTag, pText, vPosition, vColor, fRadian, vOrigin, vScale);
+}
+
 void CGameInstance::Release_Engine()
 {
 	Release();
+	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pSaveLoader);
 	Safe_Release(m_pPicking);
 	Safe_Release(m_pGarbage_Collector);

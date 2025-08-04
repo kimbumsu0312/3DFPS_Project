@@ -1,8 +1,8 @@
 #pragma once
-#include "StateObject.h"
+#include "PlayerState.h"
 
 NS_BEGIN(Client)
-class CAttack_Player final : public CStateObject
+class CAttack_Player final : public CPlayerState
 {
 
 private:
@@ -11,8 +11,8 @@ private:
 
 public:
 	virtual HRESULT				Initalize(void* pArg) override;
-	virtual void				Enter() override;
-	virtual void				Update(_float fDeltatime) override;
+	virtual void				Enter(const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState) override;
+	virtual void				Update(_float fDeltatime, const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState) override;
 	virtual void				Exit() override;
 
 private:

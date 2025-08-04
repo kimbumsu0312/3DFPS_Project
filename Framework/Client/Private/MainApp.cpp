@@ -75,6 +75,7 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Render_Begin(&vClearColor);
 
 	m_pGameInstance->Draw();
+	m_pGameInstance->DrawText(TEXT("Font_Godic"), TEXT("배고파 피곤해"), _float2(100.f, 0.f));
 
 	m_pGameInstance->Render_End();
 
@@ -83,6 +84,9 @@ HRESULT CMainApp::Render()
 
 HRESULT CMainApp::Ready_Prototype_ForStatic()
 {
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_Godic"), TEXT("../Bin/Resources/Fonts/Godic.spritefont"))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements))))
 		return E_FAIL;

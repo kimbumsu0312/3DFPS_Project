@@ -43,11 +43,18 @@ private:
 	const _float4x4*		m_pSocketMatrix2 = { nullptr };
 	_matrix					m_DefultWorldMatrix = {};
 	_float4x4				m_CombinedWorldMatrix = {};
+
+	_int					m_iMousePosX = {};
+	_int					m_iMousePosY = {};
+
+	_float					m_fYaw = {};
+	_float					m_fPitch = {};
+
 private:
 	void					Zoom_In(_float fTimeDelta);
 	void					Zoom_Out(_float fTimeDelta);
-	void					Update_CamraPos();
-
+	void					Update_CameraPos();
+	void					Update_CameraRot(_float fTimeDelta);
 public:
 	static CCamera_Player*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg)override;

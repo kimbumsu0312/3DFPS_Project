@@ -35,12 +35,13 @@ public:
 public:
 	_float4x4*				Get_BoneMatrix(const _wstring pBoneName);
 	_float3*				Get_MovePos();
+
+	void					Model_Upper_Rot(_float fPitch);
 private:
 	CShader*				m_pShaderCom = { nullptr };
 	CModel*					m_pModelCom = { nullptr };
 	CAnimatio_Controller*	m_pAnimCom = { nullptr };
 
-	_uint*					m_pState = { nullptr };
 	_uint*					m_pWeaponState = { nullptr };
 	string*					m_pAnimTag = { nullptr };
 	_bool*					m_pIsAnimLoop = { nullptr };

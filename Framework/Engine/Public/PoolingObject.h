@@ -28,7 +28,7 @@ public:
 	virtual HRESULT			Initialize_Pool(void *pArg);
 	virtual void			Return_Pool() = 0;
 	
-private:
+protected:
 	_wstring				m_szPoolingPath;
 
 public:

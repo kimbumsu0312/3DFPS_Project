@@ -20,7 +20,6 @@ HRESULT CBody_Player::Initialize(void* pArg)
 
     BODY_DESC* pDesc = static_cast<BODY_DESC*>(pArg);
     
-    m_pState = pDesc->pState;
     m_pWeaponState = pDesc->pWeaponState;
     m_pAnimTag = pDesc->pAnimTag;
     m_pIsAnimFinsh = pDesc->pIsAnimFinsh;
@@ -42,8 +41,7 @@ void CBody_Player::Priority_Update(_float fTimeDelta)
 
 void CBody_Player::Update(_float fTimeDelta)
 {
-
-    *m_pIsAnimFinsh = m_pAnimCom->Player_Animation(*m_pWeaponState, *m_pAnimTag, m_pIsAnimLoop, m_pModelCom, fTimeDelta, m_iRootLodeIndex);
+    *m_pIsAnimFinsh = m_pAnimCom->Player_Animation(*m_pWeaponState, *m_pAnimTag, *m_pIsAnimLoop, m_pModelCom, fTimeDelta, m_iRootLodeIndex);
 
     Update_CombinedMatrix();
 }
@@ -86,6 +84,11 @@ _float4x4* CBody_Player::Get_BoneMatrix(const _wstring pBoneName)
 _float3* CBody_Player::Get_MovePos()
 {
     return m_pModelCom->Get_PtrMovePos();
+}
+
+void CBody_Player::Model_Upper_Rot(_float fPitch)
+{
+    m_pModelCom->Set_Upper(39, fPitch, true);
 }
 
 HRESULT CBody_Player::Ready_Components()

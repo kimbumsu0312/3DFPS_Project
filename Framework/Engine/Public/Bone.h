@@ -21,6 +21,9 @@ public:
 							Combined.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
 							XMStoreFloat4x4(&m_CombinedTransformationMatrix, Combined);	}
 
+	void				Set_TransformationToCombind() { m_CombinedTransformationMatrix = m_TransformationMatrix; }
+	void				Set_RotBonePitch(_float fPitch, _bool IsTrans);
+
 public:
 	HRESULT				Initialize(const SAVE_BONE& pBone);
 	void				Update_CombinedTransformationMatrix(const _float4x4& PreTransformMatrix, const vector<CBone*>& Bones);

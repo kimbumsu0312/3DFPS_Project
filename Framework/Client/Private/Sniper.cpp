@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "Sniper.h"
 
-CSniper::CSniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CPartObject{ pDevice, pContext }
+CSniper::CSniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CWeaponObject{ pDevice, pContext }
 {
 }
 
-CSniper::CSniper(const CSniper& Prototype) : CPartObject(Prototype)
+CSniper::CSniper(const CSniper& Prototype) : CWeaponObject(Prototype)
 {
 }
 
@@ -16,9 +16,6 @@ HRESULT CSniper::Initialize_Prototype()
 
 HRESULT CSniper::Initialize(void* pArg)
 {
-    SNIPER_DESC* pDesc = static_cast<SNIPER_DESC*>(pArg);
-    m_pParentState = pDesc->pState;
-    m_pSocketMatrix = pDesc->pSocketMatrix;
     m_AnimTag = "Idle";
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
@@ -26,9 +23,9 @@ HRESULT CSniper::Initialize(void* pArg)
     if (FAILED(Ready_Components()))
         return E_FAIL;
 
-    m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-0.070f, -0.04f, -0.02f, 1.f));
-
-    m_pTransformCom->Rotation_All(_float3{ XMConvertToRadians(-80.0f), XMConvertToRadians(0.f), XMConvertToRadians(-80.f) });
+    m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-0.1f, -0.03f, -0.02f, 1.f));
+    
+    m_pTransformCom->Rotation_All(_float3{ XMConvertToRadians(-94.f), XMConvertToRadians(0.f), XMConvertToRadians(-77.f) });
     m_pTransformCom->Scale(_float3{ 1.f, 1.f, 1.f });
     return S_OK;
 }
@@ -39,11 +36,11 @@ void CSniper::Priority_Update(_float fTimeDelta)
 
 void CSniper::Update(_float fTimeDelta)
 {
-    if (*m_pParentState == PLAYER_STATE::ATTACK)
+    if (*m_pCulStateTag ==TEXT("Attack"))
     {
         m_pAnimCom->Player_Animation(0, "AimShot", false, m_pModelCom, fTimeDelta, 0);
     }
-    else if (*m_pParentState == PLAYER_STATE::RELOAD)
+    else if (*m_pCulStateTag == TEXT("Reload"))
     {
         m_pAnimCom->Player_Animation(0, "Reload", false, m_pModelCom, fTimeDelta, 0);
     }
@@ -51,10 +48,7 @@ void CSniper::Update(_float fTimeDelta)
     {
         m_pAnimCom->Player_Animation(0, "Idle", true, m_pModelCom, fTimeDelta, 0);
     }
-}
 
-void CSniper::Late_Update(_float fTimeDelta)
-{
     _matrix     BoneMatrix = XMLoadFloat4x4(m_pSocketMatrix);
     _matrix     ParentMatrix = XMLoadFloat4x4(m_pParentMatrix);
     _matrix     WorldMatrix = m_pTransformCom->Get_WorldMatrix();
@@ -64,6 +58,11 @@ void CSniper::Late_Update(_float fTimeDelta)
         BoneMatrix.r[i] = XMVector3Normalize(BoneMatrix.r[i]);
     }
     XMStoreFloat4x4(&m_CombinedWorldMatrix, WorldMatrix * BoneMatrix * ParentMatrix);
+ 
+}
+
+void CSniper::Late_Update(_float fTimeDelta)
+{
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
         return;
 }
@@ -87,9 +86,6 @@ HRESULT CSniper::Render()
 
         m_pModelCom->Render(i);
     }
-
-
-
     return S_OK;
 }
 
@@ -121,8 +117,7 @@ HRESULT CSniper::Bind_ShaderResources()
 {
     if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
         return E_FAIL;
-    //if (FAILED(m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix")))
-    //    return E_FAIL;
+
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW))))
         return E_FAIL;
 

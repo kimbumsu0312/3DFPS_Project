@@ -24,6 +24,29 @@
                     "iTexCount": 0
                 },
                 {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Normal_Mon_1/ch13_1000_Body_ATOC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
                     "iTexCount": 0
                 },
                 {
@@ -50,10 +73,75 @@
                     "iTexCount": 0
                 },
                 {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
                     "iTexCount": 1,
                     "szFullPath": [
                         {
-                            "Path": "../Bin/Resources/Models/Normal_Mon_1/hangyoSkin_Array_MSK4 #ARRAY_0.dds"
+                            "Path": "../Bin/Resources/Models/Normal_Mon_1/ch13_1000_Head_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Normal_Mon_1/ch13_1000_Head_ATOC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Normal_Mon_1/ch13_1000_Head_ATOC.dds"
                         }
                     ]
                 },
@@ -112,9 +200,6 @@
                     "iTexCount": 0
                 },
                 {
-                    "iTexCount": 0
-                },
-                {
                     "iTexCount": 1,
                     "szFullPath": [
                         {
@@ -138,68 +223,6 @@
                     "iTexCount": 0
                 },
                 {
-                    "iTexCount": 1,
-                    "szFullPath": [
-                        {
-                            "Path": "../Bin/Resources/Models/Normal_Mon_1/hangyoSkin_Array_MSK4 #ARRAY_0.dds"
-                        }
-                    ]
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                }
-            ]
-        },
-        {
-            "Materials": [
-                {
-                    "iTexCount": 1,
-                    "szFullPath": [
-                        {
-                            "Path": "../Bin/Resources/Models/Normal_Mon_1/ch13_1000_Head_ALBD.dds"
-                        }
-                    ]
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
                     "iTexCount": 0
                 },
                 {
@@ -207,29 +230,6 @@
                     "szFullPath": [
                         {
                             "Path": "../Bin/Resources/Models/Normal_Mon_1/ch13_1000_Head_ATOC.dds"
-                        }
-                    ]
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 1,
-                    "szFullPath": [
-                        {
-                            "Path": "../Bin/Resources/Models/Normal_Mon_1/hangyoSkin_Array_MSK4 #ARRAY_0.dds"
                         }
                     ]
                 },
@@ -288,9 +288,6 @@
                     "iTexCount": 0
                 },
                 {
-                    "iTexCount": 0
-                },
-                {
                     "iTexCount": 1,
                     "szFullPath": [
                         {
@@ -314,68 +311,6 @@
                     "iTexCount": 0
                 },
                 {
-                    "iTexCount": 1,
-                    "szFullPath": [
-                        {
-                            "Path": "../Bin/Resources/Models/Normal_Mon_1/LinenWeave1_Array_MSK4 #ARRAY_0.dds"
-                        }
-                    ]
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                }
-            ]
-        },
-        {
-            "Materials": [
-                {
-                    "iTexCount": 1,
-                    "szFullPath": [
-                        {
-                            "Path": "../Bin/Resources/Models/Normal_Mon_1/ch13_1000_Cloth_ALBD.dds"
-                        }
-                    ]
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
                     "iTexCount": 0
                 },
                 {
@@ -383,29 +318,6 @@
                     "szFullPath": [
                         {
                             "Path": "../Bin/Resources/Models/Normal_Mon_1/ch13_1000_Cloth_ATOC.dds"
-                        }
-                    ]
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 1,
-                    "szFullPath": [
-                        {
-                            "Path": "../Bin/Resources/Models/Normal_Mon_1/LinenWeave1_Array_MSK4 #ARRAY_0.dds"
                         }
                     ]
                 },
@@ -464,9 +376,6 @@
                     "iTexCount": 0
                 },
                 {
-                    "iTexCount": 0
-                },
-                {
                     "iTexCount": 1,
                     "szFullPath": [
                         {
@@ -490,10 +399,13 @@
                     "iTexCount": 0
                 },
                 {
+                    "iTexCount": 0
+                },
+                {
                     "iTexCount": 1,
                     "szFullPath": [
                         {
-                            "Path": "../Bin/Resources/Models/Normal_Mon_1/ch13_1000_Hair_NRMR.dds"
+                            "Path": "../Bin/Resources/Models/Normal_Mon_1/ch13_1000_Hair_ATOC.dds"
                         }
                     ]
                 },
@@ -532,5 +444,5 @@
     ],
     "Model_name": "Normal_Mon_1",
     "Model_type": 1,
-    "iNumMaterials": 6
+    "iNumMaterials": 5
 }

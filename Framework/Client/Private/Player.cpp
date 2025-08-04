@@ -15,6 +15,7 @@
 #include "Aim_Player.h"
 #include "Reload_Player.h"
 #include "Attack_Player.h"
+#include "Player_Manager.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CContainerObject(pDevice, pContext)
 {
@@ -33,11 +34,11 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void* pArg)
 {
-	m_iWeponState = PLAYER_WEAPON::KNIFE;
+	m_iCulWeponState = PLAYER_WEAPON::KNIFE;
 	m_szAnimTag = "Idle_Loop";
-	m_szStateTag = TEXT("Idle");
-	m_iCulState = PLAYER_STATE::IDLE;
-	m_iPreState = m_iCulState;
+	m_szCulStateTag = TEXT("Idle");
+	m_szPreStateTag = m_szCulStateTag;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -49,7 +50,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	if (FAILED(Ready_StateObjects()))
 		return E_FAIL;
-	m_pMovePos = static_cast<CBody_Player*>(m_PartObjects.at(TEXT("Part_Body")))->Get_MovePos();
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 3.f, 0.f, 1.f));
 
@@ -58,46 +58,57 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
-	__super::Priority_Update(fTimeDelta);
 	m_pCamera->Priority_Update(fTimeDelta);
+	m_MoveState = {};
+	m_AttackState = {};
+
+	m_pBodyObject->Priority_Update(fTimeDelta);
+	m_pWeaponObject->Priority_Update(fTimeDelta);
+	if (m_pGameInstance->IsKeyDown(DIK_5))
+		m_bisCameraLock ? m_bisCameraLock = false : m_bisCameraLock = true;
+
+	if(!m_bisCameraLock)
+		Rotaion_Upper(fTimeDelta);
 }
 
 void CPlayer::Update(_float fTimeDelta)
  {
-	if (m_pGameInstance->IsKeyDown(DIK_1))
-		m_iWeponState = PLAYER_WEAPON::KNIFE;
-	if (m_pGameInstance->IsKeyDown(DIK_2))
-		m_iWeponState = PLAYER_WEAPON::SHOTGUN;
-	if (m_pGameInstance->IsKeyDown(DIK_3))
-		m_iWeponState = PLAYER_WEAPON::SNIPER;
-	if (m_pGameInstance->IsKeyDown(DIK_4))
-		m_iWeponState = PLAYER_WEAPON::HANDGUN;
-
-	if (m_bIsAnimFinsh)
-		int a = 10; 
- 	m_CulStateObject->Update( fTimeDelta);
-	if (m_iPreState != m_iCulState)
+	if (!InputKey_UI() && !m_bisCameraLock)
+	{
+		InputKey_MoveState(fTimeDelta);
+		InputKey_AttackState(fTimeDelta);
+		InputKey_WeaponChange(fTimeDelta);
+	}
+ 	m_CulStateObject->Update(fTimeDelta, m_AttackState, m_MoveState);
+	if (m_szPreStateTag != m_szCulStateTag)
 	{
 		m_CulStateObject->Exit();
 		Safe_Release(m_CulStateObject);
 
-		m_CulStateObject = Find_StateObject(m_szStateTag);
+		m_CulStateObject = Find_StateObject(m_szCulStateTag);
 		Safe_AddRef(m_CulStateObject);
 
-		m_CulStateObject->Enter();
-		m_iPreState = m_iCulState;
+		m_CulStateObject->Enter(m_AttackState, m_MoveState);
+		m_szPreStateTag = m_szCulStateTag;
 	}
 
 	m_bIsAnimFinsh = false;
-	Move(fTimeDelta);
-	__super::Update(fTimeDelta);
+	m_pBodyObject->Update(fTimeDelta);
+	m_pWeaponObject->Update(fTimeDelta);
 	m_pCamera->Update(fTimeDelta);
-
+	if (!m_bisCameraLock)
+	{
+		m_fYaw += m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::X) * 0.1f * fTimeDelta;
+		m_pTransformCom->Rotation_All(_float3{ 0.f, m_fYaw, 0.f });
+	}
+	CPlayer_Manager::GetInstance()->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
 {
-	__super::Late_Update(fTimeDelta);
+	m_pBodyObject->Late_Update(fTimeDelta);
+
+	m_pWeaponObject->Late_Update(fTimeDelta);
 	m_pCamera->Late_Update(fTimeDelta);
 }
 
@@ -106,27 +117,7 @@ HRESULT CPlayer::Render()
 	return S_OK;
 }
 
-void CPlayer::Move(_float fTimeDelta)
-{
-	if (m_pGameInstance->IsKeyHold(DIK_W))
-	{
-		m_pTransformCom->Go_Straight(fTimeDelta);
-	}
-	else if (m_pGameInstance->IsKeyHold(DIK_S))
-	{
-		m_pTransformCom->Go_Backward(fTimeDelta);
-	}
 
-	if (m_pGameInstance->IsKeyHold(DIK_A))
-	{
-		m_pTransformCom->Go_Left(fTimeDelta);
-	}
-	if (m_pGameInstance->IsKeyHold(DIK_D))
-	{
-		m_pTransformCom->Go_Right(fTimeDelta);
-	}
-
-}
 
 HRESULT CPlayer::Ready_Components()
 {
@@ -137,8 +128,7 @@ HRESULT CPlayer::Ready_Components()
 HRESULT CPlayer::Ready_PartObjects()
 {
 	CBody_Player::BODY_DESC BodyDesc{};
-	BodyDesc.pState = &m_iCulState;
-	BodyDesc.pWeaponState = &m_iWeponState;
+	BodyDesc.pWeaponState = &m_iCulWeponState;
 	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 	BodyDesc.pAnimTag = &m_szAnimTag;
 	BodyDesc.pIsAnimLoop = &m_bIsAnimLoop;
@@ -148,40 +138,36 @@ HRESULT CPlayer::Ready_PartObjects()
 		return E_FAIL;
 	
 	CBody_Player* pBody = static_cast<CBody_Player*>(Find_PartObject(TEXT("Part_Body")));
-	
 	if (pBody == nullptr)
 		return E_FAIL;
-	//CKnife::KNIFE_DESC	KnifeDesc{};
-	//KnifeDesc.pState = &m_iCulState;
-	//KnifeDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	//KnifeDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_MiddleF1"));
-	//if (FAILED(__super::Add_PartObject(TEXT("Part_Knife"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Knife_Player"), &KnifeDesc)))
-	//	return E_FAIL;
+	m_pBodyObject = pBody;
+	Safe_AddRef(m_pBodyObject);
 
-	//CHandGun::HANDGUN_DESC	HandGunDesc{};
-	//HandGunDesc.pState = &m_iCulState;
-	//HandGunDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	//HandGunDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_MiddleF1"));
-	//if (FAILED(__super::Add_PartObject(TEXT("Part_HandGun"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_HandGun_Player"), &HandGunDesc)))
-	//	return E_FAIL;
+	CWeaponObject::WEAPON_DESC WeaponDesc{};
+	WeaponDesc.pCulStateTag = &m_szCulStateTag;
+	WeaponDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
 
-	//CShotGun::SHOTGUN_DESC	ShotGunDesc{};
-	//ShotGunDesc.pState = &m_iCulState;
-	//ShotGunDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	//ShotGunDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_MiddleF1"));
-	//if (FAILED(__super::Add_PartObject(TEXT("Part_ShotGun"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_ShotGun_Player"), &ShotGunDesc)))
-	//	return E_FAIL;
-
-	CSniper::SNIPER_DESC	SniperDesc{};
-	SniperDesc.pState = &m_iCulState;
-	SniperDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	SniperDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_Palm"));
-	if (FAILED(__super::Add_PartObject(TEXT("Part_Sniper"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sniper_Player"), &SniperDesc)))
+	WeaponDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_MiddleF1"));
+	if (FAILED(__super::Add_PartObject(TEXT("Part_Knife"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Knife_Player"), &WeaponDesc)))
 		return E_FAIL;
+
+	WeaponDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_Wep"));
+	if (FAILED(__super::Add_PartObject(TEXT("Part_HandGun"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_HandGun_Player"), &WeaponDesc)))
+		return E_FAIL;
+
+	WeaponDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_Wep"));
+	if (FAILED(__super::Add_PartObject(TEXT("Part_ShotGun"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_ShotGun_Player"), &WeaponDesc)))
+		return E_FAIL;
+
+	WeaponDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_Wep"));
+	if (FAILED(__super::Add_PartObject(TEXT("Part_Sniper"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sniper_Player"), &WeaponDesc)))
+		return E_FAIL;
+
+	m_pWeaponObject = Find_PartObject(TEXT("Part_Knife"));
 
 	CCamera_Player::CAMERA_PLAYER_DESC CameraDesc{};
 	CameraDesc.vEye = _float4(0.f, 0.f, 0.1f, 1.f);
-	CameraDesc.vAt = _float4(0.f, 0.f, -1.f, 1.f);
+	CameraDesc.vAt = _float4(-0.1f, 0.f, -1.f, 1.f);
 	CameraDesc.fFovy = XMConvertToRadians(45.0f);
 	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 500.f;
@@ -198,11 +184,10 @@ HRESULT CPlayer::Ready_PartObjects()
 
 HRESULT CPlayer::Ready_StateObjects()
 {
-	CStateObject::STATE_DESC Desc{};
-	Desc.pState = &m_iCulState;
-	Desc.pWeaponState = &m_iWeponState;
+	CPlayerState::Player_STATE_DESC Desc{};
+	Desc.pWeaponState = &m_iCulWeponState;
 	Desc.pAnimTag = &m_szAnimTag;
-	Desc.pStateTag = &m_szStateTag;
+	Desc.pStateTag = &m_szCulStateTag;
 	Desc.pIsAnimLoop = &m_bIsAnimLoop;
 	Desc.pIsAnimFinsh = &m_bIsAnimFinsh;
 	CIdle_Player* pInstance = CIdle_Player::Create(&Desc);
@@ -216,18 +201,12 @@ HRESULT CPlayer::Ready_StateObjects()
 
 
 	Add_StateObject(TEXT("Guard"), CGuard_Player::Create(&Desc));
-	Add_StateObject(TEXT("Walk"), CWalk_Player::Create(&Desc));
+	//Add_StateObject(TEXT("Walk"), CWalk_Player::Create(&Desc));
 	Add_StateObject(TEXT("Aim"), CAim_Player::Create(&Desc));
 	Add_StateObject(TEXT("Reload"), CReload_Player::Create(&Desc));
 	Add_StateObject(TEXT("Attack"), CAttack_Player::Create(&Desc));
 	return S_OK;
 }
-
-void CPlayer::Update_RootMove()
-{
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(m_pTransformCom->Get_State(STATE::POSITION) + XMLoadFloat3(m_pMovePos), 1.f));
-}
-
 
 HRESULT CPlayer::Add_StateObject(const _wstring& strStateObjectTag, CStateObject* pStateObject)
 {
@@ -249,6 +228,130 @@ CStateObject* CPlayer::Find_StateObject(const _wstring& strStateObjectTag)
 		return nullptr;
 
 	return iter->second;
+}
+
+void CPlayer::InputKey_MoveState(_float fTimeDelta)
+{
+	//이동 상태 값
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT))
+	{
+		m_MoveState.isJog = true;
+	}
+	if (m_pGameInstance->IsKeyHold(DIK_W))
+	{
+		m_MoveState.isMoveF = true;
+		m_pTransformCom->Go_Straight(fTimeDelta);
+	}
+	if (m_pGameInstance->IsKeyHold(DIK_S))
+	{
+		m_MoveState.isMoveB = true;
+		m_pTransformCom->Go_Backward(fTimeDelta);
+	}
+	if (m_pGameInstance->IsKeyHold(DIK_A))
+	{
+		m_MoveState.isMoveL = true;
+		m_pTransformCom->Go_Left(fTimeDelta);
+	}
+	if (m_pGameInstance->IsKeyHold(DIK_D))
+	{
+		m_MoveState.isMoveR = true;
+		m_pTransformCom->Go_Right(fTimeDelta);
+	}
+}
+
+void CPlayer::InputKey_AttackState(_float fTimeDelta)
+{
+	if (m_pGameInstance->IsKeyHold(DIK_Q))
+	{
+		m_AttackState.isGuard = true;
+	}
+	else if (m_iCulWeponState != PLAYER_WEAPON::KNIFE && m_pGameInstance->IsMouseHold(MOUSEKEYSTATE::RB))
+	{
+		m_AttackState.isAim = true;
+	}
+
+	if (m_pGameInstance->IsMouseHold(MOUSEKEYSTATE::LB))
+	{
+		m_AttackState.isAttack = true;
+	}
+
+	if (m_pGameInstance->IsKeyHold(DIK_R))
+	{
+		m_AttackState.isReload = true;
+	}
+
+}
+
+void CPlayer::InputKey_WeaponChange(_float fTimeDelta)
+{
+	if (m_szCulStateTag == TEXT("Attack") || m_szCulStateTag == TEXT("Reload") || m_szCulStateTag == TEXT("Aim") || m_szCulStateTag == TEXT("Guard"))
+		return;
+
+	if (m_pGameInstance->IsKeyDown(DIK_1))
+		m_iCulWeponState = PLAYER_WEAPON::KNIFE;
+	if (m_pGameInstance->IsKeyDown(DIK_2))
+		m_iCulWeponState = PLAYER_WEAPON::SHOTGUN;
+	if (m_pGameInstance->IsKeyDown(DIK_3))
+		m_iCulWeponState = PLAYER_WEAPON::SNIPER;
+	if (m_pGameInstance->IsKeyDown(DIK_4))
+		m_iCulWeponState = PLAYER_WEAPON::HANDGUN;
+
+	if (m_iPreWeponState != m_iCulWeponState)
+	{
+		switch (m_iCulWeponState)
+		{
+		case PLAYER_WEAPON::KNIFE:
+			m_pWeaponObject = Find_PartObject(TEXT("Part_Knife"));
+
+			break;
+		case PLAYER_WEAPON::HANDGUN:
+			m_pWeaponObject = Find_PartObject(TEXT("Part_HandGun"));
+			m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::PISTOL });
+			break;
+		case PLAYER_WEAPON::SHOTGUN:
+			m_pWeaponObject = Find_PartObject(TEXT("Part_ShotGun"));
+			m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::SHOTGUN });
+			break;
+		case PLAYER_WEAPON::SNIPER:
+			m_pWeaponObject = Find_PartObject(TEXT("Part_Sniper"));
+			m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::SNIPER });
+			break;
+		}
+		m_iPreWeponState = m_iCulWeponState;
+	}
+
+}
+
+_bool CPlayer::InputKey_UI()
+{
+	if (m_szCulStateTag == TEXT("Attack") || m_szCulStateTag == TEXT("Reload") || m_szCulStateTag == TEXT("Aim") || m_szCulStateTag == TEXT("Guard"))
+		return false;
+
+	if (m_pGameInstance->IsKeyDown(DIK_TAB) && !m_bIsUIOpen)
+	{
+		m_pGameInstance->Publish(Event_Inventory_Open{ {true} });
+		m_bIsUIOpen = true;
+	}
+	else if (m_pGameInstance->IsKeyDown(DIK_TAB) && m_bIsUIOpen)
+	{
+		m_pGameInstance->Publish(Event_Inventory_Open{ {false} });
+		m_bIsUIOpen = false;
+	}
+
+	return m_bIsUIOpen;
+}
+
+void CPlayer::Rotaion_Upper(_float fTimeDelta)
+{
+ 	m_fPitch -= m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::Y) * 0.1 * fTimeDelta;
+	
+	if (m_fPitch >= XMConvertToRadians(45.f))
+		m_fPitch = XMConvertToRadians(45.f);
+	else if (m_fPitch <= XMConvertToRadians(-45.f))
+		m_fPitch = XMConvertToRadians(-45.f);
+
+	m_pBodyObject->Model_Upper_Rot(m_fPitch);
+
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -282,9 +385,11 @@ void CPlayer::Free()
 	__super::Free();
 	Safe_Release(m_pCamera);
 
+	Safe_Release(m_pBodyObject);
 	for (auto& Pair : m_StateObjects)
 		Safe_Release(Pair.second);
 
 	m_StateObjects.clear();
 	Safe_Release(m_CulStateObject);
+
 }

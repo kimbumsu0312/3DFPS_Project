@@ -172,38 +172,74 @@
     <Filter Include="02.GameObject\Player\State">
       <UniqueIdentifier>{3bede824-e979-478f-a8a3-484e328807f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Player\State\Idle">
-      <UniqueIdentifier>{c0130ec4-ab65-4846-b2b8-0b09ef91dfb0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96.SuperClass\StateObject">
       <UniqueIdentifier>{3e6dd77c-61cb-435b-b5f3-640e46383aa0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Player\State\Attack">
-      <UniqueIdentifier>{017e5d35-1f22-41ef-b9ef-078584f6bec3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Player\State\Aim">
-      <UniqueIdentifier>{ba1f2610-4302-4794-ad99-fc5528f9369f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Player\State\Guard">
-      <UniqueIdentifier>{73195018-432f-4243-bba1-7fe1455e3363}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Player\State\Reload">
-      <UniqueIdentifier>{1d851e46-3185-497b-a86a-82ffa43770bd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Player\State\Walk">
-      <UniqueIdentifier>{0f4a17f4-4815-4b24-b58b-3c260f90be07}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\Sky">
       <UniqueIdentifier>{02e02894-eeb8-4c99-a244-8bd7f5753671}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Player\Object\Sniper">
+    <Filter Include="02.GameObject\Player\State\Action">
+      <UniqueIdentifier>{6e66e602-1d8a-4155-b98f-6fce3e8cb3cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Action\Reload">
+      <UniqueIdentifier>{1d851e46-3185-497b-a86a-82ffa43770bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Action\Attack">
+      <UniqueIdentifier>{017e5d35-1f22-41ef-b9ef-078584f6bec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Action\Aim">
+      <UniqueIdentifier>{ba1f2610-4302-4794-ad99-fc5528f9369f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Action\Guard">
+      <UniqueIdentifier>{73195018-432f-4243-bba1-7fe1455e3363}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Move">
+      <UniqueIdentifier>{06916121-de37-4878-aaa2-ef6af21845fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Move\Walk">
+      <UniqueIdentifier>{0f4a17f4-4815-4b24-b58b-3c260f90be07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Move\Idle">
+      <UniqueIdentifier>{c0130ec4-ab65-4846-b2b8-0b09ef91dfb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Move\Jog">
+      <UniqueIdentifier>{5475885d-33fe-4253-9b24-43161be5c90c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Action\Idle">
+      <UniqueIdentifier>{211497e3-ea5c-4832-b27f-1eb9a11c5822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\StateObject\PlayerState">
+      <UniqueIdentifier>{6a56fb7b-5f52-4ce1-a249-da683181cf73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\WeaponObject">
+      <UniqueIdentifier>{cf2df7ba-44a8-486a-9619-bd94d964be98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\Object\Weapon\Knife">
+      <UniqueIdentifier>{cc264c65-f8df-478a-9bf0-b4290c03ea60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\Object\Weapon\Sniper">
       <UniqueIdentifier>{6f065815-43dc-485c-9f21-5c8c14c838c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Player\Object\ShotGun">
+    <Filter Include="02.GameObject\Player\Object\Weapon\ShotGun">
       <UniqueIdentifier>{b5ae7f6f-0681-45bd-9c60-a7e0fbc22bc1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Player\Object\HandGun">
+    <Filter Include="02.GameObject\Player\Object\Weapon\HandGun">
       <UniqueIdentifier>{68f747a9-1aa9-4395-8e8a-7b3ee8f59f57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster">
+      <UniqueIdentifier>{212b7d12-95f3-495b-87e3-e7af566b68a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Body">
+      <UniqueIdentifier>{4238a945-7e11-4c23-81d5-e4200cd9609d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Weapon">
+      <UniqueIdentifier>{c69cfa14-8fe4-490d-b4a5-b0baf80ef120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\State">
+      <UniqueIdentifier>{7f58b992-1e42-486a-b038-780fcacdbe88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\StateObject\MonState">
+      <UniqueIdentifier>{a0cd18b7-9c95-4b3f-bd30-3d01e0c6baec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -372,14 +408,8 @@
     <ClInclude Include="..\Public\Player_Header.h">
       <Filter>94.LevelHead</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Knife.h">
-      <Filter>02.GameObject\Player\Object\Weapon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Idle_Player.h">
-      <Filter>02.GameObject\Player\State\Idle</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Walk_Player.h">
-      <Filter>02.GameObject\Player\State\Walk</Filter>
+      <Filter>02.GameObject\Player\State\Move\Walk</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Enum.h">
       <Filter>99.Defines</Filter>
@@ -388,28 +418,76 @@
       <Filter>96.SuperClass\StateObject</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Aim_Player.h">
-      <Filter>02.GameObject\Player\State\Aim</Filter>
+      <Filter>02.GameObject\Player\State\Action\Aim</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Guard_Player.h">
-      <Filter>02.GameObject\Player\State\Guard</Filter>
+      <Filter>02.GameObject\Player\State\Action\Guard</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Reload_Player.h">
-      <Filter>02.GameObject\Player\State\Reload</Filter>
+      <Filter>02.GameObject\Player\State\Action\Reload</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Attack_Player.h">
-      <Filter>02.GameObject\Player\State\Attack</Filter>
+      <Filter>02.GameObject\Player\State\Action\Attack</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Sky.h">
       <Filter>02.GameObject\Sky</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Sniper.h">
-      <Filter>02.GameObject\Player\Object\Sniper</Filter>
+      <Filter>02.GameObject\Player\Object\Weapon\Sniper</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ShotGun.h">
-      <Filter>02.GameObject\Player\Object\ShotGun</Filter>
+      <Filter>02.GameObject\Player\Object\Weapon\ShotGun</Filter>
     </ClInclude>
     <ClInclude Include="..\public\HandGun.h">
-      <Filter>02.GameObject\Player\Object\HandGun</Filter>
+      <Filter>02.GameObject\Player\Object\Weapon\HandGun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Idle_Player.h">
+      <Filter>02.GameObject\Player\State\Action\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Struct.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerState.h">
+      <Filter>96.SuperClass\StateObject\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\WeaponObject.h">
+      <Filter>96.SuperClass\WeaponObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Knife.h">
+      <Filter>02.GameObject\Player\Object\Weapon\Knife</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Monster_Normal.h">
+      <Filter>02.GameObject\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Body_NorMon.h">
+      <Filter>02.GameObject\Monster\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\NorMon_Sword.h">
+      <Filter>02.GameObject\Monster\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\NorMon_Shotel.h">
+      <Filter>02.GameObject\Monster\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\NorMon_Halberd.h">
+      <Filter>02.GameObject\Monster\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Attack_NorMon_1.h">
+      <Filter>02.GameObject\Monster\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Chase_NorMon_1.h">
+      <Filter>02.GameObject\Monster\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Damage_NorMon_1.h">
+      <Filter>02.GameObject\Monster\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonState.h">
+      <Filter>96.SuperClass\StateObject\MonState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Scouting_NorMon_1.h">
+      <Filter>02.GameObject\Monster\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Stand_NorMon_1.h">
+      <Filter>02.GameObject\Monster\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -567,41 +645,80 @@
     <ClCompile Include="..\private\Camera_Player.cpp">
       <Filter>02.GameObject\Player\Object\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Knife.cpp">
-      <Filter>02.GameObject\Player\Object\Weapon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Idle_Player.cpp">
-      <Filter>02.GameObject\Player\State\Idle</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Walk_Player.cpp">
-      <Filter>02.GameObject\Player\State\Walk</Filter>
+      <Filter>02.GameObject\Player\State\Move\Walk</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\StateObject.cpp">
       <Filter>96.SuperClass\StateObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Aim_Player.cpp">
-      <Filter>02.GameObject\Player\State\Aim</Filter>
+      <Filter>02.GameObject\Player\State\Action\Aim</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Guard_Player.cpp">
-      <Filter>02.GameObject\Player\State\Guard</Filter>
+      <Filter>02.GameObject\Player\State\Action\Guard</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Reload_Player.cpp">
-      <Filter>02.GameObject\Player\State\Reload</Filter>
+      <Filter>02.GameObject\Player\State\Action\Reload</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Attack_Player.cpp">
-      <Filter>02.GameObject\Player\State\Attack</Filter>
+      <Filter>02.GameObject\Player\State\Action\Attack</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Sky.cpp">
       <Filter>02.GameObject\Sky</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Sniper.cpp">
-      <Filter>02.GameObject\Player\Object\Sniper</Filter>
+      <Filter>02.GameObject\Player\Object\Weapon\Sniper</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ShotGun.cpp">
-      <Filter>02.GameObject\Player\Object\ShotGun</Filter>
+      <Filter>02.GameObject\Player\Object\Weapon\ShotGun</Filter>
     </ClCompile>
     <ClCompile Include="..\private\HandGun.cpp">
-      <Filter>02.GameObject\Player\Object\HandGun</Filter>
+      <Filter>02.GameObject\Player\Object\Weapon\HandGun</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Idle_Player.cpp">
+      <Filter>02.GameObject\Player\State\Action\Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerState.cpp">
+      <Filter>96.SuperClass\StateObject\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\WeaponObject.cpp">
+      <Filter>96.SuperClass\WeaponObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Knife.cpp">
+      <Filter>02.GameObject\Player\Object\Weapon\Knife</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Monster_Normal.cpp">
+      <Filter>02.GameObject\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Body_NorMon.cpp">
+      <Filter>02.GameObject\Monster\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NorMon_Sword.cpp">
+      <Filter>02.GameObject\Monster\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NorMon_Shotel.cpp">
+      <Filter>02.GameObject\Monster\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NorMon_Halberd.cpp">
+      <Filter>02.GameObject\Monster\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Chase_NorMon_1.cpp">
+      <Filter>02.GameObject\Monster\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Scouting_NorMon_1.cpp">
+      <Filter>02.GameObject\Monster\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Damage_NorMon_1.cpp">
+      <Filter>02.GameObject\Monster\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Attack_NorMon_1.cpp">
+      <Filter>02.GameObject\Monster\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonState.cpp">
+      <Filter>96.SuperClass\StateObject\MonState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Stand_NorMon_1.cpp">
+      <Filter>02.GameObject\Monster\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

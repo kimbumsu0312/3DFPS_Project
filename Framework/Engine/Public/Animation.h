@@ -13,7 +13,10 @@ private:
 public:
 	HRESULT						Initialize(const SAVE_ANIM& pAnimation, const vector<class CBone*>& Bones);
 	void						Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta, _bool isLoop, ANIM_STATUS eAnimStatus, _bool* pFinished, const ANIMEFRAME& pAnimFrameData);
+	void						Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta, _bool isLoop, ANIM_STATUS eAnimStatus, _bool* pFinished, const ANIMEFRAME& pAnimFrameData, _uint iLowBonIndex, _bool IsUpper);
+
 	void						Update_TransformationMatrices_Transition(const vector<class CBone*>& Bones, const ANIMEFRAME& pAnimFrameData, _float fRatio);
+	void						Update_TransformationMatrices_Transition(const vector<class CBone*>& Bones, const ANIMEFRAME& pAnimFrameData, _float fRatio, _uint iLowBonIndex, _bool IsUpper);
 
 	void						Reset_Anim();
 private:

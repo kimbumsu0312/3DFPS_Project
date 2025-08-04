@@ -2,7 +2,7 @@
 #include "Aim_Player.h"
 #include "Player.h"
 
-CAim_Player::CAim_Player() : CStateObject()
+CAim_Player::CAim_Player()
 {
 }
 
@@ -13,52 +13,35 @@ HRESULT CAim_Player::Initalize(void* pArg)
     return S_OK;
 }
 
-void CAim_Player::Enter()
+void CAim_Player::Enter(const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
 {
-    m_eAnimState = STATE_ANIM::START;
+    m_eAnimState = STATE_ANIM::LOOP;
 
-    *m_pAnimTag = "Aim_Start";
-    *m_pIsAnimLoop = false;
+    *m_pAnimTag = "Aim_Loop";
+    *m_pIsAnimLoop = true;
 }
 
-void CAim_Player::Update(_float fDeltatime)
+void CAim_Player::Update(_float fDeltatime, const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
 {
-    if (*m_pIsAnimFinsh && m_eAnimState == STATE_ANIM::END)
-    {
-        *m_pState = PLAYER_STATE::IDLE;
+    if(pAttackState.isGuard)
+        *m_pStateTag = TEXT("Guard");
+    else if (pAttackState.isReload)
+        *m_pStateTag = TEXT("Reload");
+    else if (pAttackState.isAttack)
+        *m_pStateTag = TEXT("Attack");
+    else if (!pAttackState.isAim)
         *m_pStateTag = TEXT("Idle");
-        return;
-    }
-
-    if (*m_pIsAnimFinsh && m_eAnimState == STATE_ANIM::START)
-    {
-        m_eAnimState = STATE_ANIM::LOOP;
-    }
-    if (*m_pIsAnimFinsh && m_eAnimState == STATE_ANIM::LOOP)
+    else
     {
         *m_pAnimTag = "Aim_Loop";
         *m_pIsAnimLoop = true;
     }
-    KeyInput();
+
 }
 
 void CAim_Player::Exit()
 {
     m_eAnimState == STATE_ANIM::END;
-}
-
-void CAim_Player::KeyInput()
-{
-    if (m_eAnimState == STATE_ANIM::END || m_eAnimState == STATE_ANIM::START)
-        return;
-
-    if (m_pGameInstance->IsMouseUp(MOUSEKEYSTATE::RB))
-    {
-        m_eAnimState = STATE_ANIM::END;
-
-        *m_pAnimTag = "Aim_End";
-        *m_pIsAnimLoop = false;
-    }
 }
 
 CAim_Player* CAim_Player::Create(void* pArg)

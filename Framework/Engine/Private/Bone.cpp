@@ -15,6 +15,15 @@ HRESULT CBone::Initialize(const SAVE_BONE& pBone)
     return S_OK;
 }
 
+void CBone::Set_RotBonePitch(_float fPitch, _bool IsTrans)
+{
+    _matrix matPitch = XMMatrixRotationX(fPitch);
+    if (IsTrans)
+       XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMLoadFloat4x4(&m_CombinedTransformationMatrix) * matPitch);
+    else
+       XMStoreFloat4x4(&m_TransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * matPitch);
+}
+
 void CBone::Update_CombinedTransformationMatrix(const _float4x4& PreTransformMatrix, const vector<CBone*>& Bones)
 {
     if (-1 == m_iParentBoneIndex)

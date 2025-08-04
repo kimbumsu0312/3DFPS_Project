@@ -89,14 +89,77 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, 
 _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex)
 {
     _bool bisFinished = false;
+    _vector vCombinedPos = {};
+    if (m_fTransitionTime < m_fTransitionDuration)
+    {
+         m_fTransitionTime += 0.016;
+        _float fRatio = min(m_fTransitionTime / m_fTransitionDuration, 1.0f);
+       
+         m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices_Transition(m_Bones, pAnimFrameData, fRatio);
+        for (_int i = 0; i < m_Bones.size(); ++i)
+        {
+            if (m_bIsUpperSet)
+            {
+                if (m_bIsUpperSet && m_iUpperBoneIndex == i)
+                {
+                    m_Bones[i]->Set_RotBonePitch(m_fPitch, true);
+                }
+            }
+            m_Bones[i]->Update_CombinedTransformationMatrix_Transition(m_PreTransformMatrix, m_Bones);
+            if (RootNodeIndex == i)
+            {
+                vCombinedPos = m_Bones[i]->Get_CombinedTransformationMatrix().r[3];
+                m_Bones[i]->Set_CombindMationMatinMatrix_PosReset();
+            }
+        }
+    }
+    else
+    {
+        m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &bisFinished, pAnimFrameData);
+
+
+        m_Bones[0]->Set_CombindMationMatinMatrix_PosReset();
+        for (_int i = 0; i < m_Bones.size(); ++i)
+        {
+            if (m_bIsUpperSet && m_iUpperBoneIndex == i)
+            {
+                m_Bones[i]->Set_RotBonePitch(m_fPitch, false);
+            }
+            m_Bones[i]->Update_CombinedTransformationMatrix(m_PreTransformMatrix, m_Bones);
+
+            if (RootNodeIndex == i)
+            {
+                vCombinedPos = m_Bones[i]->Get_CombinedTransformationMatrix().r[3];
+                m_Bones[i]->Set_CombindMationMatinMatrix_PosReset();
+            }
+        }
+    }
+
+    XMStoreFloat3(&m_vMovePos, vCombinedPos - m_vPreRootPos);
+
+    //if (bisFinished)
+    //{
+    //    m_fTransitionTime = 0.f;
+    //    m_vMovePos = { 0.f, 0.f, 0.f };
+    //    m_vPreRootPos = { 0.f, 0.f, 0.f };
+    //}
+    return bisFinished;
+    
+}
+
+_bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex, _int iLowBonIndex, const ANIMEFRAME& pLowFrameData)
+{
+    _bool bisFinished = false;
 
     if (m_fTransitionTime < m_fTransitionDuration)
     {
         m_fTransitionTime += fTimeDelta;
         _float fRatio = min(m_fTransitionTime / m_fTransitionDuration, 1.f);
+
         
- 
-        m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices_Transition(m_Bones, pAnimFrameData, fRatio);
+        m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices_Transition(m_Bones, pAnimFrameData, fRatio, iLowBonIndex, true);
+        m_Animations[m_iLowAnimIndex]->Update_TransformationMatrices_Transition(m_Bones, pLowFrameData, fRatio, iLowBonIndex, false);
+
         for (_int i = 0; i < m_Bones.size(); ++i)
         {
             m_Bones[i]->Update_CombinedTransformationMatrix_Transition(m_PreTransformMatrix, m_Bones);
@@ -104,11 +167,12 @@ _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const A
             {
                 m_Bones[i]->Set_CombindMationMatinMatrix_PosReset();
             }
-         }
+        }
     }
     else
     {
-        m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &bisFinished, pAnimFrameData);
+        m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &bisFinished, pAnimFrameData, iLowBonIndex, true);
+        m_Animations[m_iLowAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &bisFinished, pLowFrameData, iLowBonIndex, false);
 
         for (_int i = 0; i < m_Bones.size(); ++i)
         {
@@ -121,9 +185,8 @@ _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const A
     }
 
     return bisFinished;
-    
-}
 
+}
 _float4x4* CModel::Get_BoneMatrix(const _wstring pBoneName)
 {
     auto iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone) {
@@ -148,8 +211,15 @@ void CModel::Set_Animations(_uint AnimiIndex, _bool IsLoop)
     m_fTransitionTime = 0.f;
     for (auto Anim : m_Animations)
         Anim->Reset_Anim();
+
 }
 
+void CModel::Set_Upper(_int BoneIndex, _float fPitch, _bool IsUpperSet)
+{
+    m_iUpperBoneIndex = BoneIndex;
+    m_fPitch = fPitch;
+    m_bIsUpperSet = IsUpperSet;
+}
 
 HRESULT CModel::Ready_Meshes(const SAVE_MODEL& pModelData)
 {

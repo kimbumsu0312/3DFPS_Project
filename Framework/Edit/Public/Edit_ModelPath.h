@@ -5,8 +5,8 @@ namespace Edit
 {
 	const char* g_ModelPath[] = {
 		"Prototype_Component_Model_Fiona",
-		"Prototype_Component_Model_ForkLift",
-		"Prototype_Component_Model_Wall1",
+		"Prototype_Component_Model_Shotel",
+		"Prototype_Component_Model_BadRoom",
 		"Prototype_Component_Model_Wall2",
 		"Prototype_Component_Model_Wall3",
 		"Prototype_Component_Model_Player",

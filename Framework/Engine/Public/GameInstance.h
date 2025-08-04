@@ -142,6 +142,11 @@ public:
 
 	void						Clear_Object();
 #pragma endregion
+
+#pragma region Font_Manager
+	HRESULT						Add_Font(const _wstring& strFontTag, const _tchar* pFontFilePath);
+	void						DrawText(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f), _float fRadian = 0.f, const _float2& vOrigin = _float2(0.f, 0.f), const _float2& vScale = _float2(1.f, 1.f));
+#pragma endregion 
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CInput_Device*		m_pInput_Device = { nullptr };
@@ -156,6 +161,7 @@ private:
 	class CGarbage_Collector*	m_pGarbage_Collector = { nullptr };
 	class CPicking*				m_pPicking = { nullptr };
 	class CSaveLoader*			m_pSaveLoader = { nullptr };
+	class CFont_Manager*		m_pFont_Manager = { nullptr };
 public:
 	void						Release_Engine();
 	virtual void				Free() override;

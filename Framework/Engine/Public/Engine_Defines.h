@@ -17,6 +17,10 @@
 #include "DirectXTK/DDSTextureLoader.h"
 #include "DirectXTK/WICTextureLoader.h"
 
+//폰트 렌더 헤더
+#include "DirectXTK/SpriteBatch.h"
+#include "DirectXTK/SpriteFont.h"
+
 using namespace DirectX;
 
 //Json 로드

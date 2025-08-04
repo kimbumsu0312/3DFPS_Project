@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "ShotGun.h"
 
-CShotGun::CShotGun(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CPartObject{ pDevice, pContext }
+CShotGun::CShotGun(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CWeaponObject{ pDevice, pContext }
 {
 }
 
-CShotGun::CShotGun(const CShotGun& Prototype) : CPartObject(Prototype)
+CShotGun::CShotGun(const CShotGun& Prototype) : CWeaponObject(Prototype)
 {
 }
 
@@ -16,9 +16,6 @@ HRESULT CShotGun::Initialize_Prototype()
 
 HRESULT CShotGun::Initialize(void* pArg)
 {
-    SHOTGUN_DESC* pDesc = static_cast<SHOTGUN_DESC*>(pArg);
-    m_pParentState = pDesc->pState;
-    m_pSocketMatrix = pDesc->pSocketMatrix;
     m_AnimTag = "Idle_Loop";
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
@@ -26,9 +23,9 @@ HRESULT CShotGun::Initialize(void* pArg)
     if (FAILED(Ready_Components()))
         return E_FAIL;
 
-    m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-0.02f, -0.02f, -0.025f, 1.f));
+    m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-0.09f, -0.03f, -0.035f, 1.f));
+    m_pTransformCom->Rotation_All(_float3{ XMConvertToRadians(-78.f), XMConvertToRadians(0.f), XMConvertToRadians(-90.f) });
 
-    m_pTransformCom->Rotation_All(_float3{ XMConvertToRadians(120.f), XMConvertToRadians(-180.f), XMConvertToRadians(0.f) });
     m_pTransformCom->Scale(_float3{ 1.f, 1.f, 1.f });
     return S_OK;
 }
@@ -39,11 +36,11 @@ void CShotGun::Priority_Update(_float fTimeDelta)
 
 void CShotGun::Update(_float fTimeDelta)
 {
-    if (*m_pParentState == PLAYER_STATE::ATTACK)
+    if (*m_pCulStateTag == TEXT("Attack"))
     {
         m_pAnimCom->Player_Animation(0, "Aimshot", false, m_pModelCom, fTimeDelta, 0);
     }
-    else if (*m_pParentState == PLAYER_STATE::RELOAD)
+    else if (*m_pCulStateTag == TEXT("Reload"))
     {
         m_pAnimCom->Player_Animation(0, "Reload_Loop", false, m_pModelCom, fTimeDelta, 0);
     }
@@ -51,10 +48,6 @@ void CShotGun::Update(_float fTimeDelta)
     {
         m_pAnimCom->Player_Animation(0, "Idle_Loop", true, m_pModelCom, fTimeDelta, 0);
     }
-}
-
-void CShotGun::Late_Update(_float fTimeDelta)
-{
     _matrix     BoneMatrix = XMLoadFloat4x4(m_pSocketMatrix);
     _matrix     ParentMatrix = XMLoadFloat4x4(m_pParentMatrix);
     _matrix     WorldMatrix = m_pTransformCom->Get_WorldMatrix();
@@ -65,8 +58,14 @@ void CShotGun::Late_Update(_float fTimeDelta)
     }
     XMStoreFloat4x4(&m_CombinedWorldMatrix, WorldMatrix * BoneMatrix * ParentMatrix);
 
+
+}
+
+void CShotGun::Late_Update(_float fTimeDelta)
+{
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
         return;
+
 }
 
 HRESULT CShotGun::Render()

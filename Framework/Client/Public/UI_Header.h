@@ -1,4 +1,5 @@
-#pragma ones
+#pragma once
+
 #include "Aim_Pistol.h"
 #include "Aim_Shotgun.h"
 #include "Aim_Line.h"

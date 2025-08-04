@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "HandGun.h"
 #include "Client_Enum.h"
-CHandGun::CHandGun(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CPartObject{ pDevice, pContext }
+CHandGun::CHandGun(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CWeaponObject{ pDevice, pContext }
 {
 }
 
-CHandGun::CHandGun(const CHandGun& Prototype) : CPartObject(Prototype)
+CHandGun::CHandGun(const CHandGun& Prototype) : CWeaponObject(Prototype)
 {
 }
 
@@ -16,9 +16,6 @@ HRESULT CHandGun::Initialize_Prototype()
 
 HRESULT CHandGun::Initialize(void* pArg)
 {
-    HANDGUN_DESC* pDesc = static_cast<HANDGUN_DESC*>(pArg);
-    m_pParentState = pDesc->pState;
-    m_pSocketMatrix = pDesc->pSocketMatrix;
     m_AnimTag = "Idle";
 
     if (FAILED(__super::Initialize(pArg)))
@@ -27,9 +24,8 @@ HRESULT CHandGun::Initialize(void* pArg)
     if (FAILED(Ready_Components()))
         return E_FAIL;
 
-    m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-0.015f, -0.03f, -0.01f, 1.f));
-
-    m_pTransformCom->Rotation_All(_float3{ XMConvertToRadians(110.0f), XMConvertToRadians(180.f), XMConvertToRadians(50.f) });
+    m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-0.09f, -0.035f, -0.02f, 1.f));
+    m_pTransformCom->Rotation_All(_float3{ XMConvertToRadians(-100.0f), XMConvertToRadians(0.f), XMConvertToRadians(-80.f) });
     m_pTransformCom->Scale(_float3{ 1.f, 1.f, 1.f });
 
     return S_OK;
@@ -41,11 +37,11 @@ void CHandGun::Priority_Update(_float fTimeDelta)
 
 void CHandGun::Update(_float fTimeDelta)
 {
-    if (*m_pParentState == PLAYER_STATE::ATTACK)
+    if (*m_pCulStateTag == TEXT("Attack"))
     {
         m_pAnimCom->Player_Animation(0, "Aim_Shot", false, m_pModelCom, fTimeDelta, 0);
     }
-    else if (*m_pParentState == PLAYER_STATE::RELOAD)
+    else if (*m_pCulStateTag == TEXT("Reload"))
     { 
         m_pAnimCom->Player_Animation(0, "Reload", false, m_pModelCom, fTimeDelta, 0);
     }
@@ -53,11 +49,6 @@ void CHandGun::Update(_float fTimeDelta)
     {
         m_pAnimCom->Player_Animation(0, "Idle", true, m_pModelCom, fTimeDelta, 0);
     }
-
-}
-
-void CHandGun::Late_Update(_float fTimeDelta)
-{
     _matrix     BoneMatrix = XMLoadFloat4x4(m_pSocketMatrix);
     _matrix     ParentMatrix = XMLoadFloat4x4(m_pParentMatrix);
     _matrix     WorldMatrix = m_pTransformCom->Get_WorldMatrix();
@@ -67,6 +58,10 @@ void CHandGun::Late_Update(_float fTimeDelta)
         BoneMatrix.r[i] = XMVector3Normalize(BoneMatrix.r[i]);
     }
     XMStoreFloat4x4(&m_CombinedWorldMatrix, WorldMatrix * BoneMatrix * ParentMatrix);
+}
+
+void CHandGun::Late_Update(_float fTimeDelta)
+{
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
         return;
 }

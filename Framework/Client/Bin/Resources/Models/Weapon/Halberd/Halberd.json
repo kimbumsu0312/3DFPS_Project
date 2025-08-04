@@ -1,0 +1,95 @@
+{
+    "Data_Path": "../Bin/Resources/Models/Weapon/Halberd/HalberdData.dat",
+    "MeshMaterial": [
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Weapon/Halberd/it01_013_Blade_Halberd_A_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Weapon/Halberd/it01_013_Blade_Halberd_A_ATOC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        }
+    ],
+    "Model_name": "Halberd",
+    "Model_type": 0,
+    "iNumMaterials": 1,
+    "iNumMeshes": 1
+}

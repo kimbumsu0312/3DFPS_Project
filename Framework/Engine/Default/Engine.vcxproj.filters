@@ -139,6 +139,21 @@
     <Filter Include="97.ShaderFiles">
       <UniqueIdentifier>{c09a625f-7062-42af-a4ec-59231599357f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\08.Fonts">
+      <UniqueIdentifier>{8a12c641-d5b8-40c3-aee5-fa8644783802}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\08.Fonts\Manager">
+      <UniqueIdentifier>{2642f45d-79cf-4def-a1c9-be595a13303f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Component\VIBuffer\Cell">
+      <UniqueIdentifier>{259d44ac-cc87-4b25-9a43-bc62eaf522e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Component\Navigation">
+      <UniqueIdentifier>{ba03b56a-323e-4f48-a9c4-52b09ab8f602}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Component\Navigation\Cell">
+      <UniqueIdentifier>{bd7b7738-d50a-4805-a7fc-2bfd8db4e1d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -282,6 +297,24 @@
     <ClInclude Include="..\public\VIBuffer_Cube.h">
       <Filter>01.Utility\03.Component\VIBuffer\Cube</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\CustomFont.h">
+      <Filter>01.Utility\08.Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Font_Manager.h">
+      <Filter>01.Utility\08.Fonts\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PoolingContainer.h">
+      <Filter>01.Utility\02.GameObject\ContainerObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Cell.h">
+      <Filter>01.Utility\03.Component\VIBuffer\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Cell.h">
+      <Filter>01.Utility\03.Component\Navigation\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Navigation.h">
+      <Filter>01.Utility\03.Component\Navigation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -407,10 +440,33 @@
     <ClCompile Include="..\private\VIBuffer_Cube.cpp">
       <Filter>01.Utility\03.Component\VIBuffer\Cube</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\CustomFont.cpp">
+      <Filter>01.Utility\08.Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Font_Manager.cpp">
+      <Filter>01.Utility\08.Fonts\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PoolingContainer.cpp">
+      <Filter>01.Utility\02.GameObject\ContainerObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Cell.cpp">
+      <Filter>01.Utility\03.Component\VIBuffer\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Cell.cpp">
+      <Filter>01.Utility\03.Component\Navigation\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Navigation.cpp">
+      <Filter>01.Utility\03.Component\Navigation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\ShaderFiles\Engine_Shader_Defines.hlsli">
       <Filter>97.ShaderFiles</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Engine_Shader_Cell.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

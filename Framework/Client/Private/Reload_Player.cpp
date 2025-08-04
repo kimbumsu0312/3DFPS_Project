@@ -2,7 +2,7 @@
 #include "Reload_Player.h"
 #include "Player.h"
 
-CReload_Player::CReload_Player() : CStateObject()
+CReload_Player::CReload_Player()
 {
 }
 
@@ -13,7 +13,7 @@ HRESULT CReload_Player::Initalize(void* pArg)
     return S_OK;
 }
 
-void CReload_Player::Enter()
+void CReload_Player::Enter(const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
 {
     if (*m_pWeaponState == PLAYER_WEAPON::SHOTGUN)
     {
@@ -26,59 +26,48 @@ void CReload_Player::Enter()
         *m_pAnimTag = "Reload";
     }
     m_eAnimState = STATE_ANIM::START;
-    
+
     *m_pIsAnimLoop = false;
 }
 
-void CReload_Player::Update(_float fDeltatime)
+void CReload_Player::Update(_float fDeltatime, const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
 {
-
-    if (*m_pIsAnimFinsh && m_eReload_Type == RELOAD_TYPE::MAGAZINE)
+    if ( m_eReload_Type == RELOAD_TYPE::MAGAZINE)
     {
-        *m_pState = PLAYER_STATE::IDLE;
-        *m_pStateTag = TEXT("Idle");
+        if (*m_pIsAnimFinsh)
+        {
+            if (pAttackState.isAim)
+                *m_pStateTag = TEXT("Aim");
+            else
+                *m_pStateTag = TEXT("Idle");
+        }
         return;
     }
-    
-    if(m_eReload_Type == RELOAD_TYPE::BULLET)
+    else if (m_eReload_Type == RELOAD_TYPE::BULLET)
     {
-        if (m_eAnimState == STATE_ANIM::END && *m_pIsAnimFinsh)
+        if (m_eAnimState == STATE_ANIM::START && *m_pIsAnimFinsh)
         {
-            *m_pState = PLAYER_STATE::IDLE;
-            *m_pStateTag = TEXT("Idle");
-            return;
-        }
-
-        if (*m_pIsAnimFinsh && m_eAnimState == STATE_ANIM::START)
             m_eAnimState = STATE_ANIM::LOOP;
-
-        if(m_eAnimState == STATE_ANIM::LOOP)
             *m_pAnimTag = "Reload_Loop";
-
-        KeyInput();
+        }
+        else if (m_eAnimState == STATE_ANIM::LOOP && *m_pIsAnimFinsh)
+        {
+            m_eAnimState = STATE_ANIM::END;
+            *m_pAnimTag = "Reload_End";
+        }
+        else if (m_eAnimState == STATE_ANIM::END && *m_pIsAnimFinsh)
+        {
+            if (pAttackState.isAim)
+                *m_pStateTag = TEXT("Aim");
+            else
+                *m_pStateTag = TEXT("Idle");
+        }
     }
-
 }
 
 void CReload_Player::Exit()
 {
     m_eAnimState == STATE_ANIM::END;
-}
-
-void CReload_Player::KeyInput()
-{
-    if (m_eAnimState == STATE_ANIM::END || m_eAnimState == STATE_ANIM::START)
-        return;
-
-    if (m_pGameInstance->IsKeyHold(DIK_R))
-    {
-        m_eAnimState = STATE_ANIM::END;
-
-        *m_pAnimTag = "Reload_End";
-        *m_pIsAnimLoop = false;
-    }
-
-
 }
 
 CReload_Player* CReload_Player::Create(void* pArg)

@@ -17,14 +17,18 @@ public:
 public:
 	HRESULT							Bind_Materials(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _int iTexIndex, _uint iIndex);
 	HRESULT							Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
+	
 	_bool							Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex);
+	_bool							Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex, _int iLowBonIndex, const ANIMEFRAME& pLowFrameData);
+
 
 	_uint							Get_NumMeshes() const { return m_iNumMeshes; }
 	_float4x4*						Get_BoneMatrix(const _wstring pBoneName);
 	_float3*						Get_PtrMovePos() {return &m_vMovePos;}
 
 	void							Set_Animations(_uint AnimiIndex, _bool IsLoop);
-
+	void							Set_LowAnimations(_uint AnimiIndex) { m_iLowAnimIndex = AnimiIndex; }
+	void							Set_Upper(_int BoneIndex, _float fPeach, _bool IsUpperSet);
 private:
 
 	MODELTYPE						m_eModelType = {};
@@ -38,6 +42,7 @@ private:
 	vector<class CBone*>			m_Bones;
 
 	_uint							m_iCurrentAnimIndex = { 0 };
+	_uint							m_iLowAnimIndex = {0};
 	_uint							m_iNumAnimations = { 0 };
 	vector<class CAnimation*>		m_Animations;
 
@@ -47,6 +52,10 @@ private:
 
 	_float							m_fTransitionTime = { 1.f };
 	_float							m_fTransitionDuration = { 0.2f };
+
+	_bool							m_bIsUpperSet = { false };
+	_float							m_fPitch = {};
+	_int							m_iUpperBoneIndex = {};
 
 private:
 	HRESULT							Ready_Meshes(const SAVE_MODEL& pModelData);

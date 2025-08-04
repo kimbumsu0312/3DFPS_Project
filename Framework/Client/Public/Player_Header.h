@@ -1,4 +1,4 @@
-#pragma ones
+#pragma once
 
 #include "Player.h"
 #include "Body_Player.h"

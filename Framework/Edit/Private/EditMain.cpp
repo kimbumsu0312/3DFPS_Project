@@ -100,12 +100,13 @@ HRESULT CEditMain::Ready_Prototype_ForStatic()
 	//	return E_FAIL;
 	
 	//m_pGameInstance->Load_Objcet("../Bin/Data/Charter/Player.json", ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Normal_Mon_1"));
-	//Desc.szModelName = "Wall1";
-	//Desc.szModelPath = "Prototype_Component_Model_Wall1";
-	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Wall1"),
-	//	CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/Map/Wall/Wall1/Wall1.fbx", PreTransformMatrix, &Desc))))
-	//	return E_FAIL;
+	
+	Desc.szModelName = "BadRoom";
+	Desc.szModelPath = "Prototype_Component_Model_BadRoom";
+	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_BadRoom"),
+		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/Map/Room/badroom/badroom.fbx", PreTransformMatrix, &Desc))))
+		return E_FAIL;
 
 	//Desc.szModelName = "Wall2";
 	//Desc.szModelPath = "Prototype_Component_Model_Wall2";
@@ -121,11 +122,11 @@ HRESULT CEditMain::Ready_Prototype_ForStatic()
 	//	CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/Map/Wall/Wall3/Wall3.fbx", PreTransformMatrix, &Desc))))
 	//	return E_FAIL;
 
-	//Desc.szModelName = "ForkLift";
-	//Desc.szModelPath = "Prototype_Component_Model_ForkLift";
-	//PreTransformMatrix = XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
- // 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_ForkLift"),
-	//	CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/ForkLift/Boat.fbx", PreTransformMatrix, &Desc))))
+	//Desc.szModelName = "Shotel";
+	//Desc.szModelPath = "Prototype_Component_Model_Shotel";
+	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+ // 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Shotel"),
+	//	CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::NONANIM, "../Bin/Resources/Models/Weapon/Shotel/Shotel.fbx", PreTransformMatrix, &Desc))))
 	//	return E_FAIL;
 
 	//Desc.szModelName = "Fiona";
@@ -138,40 +139,12 @@ HRESULT CEditMain::Ready_Prototype_ForStatic()
 	//m_pGameInstance->Load_Objcet("../Bin/Data/Charter/Fiona.json", ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Fiona"));
 	//m_pGameInstance->Load_Objcet("../Bin/Data/Object/ForkLift.json", ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Fiona2"));
 
-	Desc.szModelName = "Player";
-	Desc.szModelPath = "Prototype_Component_Model_Player";
-	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Player"),
-		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/Player/Player.fbx", PreTransformMatrix, &Desc))))
-		return E_FAIL;
-
-	//Desc.szModelName = "Knife";
-	//Desc.szModelPath = "Prototype_Component_Model_Knife";
-	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Knife"),
-	//	CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/Knife/Knife.fbx", PreTransformMatrix, &Desc))))
+	//Desc.szModelName = "Player";
+	//Desc.szModelPath = "Prototype_Component_Model_Player";
+	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Player"),
+	//	CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/Player/Player.fbx", PreTransformMatrix, &Desc))))
 	//	return E_FAIL;
-
-	//Desc.szModelName = "HandGun";
-	//Desc.szModelPath = "Prototype_Component_Model_HandGun";
-	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_HandGun"),
-	//	CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/HandGun/HandGun.fbx", PreTransformMatrix, &Desc))))
-	//	return E_FAIL;
-
-	//Desc.szModelName = "ShotGun";
-	//Desc.szModelPath = "Prototype_Component_Model_ShotGun";
-	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_ShotGun"),
-	//	CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/ShotGun/ShotGun.fbx", PreTransformMatrix, &Desc))))
-	//	return E_FAIL;
-
-	Desc.szModelName = "Sniper";
-	Desc.szModelPath = "Prototype_Component_Model_Sniper";
-	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Sniper"),
-		CEdit_Model::Create(m_pDevice, m_pContext, MODELTYPE::ANIM, "../Bin/Resources/Models/Sniper/Sniper.fbx", PreTransformMatrix, &Desc))))
-		return E_FAIL;
 
 	/* Prototype_GameObject_Model */
 

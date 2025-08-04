@@ -91,7 +91,6 @@ HRESULT CSaveLoader::File_Save_AnimData(string szFilename, const vector<vector<S
 {
 	string FilePath = "../Bin/Data/AnimData/" + szFilename + ".json";
 
-
 	json jAnim;
 
 	for (auto& Anim : AnimDatas)
@@ -456,12 +455,12 @@ HRESULT CSaveLoader::Load_Level(string FilePath, _uint LevelIndex, _wstring szLa
 	return S_OK;
 }
 
-HRESULT CSaveLoader::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _wstring szPrototypeTag)
+HRESULT CSaveLoader::Load_Objcet(string szFilePath, _uint iPrototypeLevelIndex, _wstring szPrototypeTag)
 {
 	string DataFilePath = {};
 	SAVE_MODEL ModelData = {};
 	
-	ifstream file(FilePath);
+	ifstream file(szFilePath);
 	if (!file.is_open())
 	{
 		MSG_BOX(TEXT("불러오기 실패"));
@@ -500,7 +499,7 @@ HRESULT CSaveLoader::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _w
 	}
 	
 
-	ifstream DatFile(DataFilePath, ios::binary);
+ 	ifstream DatFile(DataFilePath, ios::binary);
 	if (!DatFile)
 	{
 		MSG_BOX(TEXT("데이터 파일 불러오기 실패"));
@@ -619,7 +618,7 @@ HRESULT CSaveLoader::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _w
 
 	DatFile.close();
 
- 	if (FAILED(m_pGameInstance->Add_Prototype(iPrototypeLevelIndex, szPrototypeTag, CModel::Create(m_pDevice, m_pContext, ModelData))))
+     	if (FAILED(m_pGameInstance->Add_Prototype(iPrototypeLevelIndex, szPrototypeTag, CModel::Create(m_pDevice, m_pContext, ModelData))))
 	{
 		MSG_BOX(TEXT("모델 데이터 로딩 실패"));
 		return E_FAIL;

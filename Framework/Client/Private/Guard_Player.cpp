@@ -2,7 +2,7 @@
 #include "Guard_Player.h"
 #include "Player.h"
 
-CGuard_Player::CGuard_Player() : CStateObject()
+CGuard_Player::CGuard_Player()
 {
 }
 
@@ -13,62 +13,32 @@ HRESULT CGuard_Player::Initalize(void* pArg)
     return S_OK;
 }
 
-void CGuard_Player::Enter()
+void CGuard_Player::Enter(const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
 {
-    m_eAnimState = STATE_ANIM::START;
+    m_eAnimState = STATE_ANIM::LOOP;
 
-    *m_pAnimTag = "Guard_Start";
-    *m_pIsAnimLoop = false;
+    *m_pAnimTag = "Guard_Loop";
+    *m_pIsAnimLoop = true;
 }
 
-void CGuard_Player::Update(_float fDeltatime)
+void CGuard_Player::Update(_float fDeltatime, const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
 {
-    if (*m_pIsAnimFinsh && m_eAnimState == STATE_ANIM::END)
-    {
-        *m_pState = PLAYER_STATE::IDLE;
+    if (!pAttackState.isGuard && pAttackState.isAim)
+        *m_pStateTag = TEXT("Aim");
+    else if(!pAttackState.isGuard)
         *m_pStateTag = TEXT("Idle");
-        return;
-    }
-
-    if (*m_pIsAnimFinsh && m_eAnimState == STATE_ANIM::START)
+    else
     {
-        m_eAnimState = STATE_ANIM::LOOP;
-    }
-    if (*m_pIsAnimFinsh && m_eAnimState == STATE_ANIM::LOOP)
-    {
-        if (m_pGameInstance->IsKeyHold(DIK_W) || m_pGameInstance->IsKeyHold(DIK_A) || m_pGameInstance->IsKeyHold(DIK_S) || m_pGameInstance->IsKeyHold(DIK_D))
-        {
+        if(pMoveState.isMoveB || pMoveState.isMoveF || pMoveState.isMoveL || pMoveState.isMoveR)
             *m_pAnimTag = "Guard_Walk";
-            *m_pIsAnimLoop = true;
-        }
         else
-        {
             *m_pAnimTag = "Guard_Loop";
-            *m_pIsAnimLoop = true;
-        }
     }
-    KeyInput();
 }
 
 void CGuard_Player::Exit()
 {
     m_eAnimState == STATE_ANIM::END;
-}
-
-void CGuard_Player::KeyInput()
-{
-    if (m_eAnimState == STATE_ANIM::END || m_eAnimState == STATE_ANIM::START)
-        return;
-
-    if (m_pGameInstance->IsKeyUp(DIK_E))
-    {
-        m_eAnimState = STATE_ANIM::END;
-
-        *m_pAnimTag = "Guard_End";
-        *m_pIsAnimLoop = false;
-    }
-
-
 }
 
 CGuard_Player* CGuard_Player::Create(void* pArg)

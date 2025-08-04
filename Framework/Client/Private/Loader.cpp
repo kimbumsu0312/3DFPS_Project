@@ -7,6 +7,13 @@
 
 #include "UI_Header.h"
 #include "Player_Header.h"
+
+#include "Monster_Normal.h"
+#include "Body_NorMon.h"
+#include "NorMon_Sword.h"
+#include "NorMon_Halberd.h"
+#include "NorMon_Shotel.h"
+
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_pDevice{ pDevice }, m_pContext { pContext }, m_pGameInstance { CGameInstance::GetInstance()}
 {
 	Safe_AddRef(m_pGameInstance);
@@ -126,24 +133,39 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Cube"),
 		CVIBuffer_Cube::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-	/* Player_Model_Prototype*/
+
+#pragma region Player_Model
+	/* Prototype_Model_Player*/
     if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Player/Player.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Player"))))
 		return E_FAIL;
-	/* Player_Model_Knife*/
+	/* Prototype_Model_Knife*/
 	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Knife/Knife.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Knife"))))
 		return E_FAIL;
-	/* Player_Model_HandGun*/
+	/* Prototype_Model_HandGun*/
 	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/HandGun/HandGun.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_HandGun"))))
 		return E_FAIL;
-	/* Player_Model_ShotGun*/
+	/* Prototype_Model_ShotGun*/
 	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/ShotGun/ShotGun.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_ShotGun"))))
 		return E_FAIL;
-	/* Player_Model_Sniper*/
+	/* Prototype_Model_Sniper*/
 	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Sniper/Sniper.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Sniper"))))
 		return E_FAIL;
+#pragma endregion
 
-
-
+#pragma region Mon_Normal_Model
+	/* Prototype_Model_Normal_Mon_1*/
+  	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Normal_Mon_1/Normal_Mon_1.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Normal_Mon_1"))))
+		return E_FAIL;
+	/* Prototype_Model_Halberd*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Weapon/Halberd/Halberd.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Halberd"))))
+		return E_FAIL;
+	/* Prototype_Model_Shotel*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Weapon/Shotel/Shotel.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Shotel"))))
+		return E_FAIL;
+	/* Prototype_Model_Sword*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Weapon/Sword/Sword.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Sword"))))
+		return E_FAIL;
+#pragma endregion
 
 	lstrcpy(m_szLoadingText, TEXT("쉐이더를 로딩중입니다."));
 	/* Prototype_Component_Shader_VtxNorTex */
@@ -197,6 +219,29 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CHandGun::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 #pragma endregion
+
+#pragma region Monster_Object
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1"),
+		CMonster_Normal::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Monster_Normal_1"),
+		CBody_NorMon::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Monster_Normal_1_Sword"),
+		CNormon_Sword::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Monster_Normal_1_Halberd"),
+		CNormon_Halberd::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Monster_Normal_1_Shotel"),
+		CNormon_Shotel::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+#pragma endregion
+
 #pragma region UI_Object
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Inventroy"),
 		CInventory::Create(m_pDevice, m_pContext))))

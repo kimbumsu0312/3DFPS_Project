@@ -1,21 +1,15 @@
 #pragma once
-#include "PartObject.h"
+#include "WeaponObject.h"
 
 NS_BEGIN(Engine)
 class CShader;
 class CModel;
+class CAnimatio_Controller;
 NS_END
 
 NS_BEGIN(Client)
-class CHandGun final : public CPartObject
+class CHandGun final : public CWeaponObject
 {
-public:
-	typedef struct tagWeaponHandGunDesc : public CPartObject::PARTOBJECT_DESC
-	{
-		const _float4x4* pSocketMatrix = { nullptr };
-		_uint* pState = { nullptr };
-	}HANDGUN_DESC;
-
 private:
 	CHandGun(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CHandGun(const CHandGun& Prototype);
@@ -33,11 +27,8 @@ private:
 	CShader*				m_pShaderCom = { nullptr };
 	CModel*					m_pModelCom = { nullptr };
 	CAnimatio_Controller*	m_pAnimCom = { nullptr };
-
-private:
-	const _float4x4*		m_pSocketMatrix = { nullptr };
-	_uint*					m_pParentState = { nullptr };
 	string					m_AnimTag = {};
+
 private:
 	HRESULT					Ready_Components();
 	HRESULT					Bind_ShaderResources();

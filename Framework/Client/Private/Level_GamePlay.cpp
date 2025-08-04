@@ -35,34 +35,6 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->IsKeyDown(DIK_TAB) && !m_bInvenOpen)
-	{
-		m_pGameInstance->Publish(Event_Inventory_Open{ {true} });
-		m_bInvenOpen = true;
-	}
-	else if (m_pGameInstance->IsKeyDown(DIK_TAB) && m_bInvenOpen)
-	{
-		m_pGameInstance->Publish(Event_Inventory_Open{ {false} });
-		m_bInvenOpen = false;
-	}
-
-	if (m_pGameInstance->IsKeyDown(DIK_1))
-	{
-		m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::PISTOL });
-	}
-	if (m_pGameInstance->IsKeyDown(DIK_2))
-	{
-		m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::SHOTGUN });
-	}
-	if (m_pGameInstance->IsKeyDown(DIK_3))
-	{
-		m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::SNIPER });
-	}
-	
-	if (m_pGameInstance->IsMouseDown(MOUSEKEYSTATE::LB))
-	{
-		m_pGameInstance->Publish(Hud_Weapon_Shoting{});
-	}
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -135,6 +107,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring& strLayerTag)
 {
+	CGameObject::GAMEOBJECT_DESC Desc;
+	Desc.fSpeedPerSec = 1.f;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1"), &Desc)))
+		return E_FAIL;
+		
 	return S_OK;
 }
 
@@ -173,9 +152,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Announce"))))
 		return E_FAIL;
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-	//	ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Loding_Fade"))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Loding_Fade"))))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Mouse"))))
