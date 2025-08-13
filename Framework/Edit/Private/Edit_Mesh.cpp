@@ -103,11 +103,9 @@ HRESULT CEdit_Mesh::Bind_BoneMatrices(CShader* pShader, const _char* pConstantNa
 	return pShader->Bind_Matrices(pConstantName, m_BoneMatrices, m_iNumBons);
 }
 
-_bool CEdit_Mesh::IsPicked(MODELTYPE eType, CTransform& pTransform, _float3& pOut)
+_bool CEdit_Mesh::IsPicked(MODELTYPE eType, CTransform& pTransform, _float& pOut)
 {
-	_float3	vLocalPickPos = { pOut };
-
-	_vector vWolrdPickPos = {};
+	_float fSourcelength = { -1.f };
 	_bool	IsPicked = false;
 
 	if (D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST != m_ePrimitiveType)
@@ -122,23 +120,30 @@ _bool CEdit_Mesh::IsPicked(MODELTYPE eType, CTransform& pTransform, _float3& pOu
 		_uint i1 = pIndices[i * 3 + 1];
 		_uint i2 = pIndices[i * 3 + 2];
 		
-		if(MODELTYPE::NONANIM == eType)
-			IsPicked = m_pGameInstance->isPickedInLocalSpace(m_MeshData.NonAnimVertex[i0].vPosition, m_MeshData.NonAnimVertex[i1].vPosition, m_MeshData.NonAnimVertex[i2].vPosition, vLocalPickPos);
+		if (MODELTYPE::NONANIM == eType)
+		{
+			_float fDestlength = { -1.f };
+			if(true == m_pGameInstance->isPickedInLocalSpace(m_MeshData.NonAnimVertex[i0].vPosition, m_MeshData.NonAnimVertex[i1].vPosition, m_MeshData.NonAnimVertex[i2].vPosition, fDestlength))
+			{
+				IsPicked = true;
+				if (fSourcelength <= 0.f || fSourcelength > fDestlength)
+				{
+					fSourcelength = fDestlength;
+					pOut = fSourcelength;
+				}
+
+			}	
+		}
 		else
 		{
-			_float3 vPos0{}, vPos1{}, vPos2{};
-			
-			XMStoreFloat3(&vPos0, XMVector3TransformCoord(XMLoadFloat3(&m_MeshData.AnimVertex[i0].vPosition), m_PreTransformMatrix));
-			XMStoreFloat3(&vPos1, XMVector3TransformCoord(XMLoadFloat3(&m_MeshData.AnimVertex[i1].vPosition), m_PreTransformMatrix));
-			XMStoreFloat3(&vPos2, XMVector3TransformCoord(XMLoadFloat3(&m_MeshData.AnimVertex[i2].vPosition), m_PreTransformMatrix));
-
-			IsPicked = m_pGameInstance->isPickedInLocalSpace(vPos0, vPos1, vPos2, vLocalPickPos);
-		}
-		if (IsPicked)
-		{
-			XMVECTOR vWorldPos = XMVector3TransformCoord(XMLoadFloat3(&vLocalPickPos), pTransform.Get_WorldMatrix());
-			XMStoreFloat3(&pOut, vWorldPos);
-			break;
+			return false;
+			//_float3 vPos0{}, vPos1{}, vPos2{};
+			//
+			//XMStoreFloat3(&vPos0, XMVector3TransformCoord(XMLoadFloat3(&m_MeshData.AnimVertex[i0].vPosition), m_PreTransformMatrix));
+			//XMStoreFloat3(&vPos1, XMVector3TransformCoord(XMLoadFloat3(&m_MeshData.AnimVertex[i1].vPosition), m_PreTransformMatrix));
+			//XMStoreFloat3(&vPos2, XMVector3TransformCoord(XMLoadFloat3(&m_MeshData.AnimVertex[i2].vPosition), m_PreTransformMatrix));
+			//
+			//IsPicked = m_pGameInstance->isPickedInLocalSpace(vPos0, vPos1, vPos2, vLocalPickPos);
 		}
 
 	}

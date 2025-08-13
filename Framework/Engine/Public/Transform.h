@@ -36,7 +36,6 @@ public:
 public:
 	virtual HRESULT			Initialize_Prototype();
 	virtual HRESULT			Initialize(void* pArg);
-	virtual HRESULT			Initialize(void* pArg, _float4x4 WorldMat);
 
 public:
 	void					Scale(_float3 vScale);

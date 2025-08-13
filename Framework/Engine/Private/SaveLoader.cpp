@@ -411,6 +411,8 @@ HRESULT CSaveLoader::Load_Level(string FilePath, _uint LevelIndex, _wstring szLa
 
 	while (!file.eof())
 	{
+		_bool IsData = true;
+
 		OBJCET_DATA Data;
 		size_t szNameSize = 0;
 		file.read(reinterpret_cast<_char*>(&szNameSize), sizeof(size_t));
@@ -421,6 +423,8 @@ HRESULT CSaveLoader::Load_Level(string FilePath, _uint LevelIndex, _wstring szLa
 			file.read(reinterpret_cast<_char*>(&szObjPath[0]), szNameSize * sizeof(_tchar));
 			Data.szObject_Path = szObjPath;
 		}
+		else
+			IsData = false;
 
 		file.read(reinterpret_cast<_char*>(&szNameSize), sizeof(size_t));
 		if (szNameSize > 0)
@@ -430,12 +434,17 @@ HRESULT CSaveLoader::Load_Level(string FilePath, _uint LevelIndex, _wstring szLa
 			file.read(reinterpret_cast<_char*>(&szModelPath[0]), szNameSize * sizeof(_tchar));
 			Data.szModel_Path = szModelPath;
 		}
+		else
+			IsData = false;
+		
+		if (IsData)
+		{
+			_float4x4 matrix;
+			file.read(reinterpret_cast<_char*>(&matrix), sizeof(_float4x4));
+			Data.objmat = XMLoadFloat4x4(&matrix);
 
-		_float4x4 matrix;
-		file.read(reinterpret_cast<_char*>(&matrix), sizeof(_float4x4));
-		Data.objmat = XMLoadFloat4x4(&matrix);
-
-		OBjects_Data.push_back(Data);
+			OBjects_Data.push_back(Data);
+		}
 	}
 	file.close();
 
@@ -448,8 +457,76 @@ HRESULT CSaveLoader::Load_Level(string FilePath, _uint LevelIndex, _wstring szLa
 		Desc.szModel_Path = OBjects_Data[i].szModel_Path;
 		Desc.WolrdMatrix = OBjects_Data[i].objmat;
 
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(LevelIndex, szLayerTag,
-			iPrototypeLevelIndex, OBjects_Data[i].szObject_Path, &Desc)))
+		CGameObject* pObject = static_cast<CGameObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, iPrototypeLevelIndex, OBjects_Data[i].szObject_Path, &Desc));
+		if (pObject == nullptr)
+			MSG_BOX(TEXT("레벨 로드 실패"));
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(LevelIndex, szLayerTag, iPrototypeLevelIndex, OBjects_Data[i].szObject_Path, pObject)))	
+			return E_FAIL;
+
+		m_Objects.push_back(pObject);
+		Safe_AddRef(pObject);
+	}
+	return S_OK;
+}
+
+HRESULT CSaveLoader::Load_Level(string szFilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex, _wstring szPrototypeTag)
+{
+	ifstream file(szFilePath, ios::binary);
+	if (!file.is_open())
+		return E_FAIL;
+
+	vector<OBJCET_DATA> OBjects_Data;
+
+	while (!file.eof())
+	{
+		_bool IsData = true;
+
+		OBJCET_DATA Data;
+		size_t szNameSize = 0;
+		file.read(reinterpret_cast<_char*>(&szNameSize), sizeof(size_t));
+		if (szNameSize > 0)
+		{
+			wstring szObjPath;
+			szObjPath.resize(szNameSize);
+			file.read(reinterpret_cast<_char*>(&szObjPath[0]), szNameSize * sizeof(_tchar));
+			Data.szObject_Path = szObjPath;
+		}
+		else
+			IsData = false;
+
+		file.read(reinterpret_cast<_char*>(&szNameSize), sizeof(size_t));
+		if (szNameSize > 0)
+		{
+			wstring szModelPath;
+			szModelPath.resize(szNameSize);
+			file.read(reinterpret_cast<_char*>(&szModelPath[0]), szNameSize * sizeof(_tchar));
+			Data.szModel_Path = szModelPath;
+		}
+		else
+			IsData = false;
+
+		if (IsData)
+		{
+			_float4x4 matrix;
+			file.read(reinterpret_cast<_char*>(&matrix), sizeof(_float4x4));
+			Data.objmat = XMLoadFloat4x4(&matrix);
+			OBjects_Data.push_back(Data);
+		}
+	} 
+	file.close();
+
+	for (_int i = 0; i < OBjects_Data.size(); ++i)
+	{
+		CGameObject::GAMEOBJECT_DESC Desc{};
+
+		Desc.isLoad = true;
+		Desc.szObject_Path = OBjects_Data[i].szObject_Path;
+		Desc.szModel_Path = OBjects_Data[i].szModel_Path;
+		Desc.WolrdMatrix = OBjects_Data[i].objmat;
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(iLevelIndex, szLayerTag,
+			iPrototypeLevelIndex, szPrototypeTag, &Desc)))
 			return E_FAIL;
 	}
 	return S_OK;

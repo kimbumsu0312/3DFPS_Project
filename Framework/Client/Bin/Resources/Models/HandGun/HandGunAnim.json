@@ -5,7 +5,7 @@
                 {
                     "AnimeName": "Aim_Shot",
                     "EndFrame": 10,
-                    "StartFrame": 0,
+                    "StartFrame": 2,
                     "TickPerSecond": 30.0
                 },
                 {
@@ -16,7 +16,7 @@
                 },
                 {
                     "AnimeName": "Reload_Empty",
-                    "EndFrame": 459,
+                    "EndFrame": 548,
                     "StartFrame": 353,
                     "TickPerSecond": 25.0
                 },

@@ -241,6 +241,12 @@
     <Filter Include="96.SuperClass\StateObject\MonState">
       <UniqueIdentifier>{a0cd18b7-9c95-4b3f-bd30-3d01e0c6baec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Map">
+      <UniqueIdentifier>{96005c66-a779-4620-b97f-135f8956d81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\State\Action\WeponSwap">
+      <UniqueIdentifier>{dc01baf9-0b9e-4b12-bfbb-2573f53210b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -489,6 +495,12 @@
     <ClInclude Include="..\Public\Stand_NorMon_1.h">
       <Filter>02.GameObject\Monster\State</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\BaseMapObj.h">
+      <Filter>02.GameObject\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\WeaponSwap_Player.h">
+      <Filter>02.GameObject\Player\State\Action\WeponSwap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -719,6 +731,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Stand_NorMon_1.cpp">
       <Filter>02.GameObject\Monster\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BaseMapObj.cpp">
+      <Filter>02.GameObject\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\WeaponSwap_Player.cpp">
+      <Filter>02.GameObject\Player\State\Action\WeponSwap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

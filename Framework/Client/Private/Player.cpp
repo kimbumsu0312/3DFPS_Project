@@ -16,7 +16,7 @@
 #include "Reload_Player.h"
 #include "Attack_Player.h"
 #include "Player_Manager.h"
-
+#include "WeaponSwap_Player.h"
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CContainerObject(pDevice, pContext)
 {
 
@@ -51,13 +51,15 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_StateObjects()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 3.f, 0.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-55.f, -8.5f, 15.f, 1.f));
 
 	return S_OK;
 }
 
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
+	if (!m_bisCameraLock)
+		Rotaion_Upper(fTimeDelta);
 	m_pCamera->Priority_Update(fTimeDelta);
 	m_MoveState = {};
 	m_AttackState = {};
@@ -67,8 +69,6 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 	if (m_pGameInstance->IsKeyDown(DIK_5))
 		m_bisCameraLock ? m_bisCameraLock = false : m_bisCameraLock = true;
 
-	if(!m_bisCameraLock)
-		Rotaion_Upper(fTimeDelta);
 }
 
 void CPlayer::Update(_float fTimeDelta)
@@ -102,6 +102,7 @@ void CPlayer::Update(_float fTimeDelta)
 		m_pTransformCom->Rotation_All(_float3{ 0.f, m_fYaw, 0.f });
 	}
 	CPlayer_Manager::GetInstance()->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
+
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -110,6 +111,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 	m_pWeaponObject->Late_Update(fTimeDelta);
 	m_pCamera->Late_Update(fTimeDelta);
+
 }
 
 HRESULT CPlayer::Render()
@@ -190,13 +192,14 @@ HRESULT CPlayer::Ready_StateObjects()
 	Desc.pStateTag = &m_szCulStateTag;
 	Desc.pIsAnimLoop = &m_bIsAnimLoop;
 	Desc.pIsAnimFinsh = &m_bIsAnimFinsh;
+	Desc.pNextWeaponState = &m_iNextWeponState;
 	CIdle_Player* pInstance = CIdle_Player::Create(&Desc);
 	if (pInstance == nullptr)
 		return E_FAIL;
 
 	Add_StateObject(TEXT("Idle"), pInstance);
 	m_CulStateObject = pInstance;
-	m_CulStateObject->Enter();
+	m_CulStateObject->Enter(m_AttackState, m_MoveState);
 	Safe_AddRef(pInstance);
 
 
@@ -205,6 +208,8 @@ HRESULT CPlayer::Ready_StateObjects()
 	Add_StateObject(TEXT("Aim"), CAim_Player::Create(&Desc));
 	Add_StateObject(TEXT("Reload"), CReload_Player::Create(&Desc));
 	Add_StateObject(TEXT("Attack"), CAttack_Player::Create(&Desc));
+	Add_StateObject(TEXT("WeaponSwap"), CWeaponSwap_Player::Create(&Desc));
+
 	return S_OK;
 }
 
@@ -287,22 +292,34 @@ void CPlayer::InputKey_WeaponChange(_float fTimeDelta)
 	if (m_szCulStateTag == TEXT("Attack") || m_szCulStateTag == TEXT("Reload") || m_szCulStateTag == TEXT("Aim") || m_szCulStateTag == TEXT("Guard"))
 		return;
 
-	if (m_pGameInstance->IsKeyDown(DIK_1))
-		m_iCulWeponState = PLAYER_WEAPON::KNIFE;
-	if (m_pGameInstance->IsKeyDown(DIK_2))
-		m_iCulWeponState = PLAYER_WEAPON::SHOTGUN;
-	if (m_pGameInstance->IsKeyDown(DIK_3))
-		m_iCulWeponState = PLAYER_WEAPON::SNIPER;
-	if (m_pGameInstance->IsKeyDown(DIK_4))
-		m_iCulWeponState = PLAYER_WEAPON::HANDGUN;
 
+	if (m_pGameInstance->IsKeyDown(DIK_1) && m_iCulWeponState != PLAYER_WEAPON::KNIFE)
+	{
+		m_iNextWeponState = PLAYER_WEAPON::KNIFE;
+		m_AttackState.isWeaponSwap = true;
+	}
+
+	if (m_pGameInstance->IsKeyDown(DIK_2) && m_iCulWeponState != PLAYER_WEAPON::SHOTGUN)
+	{
+		m_iNextWeponState = PLAYER_WEAPON::SHOTGUN;
+		m_AttackState.isWeaponSwap = true;
+	}
+	if (m_pGameInstance->IsKeyDown(DIK_3) && m_iCulWeponState != PLAYER_WEAPON::SNIPER)
+	{
+		m_iNextWeponState = PLAYER_WEAPON::SNIPER;
+		m_AttackState.isWeaponSwap = true;
+	}
+	if (m_pGameInstance->IsKeyDown(DIK_4) && m_iCulWeponState != PLAYER_WEAPON::HANDGUN)
+	{
+		m_iNextWeponState = PLAYER_WEAPON::HANDGUN;
+		m_AttackState.isWeaponSwap = true;
+	}
 	if (m_iPreWeponState != m_iCulWeponState)
 	{
 		switch (m_iCulWeponState)
 		{
 		case PLAYER_WEAPON::KNIFE:
 			m_pWeaponObject = Find_PartObject(TEXT("Part_Knife"));
-
 			break;
 		case PLAYER_WEAPON::HANDGUN:
 			m_pWeaponObject = Find_PartObject(TEXT("Part_HandGun"));

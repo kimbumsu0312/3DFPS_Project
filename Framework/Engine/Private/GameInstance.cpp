@@ -350,6 +350,21 @@ _bool CGameInstance::isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _flo
 	return m_pPicking->isPickedInLocalSpace(vPointA, vPointB, vPointC, pOut);
 }
 
+_bool CGameInstance::isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float& pDist)
+{
+	return m_pPicking->isPickedInLocalSpace(vPointA, vPointB, vPointC, pDist);
+}
+
+_vector CGameInstance::Get_LocalRayPos()
+{
+	return m_pPicking->Get_LocalRayPos();
+}
+
+_vector CGameInstance::Get_LocalRayDir()
+{
+	return m_pPicking->Get_LocalRayDir();
+}
+
 HRESULT CGameInstance::File_Save_TerrainLevel(DATA_TYPE eData, string szFilename, CVIBuffer* pVIBuffer)
 {
 	return m_pSaveLoader->File_Save_TerrainLevel(eData, szFilename, pVIBuffer);
@@ -385,6 +400,11 @@ HRESULT CGameInstance::Load_Level(string FilePath, _uint iLevelIndex, _wstring s
 	return m_pSaveLoader->Load_Level(FilePath, iLevelIndex, szLayerTag, iPrototypeLevelIndex);
 }
 
+HRESULT CGameInstance::Load_Level(string szFilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex, _wstring szPrototypeTag)
+{
+	return m_pSaveLoader->Load_Level(szFilePath, iLevelIndex, szLayerTag, iPrototypeLevelIndex, szPrototypeTag);
+}
+
 HRESULT CGameInstance::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _wstring szPrototypeTag)
 {
 	return m_pSaveLoader->Load_Objcet(FilePath, iPrototypeLevelIndex, szPrototypeTag);
@@ -393,6 +413,11 @@ HRESULT CGameInstance::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, 
 void CGameInstance::Clear_Object()
 {
 	m_pSaveLoader->Clear_Object();
+}
+
+vector<class CGameObject*>* CGameInstance::Get_Objects()
+{
+	return m_pSaveLoader->Get_Objects();
 }
 
 HRESULT CGameInstance::Add_Font(const _wstring& strFontTag, const _tchar* pFontFilePath)

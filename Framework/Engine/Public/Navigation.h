@@ -16,6 +16,7 @@ private:
 	virtual ~CNavigation() = default;
 
 public:
+	virtual HRESULT					Initialize_Prototype();
 	virtual HRESULT					Initialize_Prototype(const string& pNavigationFilePath);
 	virtual HRESULT					Initialize(void* pArg);
 	virtual void					Update(_fmatrix WorldMatrix);
@@ -29,6 +30,7 @@ public:
 	HRESULT							Add_Cell(const _float3* pPos);
 	HRESULT							Render();
 	HRESULT							Save_Cell(string szFilename);
+	_bool							IsSnap(_float3& vPos, _float Radius );
 #endif
 
 private:
@@ -40,7 +42,7 @@ private:
 #ifdef _DEBUG
 private:
 	class CShader*					m_pShader = { nullptr };
-	vector<_float3>					m_CellPos;
+	vector<SAVE_CELLDATA>			m_pCellPos;
 #endif
 
 private:
@@ -48,6 +50,8 @@ private:
 
 public:
 	static CNavigation*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const string& pNavigationFilePath);
+	static CNavigation*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+
 	virtual CComponent*				Clone(void* pArg) override;
 	virtual void					Free() override;
 };

@@ -125,6 +125,9 @@ public:
 public:
 	void						TransformToLocalSpace(class CTransform& pTransformCom);
 	_bool						isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float3& pOut);
+	_bool						isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float& pDist);
+	_vector						Get_LocalRayPos();
+	_vector						Get_LocalRayDir();
 #pragma endregion
 
 #pragma region SaveLoader
@@ -138,9 +141,12 @@ public:
 
 	HRESULT						Load_Terrain(string FilePath, SAVE_TERRAIN& pOut);
 	HRESULT						Load_Level(string FilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex);
+	HRESULT						Load_Level(string szFilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex, _wstring szPrototypeTag);
+
 	HRESULT						Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _wstring szPrototypeTag);
 
 	void						Clear_Object();
+	vector<class CGameObject*>* Get_Objects();
 #pragma endregion
 
 #pragma region Font_Manager

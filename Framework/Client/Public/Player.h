@@ -21,6 +21,7 @@ public:
 private:
 	_uint						m_iPreWeponState = { PLAYER_WEAPON::KNIFE };
 	_uint						m_iCulWeponState = { PLAYER_WEAPON::KNIFE };
+	_uint						m_iNextWeponState = { PLAYER_WEAPON::KNIFE };
 
 	_wstring					m_szPreStateTag = {};
 	_wstring					m_szCulStateTag = {};

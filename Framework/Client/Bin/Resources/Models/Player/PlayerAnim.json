@@ -94,13 +94,13 @@
                 },
                 {
                     "AnimeName": "Aim_Shoot",
-                    "EndFrame": 1145,
+                    "EndFrame": 1131,
                     "StartFrame": 1123,
-                    "TickPerSecond": 25.0
+                    "TickPerSecond": 30.0
                 },
                 {
                     "AnimeName": "Reload",
-                    "EndFrame": 1415,
+                    "EndFrame": 1278,
                     "StartFrame": 1156,
                     "TickPerSecond": 25.0
                 }                
@@ -364,20 +364,20 @@
                 },
                 {
                     "AnimeName": "Reload_Start",
-                    "EndFrame": 1202,
-                    "StartFrame": 1164,
+                    "EndFrame": 1237,
+                    "StartFrame": 1167,
                     "TickPerSecond": 25.0
                 },
                 {
                     "AnimeName": "Reload_Loop",
-                    "EndFrame": 1284,
-                    "StartFrame": 1203,
-                    "TickPerSecond": 25.0
+                    "EndFrame": 1265,
+                    "StartFrame": 1238,
+                    "TickPerSecond": 30.0
                 },
                 {
                     "AnimeName": "Reload_End",
                     "EndFrame": 1305,
-                    "StartFrame": 1285,
+                    "StartFrame": 1266,
                     "TickPerSecond": 25.0
                 }  
             ]        
@@ -477,7 +477,7 @@
                 {
                     "AnimeName": "Aim_Shoot",
                     "EndFrame": 1256,
-                    "StartFrame": 1165,
+                    "StartFrame": 1174,
                     "TickPerSecond": 25.0
                 },
                 {

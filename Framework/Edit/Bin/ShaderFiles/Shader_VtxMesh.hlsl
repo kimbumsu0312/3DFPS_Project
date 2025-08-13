@@ -1,3 +1,5 @@
+#include "Engine_Shader_Defines.hlsli"
+
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
@@ -10,13 +12,6 @@ vector g_vCamPosition;
 texture2D g_DiffuseTexture;
 vector      g_vMtrlAmbient = 1.f;
 vector      g_vMtrlSpecular = 1.f;
-
-sampler DefaultSampler = sampler_state
-{
-    filter = min_mag_mip_linear;
-    AddressU = wrap;
-    AddressV = wrap;
-};
 
 struct VS_IN
 {
@@ -112,6 +107,9 @@ technique11 DefaultTechnique
 {
     pass DefaultPass
     {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();
     }
@@ -120,6 +118,15 @@ technique11 DefaultTechnique
     {
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_Selete();
+    }
+
+    pass WIPass
+    {
+        SetRasterizerState(RS_WireFrame);
+        SetDepthStencilState(DSS_Default, 0);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN();
     }
 }
 

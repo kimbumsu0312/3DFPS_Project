@@ -54,7 +54,6 @@ private:
 	void					Zoom_In(_float fTimeDelta);
 	void					Zoom_Out(_float fTimeDelta);
 	void					Update_CameraPos();
-	void					Update_CameraRot(_float fTimeDelta);
 public:
 	static CCamera_Player*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg)override;

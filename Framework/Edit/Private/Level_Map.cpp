@@ -22,7 +22,10 @@ HRESULT CLevel_Map::Initialize()
 	if (FAILED(Ready_Layer_Model(TEXT("Layer_Model"))))
 		return E_FAIL;
 	m_pGameInstance->Subscribe<Event_NextLevel>([&](const Event_NextLevel& e) {m_bIsNextLevel = true; m_eNextLevel = e.eLevel; });
-
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Nevi"),
+		ENUM_CLASS(LEVEL::MAP), TEXT("Prototype_GameObjcet_NeviMesh"))))
+		return E_FAIL;
+	
 	return S_OK;
 }
 

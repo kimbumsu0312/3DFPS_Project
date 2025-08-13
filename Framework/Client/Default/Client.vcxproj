@@ -165,6 +165,7 @@
     <ClInclude Include="..\Public\Attack_NorMon_1.h" />
     <ClInclude Include="..\Public\Attack_Player.h" />
     <ClInclude Include="..\public\BackGround.h" />
+    <ClInclude Include="..\public\BaseMapObj.h" />
     <ClInclude Include="..\public\Body_NorMon.h" />
     <ClInclude Include="..\public\Body_Player.h" />
     <ClInclude Include="..\public\Button.h" />
@@ -230,6 +231,7 @@
     <ClInclude Include="..\public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\public\WeaponObject.h" />
+    <ClInclude Include="..\public\WeaponSwap_Player.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Client_Event.h" />
     <ClInclude Include="Client_Item.h" />
@@ -249,6 +251,7 @@
     <ClCompile Include="..\Private\Attack_NorMon_1.cpp" />
     <ClCompile Include="..\Private\Attack_Player.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
+    <ClCompile Include="..\private\BaseMapObj.cpp" />
     <ClCompile Include="..\private\Body_NorMon.cpp" />
     <ClCompile Include="..\private\Body_Player.cpp" />
     <ClCompile Include="..\private\Button.cpp" />
@@ -309,6 +312,7 @@
     <ClCompile Include="..\private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\WeaponObject.cpp" />
+    <ClCompile Include="..\private\WeaponSwap_Player.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

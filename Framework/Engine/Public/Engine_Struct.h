@@ -249,6 +249,13 @@ namespace Engine
 
 	}SAVE_ANIMDATA;
 
+	typedef struct tagSaveCell
+	{
+		XMFLOAT3 Point_A;
+		XMFLOAT3 Point_B;
+		XMFLOAT3 Point_C;
+	}SAVE_CELLDATA;
+
 }
 
 #endif // Engine_Struct_h__

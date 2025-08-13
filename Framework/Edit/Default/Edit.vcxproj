@@ -185,6 +185,8 @@
     <ClInclude Include="..\Public\Edit_MeshMaterial.h" />
     <ClInclude Include="..\Public\Edit_Model.h" />
     <ClInclude Include="..\Public\MapObject.h" />
+    <ClInclude Include="..\public\NeviMesh.h" />
+    <ClInclude Include="..\public\PointCube.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="Edit.h" />
     <ClInclude Include="framework.h" />
@@ -208,6 +210,8 @@
     <ClCompile Include="..\Private\Edit_MeshMaterial.cpp" />
     <ClCompile Include="..\Private\Edit_Model.cpp" />
     <ClCompile Include="..\Private\MapObject.cpp" />
+    <ClCompile Include="..\private\NeviMesh.cpp" />
+    <ClCompile Include="..\private\PointCube.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Public\Imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -254,6 +258,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCube.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
   </ItemGroup>

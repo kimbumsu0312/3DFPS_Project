@@ -3,6 +3,7 @@
 
 namespace Engine
 {
+	enum class COLLIDER { AABB, OBB, SPHERE, END};
 	enum class CELL_POINT { A, B, C, END};
 	enum class CELL_LINE { AB, BC, CA, END};
 	enum class ANIM_STATUS {STOP, PLAY, END};

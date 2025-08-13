@@ -56,7 +56,8 @@ private:
 	_bool							m_bIsUpperSet = { false };
 	_float							m_fPitch = {};
 	_int							m_iUpperBoneIndex = {};
-
+	_bool							m_bIsAnimFished = { false };
+	_bool							m_bPreRootSet = { true };
 private:
 	HRESULT							Ready_Meshes(const SAVE_MODEL& pModelData);
 	HRESULT							Ready_Materials(const SAVE_MODEL& pModelData);

@@ -12,7 +12,7 @@ HRESULT CStand_NorMon_1::Initalize(void* pArg)
     return S_OK;
 }
 
-void CStand_NorMon_1::Enter(const NORMON_STATE& pMonState)
+void CStand_NorMon_1::Enter(const NORMON_STATE& pMonState, CTransform* pTransformCom)
 {
     *m_pAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
     m_eAnimState = STATE_ANIM::LOOP;
@@ -20,7 +20,7 @@ void CStand_NorMon_1::Enter(const NORMON_STATE& pMonState)
     *m_pIsAnimLoop = true;
 }
 
-void CStand_NorMon_1::Update(_float fDeltatime, const NORMON_STATE& pMonState)
+void CStand_NorMon_1::Update(_float fDeltatime, const NORMON_STATE& pMonState, CTransform* pTransformCom)
 {
     if (pMonState.isDamage)
     {

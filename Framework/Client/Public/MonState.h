@@ -2,6 +2,9 @@
 #include "StateObject.h"
 #include "Client_Struct.h"
 
+NS_BEGIN(Engine)
+class CTransform;
+NS_END
 NS_BEGIN(Client)
 class CMonState abstract : public CStateObject
 {
@@ -19,8 +22,8 @@ protected:
 
 public:
     virtual HRESULT         Initalize(void* pArg);
-    virtual void            Enter(const NORMON_STATE& pMonState) = 0;
-    virtual void            Update(_float fDeltatime, const NORMON_STATE& pMonState) = 0;
+    virtual void            Enter(const NORMON_STATE& pMonState, CTransform* pTransformCom) = 0;
+    virtual void            Update(_float fDeltatime, const NORMON_STATE& pMonState, CTransform* pTransformCom) = 0;
     virtual void            Exit() = 0;
 
 protected:

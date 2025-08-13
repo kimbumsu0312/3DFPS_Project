@@ -8,6 +8,7 @@ class CPlayerState abstract : public CStateObject
 public:
     typedef struct tagPlayerStateDesc {
         _uint* pWeaponState = { nullptr };
+        _uint* pNextWeaponState = { nullptr };
         string* pAnimTag = { nullptr };
         _wstring* pStateTag = { nullptr };
         _bool* pIsAnimLoop = { nullptr };
@@ -25,6 +26,8 @@ public:
 
 protected:
     _uint* m_pWeaponState = { nullptr };
+    _uint* m_pNextWeaponState = { nullptr };
+
     string* m_pAnimTag = { nullptr };
 
     _wstring* m_pStateTag = { nullptr };

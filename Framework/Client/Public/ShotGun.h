@@ -9,7 +9,7 @@ NS_END
 NS_BEGIN(Client)
 class CShotGun final : public CWeaponObject
 {
-
+	
 private:
 	CShotGun(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CShotGun(const CShotGun& Prototype);
@@ -28,7 +28,8 @@ private:
 	CModel*					m_pModelCom = { nullptr };
 	CAnimatio_Controller*	m_pAnimCom = { nullptr };
 	string					m_AnimTag = {};
-
+	_bool					m_isReload = { false };
+	_int					m_iReloadStack = {};
 private:
 	HRESULT					Ready_Components();
 	HRESULT					Bind_ShaderResources();

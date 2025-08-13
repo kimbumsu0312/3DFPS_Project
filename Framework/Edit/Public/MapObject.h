@@ -35,6 +35,8 @@ public:
 	_int&					Get_Index() {return m_iIndex;}
 
 	void					Set_AnimStop() { m_bisAnimstop == true ? m_bisAnimstop = false : m_bisAnimstop = true; }
+	_bool					IsPick_Objcet(_float& pOut);
+
 private:
 	class CEdit_Model*		m_pModelCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
@@ -49,7 +51,7 @@ private:
 
 	HRESULT					Bind_ShaderResources();
 public:
-	static CMapObject*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMapObject*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg);
 	virtual void			Free();
 };

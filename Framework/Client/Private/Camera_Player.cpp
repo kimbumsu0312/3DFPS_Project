@@ -50,12 +50,11 @@ HRESULT CCamera_Player::Initialize(void* pArg)
 
 void CCamera_Player::Priority_Update(_float fTimeDelta)
 {
-    if (m_pGameInstance->IsKeyHold(DIK_Q))
+    if (m_pGameInstance->IsKeyHold(DIK_Y))
         return;
 
     Zoom_In(fTimeDelta);
     Zoom_Out(fTimeDelta);
-    Update_CameraRot(fTimeDelta);
     Update_CameraPos();
     __super::Update_PipeLines();
 }
@@ -103,17 +102,9 @@ void CCamera_Player::Zoom_Out(_float fTimeDelta)
     }
 }
 
-void CCamera_Player::Update_CameraRot(_float fTimeDelta)
-{
-
-}
 
 void CCamera_Player::Update_CameraPos()
 {
-    _matrix matYaw = XMMatrixRotationY(m_fYaw);     // Y축 (좌우)
-    _matrix matPitch = XMMatrixRotationAxis(m_pTransformCom->Get_State(STATE::RIGHT), m_fPitch); // X축 (상하)
-    _matrix matMouseRot = matPitch;
-
     _matrix     MainBoneMatrix = XMLoadFloat4x4(m_pSocketMatrix1);
     //_matrix     SubBoneMatrix = XMLoadFloat4x4(m_pSocketMatrix2);
     for (size_t i = 0; i < 3; i++)
@@ -122,7 +113,8 @@ void CCamera_Player::Update_CameraPos()
         //SubBoneMatrix.r[i] = XMVector3Normalize(SubBoneMatrix.r[i]);
     }
 
-    XMStoreFloat4x4(&m_CombinedWorldMatrix, m_DefultWorldMatrix * matMouseRot * MainBoneMatrix * XMLoadFloat4x4(m_pParentMatrix));
+    XMStoreFloat4x4(&m_CombinedWorldMatrix, m_DefultWorldMatrix * MainBoneMatrix * XMLoadFloat4x4(m_pParentMatrix));
+
     m_pTransformCom->Set_WorldMatrix(m_CombinedWorldMatrix);
 }
 

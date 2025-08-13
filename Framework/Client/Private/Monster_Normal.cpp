@@ -42,8 +42,9 @@ HRESULT CMonster_Normal::Initialize(void* pArg)
 	if (FAILED(Ready_StateObjects()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(4.f, 3.f, 4.f, 1.f));
 	
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-65.f, -8.5f, 15.f, 1.f));
+	//m_pTransformCom->Rotation(_vector{ 0.f, 1.f, 0.f, 0.f }, XMConvertToRadians(-90.f));
 	switch (rand() % 4)
 	{
 	case ENUM_CLASS(NORMAL_MON_WEAPON::SWORD):
@@ -82,8 +83,10 @@ void CMonster_Normal::Priority_Update(_float fTimeDelta)
 
 void CMonster_Normal::Update(_float fTimeDelta)
 {
+	m_pTransformCom->LookAt(CPlayer_Manager::GetInstance()->Get_PlayerPos());
+	//m_pTransformCom->Chase(CPlayer_Manager::GetInstance()->Get_PlayerPos(), fTimeDelta, 2.5f);
 	State_Check();
-	m_pCulStateObject->Update(fTimeDelta, m_NorMonState);
+	m_pCulStateObject->Update(fTimeDelta, m_NorMonState, m_pTransformCom);
 	if (m_szPreStateTag != m_szCulStateTag)
 	{
 		m_pCulStateObject->Exit();
@@ -92,13 +95,30 @@ void CMonster_Normal::Update(_float fTimeDelta)
 		m_pCulStateObject = Find_StateObject(m_szCulStateTag);
 		Safe_AddRef(m_pCulStateObject);
 
-		m_pCulStateObject->Enter(m_NorMonState);
+		m_pCulStateObject->Enter(m_NorMonState, m_pTransformCom);
 		m_szPreStateTag = m_szCulStateTag;
 	}
 
 	m_pBodyObject->Update(fTimeDelta);
 	if (m_pWeaponObject != nullptr)
 		m_pWeaponObject->Update(fTimeDelta);
+	
+	//_matrix Movemat = XMMatrixTranslationFromVector(XMLoadFloat3(m_pBodyObject->Get_MovePos()));
+	_vector vMovePos = XMLoadFloat3(m_pBodyObject->Get_MovePos());
+	_matrix Worldmat = m_pTransformCom->Get_WorldMatrix();
+	_vector vRotation = XMQuaternionRotationMatrix(Worldmat);
+
+	vMovePos = XMVector3Rotate(vMovePos, vRotation);
+	_matrix Movemat = XMMatrixTranslationFromVector(vMovePos);
+
+
+	//Movemat.r[0] = m_pTransformCom->Get_State(STATE::RIGHT);
+	//Movemat.r[1] = m_pTransformCom->Get_State(STATE::UP);
+	//Movemat.r[2] = m_pTransformCom->Get_State(STATE::LOOK);
+
+	_float4x4 WorldMatrix = {};
+	XMStoreFloat4x4(&WorldMatrix, Worldmat * Movemat);
+	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 
 }
 
@@ -218,9 +238,9 @@ void CMonster_Normal::State_Check()
 	vPlayerPos = XMVector3Length(m_pTransformCom->Get_State(STATE::POSITION) - vPlayerPos);
 	XMStoreFloat(&fDis, vPlayerPos);
 
-	if(fDis <= 5.f)
+	if(fDis <= 3.f)
 		m_NorMonState.isAttack = true;
-	if (fDis <= 10.f)
+	if (fDis <= 6.f)
 		m_NorMonState.isChase = true;
 	if (m_pGameInstance->IsKeyDown(DIK_J))
 		m_NorMonState.isDamage = true;
@@ -255,11 +275,13 @@ CGameObject* CMonster_Normal::Clone(void* pArg)
 
 void CMonster_Normal::Free()
 {
-	Safe_Release(m_pBodyObject);
+	__super::Free();
 	for (auto& Pair : m_StateObjects)
 		Safe_Release(Pair.second);
 	
 	m_StateObjects.clear();
+
 	Safe_Release(m_pCulStateObject);
 	Safe_Release(m_pWeaponObject);
+	Safe_Release(m_pBodyObject);
 }

@@ -66,6 +66,18 @@ _bool CPicking::isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 v
 	return isPicked;
 }
 
+_bool CPicking::isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float& pDist)
+{
+	_float fDist{};
+	_bool isPicked = false;
+	isPicked = DirectX::TriangleTests::Intersects(m_vLocalRayPos, m_vLocalRayDir, XMLoadFloat3(&vPointA), XMLoadFloat3(&vPointB), XMLoadFloat3(&vPointC), fDist);
+
+	if (true == isPicked)
+		pDist = fDist;
+
+	return isPicked;
+}
+
 CPicking* CPicking::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HWND hWnd)
 {
 	CPicking* pInstance = new CPicking(pDevice, pContext);

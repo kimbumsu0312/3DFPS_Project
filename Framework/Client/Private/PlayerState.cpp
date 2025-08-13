@@ -13,6 +13,7 @@ HRESULT CPlayerState::Initalize(void* pArg)
 	m_pStateTag = pDesc->pStateTag;
 	m_pIsAnimFinsh = pDesc->pIsAnimFinsh;
 	m_pIsAnimLoop = pDesc->pIsAnimLoop;
+	m_pNextWeaponState = pDesc->pNextWeaponState;
 	return S_OK;
 }
 

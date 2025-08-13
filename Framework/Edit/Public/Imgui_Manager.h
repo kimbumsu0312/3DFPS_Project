@@ -31,12 +31,11 @@ public:
 	_float					Get_Height() { return m_fHeight; }
 	_bool					Get_HeightUp() { return m_bIsHeightUP; }
 	_float2					Get_MinMaxHeight() { return m_fMinMaxHeight; }
-	
+	void					Set_NeviMesh(class CNeviMesh* pNeviMesh) { m_pNaviMesh = pNeviMesh; }
+
 private:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
-	ID3D11RasterizerState*	m_pWireframeRS = { nullptr };
-	ID3D11RasterizerState*	m_pSolidframeRS = { nullptr };
 	CGameInstance*			m_pGameInstance = { nullptr };
 
 	_uint                   m_ResizeWidth = 0, g_ResizeHeight = 0;
@@ -62,7 +61,7 @@ private:
 	_bool					m_bIsHeightUP = { true };
 	_float2					m_fMinMaxHeight = {0.f, 400.f};
 
-	_bool					m_bISWireFream = {false};
+	class CNeviMesh*		m_pNaviMesh = { nullptr };
 
 	//세이브 타입
 	_int					m_iMapSaveType = {0};

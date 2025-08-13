@@ -12,7 +12,7 @@ HRESULT CScouting_NorMon_1::Initalize(void* pArg)
     return S_OK;
 }
 
-void CScouting_NorMon_1::Enter(const NORMON_STATE& pMonState)
+void CScouting_NorMon_1::Enter(const NORMON_STATE& pMonState, CTransform* pTransformCom)
 {
     *m_pAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
     m_eAnimState = STATE_ANIM::START;
@@ -20,8 +20,10 @@ void CScouting_NorMon_1::Enter(const NORMON_STATE& pMonState)
     *m_pIsAnimLoop = false;
 }
 
-void CScouting_NorMon_1::Update(_float fDeltatime, const NORMON_STATE& pMonState)
+void CScouting_NorMon_1::Update(_float fDeltatime, const NORMON_STATE& pMonState, CTransform* pTransformCom)
 {
+    pTransformCom->Go_Straight(fDeltatime);
+    
     if (pMonState.isDamage)
     {
         *m_pStateTag = TEXT("Damage");

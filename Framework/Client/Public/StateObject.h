@@ -17,10 +17,10 @@ public:
     virtual HRESULT         Initalize(void *pArg);
     virtual void            Enter() {};    
     virtual void            Enter(const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState) {};
-    virtual void            Enter(const NORMON_STATE& pMonState) {};
+    virtual void            Enter(const NORMON_STATE& pMonState, CTransform* pTransformCom) {};
     virtual void            Update(_float fDeltatime) {};
     virtual void            Update(_float fDeltatime, const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState) {};
-    virtual void            Update(_float fDeltatime, const NORMON_STATE& pMonState) {};
+    virtual void            Update(_float fDeltatime, const NORMON_STATE& pMonState, CTransform* pTransformCom) {};
     virtual void            Exit() {};
 
 protected:

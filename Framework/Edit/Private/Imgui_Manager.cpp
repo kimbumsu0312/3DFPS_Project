@@ -8,6 +8,7 @@
 #include "MapObject.h"
 #include "Engine_Defines.h"
 #include "Edit_Model.h"
+#include "NeviMesh.h"
 IMPLEMENT_SINGLETON(CImgui_Manger)
 
 CImgui_Manger::CImgui_Manger()
@@ -38,21 +39,6 @@ HRESULT CImgui_Manger::Initalize(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 	Safe_AddRef(pContext);
 	m_szModelPath = g_ModelPath[m_iCurModel_Index];
 	
-	D3D11_RASTERIZER_DESC Desc = {};
-
-	Desc.FillMode = D3D11_FILL_WIREFRAME;
-	Desc.CullMode = D3D11_CULL_NONE;
-	Desc.FrontCounterClockwise = false;
-	Desc.DepthClipEnable = true;
-
-	pDevice->CreateRasterizerState(&Desc, &m_pWireframeRS);
-
-	Desc.FillMode = D3D11_FILL_SOLID;
-	Desc.CullMode = D3D11_CULL_BACK;
-	Desc.FrontCounterClockwise = false;
-	Desc.DepthClipEnable = true;
-	pDevice->CreateRasterizerState(&Desc, &m_pSolidframeRS);
-
 	return S_OK;
 }
 
@@ -107,16 +93,6 @@ void CImgui_Manger::Update_Map()
 	else if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_4) && !g_TerrainHight)
 		g_TerrainHight = true;
 
-	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_5) && m_bISWireFream)
-	{
-		m_pContext->RSSetState(m_pSolidframeRS);
-		m_bISWireFream = false;
-	}
-	else if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_5) && !m_bISWireFream)
-	{
-		m_pContext->RSSetState(m_pWireframeRS);
-		m_bISWireFream = true;
-	}
 	static _int g_iTerrainSizeX = 200;
 	static _int g_iTerrainSizeZ = 200;
 	
@@ -124,8 +100,7 @@ void CImgui_Manger::Update_Map()
 	{
 		if (BeginTabItem("Terrain"))
 		{
-			if (Checkbox("WireFrameMode(5)", &m_bISWireFream))
-				m_pContext->RSSetState(m_bISWireFream ? m_pWireframeRS : m_pSolidframeRS);
+			if (Checkbox("WireFrameMode(5)", &g_ISWireFream))
 
 			InputInt("X", &g_iTerrainSizeX);
 			InputInt("Z", &g_iTerrainSizeZ);
@@ -161,7 +136,20 @@ void CImgui_Manger::Update_Map()
 				Text("선택된 항목: %s", g_ModelPath[m_iCurModel_Index]);
 
 			}
+			if (Button("Model_Create"))
+			{
+				CMapObject::MODEL_OBJECT_DESC Desc{};
+				Desc.vPos.x = 0.f;
+				Desc.vPos.y = 0.f;
+				Desc.vPos.z = 0.f;
+				Desc.vPos.w = 1.f;
+				Desc.szModel_Path = CImgui_Manger::GetInstance()->Get_ModelPath();
+				Desc.szObject_Path = TEXT("Prototype_GameObject_Model");
 
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Model"),
+					ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Model"), &Desc)))
+					return;
+			}
 			Checkbox("Create Model(1)", &g_CreateModel);
 			Checkbox("Selete Model(2)", &g_SeleteModel);
 			Checkbox("Move Model(3)", &g_MoveModel);
@@ -310,6 +298,21 @@ void CImgui_Manger::Update_Map()
 			EndTabItem();
 		}
 
+		if (BeginTabItem("Navi"))
+		{
+			Checkbox("SeleteMesh", &g_SeletePos);
+
+			if (m_pNaviMesh != nullptr)
+			{
+				Text("A: %.2f %.2f %.2f", m_pNaviMesh->Get_SeletePoint(0).x, m_pNaviMesh->Get_SeletePoint(0).y, m_pNaviMesh->Get_SeletePoint(0).z);
+				Text("B: %.2f %.2f %.2f", m_pNaviMesh->Get_SeletePoint(1).x, m_pNaviMesh->Get_SeletePoint(1).y, m_pNaviMesh->Get_SeletePoint(1).z);
+				Text("C: %.2f %.2f %.2f", m_pNaviMesh->Get_SeletePoint(2).x, m_pNaviMesh->Get_SeletePoint(2).y, m_pNaviMesh->Get_SeletePoint(2).z);
+				Text("SeleteCell : %d", m_pNaviMesh->Get_SeleteNum()+1);
+			}
+
+			EndTabItem();
+		}
+
 		if (BeginTabItem("Level"))
 		{
 			if (Button("EDIT_MODEL"))
@@ -379,6 +382,7 @@ void CImgui_Manger::Update_Map()
 			{
 				if (m_szFileName != "")
 				{
+					m_pNaviMesh->Set_Objcets();
 					string szFileName = m_szFileName;
 					m_pGameInstance->Load_Level(szFileName, ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Object"), ENUM_CLASS(LEVEL::STATIC));
 				}
@@ -697,8 +701,6 @@ void CImgui_Manger::Free()
 	m_pModelCom = nullptr;
 	m_pTransform = nullptr;
 	Safe_Release(m_pModel);
-	Safe_Release(m_pWireframeRS);
-	Safe_Release(m_pSolidframeRS);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 	Safe_Release(m_pGameInstance);

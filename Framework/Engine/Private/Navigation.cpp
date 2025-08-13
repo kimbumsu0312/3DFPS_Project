@@ -25,6 +25,17 @@ m_pShader{ Prototype.m_pShader }
 
 }
 
+HRESULT CNavigation::Initialize_Prototype()
+{
+#ifdef _DEBUG
+	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Engine_Shader_Cell.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements);
+	if (nullptr == m_pShader)
+		return E_FAIL;
+#endif
+
+	return S_OK;
+}
+
 HRESULT CNavigation::Initialize_Prototype(const string& pNavigationFilePath)
 {
 	ifstream file(pNavigationFilePath, ios::binary);
@@ -34,18 +45,23 @@ HRESULT CNavigation::Initialize_Prototype(const string& pNavigationFilePath)
 		return E_FAIL;
 	}
 
-	vector<VTXPOS> Sells;
+	vector<SAVE_CELLDATA> Cells;
 	_uint iSize = 0;
 	file.read(reinterpret_cast<char*>(&iSize), sizeof(_uint));
-	Sells.resize(iSize);
+	Cells.resize(iSize);
 
-	file.read(reinterpret_cast<char*>(Sells.data()), sizeof(VTXPOS) * iSize);
+	file.read(reinterpret_cast<char*>(Cells.data()), sizeof(SAVE_CELLDATA) * iSize);
 
 	file.close();
 	
-	for (_int i = 0; i < iSize; ++i)
+	for (_uint i = 0; i < iSize; ++i)
 	{
-		CCell* pCell = CCell::Create(m_pDevice, m_pContext, &Sells[i].vPosition, m_Cells.size());
+		_float3 CellData[3] = {};
+		CellData[0] = Cells[i].Point_A;
+		CellData[1] = Cells[i].Point_B;
+		CellData[2] = Cells[i].Point_C;
+
+		CCell* pCell = CCell::Create(m_pDevice, m_pContext, CellData, (_uint)m_Cells.size(), true);
 		if (nullptr == pCell)
 			return E_FAIL;
 
@@ -134,7 +150,7 @@ _vector CNavigation::Compute_OnCell(_fvector vPosition)
 HRESULT CNavigation::Add_Cell(const _float3* pPos)
 {
 
-	CCell* pCell = CCell::Create(m_pDevice, m_pContext, pPos, m_Cells.size());
+	CCell* pCell = CCell::Create(m_pDevice, m_pContext, pPos, (_uint)m_Cells.size(), false);
 
 	if (pCell == nullptr)
 	{
@@ -142,8 +158,13 @@ HRESULT CNavigation::Add_Cell(const _float3* pPos)
 		Safe_Release(pCell);
 	}
 	m_Cells.push_back(pCell);
-	_float3 vPos = *pPos;
-	m_CellPos.push_back(vPos);
+
+	SAVE_CELLDATA CellPos{};
+	CellPos.Point_A = pPos[0];
+	CellPos.Point_B = pPos[1];
+	CellPos.Point_C = pPos[2];
+
+	m_pCellPos.push_back(CellPos);
 	return S_OK;
 }
 
@@ -191,9 +212,7 @@ HRESULT CNavigation::Render()
 
 		m_Cells[m_iCurrentCellIndex]->Render();
 	}
-
-
-
+	 
 	return S_OK;
 }
 HRESULT CNavigation::Save_Cell(string szFilename)
@@ -208,14 +227,25 @@ HRESULT CNavigation::Save_Cell(string szFilename)
 		return E_FAIL;
 	}
 
-	_uint	iSize = m_CellPos.size();
+	_uint	iSize = (_uint)m_pCellPos.size();
 	out.write(reinterpret_cast<const _char*>(&iSize), sizeof(_uint));
-	out.write(reinterpret_cast<const _char*>(m_CellPos.data()), sizeof(VTXPOS) * iSize);
+	out.write(reinterpret_cast<const _char*>(m_pCellPos.data()), sizeof(SAVE_CELLDATA) * iSize);
 
 	out.close();
 	MSG_BOX(TEXT("Save"));
 
 	return S_OK;
+}
+_bool CNavigation::IsSnap(_float3& vPos, _float Radius)
+{
+	for (auto Cell : m_Cells)
+	{
+		if (Cell->IsSnap(vPos, Radius))
+		{
+			//return true;
+		}
+	}
+	return false;
 }
 #endif
 
@@ -250,6 +280,19 @@ CNavigation* CNavigation::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 	CNavigation* pInstance = new CNavigation(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(pNavigationFilePath)))
+	{
+		MSG_BOX(TEXT("Failed to Created : CNavigation"));
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CNavigation* CNavigation::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CNavigation* pInstance = new CNavigation(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX(TEXT("Failed to Created : CNavigation"));
 		Safe_Release(pInstance);

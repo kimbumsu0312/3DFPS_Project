@@ -11,7 +11,7 @@ HRESULT CAttack_NorMon_1::Initalize(void* pArg)
 
     return S_OK;
 }
-void CAttack_NorMon_1::Enter(const NORMON_STATE& pMonState)
+void CAttack_NorMon_1::Enter(const NORMON_STATE& pMonState, CTransform* pTransformCom)
 {
     _int Rand = rand() % 3;
     *m_pAnimState = ENUM_CLASS(NORMAL_MON_STATE::ATTACK);
@@ -49,8 +49,9 @@ void CAttack_NorMon_1::Enter(const NORMON_STATE& pMonState)
     *m_pIsAnimLoop = false;
 }
 
-void CAttack_NorMon_1::Update(_float fDeltatime, const NORMON_STATE& pMonState)
+void CAttack_NorMon_1::Update(_float fDeltatime, const NORMON_STATE& pMonState, CTransform* pTransformCom)
 {
+    //pTransformCom->Go_Straight(fDeltatime);
     if (pMonState.isDamage)
     {
         *m_pStateTag = TEXT("Damage");

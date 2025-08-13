@@ -27,6 +27,8 @@ extern bool g_CreateModel;
 extern bool g_SeleteModel;
 extern bool g_MoveModel;
 extern bool g_TerrainHight;
+extern bool	g_ISWireFream;
+extern bool g_SeletePos;
 
 using namespace Edit;
 using namespace ImGui;

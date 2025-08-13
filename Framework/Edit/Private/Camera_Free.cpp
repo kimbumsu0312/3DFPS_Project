@@ -82,24 +82,48 @@ void CCamera_Free::KeyInput(_float fTimeDelta)
     else if (m_pGameInstance->IsKeyDown(DIK_Q) && m_bIsCameraRot)
         m_bIsCameraRot = false;
 
-    if (m_pGameInstance->IsKeyHold(DIK_UP))
+    if (ENUM_CLASS(LEVEL::MODEL) == m_pGameInstance->Get_CulLevelID())
     {
-        m_pTransformCom->Go_Straight(fTimeDelta);
-    }
+        if (m_pGameInstance->IsKeyHold(DIK_UP))
+        {
+            m_pTransformCom->Go_Straight(fTimeDelta);
+        }
 
-    if (m_pGameInstance->IsKeyHold(DIK_DOWN))
-    {
-        m_pTransformCom->Go_Backward(fTimeDelta);
+        if (m_pGameInstance->IsKeyHold(DIK_DOWN))
+        {
+            m_pTransformCom->Go_Backward(fTimeDelta);
+        }
+        if (m_pGameInstance->IsKeyHold(DIK_LEFT))
+        {
+            m_pTransformCom->Go_Left(fTimeDelta);
+        }
+        if (m_pGameInstance->IsKeyHold(DIK_RIGHT))
+        {
+            m_pTransformCom->Go_Right(fTimeDelta);
+        }
     }
-    if (m_pGameInstance->IsKeyHold(DIK_LEFT))
+    else
     {
-        m_pTransformCom->Go_Left(fTimeDelta);
-    }
-    if (m_pGameInstance->IsKeyHold(DIK_RIGHT))
-    {
-        m_pTransformCom->Go_Right(fTimeDelta);
-    }
 
+        if (m_pGameInstance->IsKeyHold(DIK_W))
+        {
+            m_pTransformCom->Go_Straight(fTimeDelta);
+        }
+        
+        if (m_pGameInstance->IsKeyHold(DIK_S))
+        {
+            m_pTransformCom->Go_Backward(fTimeDelta);
+        }
+        if (m_pGameInstance->IsKeyHold(DIK_A))
+        {
+            m_pTransformCom->Go_Left(fTimeDelta);
+        }
+        if (m_pGameInstance->IsKeyHold(DIK_D))
+        {
+            m_pTransformCom->Go_Right(fTimeDelta);
+        }
+  
+    }
     //if (m_pGameInstance->IsKeyHold(DIK_8))
     //{
     //    m_fFovy += XMConvertToRadians(10.f) * fTimeDelta;

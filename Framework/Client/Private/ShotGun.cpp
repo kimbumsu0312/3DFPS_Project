@@ -42,10 +42,33 @@ void CShotGun::Update(_float fTimeDelta)
     }
     else if (*m_pCulStateTag == TEXT("Reload"))
     {
-        m_pAnimCom->Player_Animation(0, "Reload_Loop", false, m_pModelCom, fTimeDelta, 0);
+        if (m_isReload == false)
+        {
+            m_iReloadStack = 0;
+            m_isReload = true;
+        }
+        if (m_isReload)
+        {
+            if (m_iReloadStack == 0)
+            {
+                if (m_pAnimCom->Player_Animation(0, "Reload_Start", false, m_pModelCom, fTimeDelta, 0))
+                    m_iReloadStack = 1;
+            }
+            else if (m_iReloadStack == 1)
+            {
+                if (m_pAnimCom->Player_Animation(0, "Reload_Loop", false, m_pModelCom, fTimeDelta, 0))
+                    m_iReloadStack = 2;
+            }
+            else if(m_iReloadStack == 2)
+            {
+                if (m_pAnimCom->Player_Animation(0, "Reload_End", false, m_pModelCom, fTimeDelta, 0))
+                    m_iReloadStack = 3;
+            }
+        }
     }
     else
     {
+        m_isReload = false;
         m_pAnimCom->Player_Animation(0, "Idle_Loop", true, m_pModelCom, fTimeDelta, 0);
     }
     _matrix     BoneMatrix = XMLoadFloat4x4(m_pSocketMatrix);

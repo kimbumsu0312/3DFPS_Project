@@ -13,6 +13,7 @@
 #include "NorMon_Sword.h"
 #include "NorMon_Halberd.h"
 #include "NorMon_Shotel.h"
+#include "BaseMapObj.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_pDevice{ pDevice }, m_pContext { pContext }, m_pGameInstance { CGameInstance::GetInstance()}
 {
@@ -167,6 +168,36 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		return E_FAIL;
 #pragma endregion
 
+#pragma region MapObject
+	/* Prototype_Model_Badroom*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Badroom/Badroom.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_BadRoom"))))
+		return E_FAIL;
+	/* Prototype_Model_Badroom*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Courtyardground/Courtyardground.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Courtyardground"))))
+		return E_FAIL;
+	/* Prototype_Model_Badroom*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Diningroom/Diningroom.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Diningroom"))))
+		return E_FAIL;
+	/* Prototype_Model_Badroom*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Entrancehalla/Entrancehalla.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Entrancehalla"))))
+		return E_FAIL;
+	/* Prototype_Model_Badroom*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Livingroom/Livingroom.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Livingroom"))))
+		return E_FAIL;
+	/* Prototype_Model_Badroom*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/MainHall/MainHall.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_MainHall"))))
+		return E_FAIL;
+	/* Prototype_Model_Badroom*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/SafeRoom/SafeRoom.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_SafeRoom"))))
+		return E_FAIL;
+	/* Prototype_Model_Badroom*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/WoodEncorridora/WoodEncorridora.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_WoodEncorridora"))))
+		return E_FAIL;
+	/* Prototype_Model_Badroom*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Woodencorridorb/Woodencorridorb.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Woodencorridorb"))))
+		return E_FAIL;
+#pragma endregion
+
 	lstrcpy(m_szLoadingText, TEXT("쉐이더를 로딩중입니다."));
 	/* Prototype_Component_Shader_VtxNorTex */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Shader_VtxNorTex"),
@@ -190,6 +221,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sky"),
 		CSky::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
 #pragma region Player_Object
 	if(FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Player"),
 		CPlayer::Create(m_pDevice, m_pContext))))
@@ -283,8 +315,11 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CAnnounce::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-
 #pragma endregion
+	/* Prototype_GameObject_BaseMapObj */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_BaseMapObj"),
+		CBaseMapObj::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
 	m_isFinished = true;

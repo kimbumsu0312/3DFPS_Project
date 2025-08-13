@@ -76,6 +76,12 @@
     <Filter Include="96.Utility\Imgui">
       <UniqueIdentifier>{cca49efb-f975-4fbb-b8b2-f70115c02767}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Object\NeviMesh">
+      <UniqueIdentifier>{49b9115c-2c78-4c11-bef0-3995a9a6cb42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Object\NeviMesh\PointCube">
+      <UniqueIdentifier>{7936a109-ffa1-4d36-befe-a0176f45b72b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -174,6 +180,12 @@
     <ClInclude Include="..\public\Edit_Channel.h">
       <Filter>03.Component\Model\Animation\Channel</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\NeviMesh.h">
+      <Filter>02.Object\NeviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PointCube.h">
+      <Filter>02.Object\NeviMesh\PointCube</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -251,6 +263,12 @@
     <ClCompile Include="..\private\Edit_Channel.cpp">
       <Filter>03.Component\Model\Animation\Channel</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\NeviMesh.cpp">
+      <Filter>02.Object\NeviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PointCube.cpp">
+      <Filter>02.Object\NeviMesh\PointCube</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -273,6 +291,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCube.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

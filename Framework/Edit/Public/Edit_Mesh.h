@@ -17,7 +17,7 @@ public:
 public:
 	_uint					Get_MaterialIndex() { return m_iMaterialIndex; }
 	HRESULT					Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, const vector<class CEdit_Bone*>& Bones);
-	virtual _bool			IsPicked(MODELTYPE eType, class CTransform& pTransform, _float3& pOut);
+	virtual _bool			IsPicked(MODELTYPE eType, class CTransform& pTransform, _float& pOut);
 private:
 	_char					m_szName[MAX_PATH] = {};
 	_uint					m_iMaterialIndex = {};

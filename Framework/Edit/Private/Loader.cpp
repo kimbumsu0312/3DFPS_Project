@@ -2,6 +2,8 @@
 #include "Loader.h"
 #include "Terrain.h"
 #include "MapObject.h"
+#include "NeviMesh.h"
+#include "PointCube.h"
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_pDevice{ pDevice }, m_pContext { pContext }, m_pGameInstance { CGameInstance::GetInstance()}
 {
 	Safe_AddRef(m_pGameInstance);
@@ -98,7 +100,15 @@ HRESULT CLoader::Loading_For_Map_Level()
 	lstrcpy(m_szLoadingText, TEXT("쉐이더를 로딩중입니다."));
 
 	lstrcpy(m_szLoadingText, TEXT("게임오브젝트원형를 로딩중입니다."));
-	/* Prototype_GameObject_Terrain */
+	/* Prototype_GameObjcet_NeviMesh */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAP), TEXT("Prototype_GameObjcet_NeviMesh"),
+		CNeviMesh::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* Prototype_GameObjcet_NeviMesh */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAP), TEXT("Prototype_GameObjcet_PointCube"),
+		CPointCube::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("맵 로딩중"));
 	m_isFinished = true;

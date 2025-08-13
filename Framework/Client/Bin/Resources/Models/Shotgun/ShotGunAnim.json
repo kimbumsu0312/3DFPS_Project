@@ -22,20 +22,20 @@
                 },
                 {
                     "AnimeName": "Reload_Start",
-                    "EndFrame": 245,
-                    "StartFrame": 284,
+                    "EndFrame": 293,
+                    "StartFrame": 230,
                     "TickPerSecond": 25.0
                 },
                 {
                     "AnimeName": "Reload_Loop",
-                    "EndFrame": 299,
-                    "StartFrame": 284,
+                    "EndFrame": 319,
+                    "StartFrame": 296,
                     "TickPerSecond": 25.0
                 },
                 {
                     "AnimeName": "Reload_End",
                     "EndFrame": 348,
-                    "StartFrame": 329,
+                    "StartFrame": 320,
                     "TickPerSecond": 25.0
                 }
             ]

@@ -12,7 +12,7 @@ HRESULT CDamage_NorMon_1::Initalize(void* pArg)
     return S_OK;
 }
 
-void CDamage_NorMon_1::Enter(const NORMON_STATE& pMonState)
+void CDamage_NorMon_1::Enter(const NORMON_STATE& pMonState, CTransform* pTransformCom)
 {
     *m_pAnimState = ENUM_CLASS(NORMAL_MON_STATE::DAMAGE);
     m_eAnimState = STATE_ANIM::START;
@@ -20,11 +20,11 @@ void CDamage_NorMon_1::Enter(const NORMON_STATE& pMonState)
     *m_pIsAnimLoop = false;
 }
 
-void CDamage_NorMon_1::Update(_float fDeltatime, const NORMON_STATE& pMonState)
+void CDamage_NorMon_1::Update(_float fDeltatime, const NORMON_STATE& pMonState, CTransform* pTransformCom)
 {
     if (*m_pIsAnimFinsh)
     {
-        *m_pStateTag = TEXT("Chase");
+        *m_pStateTag = TEXT("Stand");
     }
 }
 

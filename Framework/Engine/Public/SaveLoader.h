@@ -15,12 +15,15 @@ public:
 
 	HRESULT						Load_Terrain(string szFilePath, SAVE_TERRAIN& pOut);
 	HRESULT						Load_Level(string szFilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex );
+	HRESULT						Load_Level(string szFilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex, _wstring szPrototypeTag);
+
 	HRESULT						Load_Objcet(string szFilePath, _uint iPrototypeLevelIndex, _wstring szPrototypeTag);
 
 	HRESULT						Add_SaveObject(class CGameObject* pObject, _int &pOut);
 	HRESULT						Erase_SaveObject(_int Index);
 	void						Clear_Object();
 
+	vector<class CGameObject*>* Get_Objects() { return &m_Objects; }
 private:
 	ID3D11Device*				m_pDevice;
 	ID3D11DeviceContext*		m_pContext;

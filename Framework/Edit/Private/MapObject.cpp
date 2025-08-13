@@ -65,14 +65,14 @@ void CMapObject::Update(_float fTimeDelta)
 	{
 		if (m_pGameInstance->IsMouseHold(MOUSEKEYSTATE::LB))
 		{
-			_float3 vSetModelPos = { 0.f, 0.f, 0.f };
+			_float vSetModelPos = { 0.f };
 			if (m_pModelCom->Selete_Model(*m_pTransformCom, vSetModelPos))
 			{
 				CImgui_Manger::GetInstance()->Selete_Object(*this, *m_pTransformCom);
 			}
 		}
 
-		if (m_pGameInstance->IsKeyDown(DIK_TAB))
+		if (m_pGameInstance->IsKeyDown(DIK_P))
 		{
 			m_pGameInstance->File_Save_Object(m_pModelCom->Get_ModelData().szName, m_pModelCom->Get_ModelData().eModel, m_pModelCom->Get_ModelData());
 		}
@@ -112,6 +112,8 @@ HRESULT CMapObject::Render()
 
 		if(m_bIsSelete)
 			m_pShaderCom->Begin(1);
+		else if(g_ISWireFream)
+			m_pShaderCom->Begin(2);
 		else
 			m_pShaderCom->Begin(0);
 		
@@ -120,6 +122,10 @@ HRESULT CMapObject::Render()
 	return S_OK;
 }
 
+_bool CMapObject::IsPick_Objcet(_float& pOut)
+{
+	return m_pModelCom->Selete_Model(*m_pTransformCom, pOut);
+}
 
 HRESULT CMapObject::Ready_Components()
 {

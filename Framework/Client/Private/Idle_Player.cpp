@@ -22,18 +22,26 @@ void CIdle_Player::Enter(const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_M
 
 void CIdle_Player::Update(_float fDeltatime, const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
 {
-    if(pAttackState.isGuard)
-        *m_pStateTag = TEXT("Guard");
-    else if(pAttackState.isReload)
-        *m_pStateTag = TEXT("Reload");
-    else if(pAttackState.isAttack)
-        *m_pStateTag = TEXT("Attack");
-    else if(pAttackState.isAim)
-        *m_pStateTag = TEXT("Aim");
-    else
+    //if(*m_pIsAnimFinsh)
+    //    m_eAnimState = STATE_ANIM::LOOP;
+
+    if (m_eAnimState == STATE_ANIM::LOOP)
     {
-        *m_pAnimTag = "Idle_Loop";
-        *m_pIsAnimLoop = true;
+        if (pAttackState.isWeaponSwap)
+            *m_pStateTag = TEXT("WeaponSwap");
+        else if (pAttackState.isGuard)
+            *m_pStateTag = TEXT("Guard");
+        else if (pAttackState.isReload)
+            *m_pStateTag = TEXT("Reload");
+        else if (pAttackState.isAttack)
+            *m_pStateTag = TEXT("Attack");
+        else if (pAttackState.isAim)
+            *m_pStateTag = TEXT("Aim");
+        else
+        {
+            *m_pAnimTag = "Idle_Loop";
+            *m_pIsAnimLoop = true;
+        }
     }
 }
 

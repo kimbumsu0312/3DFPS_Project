@@ -124,15 +124,33 @@ _bool CEdit_Model::Play_Animation(_float fTimeDelta, _bool bIsAnimStop, _int iSt
 	return m_bisFinished;
 }
 
-_bool CEdit_Model::Selete_Model(CTransform& pTransform, _float3& pOut)
+_bool CEdit_Model::Selete_Model(CTransform& pTransform, _float& pOut)
 {
+	_float fSourcelength = { -1.f };
+	_bool IsPicked = false;
+
 	for (_int i = 0; i < m_Meshes.size(); ++i)
 	{
-		if (m_Meshes[i]->IsPicked(m_ModelData.eModel, pTransform, pOut))
-			return true;
+		_float fDestlength = { -1.f };
+
+		if (true == m_Meshes[i]->IsPicked(m_ModelData.eModel, pTransform, fDestlength))
+		{
+			if (fSourcelength <= 0.f || fSourcelength > fDestlength)
+			{
+				fSourcelength = fDestlength;
+				pOut = fSourcelength;
+			}
+			IsPicked = true;
+		}
+
 	}
 
-	return false;
+	//if (IsPicked)
+	//{
+	//	XMVECTOR vWorldPos = XMVector3TransformCoord(XMLoadFloat3(&pOut), pTransform.Get_WorldMatrix());
+	//	XMStoreFloat3(&pOut, vWorldPos);
+	//}
+	return IsPicked;
 }
 
 void CEdit_Model::Set_Animations(_uint iIndex, _bool IsLoop)
@@ -163,6 +181,8 @@ _float CEdit_Model::Get_Animation(_int i)
 	else
 		return m_Animations[m_iCurrentAnimIndex]->Get_Duration();
 }
+
+
 
 HRESULT CEdit_Model::Render(_uint iMeshIndex)
 {

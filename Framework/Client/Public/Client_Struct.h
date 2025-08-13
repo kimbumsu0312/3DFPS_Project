@@ -17,6 +17,7 @@ namespace Client
 		bool isGuard;
 		bool isReload;
 		bool isAim;
+		bool isWeaponSwap;
 	}PLAYER_ATTACK_STATE;
 
 	typedef struct NorMonState

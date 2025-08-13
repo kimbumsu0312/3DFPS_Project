@@ -8,6 +8,7 @@
 #include "Animatio_Controller.h"
 #include "VIBuffer_Cube.h"
 #include "Model.h"
+#include "Navigation.h"
 
 NS_BEGIN(Engine)
 class CPrototype_Manager final : public CBase

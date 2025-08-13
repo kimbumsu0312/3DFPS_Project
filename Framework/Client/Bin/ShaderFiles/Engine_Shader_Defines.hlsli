@@ -17,6 +17,17 @@ RasterizerState RS_Cull_CW
 {    
     CullMode = front;    
 };
+RasterizerState RS_Cull_None
+{
+    CullMode = None;
+};
+
+RasterizerState RS_WireFrame
+{
+    FillMode = Wireframe;
+    CullMode = None;
+    FrontCounterClockwise = false;
+};
 
 DepthStencilState DSS_Default
 {
