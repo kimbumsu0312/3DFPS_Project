@@ -11,16 +11,15 @@ private:
 
 public:
 	virtual HRESULT				Initalize(void* pArg) override;
-	virtual void				Enter(const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState) override;
-	virtual void				Update(_float fDeltatime, const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState) override;
-	virtual void				Exit() override;
+	virtual void				Enter(CPlayer* pContainer) override;
+	virtual void				Update(CPlayer* pContainer, _float fTimeDelta) override;
+	virtual void				Exit(CPlayer* pContainer) override;
 
 private:
-	STATE_ANIM					m_eAnimState = STATE_ANIM::END;
-	_bool						m_bAttackPatten = true;
+	_bool						m_bMotionSwap= true;
 
 public:
-	static CAttack_Player*		Create(void* pArg);
+	static CAttack_Player*		Create(void* pArg = nullptr);
 	virtual void				Free() override;
 };
 NS_END

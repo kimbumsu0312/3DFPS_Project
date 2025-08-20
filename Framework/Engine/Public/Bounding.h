@@ -1,12 +1,13 @@
 #pragma once
 #include "Base.h"
+#include "Collider.h"
 #include "DebugDraw.h"
 
 NS_BEGIN(Engine)
 class ENGINE_DLL CBounding abstract : public CBase
 {
 public:
-	typedef struct tagBoundingDesc
+	typedef struct tagBoundingDesc : public CCollider::COLLIDER_DESC
 	{
 		_float3 vCenter;
 	}BOUNDING_DESC;
@@ -19,6 +20,7 @@ public:
 	virtual HRESULT				Initialize();
 	virtual void				Update(_fmatrix WorldMatrix) {};
 	virtual _bool				Intersect(COLLIDER eType, CBounding* pTarget) = 0;
+	virtual _bool				Intersect(_vector RayPos, _vector RayDir) = 0;
 
 #ifdef _DEBUG
 public:

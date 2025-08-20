@@ -26,56 +26,6 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pRende
     
     return S_OK;
 }
-/*
-HRESULT CRenderer::Add_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates, const void* pDesc)
-{
-    ID3D11DeviceChild* pRenderState = Find_RenderState(szRenderTag, eRenderStates);
-
-    if (pRenderState != nullptr)
-        return E_FAIL;
-
-    if (eRenderStates == RENDERSTATE::BLEND)
-    {
-        ID3D11BlendState* pBlendState = nullptr;
-        if (FAILED(m_pDevice->CreateBlendState(static_cast<const D3D11_BLEND_DESC*>(pDesc), &pBlendState)))
-            return E_FAIL;
-
-        m_pRenderState[ENUM_CLASS(eRenderStates)].emplace(szRenderTag, pBlendState);
-    }
-    else if (eRenderStates == RENDERSTATE::DEPTH_STENCIL)
-    {
-        ID3D11DepthStencilState* pDSState = nullptr;
-        if (FAILED(m_pDevice->CreateDepthStencilState(static_cast<const D3D11_DEPTH_STENCIL_DESC*>(pDesc), &pDSState)))
-            return E_FAIL;
-
-        m_pRenderState[ENUM_CLASS(eRenderStates)].emplace(szRenderTag, pDSState);
-    }
-    else
-    {
-        return E_FAIL;
-    }
-
-    return S_OK;
-}
-
-HRESULT CRenderer::Switching_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates)
-{
-    ID3D11DeviceChild* pRenderState = Find_RenderState(szRenderTag, eRenderStates);
-
-    if (pRenderState == nullptr)
-        return E_FAIL;
-
-    switch (eRenderStates)
-    {
-    case RENDERSTATE::BLEND:
-        m_pContext->OMSetBlendState(static_cast<ID3D11BlendState*>(pRenderState), nullptr, 0xffffffff);
-        break;
-    case RENDERSTATE::DEPTH_STENCIL:
-        m_pContext->OMSetDepthStencilState(static_cast<ID3D11DepthStencilState*>(pRenderState), 0);
-        break;
-    }
-    return S_OK;
-}*/
 
 HRESULT CRenderer::Draw()
 {
@@ -185,63 +135,6 @@ HRESULT CRenderer::Render_Last()
 
     return S_OK;
 }
-
-/*ID3D11DeviceChild* CRenderer::Find_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates)
-{
-    auto iter = m_pRenderState[ENUM_CLASS(eRenderStates)].find(szRenderTag);
-
-    if (iter == m_pRenderState[ENUM_CLASS(eRenderStates)].end())
-        return nullptr;
-
-    return iter->second;
-}
-
-HRESULT CRenderer::Ready_RenderState()
-{
-    D3D11_DEPTH_STENCIL_DESC dsDesc = {};
-    dsDesc.DepthEnable = TRUE;                  
-    dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-    dsDesc.DepthFunc = D3D11_COMPARISON_LESS;       
-    dsDesc.StencilEnable = FALSE;
-
-    if (FAILED(Add_RenderState(TEXT("Default_State"), RENDERSTATE::DEPTH_STENCIL, &dsDesc)))
-        return E_FAIL;
-
-    //뎁스 스텐실 컴객체 생성
-    //뎁스 버퍼 : 깊이 값을 저장하는 버퍼
-    //스텐실 버퍼 : 화면 각 픽셀마다 정보를 저장하는 버퍼
-    D3D11_DEPTH_STENCIL_DESC DepthStencil_Desc = {};
-    DepthStencil_Desc.DepthEnable = FALSE;
-    DepthStencil_Desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-    DepthStencil_Desc.DepthFunc = D3D11_COMPARISON_ALWAYS;
-    DepthStencil_Desc.StencilEnable = FALSE;
-
-    if (FAILED(Add_RenderState(TEXT("NonDepthTest"), RENDERSTATE::DEPTH_STENCIL, &DepthStencil_Desc)))
-        return E_FAIL;
-
-    D3D11_BLEND_DESC Blend_Desc = {};
-    Blend_Desc.RenderTarget[0].BlendEnable = TRUE;
-    Blend_Desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-    Blend_Desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-    Blend_Desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-    Blend_Desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-    Blend_Desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-    Blend_Desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-    Blend_Desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-    if (FAILED(Add_RenderState(TEXT("AlphaBlend"), RENDERSTATE::BLEND, &Blend_Desc)))
-        return E_FAIL;
-
-    D3D11_BLEND_DESC NonBlend_Desc = {};
-    NonBlend_Desc.RenderTarget[0].BlendEnable = FALSE;
-    NonBlend_Desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-    if (FAILED(Add_RenderState(TEXT("NonAlphaBlend"), RENDERSTATE::BLEND, &NonBlend_Desc)))
-        return E_FAIL;
-
-    return S_OK;
-}*/
-
 
 CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

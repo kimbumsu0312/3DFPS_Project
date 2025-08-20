@@ -12,9 +12,8 @@ private:
 public:
 	HRESULT							Initialize(const SAVE_CHANNEL& pChannel, const vector<class CBone*>& Bones);
 	void							Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _float fPreTrackPosition, _uint* pCurrentKeyFrameIndex, const ANIMEFRAME& pAnimFrameData, _float fRatio);
-	void							Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _float fPreTrackPosition, _uint* pCurrentKeyFrameIndex, const ANIMEFRAME& pAnimFrameData, _uint iLowBonIndex, _bool IsUpper);
 	void							Update_TransformationMatirx_Transition(const vector<class CBone*>& Bones, _uint pStartKeyFrameIndex, _float fRatio);
-	void							Update_TransformationMatirx_Transition(const vector<class CBone*>& Bones, _uint pStartKeyFrameIndex, _float fRatio, _uint iLowBonIndex, _bool IsUpper);
+
 private:
 	_char							m_szName[MAX_PATH] = { };
 	_uint							m_iBoneIndex = {};

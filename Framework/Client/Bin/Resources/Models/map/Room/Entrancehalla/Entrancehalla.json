@@ -1,5 +1,5 @@
 {
-    "Data_Path":"../Bin/Resources/Models/Map/Room/Entrancehalla/EntrancehallaData.dat",
+    "Data_Path": "../Bin/Data/Object/EntrancehallaData.dat",
     "MeshMaterial": [
         {
             "Materials": [

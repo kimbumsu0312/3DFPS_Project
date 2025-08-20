@@ -52,9 +52,6 @@ HRESULT CBaseMapObj::Render()
 		if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_DiffuseTexture", i, 0, 0)))
 			continue;
 
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
-			return E_FAIL;
-
 		m_pShaderCom->Begin(0);
 		m_pModelCom->Render(i);
 	}

@@ -1,5 +1,5 @@
 {
-    "Data_Path": "../Bin/Resources/Models/Map/Room/badroom/BadRoomData.dat",
+    "Data_Path": "../Bin/Data/Object/BadRoomData.dat",
     "MeshMaterial": [
         {
             "Materials": [

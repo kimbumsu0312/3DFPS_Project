@@ -8,64 +8,61 @@ CReload_Player::CReload_Player()
 
 HRESULT CReload_Player::Initalize(void* pArg)
 {
-    __super::Initalize(pArg);
-
     return S_OK;
 }
 
-void CReload_Player::Enter(const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
+void CReload_Player::Enter(CPlayer* pContainer)
 {
-    if (*m_pWeaponState == PLAYER_WEAPON::SHOTGUN)
+    m_eAnimState = STATE_ANIM::START;
+
+    if (pContainer->Get_WeaponType() == ENUM_CLASS(PLAYER_WEAPON::SHOTGUN))
     {
         m_eReload_Type = RELOAD_TYPE::BULLET;
-        *m_pAnimTag = "Reload_Start";
+        pContainer->Switch_Anim("Reload_Start", false);
     }
     else
     {
         m_eReload_Type = RELOAD_TYPE::MAGAZINE;
-        *m_pAnimTag = "Reload";
+        pContainer->Switch_Anim("Reload", false);
     }
-    m_eAnimState = STATE_ANIM::START;
-
-    *m_pIsAnimLoop = false;
 }
 
-void CReload_Player::Update(_float fDeltatime, const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
+void CReload_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 {
-    if ( m_eReload_Type == RELOAD_TYPE::MAGAZINE)
+    if (m_eReload_Type == RELOAD_TYPE::MAGAZINE)
     {
-        if (*m_pIsAnimFinsh)
+        if (pContainer->IsAnimFinsh())
         {
-            if (pAttackState.isAim)
-                *m_pStateTag = TEXT("Aim");
+            if (pContainer->Get_AttackState().isAim)
+                pContainer->Switch_State(TEXT("Aim"));
             else
-                *m_pStateTag = TEXT("Idle");
+                pContainer->Switch_State(TEXT("Idle"));
         }
         return;
     }
     else if (m_eReload_Type == RELOAD_TYPE::BULLET)
     {
-        if (m_eAnimState == STATE_ANIM::START && *m_pIsAnimFinsh)
+        if (m_eAnimState == STATE_ANIM::START && pContainer->IsAnimFinsh())
         {
             m_eAnimState = STATE_ANIM::LOOP;
-            *m_pAnimTag = "Reload_Loop";
+            pContainer->Switch_Anim("Reload_Loop", false);
         }
-        else if (m_eAnimState == STATE_ANIM::LOOP && *m_pIsAnimFinsh)
+        else if (m_eAnimState == STATE_ANIM::LOOP && pContainer->IsAnimFinsh())
         {
             m_eAnimState = STATE_ANIM::END;
-            *m_pAnimTag = "Reload_End";
+            pContainer->Switch_Anim("Reload_End", false);
         }
-        else if (m_eAnimState == STATE_ANIM::END && *m_pIsAnimFinsh)
+        else if (m_eAnimState == STATE_ANIM::END && pContainer->IsAnimFinsh())
         {
-            if (pAttackState.isAim)
-                *m_pStateTag = TEXT("Aim");
+            if (pContainer->Get_AttackState().isAim)
+                pContainer->Switch_State(TEXT("Aim"));
             else
-                *m_pStateTag = TEXT("Idle");
+                pContainer->Switch_State(TEXT("Idle"));
         }
     }
 }
 
-void CReload_Player::Exit()
+void CReload_Player::Exit(CPlayer* pContainer)
 {
     m_eAnimState == STATE_ANIM::END;
 }

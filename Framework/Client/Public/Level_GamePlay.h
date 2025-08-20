@@ -24,6 +24,7 @@ private:
 	HRESULT Ready_Layer_Monster(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Effect(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_UI(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_Event(const _wstring& strLayerTag);
 
 
 public:

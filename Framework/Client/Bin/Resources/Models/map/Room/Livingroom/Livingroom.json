@@ -1,5 +1,5 @@
 {
-    "Data_Path": "../Bin/Resources/Models/Map/Room/Livingroom/LivingroomData.dat",
+    "Data_Path": "../Bin/Data/Object/LivingroomData.dat",
     "MeshMaterial": [
         {
             "Materials": [
@@ -7,9 +7,33 @@
                     "iTexCount": 1,
                     "szFullPath": [
                         {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/MS_Wood_RoughWood_01_004_t_ALBD.dds"
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm21_142_BedRoom_Floor_A_ALBD.dds"
                         }
                     ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
                 },
                 {
                     "iTexCount": 0
@@ -27,33 +51,9 @@
                     "iTexCount": 1,
                     "szFullPath": [
                         {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm39_035_WoodenFirePlace01_A_LYMO.dds"
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm21_142_BedRoom_Floor_A_NRRC.dds"
                         }
                     ]
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
                 },
                 {
                     "iTexCount": 0
@@ -93,53 +93,137 @@
                     "iTexCount": 1,
                     "szFullPath": [
                         {
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/MS_Wood_RoughWood_01_004_t_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm39_035_WoodenFirePlace01_A_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm39_035_WoodenFirePlace01_C_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
                             "Path": "../Bin/Resources/Models/Map/Room/Livingroom/MS_rm5h3hp_ALBD.dds"
-                        }
-                    ]
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 1,
-                    "szFullPath": [
-                        {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm39_035_WoodenFirePlace01_C_LYMO.dds"
-                        },
-                        {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm39_035_WoodenFirePlace01_C_ALB.dds"
-                        }
-                    ]
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 1,
-                    "szFullPath": [
-                        {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/Wear_Grunge_00_007_MSK.dds"
                         }
                     ]
                 },
@@ -198,36 +282,36 @@
                     "iTexCount": 0
                 },
                 {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
                     "iTexCount": 1,
                     "szFullPath": [
                         {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/Wear_Grunge_00_004_MSK.dds"
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/MS_sewrcdya_NRRC.dds"
                         }
                     ]
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
                 },
                 {
                     "iTexCount": 0
@@ -308,10 +392,12 @@
                     "iTexCount": 0
                 },
                 {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm80_003_FirePoint_A_NRRC.dds"
+                        }
+                    ]
                 },
                 {
                     "iTexCount": 0
@@ -395,7 +481,7 @@
                     "iTexCount": 1,
                     "szFullPath": [
                         {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm39_035_WoodenFirePlace01_B_LYMO.dds"
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm39_035_WoodenFirePlace01_B_NRRC.dds"
                         }
                     ]
                 },
@@ -481,7 +567,177 @@
                     "iTexCount": 1,
                     "szFullPath": [
                         {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/st04_022_GhostHouse1FHall_WoodCeiling_A_MSK.dds"
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/st04_022_GhostHouse1FHall_WoodCeiling_A_NRRH.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/shcl0jn_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/MS_Wood_RoughWood_01_004_t_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm21_129_Dining_WoodCeiling_A_NRRC.dds"
                         }
                     ]
                 },
@@ -567,7 +823,7 @@
                     "iTexCount": 1,
                     "szFullPath": [
                         {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm21_129_Dining_WoodCeiling_B_ATOS.dds"
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm21_129_Dining_WoodCeiling_B_NRRC.dds"
                         }
                     ]
                 },
@@ -653,7 +909,7 @@
                     "iTexCount": 1,
                     "szFullPath": [
                         {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/MS_Wood_RoughWood_01_011_t_ALBD.dds"
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/MS_Wood_RoughWood_01_011_t_NRRC.dds"
                         }
                     ]
                 },
@@ -739,7 +995,7 @@
                     "iTexCount": 1,
                     "szFullPath": [
                         {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/Wear_Grunge_00_000_MSK.dds"
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/MS_sbqirwp_NRRC.dds"
                         }
                     ]
                 },
@@ -778,178 +1034,10 @@
         {
             "Materials": [
                 {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                }
-            ]
-        },
-        {
-            "Materials": [
-                {
                     "iTexCount": 1,
                     "szFullPath": [
                         {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/MS_Wood_RoughWood_01_004_t_ALBD.dds"
-                        }
-                    ]
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 1,
-                    "szFullPath": [
-                        {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm21_133_ConcertHall_Wall_02_C_LYMO.dds"
-                        }
-                    ]
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                },
-                {
-                    "iTexCount": 0
-                }
-            ]
-        },
-        {
-            "Materials": [
-                {
-                    "iTexCount": 1,
-                    "szFullPath": [
-                        {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/MS_Wood_RoughWood_01_004_t_ALBD.dds"
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/MS_sbqirwp_ALBD.dds"
                         }
                     ]
                 },
@@ -993,7 +1081,7 @@
                     "iTexCount": 1,
                     "szFullPath": [
                         {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/Wear_Grunge_00_003_MSK.dds"
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/MS_sbqirwp_NRRC.dds"
                         }
                     ]
                 },
@@ -1079,7 +1167,179 @@
                     "iTexCount": 1,
                     "szFullPath": [
                         {
-                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/Wear_Grunge_00_009_MSK.dds"
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm21_133_ConcertHall_Wall_02_C_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/MS_Wood_RoughWood_01_004_t_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm21_000_MainHall_WoodWall_02_B_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/MS_Wood_RoughWood_01_004_t_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/Livingroom/sm21_000_MainHall_WoodWall_02_A_NRRC.dds"
                         }
                     ]
                 },
@@ -1118,6 +1378,6 @@
     ],
     "Model_name": "Livingroom",
     "Model_type": 0,
-    "iNumMaterials": 13,
-    "iNumMeshes": 13
+    "iNumMaterials": 16,
+    "iNumMeshes": 16
 }

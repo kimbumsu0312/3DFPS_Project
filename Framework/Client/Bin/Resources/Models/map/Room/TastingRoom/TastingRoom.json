@@ -1,0 +1,1221 @@
+{
+    "Data_Path": "../Bin/Data/Object/TastingRoomData.dat",
+    "MeshMaterial": [
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/construction_plaster_01_001_t_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/concrete_rough_01_004_t_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/MS_pkcnJ_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/sm20_053_Outside_DeathMaskFloor_ALBA.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/sm20_053_Outside_DeathMaskFloor_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/MS_terkbbhp_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/sm20_053_Outside_CorridorCeiling_A_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/MS_BRICK-WALL-01_t_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/sm29_125_RuinsWall_A_ALBA.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/MS_pjBnl2_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/MS_texlcejo_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/sm20_053_Outside_SideTowerWallPillar_A_ALBA.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/sm20_053_Outside_SideTowerWallPillar_A_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/Wood_Timber_00_003_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/Wood_Timber_00_003_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/MS_Wood_RoughWood_01_004_t_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/sm21_000_MainHall_WoodWall_01_A_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/MS_Wood_RoughWood_01_004_t_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/sm21_000_MainHall_WoodWall_02_B_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/MS_Wood_RoughWood_01_004_t_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/sm21_000_MainHall_WoodWall_02_A_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/MS_Wood_RoughWood_01_004_t_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/sm21_000_MainHall_HallCeiling_B_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/MS_Wood_RoughWood_01_004_t_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/sm21_000_MainHall_HallCeiling_C_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/MS_Wood_RoughWood_01_003_t_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/st04_046_GhostB1Office_Floor_A_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/st04_046_GhostB1Office_Floor_A_NRMR.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/shcl0jn_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/shcl0jn_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        },
+        {
+            "Materials": [
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/Metal_Rust_00_001_t_ALBD.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 1,
+                    "szFullPath": [
+                        {
+                            "Path": "../Bin/Resources/Models/Map/Room/TastingRoom/sm83_103_KitchenWindow_A_NRRC.dds"
+                        }
+                    ]
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                },
+                {
+                    "iTexCount": 0
+                }
+            ]
+        }
+    ],
+    "Model_name": "TastingRoom",
+    "Model_type": 0,
+    "iNumMaterials": 14,
+    "iNumMeshes": 14
+}

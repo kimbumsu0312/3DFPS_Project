@@ -1,5 +1,5 @@
 {
-    "Data_Path": "../Bin/Resources/Models/Map/Room/Courtyardground/CourtyardgroundData.dat",
+    "Data_Path": "../Bin/Data/Object/CourtyardgroundData.dat",
     "MeshMaterial": [
         {
             "Materials": [

@@ -34,7 +34,6 @@ public:
 	virtual HRESULT			Render() override;
 
 public:
-	virtual void			On_Dead() override;
 	virtual HRESULT			Initialize_Pool(void* pArg) override;
 	virtual void			Return_Pool() override ;
 

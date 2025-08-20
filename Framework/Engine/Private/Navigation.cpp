@@ -11,9 +11,9 @@ CNavigation::CNavigation(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) :
 {
 }
 
-CNavigation::CNavigation(const CNavigation& Prototype) : CComponent ( Prototype ), m_Cells{ Prototype.m_Cells },
+CNavigation::CNavigation(const CNavigation& Prototype) : CComponent ( Prototype ), m_Cells{ Prototype.m_Cells }
 #ifdef _DEBUG
-m_pShader{ Prototype.m_pShader }
+,m_pShader{ Prototype.m_pShader }
 #endif
 {
 	for (auto& pCell : m_Cells)
@@ -28,6 +28,7 @@ m_pShader{ Prototype.m_pShader }
 HRESULT CNavigation::Initialize_Prototype()
 {
 #ifdef _DEBUG
+	m_vColor = _float4(1.f, 0.f, 0.f, 1.f);
 	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Engine_Shader_Cell.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements);
 	if (nullptr == m_pShader)
 		return E_FAIL;
@@ -53,19 +54,29 @@ HRESULT CNavigation::Initialize_Prototype(const string& pNavigationFilePath)
 	file.read(reinterpret_cast<char*>(Cells.data()), sizeof(SAVE_CELLDATA) * iSize);
 
 	file.close();
-	
+
 	for (_uint i = 0; i < iSize; ++i)
 	{
+
 		_float3 CellData[3] = {};
 		CellData[0] = Cells[i].Point_A;
 		CellData[1] = Cells[i].Point_B;
 		CellData[2] = Cells[i].Point_C;
 
-		CCell* pCell = CCell::Create(m_pDevice, m_pContext, CellData, (_uint)m_Cells.size(), true);
+		CCell* pCell = CCell::Create(m_pDevice, m_pContext, CellData, i, Cells[i].iCellType, true);
 		if (nullptr == pCell)
 			return E_FAIL;
 
 		m_Cells.push_back(pCell);
+		
+#ifdef _DEBUG
+		SAVE_CELLDATA SaveCell{};
+		SaveCell.iCellType = Cells[i].iCellType;
+		SaveCell.Point_A = Cells[i].Point_A;
+		SaveCell.Point_B = Cells[i].Point_B;
+		SaveCell.Point_C = Cells[i].Point_C;
+		m_pCellPos.push_back(SaveCell);
+#endif
 	}
 
 	SetUp_Neighbors();
@@ -81,6 +92,9 @@ HRESULT CNavigation::Initialize_Prototype(const string& pNavigationFilePath)
 
 HRESULT CNavigation::Initialize(void* pArg)
 {
+#ifdef _DEBUG
+	m_vColor = _float4(1.f, 0.f, 0.f, 1.f);
+#endif
 	if (nullptr == pArg)
 		return S_OK;
 
@@ -97,38 +111,58 @@ void CNavigation::Update(_fmatrix WorldMatrix)
 	XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
 }
 
-_bool CNavigation::isMove(_fvector vPosition)
+_bool CNavigation::isMove(_fvector vCulPosition)
 {
 	//현재 월드 매트릭스를 객체의 로컬로 변경
-	_vector vLocalPos = XMVector3TransformCoord(vPosition, XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)));
+	_vector vLocalPos = XMVector3TransformCoord(vCulPosition, XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)));
 
 	_int iNeighborIndex = { -1 };
 
 	//로컬 셀의 위치 내의 객체가 있으면 트루 
 	if (true == m_Cells[m_iCurrentCellIndex]->isIn(vLocalPos, &iNeighborIndex))
 		return true;
-	else
+	
+	if (-1 != iNeighborIndex)
 	{
-		//이웃이 없으면 못 넘어가게 한다.
-		if (-1 != iNeighborIndex)
+		for (_int j = 0; j < 5000; j++)
 		{
-			while (true)
-			{
-				if (-1 == iNeighborIndex)
-					return false;
+			if (-1 == iNeighborIndex)
+				return false;
+			//인접한 셀에 객체가 있는지 판단 후, 없으면 다음 인접셀로 넘김
+			//있는 경우 셀 인덱스를 반환
+			if (true == m_Cells[iNeighborIndex]->isIn(vLocalPos, &iNeighborIndex))
+				break;
+		}
 
-				//인접한 셀에 객체가 있는지 판단 후, 없으면 다음 인접셀로 넘김
-				//있는 경우 셀 인덱스를 반환
-				if (true == m_Cells[iNeighborIndex]->isIn(vLocalPos, &iNeighborIndex))
-					break;
-			}
+		m_iCurrentCellIndex = iNeighborIndex;
+		return true;
+	}
 
-			m_iCurrentCellIndex = iNeighborIndex;
+	return false;
+}
+
+_bool CNavigation::isSlide(CTransform* pTransform, _fvector vPrePosition ,_float fTimeDelta)
+{
+	_vector vCulPosition = pTransform->Get_State(STATE::POSITION);
+	
+	_float3 vSlideOut = {};
+	if (m_Cells[m_iCurrentCellIndex]->isSlide(vCulPosition, vPrePosition, vSlideOut))
+	{
+		// 보정된 위치 적용
+		_vector vSlidePos = vPrePosition + XMLoadFloat3(&vSlideOut);
+		if (isMove(vSlidePos))
+		{
+			pTransform->Set_State(STATE::POSITION, XMVectorSetW(vSlidePos, 1.f));
 			return true;
 		}
 		else
+		{
+			pTransform->Set_State(STATE::POSITION, XMVectorSetW(vPrePosition, 1.f));
 			return false;
+		}
 	}
+
+	return false;
 }
 
 _vector CNavigation::Compute_OnCell(_fvector vPosition)
@@ -146,11 +180,31 @@ _vector CNavigation::Compute_OnCell(_fvector vPosition)
 	return XMVector3TransformCoord(vLocalPos, XMLoadFloat4x4(&m_WorldMatrix));
 
 }
+#ifdef _DEBUG
 
-HRESULT CNavigation::Add_Cell(const _float3* pPos)
-{
 
-	CCell* pCell = CCell::Create(m_pDevice, m_pContext, pPos, (_uint)m_Cells.size(), false);
+HRESULT CNavigation::Add_Cell(const _float3* pPos, _uint iCellType)
+{	
+	_float3	vPoints[ENUM_CLASS(CELL_POINT::END)] = {};
+	memcpy(vPoints, pPos, sizeof(_float3) * ENUM_CLASS(CELL_POINT::END));
+
+
+	_vector vCamPos = XMLoadFloat4(m_pGameInstance->Get_CamPosition());
+	_vector vUp = vCamPos - XMLoadFloat3(&vPoints[ENUM_CLASS(CELL_POINT::A)]);
+	_vector vAB = XMLoadFloat3(&vPoints[ENUM_CLASS(CELL_POINT::B)]) - XMLoadFloat3(&vPoints[ENUM_CLASS(CELL_POINT::A)]);
+	_vector vAC = XMLoadFloat3(&vPoints[ENUM_CLASS(CELL_POINT::C)]) - XMLoadFloat3(&vPoints[ENUM_CLASS(CELL_POINT::A)]);
+	_vector vCross = XMVector3Cross(vUp, vAB);
+
+	_float fDot = XMVectorGetX(XMVector3Dot(vCross, vAC));
+
+	if (fDot < 0)
+	{
+		_float3 vB = vPoints[ENUM_CLASS(CELL_POINT::B)];
+		vPoints[ENUM_CLASS(CELL_POINT::B)] = vPoints[ENUM_CLASS(CELL_POINT::C)];
+		vPoints[ENUM_CLASS(CELL_POINT::C)] = vB;
+	}
+
+	CCell* pCell = CCell::Create(m_pDevice, m_pContext, vPoints, (_uint)m_Cells.size(), iCellType, false);
 
 	if (pCell == nullptr)
 	{
@@ -160,15 +214,15 @@ HRESULT CNavigation::Add_Cell(const _float3* pPos)
 	m_Cells.push_back(pCell);
 
 	SAVE_CELLDATA CellPos{};
-	CellPos.Point_A = pPos[0];
-	CellPos.Point_B = pPos[1];
-	CellPos.Point_C = pPos[2];
+	CellPos.Point_A = vPoints[0];
+	CellPos.Point_B = vPoints[1];
+	CellPos.Point_C = vPoints[2];
+	CellPos.iCellType = iCellType;
 
 	m_pCellPos.push_back(CellPos);
 	return S_OK;
 }
 
-#ifdef _DEBUG
 HRESULT CNavigation::Render()
 {
 	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
@@ -178,18 +232,14 @@ HRESULT CNavigation::Render()
 	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ))))
 		return E_FAIL;
 
-	_float4		vColor = {};
-
 	_float4x4	WorldMatrix = m_WorldMatrix;
 
 	if (-1 == m_iCurrentCellIndex)
 	{
-		vColor = _float4(0.f, 1.f, 0.f, 1.f);
-
 		if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
 			return E_FAIL;
 
-		m_pShader->Bind_RawValue("g_vColor", &vColor, sizeof(_float4));
+		m_pShader->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4));
 
 		m_pShader->Begin(0);
 
@@ -199,7 +249,7 @@ HRESULT CNavigation::Render()
 
 	else
 	{
-		vColor = _float4(1.f, 0.f, 0.f, 1.f);
+		_float4 vColor = _float4(1.f, 0.f, 0.f, 1.f);
 
 		WorldMatrix._42 += 0.1f;
 
@@ -242,10 +292,34 @@ _bool CNavigation::IsSnap(_float3& vPos, _float Radius)
 	{
 		if (Cell->IsSnap(vPos, Radius))
 		{
-			//return true;
+
 		}
 	}
 	return false;
+}
+void CNavigation::Chage_Color(_float4 vColor)
+{
+	m_vColor = vColor;
+}
+_int CNavigation::Selete_CellIndex(CTransform& pTransformCom)
+{
+	_float fDis = D3D11_FLOAT32_MAX;
+	_int iIndex = {-1};
+	m_pGameInstance->TransformToLocalSpace(pTransformCom);
+	for (auto Cell : m_Cells)
+	{
+		Cell->IsPick(fDis, iIndex);
+	}
+
+	return iIndex;
+}
+void CNavigation::Erase_LastCell()
+{
+	if (m_Cells.size() == 0)
+		return;
+
+	m_Cells.erase(m_Cells.end() - 1);
+	m_pCellPos.erase(m_pCellPos.end() - 1);
 }
 #endif
 

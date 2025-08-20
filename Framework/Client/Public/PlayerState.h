@@ -3,36 +3,17 @@
 #include "Client_Struct.h"
 
 NS_BEGIN(Client)
-class CPlayerState abstract : public CStateObject
+class CPlayerState abstract : public CStateObject<class CPlayer>
 {
-public:
-    typedef struct tagPlayerStateDesc {
-        _uint* pWeaponState = { nullptr };
-        _uint* pNextWeaponState = { nullptr };
-        string* pAnimTag = { nullptr };
-        _wstring* pStateTag = { nullptr };
-        _bool* pIsAnimLoop = { nullptr };
-        _bool* pIsAnimFinsh = { nullptr };
-    }Player_STATE_DESC;
 protected:
     CPlayerState();
     virtual ~CPlayerState() = default;
 
 public:
-    virtual HRESULT         Initalize(void* pArg);
-    virtual void            Enter(const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState) = 0;
-    virtual void            Update(_float fDeltatime, const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState) = 0;
-    virtual void            Exit() = 0;
-
-protected:
-    _uint* m_pWeaponState = { nullptr };
-    _uint* m_pNextWeaponState = { nullptr };
-
-    string* m_pAnimTag = { nullptr };
-
-    _wstring* m_pStateTag = { nullptr };
-    _bool* m_pIsAnimLoop = { nullptr };
-    _bool* m_pIsAnimFinsh = { nullptr };
+    virtual HRESULT         Initalize(void* pArg = nullptr) = 0;
+    virtual void            Enter(CPlayer* pContainer) = 0;
+    virtual void            Update(CPlayer* pContainer, _float fTimeDelta) = 0;
+    virtual void            Exit(CPlayer* pContainer) = 0;
 
 protected:
     virtual void            Free() override;

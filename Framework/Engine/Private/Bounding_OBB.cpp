@@ -16,13 +16,22 @@ HRESULT CBounding_OBB::Initialize(const CBounding::BOUNDING_DESC* pDesc)
 
     m_pOriginalDesc = new BoundingOrientedBox(pOBBDesc->vCenter, pOBBDesc->vExtents, vQuaternion);
     m_pDesc = new BoundingOrientedBox(*m_pOriginalDesc);
-
+    
     return S_OK;
 }
 
 void CBounding_OBB::Update(_fmatrix WorldMatrix)
 {
-    m_pOriginalDesc->Transform(*m_pDesc, WorldMatrix);
+    _vector vScale, vRot, vTrans;
+
+    XMMatrixDecompose(&vScale, &vRot, &vTrans, WorldMatrix);
+
+ //   _vector vOrigRot = XMLoadFloat4(&m_pOriginalDesc->Orientation);
+ //   _vector finalRot = vOrigRot * vRot;
+    _matrix worldMat = XMMatrixRotationQuaternion(vRot) * XMMatrixTranslationFromVector(vTrans);
+
+
+    m_pOriginalDesc->Transform(*m_pDesc, worldMat);
 }
 
 _bool CBounding_OBB::Intersect(COLLIDER eType, CBounding* pTarget)
@@ -41,8 +50,18 @@ _bool CBounding_OBB::Intersect(COLLIDER eType, CBounding* pTarget)
         isColl = m_pDesc->Intersects(*static_cast<CBounding_Sphere*>(pTarget)->Get_Desc());
         break;
     }
-    return _bool();
+    return isColl;
 }
+_bool CBounding_OBB::Intersect(_vector RayPos, _vector RayDir)
+{
+    _bool isColl = { false };
+    _float fDis = {};
+
+    isColl = m_pDesc->Intersects(RayPos, RayDir, fDis);
+
+    return isColl;
+}
+
 #ifdef _DEBUG
 HRESULT CBounding_OBB::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _fvector vColor)
 {

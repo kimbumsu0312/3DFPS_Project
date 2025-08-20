@@ -1,5 +1,5 @@
 {
-    "Data_Path": "../Bin/Resources/Models/Map/Room/SafeRoom/SafeRoomData.dat",
+    "Data_Path": "../Bin/Data/Object/SafeRoomData.dat",
     "MeshMaterial": [
         {
             "Materials": [

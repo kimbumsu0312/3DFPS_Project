@@ -16,10 +16,8 @@ public:
 	void				Set_TransformationMatrix(_fmatrix Matrix) { XMStoreFloat4x4(&m_TransformationMatrix, Matrix); }
 	void				Set_CombinedTransformationMatrix(_fmatrix Matrix) { XMStoreFloat4x4(&m_CombinedTransformationMatrix, Matrix); }
 
-	void				Set_CombindMationMatinMatrix_PosReset() {
-							_matrix Combined = XMLoadFloat4x4(&m_CombinedTransformationMatrix);
-							Combined.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-							XMStoreFloat4x4(&m_CombinedTransformationMatrix, Combined);	}
+	void				Set_CombindMationMatinMatrix_PosReset();
+	void				Set_CombindMationMatinMatrix_RotReset(const _float4x4& PreTransformMatrix);
 
 	void				Set_TransformationToCombind() { m_CombinedTransformationMatrix = m_TransformationMatrix; }
 	void				Set_RotBonePitch(_float fPitch, _bool IsTrans);

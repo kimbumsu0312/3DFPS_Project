@@ -72,59 +72,6 @@ void CChannel::Update_TransformationMatrix(const vector<class CBone*>& Bones, _f
     Bones[m_iBoneIndex]->Set_TransformationMatrix(TransformationMatrix);
 }
 
-void CChannel::Update_TransformationMatrix(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _float fPreTrackPosition, _uint* pCurrentKeyFrameIndex, const ANIMEFRAME& pAnimFrameData, _uint iLowBonIndex, _bool IsUpper)
-{
-    if (IsUpper && iLowBonIndex >= m_iBoneIndex)
-        return;
-    else if (!IsUpper && iLowBonIndex < m_iBoneIndex)
-        return;
-
-    const _uint iStartIndex = Finde_KeyFrameIndex(pAnimFrameData.iStartFrame);
-    const _uint iEndIndex = Finde_KeyFrameIndex(pAnimFrameData.iEndFrame);
-
-    _vector         vScale, vRotation, vTranslation;
-    KEYFRAME        StartKeyFrame = m_KeyFrames[iStartIndex];
-    KEYFRAME        LastKeyFrame = m_KeyFrames[iEndIndex];
-
-    if (fCurrentTrackPosition == pAnimFrameData.iStartFrame)
-        *pCurrentKeyFrameIndex = iStartIndex;
-
-    if (fCurrentTrackPosition >= LastKeyFrame.fTrackPosition || *pCurrentKeyFrameIndex == iEndIndex)
-    {
-        vScale = XMLoadFloat3(&LastKeyFrame.vScale);
-        vRotation = XMLoadFloat4(&LastKeyFrame.vRotation);
-        vTranslation = XMVectorSetW(XMLoadFloat3(&LastKeyFrame.vTranslation), 1.f);
-    }
-    else if (*pCurrentKeyFrameIndex == iEndIndex)
-    {
-        vScale = XMLoadFloat3(&LastKeyFrame.vScale);
-        vRotation = XMLoadFloat4(&LastKeyFrame.vRotation);
-        vTranslation = XMVectorSetW(XMLoadFloat3(&LastKeyFrame.vTranslation), 1.f);
-    }
-    else if (fPreTrackPosition >= fCurrentTrackPosition)
-    {
-        vScale = XMLoadFloat3(&StartKeyFrame.vScale);
-        vRotation = XMLoadFloat4(&StartKeyFrame.vRotation);
-        vTranslation = XMVectorSetW(XMLoadFloat3(&StartKeyFrame.vTranslation), 1.f);
-    }
-    else
-    {
-        while (fCurrentTrackPosition >= m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition)
-            ++*pCurrentKeyFrameIndex;
-
-        _float fRatio = (fCurrentTrackPosition - m_KeyFrames[*pCurrentKeyFrameIndex].fTrackPosition) / (m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition - m_KeyFrames[*pCurrentKeyFrameIndex].fTrackPosition);
-
-        vScale = XMVectorLerp(XMLoadFloat3(&m_KeyFrames[*pCurrentKeyFrameIndex].vScale), XMLoadFloat3(&m_KeyFrames[*pCurrentKeyFrameIndex + 1].vScale), fRatio);
-        vRotation = XMQuaternionSlerp(XMLoadFloat4(&m_KeyFrames[*pCurrentKeyFrameIndex].vRotation), XMLoadFloat4(&m_KeyFrames[*pCurrentKeyFrameIndex + 1].vRotation), fRatio);
-        vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_KeyFrames[*pCurrentKeyFrameIndex].vTranslation), XMLoadFloat3(&m_KeyFrames[*pCurrentKeyFrameIndex + 1].vTranslation), fRatio), 1.f);
-
-    }
-
-    _matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.0f, 0.0f, 0.0f, 1.f), vRotation, vTranslation);
-
-    Bones[m_iBoneIndex]->Set_TransformationMatrix(TransformationMatrix);
-}
-
 void CChannel::Update_TransformationMatirx_Transition(const vector<class CBone*>& Bones, _uint pCurrentKeyFrameIndex, _float fRatio)
 {
 
@@ -141,41 +88,17 @@ void CChannel::Update_TransformationMatirx_Transition(const vector<class CBone*>
     _vector vRotEnd = XMLoadFloat4(&m_KeyFrames[iStartIndex].vRotation);
 
     vScale = XMVectorLerp(vScale, XMLoadFloat3(&m_KeyFrames[iStartIndex].vScale), fRatio);
-    //vRotation = XMQuaternionSlerp(vRotation, XMLoadFloat4(&m_KeyFrames[iStartIndex].vRotation), fRatio);
-    vTranslation = XMVectorSetW(XMVectorLerp(vTranslation, XMLoadFloat3(&m_KeyFrames[iStartIndex].vTranslation), fRatio), 1.f);
-
-    if (XMVectorGetX(XMVector4Dot(vRotStart, vRotEnd)) < 0.0f)
-        vRotEnd = XMVectorNegate(vRotEnd);
-
-    vRotation = XMQuaternionSlerp(vRotStart, vRotEnd, fRatio);
-    vRotation = XMQuaternionNormalize(vRotation); // 꼭 정규화
-
-    _matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.0f, 0.0f, 0.0f, 1.f), vRotation, vTranslation);
-    
-    Bones[m_iBoneIndex]->Set_CombinedTransformationMatrix(TransformationMatrix);
-}
-
-void CChannel::Update_TransformationMatirx_Transition(const vector<class CBone*>& Bones, _uint pCurrentKeyFrameIndex, _float fRatio, _uint iLowBonIndex, _bool IsUpper)
-{
-    if (IsUpper && iLowBonIndex >= m_iBoneIndex)
-        return;
-    else if (!IsUpper && iLowBonIndex < m_iBoneIndex)
-        return;
-
-    const _uint iStartIndex = Finde_KeyFrameIndex(pCurrentKeyFrameIndex);
-    _vector vScale, vRotation, vTranslation;
-    if (!XMMatrixDecompose(&vScale, &vRotation, &vTranslation, Bones[m_iBoneIndex]->Get_TransformationMatrix()))
-    {
-        vScale = XMVectorSet(1.f, 1.f, 1.f, 0.f);
-        vRotation = XMQuaternionIdentity();
-        vTranslation = XMVectorZero();
-    }
-    vScale = XMVectorLerp(vScale, XMLoadFloat3(&m_KeyFrames[iStartIndex].vScale), fRatio);
     vRotation = XMQuaternionSlerp(vRotation, XMLoadFloat4(&m_KeyFrames[iStartIndex].vRotation), fRatio);
     vTranslation = XMVectorSetW(XMVectorLerp(vTranslation, XMLoadFloat3(&m_KeyFrames[iStartIndex].vTranslation), fRatio), 1.f);
 
-    _matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.0f, 0.0f, 0.0f, 1.f), vRotation, vTranslation);
+    //if (XMVectorGetX(XMVector4Dot(vRotStart, vRotEnd)) < 0.0f)
+    //    vRotEnd = XMVectorNegate(vRotEnd);
+    //
+    //vRotation = XMQuaternionSlerp(vRotStart, vRotEnd, fRatio);
+    //vRotation = XMQuaternionNormalize(vRotation);
 
+    _matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.0f, 0.0f, 0.0f, 1.f), vRotation, vTranslation);
+    
     Bones[m_iBoneIndex]->Set_CombinedTransformationMatrix(TransformationMatrix);
 }
 

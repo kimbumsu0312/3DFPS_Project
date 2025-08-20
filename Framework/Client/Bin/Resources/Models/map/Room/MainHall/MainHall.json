@@ -1,5 +1,5 @@
 {
-    "Data_Path": "../Bin/Resources/Models/Map/Room/MainHall/MainHallData.dat",
+    "Data_Path": "../Bin/Data/Object/MainHallData.dat",
     "MeshMaterial": [
         {
             "Materials": [

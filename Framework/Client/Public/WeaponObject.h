@@ -23,6 +23,8 @@ public:
 	virtual void			Update(_float fTimeDelta);
 	virtual void			Late_Update(_float fTimeDelta);
 	virtual HRESULT			Render();
+
+	virtual HRESULT			Add_Collider();
 protected:
 	_wstring*   			m_pCulStateTag = {};
 	const _float4x4*		m_pSocketMatrix = { nullptr };

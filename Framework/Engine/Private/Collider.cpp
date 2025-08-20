@@ -1,9 +1,5 @@
 #include "pch.h"
 #include "Collider.h"
-#include "Bounding.h"
-#include "Bounding_AABB.h"
-#include "Bounding_OBB.h"
-#include "Bounding_Sphere.h"
 
 CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CComponent { pDevice , pContext}
 {
@@ -13,11 +9,13 @@ CCollider::CCollider(const CCollider& Prototype) : CComponent ( Prototype ), m_e
 #ifdef _DEBUG
     , m_pBatch { Prototype.m_pBatch }
     , m_pEffect {Prototype.m_pEffect }
-#endif // _DEBUG
     , m_pInputLayout { Prototype.m_pInputLayout}
+#endif // _DEBUG
     , m_isColl ( Prototype.m_isColl )
 {
+#ifdef _DEBUG
     Safe_AddRef(m_pInputLayout);
+#endif // _DEBUG
 }
 
 HRESULT CCollider::Initialize_Prototype(COLLIDER eType)
@@ -46,6 +44,10 @@ HRESULT CCollider::Initialize_Prototype(COLLIDER eType)
 
 HRESULT CCollider::Initialize(void* pArg)
 {
+    CCollider::COLLIDER_DESC* pColliderDesc = static_cast<CCollider::COLLIDER_DESC*>(pArg);
+    m_iLayer = pColliderDesc->iLayer;
+    m_iObjType = pColliderDesc->iObjType;
+
     CBounding::BOUNDING_DESC* pDesc = static_cast<CBounding::BOUNDING_DESC*>(pArg);
 
     switch (m_eType)
@@ -72,6 +74,11 @@ void CCollider::Update(_fmatrix WorldMatrix)
 _bool CCollider::Intersect(CCollider* pTarget)
 {
     return m_isColl = m_pBounding->Intersect(pTarget->m_eType, pTarget->m_pBounding);
+}
+
+_bool CCollider::Intersect(RAY_DESC& RayDesc)
+{
+    return m_isColl = m_pBounding->Intersect(RayDesc.RayPos, RayDesc.RayDIr);
 }
 
 #ifdef _DEBUG
@@ -124,6 +131,8 @@ CComponent* CCollider::Clone(void* pArg)
 void CCollider::Free()
 {
     __super::Free();
+#ifdef _DEBUG
+
 
     if (false == m_isCloned)
     {
@@ -131,5 +140,6 @@ void CCollider::Free()
         Safe_Delete(m_pBatch);
     }
     Safe_Release(m_pInputLayout);
+#endif // _DEBUG
     Safe_Release(m_pBounding);
 }

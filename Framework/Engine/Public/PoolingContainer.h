@@ -1,8 +1,8 @@
 #pragma once
-#include "GameObject.h"
+#include "PoolingObject.h"
 
 NS_BEGIN(Engine)
-class ENGINE_DLL CPoolingContainer abstract : public CGameObject
+class ENGINE_DLL CPoolingContainer abstract : public CPoolingObject
 {
 protected:
 	CPoolingContainer(ID3D11Device* pDeivec, ID3D11DeviceContext* pContext);
@@ -16,10 +16,10 @@ public:
 	virtual void					Update(_float fTimeDelta) override;
 	virtual void					Late_Update(_float fTimeDelta) override;
 	virtual HRESULT					Render() override;
-	virtual void					On_Dead() override;
 public:
-	virtual HRESULT					Initialize_Pool(void* pArg);
+	virtual HRESULT					Initialize_Pool(void* pArg) = 0;
 	virtual void					Return_Pool() = 0;
+	virtual void					OnCollision(_uint MyObjectType, _uint TargetObjectType)override {};
 protected:
 	unordered_map<_wstring,
 		class CPartObject*>			m_PartObjects;

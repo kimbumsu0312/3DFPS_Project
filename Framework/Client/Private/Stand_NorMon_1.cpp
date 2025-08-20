@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Stand_NorMon_1.h"
+#include "Monster_Normal.h"
 
 CStand_NorMon_1::CStand_NorMon_1()
 {
@@ -7,32 +8,29 @@ CStand_NorMon_1::CStand_NorMon_1()
 
 HRESULT CStand_NorMon_1::Initalize(void* pArg)
 {
-    __super::Initalize(pArg);
-
     return S_OK;
 }
 
-void CStand_NorMon_1::Enter(const NORMON_STATE& pMonState, CTransform* pTransformCom)
+void CStand_NorMon_1::Enter(CMonster_Normal* pContainer)
 {
-    *m_pAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
     m_eAnimState = STATE_ANIM::LOOP;
-    *m_pAnimTag = "Idle_Loop";
-    *m_pIsAnimLoop = true;
+    pContainer->Switch_AnimState(ENUM_CLASS(NORMAL_MON_STATE::NORMAL));
+    pContainer->Switch_Anim("Idle_Loop", true);
 }
 
-void CStand_NorMon_1::Update(_float fDeltatime, const NORMON_STATE& pMonState, CTransform* pTransformCom)
+void CStand_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
 {
-    if (pMonState.isDamage)
+    if (pContainer->Get_State().isDamage)
     {
-        *m_pStateTag = TEXT("Damage");
+        pContainer->Switch_State(TEXT("Damage"));
     }
-    else if (pMonState.isChase)
+    else if (pContainer->Get_State().isChase)
     {
-        *m_pStateTag = TEXT("Chase");
+        pContainer->Switch_State(TEXT("Chase"));
     }
 }
 
-void CStand_NorMon_1::Exit()
+void CStand_NorMon_1::Exit(CMonster_Normal* pContainer)
 {
 }
 

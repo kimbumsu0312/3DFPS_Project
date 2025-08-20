@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Normon_Shotel.h"
+#include "Player_Manager.h"
 
 CNormon_Shotel::CNormon_Shotel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CWeaponObject{ pDevice, pContext }
 {
@@ -42,6 +43,8 @@ void CNormon_Shotel::Update(_float fTimeDelta)
         BoneMatrix.r[i] = XMVector3Normalize(BoneMatrix.r[i]);
     }
     XMStoreFloat4x4(&m_CombinedWorldMatrix, WorldMatrix * BoneMatrix * ParentMatrix);
+
+    m_pColliderCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 }
 
 void CNormon_Shotel::Late_Update(_float fTimeDelta)
@@ -66,8 +69,28 @@ HRESULT CNormon_Shotel::Render()
 
         m_pModelCom->Render(i);
     }
+#ifdef _DEBUG
+    m_pColliderCom->Render();
+#endif // DEBUG
 
     return S_OK;
+}
+
+HRESULT CNormon_Shotel::Add_Collider()
+{
+    if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom)))
+        return E_FAIL;
+}
+
+void CNormon_Shotel::OnCollision(_uint MyObjectType, _uint TargetObjectType)
+{
+    switch (TargetObjectType)
+    {
+    case ENUM_CLASS(OBJECT_TYPE::PLAYER):
+        CPlayer_Manager::GetInstance()->Player_Hp(-25);
+        break;
+
+    }
 }
 
 HRESULT CNormon_Shotel::Ready_Components()
@@ -78,6 +101,17 @@ HRESULT CNormon_Shotel::Ready_Components()
 
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Shotel"),
         TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom), nullptr)))
+        return E_FAIL;
+
+    CBounding_OBB::BOUNDING_OBB_DESC  OBBDesc{};
+    OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::WEAPON);
+    OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::WEAPON);
+    OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
+    OBBDesc.vExtents = _float3(0.05f, 0.1f, 0.4f);
+    OBBDesc.vCenter = _float3(0.f, 0.f, -0.2f);
+
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
+        TEXT("Com_Collider_OBB"), reinterpret_cast<CComponent**>(&m_pColliderCom), &OBBDesc)))
         return E_FAIL;
 
     return S_OK;
@@ -144,4 +178,5 @@ void CNormon_Shotel::Free()
 
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
+    Safe_Release(m_pColliderCom);
 }

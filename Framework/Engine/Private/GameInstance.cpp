@@ -16,6 +16,7 @@
 #include "Picking.h"
 #include "SaveLoader.h"
 #include "Font_Manager.h"
+#include "Collision_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -86,6 +87,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pFont_Manager)
 		return E_FAIL;
 
+	m_pCollision_Manager = CCollision_Manager::Create(EngineDesc.iNumLayerFilter);
+	if (nullptr == m_pCollision_Manager)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -100,6 +105,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pObject_Manager->Update(fTimeDelta);
 	m_pObject_Manager->Late_Update(fTimeDelta);
 
+	m_pCollision_Manager->Update();
 	m_pLevel_Manager->Update(fTimeDelta);
 }
 
@@ -365,6 +371,11 @@ _vector CGameInstance::Get_LocalRayDir()
 	return m_pPicking->Get_LocalRayDir();
 }
 
+RAY_DESC CGameInstance::Create_FpsRayDesc(_int iOffSetX, _int iOffSetY)
+{
+	return m_pPicking->Create_FpsRayDesc(iOffSetX, iOffSetY);
+}
+
 HRESULT CGameInstance::File_Save_TerrainLevel(DATA_TYPE eData, string szFilename, CVIBuffer* pVIBuffer)
 {
 	return m_pSaveLoader->File_Save_TerrainLevel(eData, szFilename, pVIBuffer);
@@ -430,9 +441,25 @@ void CGameInstance::DrawText(const _wstring& strFontTag, const _tchar* pText, co
 	m_pFont_Manager->DrawText(strFontTag, pText, vPosition, vColor, fRadian, vOrigin, vScale);
 }
 
+HRESULT CGameInstance::Add_ColliderCheck(CGameObject* pObject, CCollider* pCollider)
+{
+	return m_pCollision_Manager->Add_ColliderCheck(pObject, pCollider);
+}
+
+HRESULT CGameInstance::Add_ColliderRay(_uint iLayLayer, _uint iObjType, RAY_DESC& RayDesc)
+{
+	return m_pCollision_Manager->Add_ColliderRay(iLayLayer, iObjType, RayDesc);
+}
+
+HRESULT CGameInstance::Set_LayerFilter(_uint iLayerNum, _uint iLayerFilter)
+{
+	return m_pCollision_Manager->Set_LayerFilter(iLayerNum, iLayerFilter);
+}
+
 void CGameInstance::Release_Engine()
 {
 	Release();
+	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pSaveLoader);
 	Safe_Release(m_pPicking);

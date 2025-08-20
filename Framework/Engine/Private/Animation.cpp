@@ -68,49 +68,11 @@ void CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones
     
 }
 
-void CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _float fTimeDelta, _bool isLoop, ANIM_STATUS eAnimStatus, _bool* pFinished, const ANIMEFRAME& pAnimFrameData, _uint iLowBonIndex, _bool IsUpper)
-{
-    if (ANIM_STATUS::PLAY == eAnimStatus)
-        m_fCurrentTrackPosition += pAnimFrameData.fTickPerSecond * fTimeDelta;
-
-    if (m_fCurrentTrackPosition >= pAnimFrameData.iEndFrame)
-    {
-        *pFinished = true;
-        if (false == isLoop)
-        {
-            m_fCurrentTrackPosition = pAnimFrameData.iEndFrame;
-            m_fPreTrackPosition = m_fCurrentTrackPosition;
-            return;
-        }
-        else
-            m_fCurrentTrackPosition = pAnimFrameData.iStartFrame;
-
-    }
-    else if (m_fCurrentTrackPosition < pAnimFrameData.iStartFrame)
-    {
-        m_fCurrentTrackPosition = pAnimFrameData.iStartFrame;
-    }
-
-    for (_uint i = 0; i < m_iNumChannels; ++i)
-    {
-        m_Channels[i]->Update_TransformationMatrix(Bones, m_fCurrentTrackPosition, m_fPreTrackPosition, &m_CurrentKeyFrameIndices[i], pAnimFrameData, iLowBonIndex, IsUpper);
-    }
-    m_fPreTrackPosition = m_fCurrentTrackPosition;
-}
-
 void CAnimation::Update_TransformationMatrices_Transition(const vector<class CBone*>& Bones, const ANIMEFRAME& pAnimFrameData, _float fRatio)
 {
     for (_uint i = 0; i < m_iNumChannels; ++i)
     {
         m_Channels[i]->Update_TransformationMatirx_Transition(Bones, pAnimFrameData.iStartFrame, fRatio);
-    }
-}
-
-void CAnimation::Update_TransformationMatrices_Transition(const vector<class CBone*>& Bones, const ANIMEFRAME& pAnimFrameData, _float fRatio, _uint iLowBonIndex, _bool IsUpper)
-{
-    for (_uint i = 0; i < m_iNumChannels; ++i)
-    {
-        m_Channels[i]->Update_TransformationMatirx_Transition(Bones, pAnimFrameData.iStartFrame, fRatio, iLowBonIndex, IsUpper);
     }
 }
 

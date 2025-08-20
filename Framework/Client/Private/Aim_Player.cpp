@@ -8,38 +8,28 @@ CAim_Player::CAim_Player()
 
 HRESULT CAim_Player::Initalize(void* pArg)
 {
-    __super::Initalize(pArg);
-
     return S_OK;
 }
 
-void CAim_Player::Enter(const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
+void CAim_Player::Enter(CPlayer* pContainer)
 {
     m_eAnimState = STATE_ANIM::LOOP;
-
-    *m_pAnimTag = "Aim_Loop";
-    *m_pIsAnimLoop = true;
+    pContainer->Switch_Anim("Aim_Loop", true);
 }
 
-void CAim_Player::Update(_float fDeltatime, const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
+void CAim_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 {
-    if(pAttackState.isGuard)
-        *m_pStateTag = TEXT("Guard");
-    else if (pAttackState.isReload)
-        *m_pStateTag = TEXT("Reload");
-    else if (pAttackState.isAttack)
-        *m_pStateTag = TEXT("Attack");
-    else if (!pAttackState.isAim)
-        *m_pStateTag = TEXT("Idle");
-    else
-    {
-        *m_pAnimTag = "Aim_Loop";
-        *m_pIsAnimLoop = true;
-    }
-
+    if (pContainer->Get_AttackState().isGuard)
+        pContainer->Switch_State(TEXT("Guard"));
+    else if (pContainer->Get_AttackState().isReload)
+        pContainer->Switch_State(TEXT("Reload"));
+    else if (pContainer->Get_AttackState().isAttack)
+        pContainer->Switch_State(TEXT("Attack"));
+    else if (!pContainer->Get_AttackState().isAim)
+        pContainer->Switch_State(TEXT("Idle"));
 }
 
-void CAim_Player::Exit()
+void CAim_Player::Exit(CPlayer* pContainer)
 {
     m_eAnimState == STATE_ANIM::END;
 }

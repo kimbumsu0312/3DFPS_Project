@@ -8,35 +8,32 @@ CWeaponSwap_Player::CWeaponSwap_Player()
 
 HRESULT CWeaponSwap_Player::Initalize(void* pArg)
 {
-    __super::Initalize(pArg);
-
     return S_OK;
 }
 
-void CWeaponSwap_Player::Enter(const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
+void CWeaponSwap_Player::Enter(CPlayer* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
-    if(*m_pWeaponState == ENUM_CLASS(PLAYER_WEAPON::HANDGUN) || *m_pWeaponState == ENUM_CLASS(PLAYER_WEAPON::KNIFE))
-        *m_pAnimTag = "Weapon_Change_HandGun";
-    else if (*m_pWeaponState == ENUM_CLASS(PLAYER_WEAPON::SHOTGUN))
-        *m_pAnimTag = "Weapon_Change_ShotGun";
-    else if (*m_pWeaponState == ENUM_CLASS(PLAYER_WEAPON::SNIPER))
-        *m_pAnimTag = "Weapon_Change_Sniper";
-    *m_pWeaponState = PLAYER_WEAPON::WEAPONCHANGE;
+    if (pContainer->Get_WeaponType() == ENUM_CLASS(PLAYER_WEAPON::HANDGUN) || pContainer->Get_WeaponType() == ENUM_CLASS(PLAYER_WEAPON::KNIFE))
+        pContainer->Switch_Anim("Weapon_Change_HandGun", false);
+    else if (pContainer->Get_WeaponType() == ENUM_CLASS(PLAYER_WEAPON::SHOTGUN))
+        pContainer->Switch_Anim("Weapon_Change_ShotGun", false);
+    else if (pContainer->Get_WeaponType() == ENUM_CLASS(PLAYER_WEAPON::SNIPER))
+        pContainer->Switch_Anim("Weapon_Change_Sniper", false);
 
-    *m_pIsAnimLoop = false;
+    pContainer->Switch_WeaponState(ENUM_CLASS(PLAYER_WEAPON::WEAPONCHANGE));
 }
 
-void CWeaponSwap_Player::Update(_float fDeltatime, const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
+void CWeaponSwap_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 {
-    if (*m_pIsAnimFinsh)
+    if (pContainer->IsAnimFinsh())
     {
-        *m_pWeaponState = *m_pNextWeaponState;
-        *m_pStateTag = TEXT("Idle");
+        pContainer->WeaponSwap();
+        pContainer->Switch_State(TEXT("Idle"));
     }
 }
 
-void CWeaponSwap_Player::Exit()
+void CWeaponSwap_Player::Exit(CPlayer* pContainer)
 {
     m_eAnimState == STATE_ANIM::END;
 }

@@ -1,6 +1,6 @@
 #ifndef Engine_Struct_h__
 #define Engine_Struct_h__
-
+#include "Engine_Enum.h"
 
 
 namespace Engine
@@ -10,9 +10,30 @@ namespace Engine
 		HINSTANCE		hInst;
 		HWND			hWnd;
 		WINMODE			eWinMode;
+
 		unsigned int	iWinSizeX, iWinSizeY;
 		unsigned int	iNumLevels;
+		unsigned int	iNumLayerFilter;
+
 	}ENGINE_DESC;	
+
+	typedef struct tagCollisionRayDesc
+	{
+		XMVECTOR	RayPos;
+		XMVECTOR	RayDIr;
+
+	}RAY_DESC;
+
+	typedef struct tagCollisionDesc
+	{
+		class CGameObject*	pObject;
+		class CCollider*	pCollider;
+		unsigned int		iLayer;
+		unsigned int		iObjType;
+
+		COLLIDER			eCollider;
+		RAY_DESC			RayDesc;
+	}COLLISIONENTRY;
 
 	typedef struct tagLightDesc
 	{
@@ -251,9 +272,10 @@ namespace Engine
 
 	typedef struct tagSaveCell
 	{
-		XMFLOAT3 Point_A;
-		XMFLOAT3 Point_B;
-		XMFLOAT3 Point_C;
+		XMFLOAT3		Point_A;
+		XMFLOAT3		Point_B;
+		XMFLOAT3		Point_C;
+		unsigned int	iCellType;
 	}SAVE_CELLDATA;
 
 }

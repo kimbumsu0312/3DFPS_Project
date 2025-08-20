@@ -1,36 +1,46 @@
 #include "pch.h"
 #include "Damage_NorMon_1.h"
-
+#include "Monster_Normal.h"
+#include "Player_Manager.h"
 CDamage_NorMon_1::CDamage_NorMon_1()
 {
 }
 
 HRESULT CDamage_NorMon_1::Initalize(void* pArg)
 {
-    __super::Initalize(pArg);
-
     return S_OK;
 }
 
-void CDamage_NorMon_1::Enter(const NORMON_STATE& pMonState, CTransform* pTransformCom)
+void CDamage_NorMon_1::Enter(CMonster_Normal* pContainer)
 {
-    *m_pAnimState = ENUM_CLASS(NORMAL_MON_STATE::DAMAGE);
     m_eAnimState = STATE_ANIM::START;
-    *m_pAnimTag = "Damage_M_F";
-    *m_pIsAnimLoop = false;
+    pContainer->Switch_AnimState(ENUM_CLASS(NORMAL_MON_STATE::DAMAGE));
+    DIRECTION eHitPoint = PlayerDIR(pContainer->Get_TransformState(STATE::POSITION), pContainer->Get_TransformState(STATE::LOOK));
+
+    if(eHitPoint == DIRECTION::F || eHitPoint == DIRECTION::FR || eHitPoint == DIRECTION::FL)
+        (pContainer->IsHeadShot()) ? pContainer->Switch_Anim("Damage_HeadShot_F", false) : pContainer->Switch_Anim("Damage_M_F", false);
+    else if(eHitPoint == DIRECTION::B)
+        pContainer->Switch_Anim("Damage_M_B", false);
+    else if ( eHitPoint == DIRECTION::R || eHitPoint == DIRECTION::BR)
+        (pContainer->IsHeadShot()) ? pContainer->Switch_Anim("Damage_HeadShot_R", false) : pContainer->Switch_Anim("Damage_M_L", false);
+    else
+        (pContainer->IsHeadShot()) ? pContainer->Switch_Anim("Damage_HeadShot_L", false) : pContainer->Switch_Anim("Damage_M_RB", false);
+
 }
 
-void CDamage_NorMon_1::Update(_float fDeltatime, const NORMON_STATE& pMonState, CTransform* pTransformCom)
+void CDamage_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
 {
-    if (*m_pIsAnimFinsh)
+    if (pContainer->IsAnimFinsh())
     {
-        *m_pStateTag = TEXT("Stand");
+        m_eAnimState = STATE_ANIM::LOOP;
+        pContainer->Switch_State(TEXT("Chase"));
     }
 }
 
-void CDamage_NorMon_1::Exit()
+void CDamage_NorMon_1::Exit(CMonster_Normal* pContainer)
 {
     m_eAnimState == STATE_ANIM::END;
+    pContainer->Reset_DamageCheck();
 }
 
 CDamage_NorMon_1* CDamage_NorMon_1::Create(void* pArg)

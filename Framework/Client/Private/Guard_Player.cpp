@@ -8,35 +8,32 @@ CGuard_Player::CGuard_Player()
 
 HRESULT CGuard_Player::Initalize(void* pArg)
 {
-    __super::Initalize(pArg);
-
     return S_OK;
 }
 
-void CGuard_Player::Enter(const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
+void CGuard_Player::Enter(CPlayer* pContainer)
 {
     m_eAnimState = STATE_ANIM::LOOP;
-
-    *m_pAnimTag = "Guard_Loop";
-    *m_pIsAnimLoop = true;
+    pContainer->Switch_Anim("Guard_Loop", true);
 }
 
-void CGuard_Player::Update(_float fDeltatime, const PLAYER_ATTACK_STATE& pAttackState, const PLAYER_MOVE_STATE& pMoveState)
+void CGuard_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 {
-    if (!pAttackState.isGuard && pAttackState.isAim)
-        *m_pStateTag = TEXT("Aim");
-    else if(!pAttackState.isGuard)
-        *m_pStateTag = TEXT("Idle");
+    if (pContainer->Get_AttackState().isGuard && pContainer->Get_AttackState().isAim)
+        pContainer->Switch_State(TEXT("Aim"));
+    else if (!pContainer->Get_AttackState().isGuard)
+        pContainer->Switch_State(TEXT("Idle"));
     else
     {
-        if(pMoveState.isMoveB || pMoveState.isMoveF || pMoveState.isMoveL || pMoveState.isMoveR)
-            *m_pAnimTag = "Guard_Walk";
+        if (pContainer->Get_MoveState().isMoveB || pContainer->Get_MoveState().isMoveF || 
+            pContainer->Get_MoveState().isMoveL || pContainer->Get_MoveState().isMoveR)
+            pContainer->Switch_Anim("Guard_Walk", true);
         else
-            *m_pAnimTag = "Guard_Loop";
+            pContainer->Switch_Anim("Guard_Loop", true);
     }
 }
 
-void CGuard_Player::Exit()
+void CGuard_Player::Exit(CPlayer* pContainer)
 {
     m_eAnimState == STATE_ANIM::END;
 }

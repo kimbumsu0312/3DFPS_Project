@@ -13,7 +13,6 @@ public:
 			_matrix		WolrdMatrix;
 			_bool		isLoad;
 
-
 			tagGameObject() : isLoad(false), WolrdMatrix(XMMatrixIdentity()) {}
 	}GAMEOBJECT_DESC;
 
@@ -35,8 +34,11 @@ public:
 	virtual void			Late_Update(_float fTimeDelta);
 	virtual HRESULT			Render();
 
+	virtual void			OnCollision(_uint MyObjectType, _uint TargetObjectType) {};
+
 	virtual void			On_Dead();
 	const OBJCET_DATA&		Get_Data();
+
 protected:
 	OBJECTTYPE				m_eObjectType = {};
 	ID3D11Device*			m_pDevice = { nullptr };

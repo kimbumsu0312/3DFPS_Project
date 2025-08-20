@@ -23,14 +23,12 @@ private:
 	CGameInstance*					m_pGameInstance = { nullptr };
 	ID3D11Device*					m_pDevice = { nullptr };
 	ID3D11DeviceContext*			m_pContext = { nullptr };
-	ID3D11RasterizerState*			m_pWireframeRS = { nullptr };
-	ID3D11RasterizerState*			m_pSolidframeRS = { nullptr };
-
-	_bool							m_bISWireFream = { false };
+	
 private:
 	HRESULT							Ready_Prototype_ForStatic();
+	HRESULT							Ready_PrototypeUI_ForStatic();
 	HRESULT							Start_Level(LEVEL eStartLevelID);
-
+	HRESULT							Ready_Collider();
 public:
 	static CMainApp*				Create();
 	virtual void					Free() override;

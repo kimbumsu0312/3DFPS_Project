@@ -1,8 +1,8 @@
 #pragma once
-#include "MonState.h"
+#include "MonState_Normal.h"
 
 NS_BEGIN(Client)
-class CScouting_NorMon_1 final : public CMonState
+class CScouting_NorMon_1 final : public CMonState_Normal
 {
 private:
 	enum class RELOAD_TYPE { BULLET, MAGAZINE, END };
@@ -12,15 +12,15 @@ private:
 
 public:
 	virtual HRESULT				Initalize(void* pArg) override;
-	virtual void				Enter(const NORMON_STATE& pMonState, CTransform* pTransformCom) override;
-	virtual void				Update(_float fDeltatime, const NORMON_STATE& pMonState, CTransform* pTransformCom) override;
-	virtual void				Exit() override;
+	virtual void				Enter(CMonster_Normal* pContainer) override;
+	virtual void				Update(CMonster_Normal* pContainer, _float fDeltatime) override;
+	virtual void				Exit(CMonster_Normal* pContainer) override;
+
 private:
-	STATE_ANIM					m_eAnimState = STATE_ANIM::END;
 	RELOAD_TYPE					m_eReload_Type = RELOAD_TYPE::END;
 
 public:
-	static CScouting_NorMon_1* Create(void* pArg);
+	static CScouting_NorMon_1*	Create(void* pArg = nullptr);
 	virtual void				Free() override;
 };
 NS_END

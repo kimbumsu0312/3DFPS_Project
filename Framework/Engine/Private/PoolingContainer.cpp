@@ -2,11 +2,11 @@
 #include "PoolingContainer.h"
 #include "PartObject.h"
 
-CPoolingContainer::CPoolingContainer(ID3D11Device* pDeivec, ID3D11DeviceContext* pContext) : CGameObject{ pDeivec, pContext }
+CPoolingContainer::CPoolingContainer(ID3D11Device* pDeivec, ID3D11DeviceContext* pContext) : CPoolingObject{ pDeivec, pContext }
 {
 }
 
-CPoolingContainer::CPoolingContainer(const CPoolingContainer& Prototype) : CGameObject(Prototype)
+CPoolingContainer::CPoolingContainer(const CPoolingContainer& Prototype) : CPoolingObject(Prototype)
 {
 }
 
@@ -46,13 +46,9 @@ HRESULT CPoolingContainer::Render()
 	return S_OK;
 }
 
-void CPoolingContainer::On_Dead()
-{
-	__super::On_Dead();
-}
-
 HRESULT CPoolingContainer::Initialize_Pool(void* pArg)
 {
+	__super::Initialize_Pool(pArg);
 	return S_OK;
 }
 

@@ -35,6 +35,7 @@ public:
 public:
 	_float4x4*				Get_BoneMatrix(const _wstring pBoneName);
 	_float3*				Get_MovePos();
+	_float4*				Get_MoveRot();
 private:
 	CShader*				m_pShaderCom = { nullptr };
 	CModel*					m_pModelCom = { nullptr };
@@ -49,7 +50,6 @@ private:
 	HRESULT					Ready_Components();
 	HRESULT					Bind_ShaderResources();
 
-	void					Anim_State(_float fTimeDelta);
 public:
 	static CBody_NorMon*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg) override;

@@ -42,6 +42,11 @@ HRESULT CWeaponObject::Render()
     return S_OK;
 }
 
+HRESULT CWeaponObject::Add_Collider()
+{
+    return S_OK;
+}
+
 
 void CWeaponObject::Free()
 {

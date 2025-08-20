@@ -1,43 +1,38 @@
 #include "pch.h"
 #include "Scouting_NorMon_1.h"
-
+#include "Monster_Normal.h"
 CScouting_NorMon_1::CScouting_NorMon_1()
 {
 }
 
 HRESULT CScouting_NorMon_1::Initalize(void* pArg)
 {
-    __super::Initalize(pArg);
-
     return S_OK;
 }
 
-void CScouting_NorMon_1::Enter(const NORMON_STATE& pMonState, CTransform* pTransformCom)
+void CScouting_NorMon_1::Enter(CMonster_Normal* pContainer)
 {
-    *m_pAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
     m_eAnimState = STATE_ANIM::START;
-    *m_pAnimTag = "Walk_Start";
-    *m_pIsAnimLoop = false;
+    pContainer->Switch_AnimState(ENUM_CLASS(NORMAL_MON_STATE::NORMAL));
+    pContainer->Switch_Anim("Walk_Start", false);
 }
 
-void CScouting_NorMon_1::Update(_float fDeltatime, const NORMON_STATE& pMonState, CTransform* pTransformCom)
+void CScouting_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
 {
-    pTransformCom->Go_Straight(fDeltatime);
-    
-    if (pMonState.isDamage)
+    if (pContainer->Get_State().isDamage)
+        pContainer->Switch_State(TEXT("Damage"));
+    else if (pContainer->Get_State().isChase)
+        pContainer->Switch_State(TEXT("Chase"));
+
+    if (pContainer->IsAnimFinsh() && m_eAnimState == STATE_ANIM::START)
     {
-        *m_pStateTag = TEXT("Damage");
-    }
-    if(*m_pIsAnimFinsh && m_eAnimState == STATE_ANIM::START)
-    { 
         m_eAnimState = STATE_ANIM::LOOP;
-        *m_pAnimTag = "Walk_Loop";
-        *m_pIsAnimLoop = true;
+        pContainer->Switch_Anim("Walk_Loop", true);
     }
-    if(pMonState.isChase == true)
-        *m_pStateTag = TEXT("Chase");
+
 }
-void CScouting_NorMon_1::Exit()
+
+void CScouting_NorMon_1::Exit(CMonster_Normal* pContainer)
 {
     m_eAnimState == STATE_ANIM::END;
 }

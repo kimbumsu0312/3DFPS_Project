@@ -22,15 +22,20 @@ public:
 	virtual void					Update(_fmatrix WorldMatrix);
 
 public:
-	_bool							isMove(_fvector vPosition);
+	_bool							isMove(_fvector vCulPosition);
+	_bool							isSlide(CTransform* pTransform, _fvector vPrePosition, _float fTimeDelta);
 	_vector							Compute_OnCell(_fvector vPosition);
-
+	void							Set_CellIndex(_int iCellIndex) { m_iCurrentCellIndex = iCellIndex; }
 #ifdef _DEBUG
 public:
-	HRESULT							Add_Cell(const _float3* pPos);
+	HRESULT							Add_Cell(const _float3* pPos, _uint iCellType);
 	HRESULT							Render();
 	HRESULT							Save_Cell(string szFilename);
 	_bool							IsSnap(_float3& vPos, _float Radius );
+	_uint							Count_Cell() { return m_pCellPos.size(); }
+	void							Chage_Color(_float4 vColor);
+	_int							Selete_CellIndex(CTransform& pTransformCom);
+	void							Erase_LastCell();
 #endif
 
 private:
@@ -38,11 +43,11 @@ private:
 	vector<class CCell*>			m_Cells;
 
 	static _float4x4				m_WorldMatrix;
-
 #ifdef _DEBUG
 private:
 	class CShader*					m_pShader = { nullptr };
 	vector<SAVE_CELLDATA>			m_pCellPos;
+	_float4							m_vColor = {};
 #endif
 
 private:

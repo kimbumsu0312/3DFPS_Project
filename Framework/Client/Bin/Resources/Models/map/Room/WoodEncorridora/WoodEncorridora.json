@@ -1,5 +1,5 @@
 {
-    "Data_Path": "../Bin/Resources/Models/Map/Room/WoodEncorridora/WoodEncorridoraData.dat",
+    "Data_Path": "../Bin/Data/Object/WoodEncorridoraData.dat",
     "MeshMaterial": [
         {
             "Materials": [

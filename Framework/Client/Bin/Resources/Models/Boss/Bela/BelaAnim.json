@@ -1,0 +1,340 @@
+{
+    "Animetions": [
+        {
+            "Anim": [
+                {
+                    "AnimeName": "Idle",
+                    "EndFrame": 249,
+                    "StartFrame": 0,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Idle_Freezes",
+                    "EndFrame": 481,
+                    "StartFrame": 250,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Idle_FreezesToIdle",
+                    "EndFrame": 648,
+                    "StartFrame": 483,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freezes_RunToIdle",
+                    "EndFrame": 840,
+                    "StartFrame": 656,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freezes_IdleToIdle",
+                    "EndFrame": 1025,
+                    "StartFrame": 841,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freezes_RunToIdle2",
+                    "EndFrame": 1129,
+                    "StartFrame": 1027,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Run_F",
+                    "EndFrame": 5790,
+                    "StartFrame": 5672,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Run_LF",
+                    "EndFrame": 5930,
+                    "StartFrame": 5792,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Run_RF",
+                    "EndFrame": 6080,
+                    "StartFrame": 5932,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Run_F_TurnStop_L",
+                    "EndFrame": 6168,
+                    "StartFrame": 6081,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Run_F_TurnStop_B",
+                    "EndFrame": 6267,
+                    "StartFrame": 6170,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Run_F_TurnStop_R",
+                    "EndFrame": 6351,
+                    "StartFrame": 6269,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Run_FastStep_L",
+                    "EndFrame": 6495,
+                    "StartFrame": 6454,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Run_FastStep_R",
+                    "EndFrame": 6540,
+                    "StartFrame": 6496,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Fly_Idle_Start",
+                    "EndFrame": 6860,
+                    "StartFrame": 6760,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Fly_Idle_Loop",
+                    "EndFrame": 7110,
+                    "StartFrame": 6862,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Fly_Idle_End",
+                    "EndFrame": 7303,
+                    "StartFrame": 7112,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Fly_F_Start",
+                    "EndFrame": 7395,
+                    "StartFrame": 7305,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Fly_F_Loop",
+                    "EndFrame": 7495,
+                    "StartFrame": 7396,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Fly_F_End",
+                    "EndFrame": 7600,
+                    "StartFrame": 7496,
+                    "TickPerSecond": 25.0
+                }
+            ]
+        },
+        {
+            "Anim": [
+                {
+                    "AnimeName": "Attack_1",
+                    "EndFrame": 245,
+                    "StartFrame": 0,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Attack_2",
+                    "EndFrame": 493,
+                    "StartFrame": 247,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Attack_3",
+                    "EndFrame": 738,
+                    "StartFrame": 495,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Attack_Turn_L",
+                    "EndFrame": 905,
+                    "StartFrame": 740,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Attack_Turn_R",
+                    "EndFrame": 1085,
+                    "StartFrame": 906,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Attack_CriticalHit",
+                    "EndFrame": 1385,
+                    "StartFrame": 1086,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freeszes_Attack_CriticalHit",
+                    "EndFrame": 1551,
+                    "StartFrame": 1386,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freeszes_Swing",
+                    "EndFrame": 1810,
+                    "StartFrame": 1553,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freeszes_Attack_Turn_L",
+                    "EndFrame": 1949,
+                    "StartFrame": 1812,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freeszes_Attack_Turn_R",
+                    "EndFrame": 2084,
+                    "StartFrame": 1950,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freeszes_MadHold_Start",
+                    "EndFrame": 2231,
+                    "StartFrame": 2085,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freeszes_MadHold_Loop",
+                    "EndFrame": 2266,
+                    "StartFrame": 2232,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freeszes_MadHold_End_F",
+                    "EndFrame": 2408,
+                    "StartFrame": 2267,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freeszes_MadHold_End_L",
+                    "EndFrame": 2525,
+                    "StartFrame": 2410,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freeszes_MadHold_End_R",
+                    "EndFrame": 2638,
+                    "StartFrame": 2526,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freeszes_MadHold_End_B",
+                    "EndFrame": 2755,
+                    "StartFrame": 2640,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freeszes_MadHold_CriticalHit",
+                    "EndFrame": 3005,
+                    "StartFrame": 2864,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Jump_Attack_Start",
+                    "EndFrame": 3181,
+                    "StartFrame": 3006,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Jump_Attack_End",
+                    "EndFrame": 3330,
+                    "StartFrame": 3183,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Jump_Attack_CriticalHit",
+                    "EndFrame": 3465,
+                    "StartFrame": 3331,
+                    "TickPerSecond": 25.0
+                }
+            ]
+        },
+        {
+            "Anim": [
+                {
+                    "AnimeName": "Damage_F_Head",
+                    "EndFrame": 126,
+                    "StartFrame": 0,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Damage_F_Shoulder_R",
+                    "EndFrame": 212,
+                    "StartFrame": 128,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Damage_F_Shoulder_L",
+                    "EndFrame": 300,
+                    "StartFrame": 214,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Damage_L_Body",
+                    "EndFrame": 550,
+                    "StartFrame": 440,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Damage_R_Body",
+                    "EndFrame": 660,
+                    "StartFrame": 552,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Damage_B_Body",
+                    "EndFrame": 754,
+                    "StartFrame": 661,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Damage_F_Head_Big",
+                    "EndFrame": 1360,
+                    "StartFrame": 1203,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Damage_F_Body_Big",
+                    "EndFrame": 1518,
+                    "StartFrame": 1361,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Damage_L_Body_Big",
+                    "EndFrame": 1676,
+                    "StartFrame": 1520,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Damage_R_Body_Big",
+                    "EndFrame": 1834,
+                    "StartFrame": 1678,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Damage_B_Body_Big",
+                    "EndFrame": 1993,
+                    "StartFrame": 1836,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Damage_FR_Body_Big",
+                    "EndFrame": 2151,
+                    "StartFrame": 1995,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Damage_FL_Body_Big",
+                    "EndFrame": 2303, 
+                    "StartFrame": 2153,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Freezes_Die",
+                    "EndFrame": 7994,
+                    "StartFrame": 7469,
+                    "TickPerSecond": 25.0
+                }
+            ]
+        }
+    ]
+}

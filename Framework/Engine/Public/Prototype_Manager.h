@@ -9,6 +9,11 @@
 #include "VIBuffer_Cube.h"
 #include "Model.h"
 #include "Navigation.h"
+#include "Collider.h"
+
+#include "Bounding_OBB.h"
+#include "Bounding_AABB.h"
+#include "Bounding_Sphere.h"
 
 NS_BEGIN(Engine)
 class CPrototype_Manager final : public CBase

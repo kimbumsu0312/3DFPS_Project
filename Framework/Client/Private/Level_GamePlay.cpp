@@ -2,6 +2,7 @@
 #include "Level_GamePlay.h"
 #include "GameInstance.h"
 #include "Camera_Free.h"
+#include "MonSpawner.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CLevel{ pDevice, pContext }
 {
@@ -28,6 +29,9 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 
 	if(FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Event(TEXT("Layer_Event"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -82,17 +86,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _wstring& strLayerTag)
 {
-
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-	//	ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Terrain"))))
-	//	return E_FAIL;
 	if (FAILED(m_pGameInstance->Load_Level("../Bin/Resources/Data/Level/Level_GamePlay.dat",
-		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_BaseMapObj"))))
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, ENUM_CLASS(LEVEL::GAMEPLAY))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_MapNevi"))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sky"))))
 		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -110,13 +115,25 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring& strLayerTag)
 {
-	CGameObject::GAMEOBJECT_DESC Desc;
-	Desc.fSpeedPerSec = 1.f;
+	//CGameObject::GAMEOBJECT_DESC Desc;
+	//Desc.fSpeedPerSec = 1.f;
+	//Desc.fRotationPerSec = 1.f;
+	//	
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+	//	ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Bela"), &Desc)))
+	//	return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1"), &Desc)))
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+	//	ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Daniela"), &Desc)))
+	//	return E_FAIL;
+
+	CPoolingObject::POOLOBJECT_DESC PoolDesc{};
+	PoolDesc.fRotationPerSec = 1.f;
+	PoolDesc.fSpeedPerSec = 1.f;
+	PoolDesc.szPoolingPath = TEXT("Pool_NormalMon_1");
+
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1"), 10, &PoolDesc)))
 		return E_FAIL;
-		
 	return S_OK;
 }
 
@@ -161,6 +178,54 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Mouse"))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
+{
+	CMonSpawner::MONSPAWNERDESC Desc{};
+	PoolMonDesc MonDesc{};
+
+	Desc.vCenter = { 0.f, 0.f, 0.f };
+	Desc.vExtents = { 1.f, 1.f, 1.f };
+	Desc.szPoolPath = TEXT("Pool_NormalMon_1");
+	Desc.vSpawnerPostion = { -53.29f, -8.68f, 28.24f };
+
+	MonDesc.vPostion = { -53.29f, -8.68f, 28.24f };
+	MonDesc.iCellIndex = 101;
+	MonDesc.iAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
+	MonDesc.szAnimTag = "Idle_Loop";
+	MonDesc.iWeponType = ENUM_CLASS(NORMAL_MON_WEAPON::SWORD);
+	MonDesc.szState = TEXT("Stand");
+	Desc.MonDesc.push_back(MonDesc);
+
+	MonDesc.vPostion = { -50.29f, -8.68f, 28.24f };
+	MonDesc.iCellIndex = 101;
+	MonDesc.iAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
+	MonDesc.szAnimTag = "Idle_Loop";
+	MonDesc.iWeponType = ENUM_CLASS(NORMAL_MON_WEAPON::HALBERD);
+	MonDesc.szState = TEXT("Stand");
+	Desc.MonDesc.push_back(MonDesc);
+
+	MonDesc.vPostion = { -50.29f, -8.68f, 32.24f };
+	MonDesc.iCellIndex = 101;
+	MonDesc.iAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
+	MonDesc.szAnimTag = "Idle_Loop";
+	MonDesc.iWeponType = ENUM_CLASS(NORMAL_MON_WEAPON::END);
+	MonDesc.szState = TEXT("Stand");
+	Desc.MonDesc.push_back(MonDesc);
+
+	MonDesc.vPostion = { -48.29f, -8.68f, 30.24f };
+	MonDesc.iCellIndex = 101;
+	MonDesc.iAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
+	MonDesc.szAnimTag = "Idle_Loop";
+	MonDesc.iWeponType = ENUM_CLASS(NORMAL_MON_WEAPON::SHOTEL);
+	MonDesc.szState = TEXT("Stand");
+	Desc.MonDesc.push_back(MonDesc);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_MonSpawneer"), &Desc)))
 		return E_FAIL;
 
 	return S_OK;

@@ -86,6 +86,11 @@ _float3* CBody_NorMon::Get_MovePos()
     return m_pModelCom->Get_PtrMovePos();
 }
 
+_float4* CBody_NorMon::Get_MoveRot()
+{
+    return m_pModelCom->Get_PtrMoveRot();;
+}
+
 HRESULT CBody_NorMon::Ready_Components()
 {
     m_iRootLodeIndex = 11;
@@ -100,15 +105,14 @@ HRESULT CBody_NorMon::Ready_Components()
 
     CAnimatio_Controller::ANIMTION_DESC Desc;
     Desc.szFile_Path = "../Bin/Resources/Models/Normal_Mon_1/Normal_Mon_1Anim.Json";
-    Desc.szCulAnimName = *m_pAnimTag;
-    Desc.iAnimIndex = *m_pAnimState;
+    Desc.szCulAnimName = "Idle_Loop";
+    Desc.iAnimIndex = 0;
     Desc.pModel = m_pModelCom;
 
     Desc.IsLoop = true;
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Animatio_Controller"),
         TEXT("Com_AnimCom"), reinterpret_cast<CComponent**>(&m_pAnimCom), &Desc)))
         return E_FAIL;
-
 
     return S_OK;
 }
@@ -140,11 +144,6 @@ HRESULT CBody_NorMon::Bind_ShaderResources()
         return E_FAIL;
 
     return S_OK;
-}
-
-void CBody_NorMon::Anim_State(_float fTimeDelta)
-{
-    m_pAnimCom->Player_Animation(*m_pAnimState, *m_pAnimTag, true, m_pModelCom, fTimeDelta, m_iRootLodeIndex);
 }
 
 CBody_NorMon* CBody_NorMon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

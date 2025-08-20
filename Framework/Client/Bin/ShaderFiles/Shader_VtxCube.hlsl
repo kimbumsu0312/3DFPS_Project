@@ -2,6 +2,7 @@
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 TextureCube g_Texture;
+float4 g_vColor = { 1.f, 0.f, 0.f, 1.f };
 
 struct VS_IN
 {
@@ -51,6 +52,14 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_POINT(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    Out.vColor = float4(1.f, 0.f, 0.f, 0.7f);
+    
+    return Out;
+}
 technique11 DefaultTechnique
 {
     pass Sky
@@ -61,5 +70,13 @@ technique11 DefaultTechnique
 
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+    pass Point
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_POINT();
     }
 }

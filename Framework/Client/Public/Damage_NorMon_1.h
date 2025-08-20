@@ -1,8 +1,8 @@
 #pragma once
-#include "MonState.h"
+#include "MonState_Normal.h"
 
 NS_BEGIN(Client)
-class CDamage_NorMon_1 final : public CMonState
+class CDamage_NorMon_1 final : public CMonState_Normal
 {
 private:
 	CDamage_NorMon_1();
@@ -10,14 +10,12 @@ private:
 
 public:
 	virtual HRESULT				Initalize(void* pArg) override;
-	virtual void				Enter(const NORMON_STATE& pMonState, CTransform* pTransformCom) override;
-	virtual void				Update(_float fDeltatime, const NORMON_STATE& pMonState, CTransform* pTransformCom) override;
-	virtual void				Exit() override;
-private:
-	STATE_ANIM					m_eAnimState = STATE_ANIM::END;
+	virtual void				Enter(CMonster_Normal* pContainer) override;
+	virtual void				Update(CMonster_Normal* pContainer, _float fDeltatime) override;
+	virtual void				Exit(CMonster_Normal* pContainer) override;
 
 public:
-	static CDamage_NorMon_1*	Create(void* pArg);
+	static CDamage_NorMon_1*	Create(void* pArg = nullptr);
 	virtual void				Free() override;
 };
 NS_END

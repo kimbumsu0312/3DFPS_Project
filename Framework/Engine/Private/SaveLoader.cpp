@@ -397,12 +397,8 @@ HRESULT CSaveLoader::Load_Terrain(string FilePath, SAVE_TERRAIN& pOut)
 	return S_OK;
 }
 
-HRESULT CSaveLoader::Load_Level(string FilePath, _uint LevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex)
+HRESULT CSaveLoader::Load_Level(string szFilePath, _uint LevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex)
 {
-	string szFilePath;
-
-	szFilePath = "../Bin/Data/Level/" + FilePath + ".dat";
-
 	ifstream file(szFilePath, ios::binary);
 	if (!file.is_open())
 		return E_FAIL;
@@ -472,7 +468,9 @@ HRESULT CSaveLoader::Load_Level(string FilePath, _uint LevelIndex, _wstring szLa
 
 HRESULT CSaveLoader::Load_Level(string szFilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex, _wstring szPrototypeTag)
 {
+	szFilePath = "../Bin/Data/Level/" + szFilePath + ".dat";
 	ifstream file(szFilePath, ios::binary);
+
 	if (!file.is_open())
 		return E_FAIL;
 
@@ -552,6 +550,18 @@ HRESULT CSaveLoader::Load_Objcet(string szFilePath, _uint iPrototypeLevelIndex, 
 	ModelData.eModel = jData["Model_type"];
 	ModelData.iNumMaterials = jData["iNumMaterials"];
 	DataFilePath = jData["Data_Path"];
+	
+
+	size_t szSlash = szFilePath.find_last_of("/\\");
+	string directory = (szSlash == string::npos) ? "" : szFilePath.substr(0, szSlash);
+
+	szSlash = DataFilePath.find_last_of("/\\");
+	string filename = (szSlash == string::npos) ? DataFilePath : DataFilePath.substr(szSlash + 1);
+
+	if (directory.back() == '/' || directory.back() == '\\')
+		DataFilePath = directory + filename;
+	else
+		DataFilePath = directory + "/" + filename;
 
 	for (int i = 0; i < ModelData.iNumMaterials; ++i)
 	{

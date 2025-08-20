@@ -44,8 +44,19 @@ _bool CBounding_AABB::Intersect(COLLIDER eType, CBounding* pTarget)
         isColl = m_pDesc->Intersects(*static_cast<CBounding_Sphere*>(pTarget)->Get_Desc());
         break;
     }
-    return _bool();
+    return isColl;
 }
+
+_bool CBounding_AABB::Intersect(_vector RayPos, _vector RayDir)
+{
+    _bool isColl = { false };
+    _float fDis = {};
+
+    isColl = m_pDesc->Intersects(RayPos, RayDir, fDis);
+
+    return isColl;
+}
+
 #ifdef _DEBUG
 HRESULT CBounding_AABB::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _fvector vColor)
 {

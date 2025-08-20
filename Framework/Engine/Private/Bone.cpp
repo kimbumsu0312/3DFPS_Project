@@ -15,18 +15,31 @@ HRESULT CBone::Initialize(const SAVE_BONE& pBone)
     return S_OK;
 }
 
+void CBone::Set_CombindMationMatinMatrix_PosReset()
+{
+    _matrix Combined = XMLoadFloat4x4(&m_CombinedTransformationMatrix);
+    Combined.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+    XMStoreFloat4x4(&m_CombinedTransformationMatrix, Combined);
+}
+
+void CBone::Set_CombindMationMatinMatrix_RotReset(const _float4x4& PreTransformMatrix)
+{
+    _matrix Combined = XMLoadFloat4x4(&m_CombinedTransformationMatrix);
+    _vector vScale, vRot, vTrans;
+    XMMatrixDecompose(&vScale, &vRot, &vTrans, Combined);
+
+    _vector vQuatScale, vQuatRot, vQuatTrans;
+    XMMatrixDecompose(&vQuatScale, &vQuatRot, &vQuatTrans, XMLoadFloat4x4(&PreTransformMatrix));
+    vRot = vQuatRot;
+    Combined = XMMatrixAffineTransformation(vScale, XMVectorZero(), vRot, vTrans);
+
+    XMStoreFloat4x4(&m_CombinedTransformationMatrix, Combined);
+}
+
 void CBone::Set_RotBonePitch(_float fPitch, _bool IsTrans)
 {
     m_fPitch = fPitch;
-    //_matrix matPitch = XMMatrixRotationX(fPitch);
-    //if (IsTrans)
-    //{
-    //    XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMLoadFloat4x4(&m_CombinedTransformationMatrix) * matPitch);
-    //}
-    //else
-    //{
-    //    XMStoreFloat4x4(&m_TransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * matPitch);
-    //}
+
 }
 
 void CBone::Update_CombinedTransformationMatrix(const _float4x4& PreTransformMatrix, const vector<CBone*>& Bones)
