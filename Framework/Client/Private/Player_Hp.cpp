@@ -51,7 +51,7 @@ HRESULT CPlayer_Hp::Initialize(void* pArg)
 
 void CPlayer_Hp::Priority_Update(_float fTimeDelta)
 {
-    if (m_pGameInstance->IsKeyDown(DIK_4))
+    if (m_pGameInstance->IsKeyDown(DIK_Y))
     {
         m_pGameInstance->Publish(Event_Player_Hp_UI_Open{ 0 });
     }

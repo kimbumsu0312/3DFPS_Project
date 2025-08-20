@@ -17,19 +17,28 @@ HRESULT CContainerObject::Initialize_Prototype()
 
 HRESULT CContainerObject::Initialize(void* pArg)
 {
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CContainerObject::Priority_Update(_float fTimeDelta)
 {
+	for (auto& Pair : m_PartObjects)
+		Pair.second->Priority_Update(fTimeDelta);
 }
 
 void CContainerObject::Update(_float fTimeDelta)
 {
+	for (auto& Pair : m_PartObjects)
+		Pair.second->Update(fTimeDelta);
 }
 
 void CContainerObject::Late_Update(_float fTimeDelta)
 {
+	for (auto& Pair : m_PartObjects)
+		Pair.second->Late_Update(fTimeDelta);
 }
 
 HRESULT CContainerObject::Render()
@@ -68,4 +77,5 @@ void CContainerObject::Free()
 		Safe_Release(Pair.second);
 
 	m_PartObjects.clear();
+
 }

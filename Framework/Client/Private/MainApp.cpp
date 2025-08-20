@@ -22,8 +22,12 @@ HRESULT CMainApp::Initialize()
 	EngineDesc.iWinSizeX = g_iWinSizeX;
 	EngineDesc.iWinSizeY = g_iWinSizeY;
 	EngineDesc.iNumLevels = ENUM_CLASS(LEVEL::END);
-	
+	EngineDesc.iNumLayerFilter = ENUM_CLASS(COLLISION_LAYER::END);
+
 	if (FAILED(m_pGameInstance->Initialize_Engine(EngineDesc, &m_pDevice, &m_pContext)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Collider()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Prototype_ForStatic()))
@@ -34,6 +38,8 @@ HRESULT CMainApp::Initialize()
 
 	if (FAILED(Start_Level(LEVEL::LOGO)))
 		return E_FAIL;
+
+	D3D11_RASTERIZER_DESC Desc = {};
 
 	return S_OK;
 }
@@ -50,6 +56,7 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Render_Begin(&vClearColor);
 
 	m_pGameInstance->Draw();
+	m_pGameInstance->DrawText(TEXT("Font_Godic"), TEXT("배고파 피곤해"), _float2(100.f, 0.f));
 
 	m_pGameInstance->Render_End();
 
@@ -58,6 +65,11 @@ HRESULT CMainApp::Render()
 
 HRESULT CMainApp::Ready_Prototype_ForStatic()
 {
+	//폰트 셋팅
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_Godic"), TEXT("../Bin/Resources/Fonts/Godic.spritefont"))))
+		return E_FAIL;
+
+	//셰이더 셋팅
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements))))
 		return E_FAIL;
@@ -74,18 +86,44 @@ HRESULT CMainApp::Ready_Prototype_ForStatic()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
 		return E_FAIL;
 
+	//유틸 셋팅
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Animatio_Controller"),
+		CAnimatio_Controller::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	//콜라이더 셋팅
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_AABB"),
+		CCollider::Create(m_pDevice, m_pContext, COLLIDER::AABB))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
+		CCollider::Create(m_pDevice, m_pContext, COLLIDER::OBB))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_Sphere"),
+		CCollider::Create(m_pDevice, m_pContext, COLLIDER::SPHERE))))
+		return E_FAIL;
+
+	//UI 셋팅
+	if(FAILED(Ready_PrototypeUI_ForStatic()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_PrototypeUI_ForStatic()
+{
+	//UI 텍스처 셋팅
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Text_Mouse"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Mouse/Mouse_%d.png"), 1))))
 		return E_FAIL;
 
+	//UI 모델 셋팅
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Animatio_Controller"),
-		CAnimatio_Controller::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
+	//UI 오브젝트 셋팅
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Loding_Fade"),
 		CFade_UI::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -94,26 +132,49 @@ HRESULT CMainApp::Ready_Prototype_ForStatic()
 		CMouse::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Mouse_Click_Fx"),
 		CMouse_Click_Fx::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	CMouse_Click_Fx::CLICKFX_CLONE_DESC pDesc{};
-	pDesc.vSize = { 50.f, 50.f };
-	pDesc.vMinUV = { 0.f , 128.f / 256.f };
-	pDesc.vMaxUV = { 128.f / 256.f , 256.f / 256.f };
-	pDesc.szPoolingPath = TEXT("Pool_Click_Fx");
+	CMouse_Click_Fx::CLICKFX_CLONE_DESC Desc{};
+	Desc.vSize = { 50.f, 50.f };
+	Desc.vMinUV = { 0.f , 128.f / 256.f };
+	Desc.vMaxUV = { 128.f / 256.f , 256.f / 256.f };
+	Desc.szPoolingPath = TEXT("Pool_Click_Fx");
 
- 	if(FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Mouse_Click_Fx"), 5 ,&pDesc)))
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Mouse_Click_Fx"), 10, &Desc)))
 		return E_FAIL;
 
 	return S_OK;
+
 }
 
 HRESULT CMainApp::Start_Level(LEVEL eStartLevelID)
 {
 	if (FAILED(m_pGameInstance->Open_Level(static_cast<_uint>(LEVEL::LOADING), CLevel_Loading::Create(m_pDevice, m_pContext, eStartLevelID))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Collider()
+{
+	if(FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::PLAYER), (1 << ENUM_CLASS(COLLISION_LAYER::WEAPON)) | (1 << ENUM_CLASS(COLLISION_LAYER::ITEM)))))
+		return E_FAIL;
+	
+	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::RAY), (1 << ENUM_CLASS(COLLISION_LAYER::MONSTER)))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::MONSTER), (1 << ENUM_CLASS(COLLISION_LAYER::WEAPON) | (1 << ENUM_CLASS(COLLISION_LAYER::RAY))))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::ITEM), (1 << ENUM_CLASS(COLLISION_LAYER::PLAYER)))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::WEAPON), (1 << ENUM_CLASS(COLLISION_LAYER::PLAYER)))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::TRIGGER), (1 << ENUM_CLASS(COLLISION_LAYER::PLAYER)))))
 		return E_FAIL;
 
 	return S_OK;
@@ -143,4 +204,5 @@ void CMainApp::Free()
 	m_pGameInstance->Release_Engine();
 
 	Safe_Release(m_pGameInstance);
+
 }

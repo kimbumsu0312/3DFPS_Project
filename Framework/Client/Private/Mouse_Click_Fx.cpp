@@ -101,11 +101,6 @@ HRESULT CMouse_Click_Fx::Render()
 	return S_OK;
 }
 
-void CMouse_Click_Fx::On_Dead()
-{
-	__super::On_Dead();
-}
-
 HRESULT CMouse_Click_Fx::Initialize_Pool(void* pArg)
 {
 	CLICKFX_POOL_DESC* pDesc = static_cast<CLICKFX_POOL_DESC*>(pArg);

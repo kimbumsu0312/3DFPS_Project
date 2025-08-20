@@ -20,17 +20,18 @@ HRESULT CBody_Player::Initialize(void* pArg)
 
     BODY_DESC* pDesc = static_cast<BODY_DESC*>(pArg);
     
-    m_pState = pDesc->pState;
-
+    m_pWeaponState = pDesc->pWeaponState;
+    m_pAnimTag = pDesc->pAnimTag;
+    m_pIsAnimFinsh = pDesc->pIsAnimFinsh;
+    m_pIsAnimLoop = pDesc->pIsAnimLoop;
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
     if (FAILED(Ready_Components()))
         return E_FAIL;
 
-    m_pModelCom->Set_Animations(0, true);
+    m_iRootLodeIndex = 35;
 
-    m_iRootLodeIndex = 36;
     return S_OK;
 }
 
@@ -40,25 +41,9 @@ void CBody_Player::Priority_Update(_float fTimeDelta)
 
 void CBody_Player::Update(_float fTimeDelta)
 {
-    //Crouch_loop
-    switch (*m_pState)
-    {
-    case ENUM_CLASS(CPlayer::PLAYER_STATE::IDLE):
-        m_pAnimCom->Player_Animation("Hand_Idle", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
-        break;
-    case ENUM_CLASS(CPlayer::PLAYER_STATE::JOG_F):
-        m_pAnimCom->Player_Animation("Hand_Jog_Front", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
-        break;
-    case ENUM_CLASS(CPlayer::PLAYER_STATE::JOG_R):
-        m_pAnimCom->Player_Animation("Hand_Jog_Right", m_pModelCom, fTimeDelta , m_iRootLodeIndex, m_pTransformCom);
-        break;
-    case ENUM_CLASS(CPlayer::PLAYER_STATE::JOG_L):
-        m_pAnimCom->Player_Animation("Hand_Jog_Left", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
-        break;
-    case ENUM_CLASS(CPlayer::PLAYER_STATE::WALK_B):
-        m_pAnimCom->Player_Animation("Hand_Walk_Back", m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pTransformCom);
-        break;
-    }
+    *m_pIsAnimFinsh = m_pAnimCom->Player_Animation(*m_pWeaponState, *m_pAnimTag, *m_pIsAnimLoop, m_pModelCom, fTimeDelta, m_iRootLodeIndex);
+
+    Update_CombinedMatrix();
 }
 
 void CBody_Player::Late_Update(_float fTimeDelta)
@@ -91,6 +76,21 @@ HRESULT CBody_Player::Render()
     return S_OK;
 }
 
+_float4x4* CBody_Player::Get_BoneMatrix(const _wstring pBoneName)
+{
+    return m_pModelCom->Get_BoneMatrix(pBoneName);
+}
+
+_float3* CBody_Player::Get_MovePos()
+{
+    return m_pModelCom->Get_PtrMovePos();
+}
+
+void CBody_Player::Model_Upper_Rot(_float fPitch)
+{
+    m_pModelCom->Set_Upper(39, fPitch, true);
+}
+
 HRESULT CBody_Player::Ready_Components()
 {
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
@@ -103,17 +103,22 @@ HRESULT CBody_Player::Ready_Components()
 
     CAnimatio_Controller::ANIMTION_DESC Desc;
     Desc.szFile_Path = "../Bin/Resources/Models/Player/PlayerAnim.Json";
-    Desc.szCulAnimName = "Hand_Idle";
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Animatio_Controller"),
+    Desc.szCulAnimName = *m_pAnimTag;
+    Desc.iAnimIndex = *m_pWeaponState;
+    Desc.pModel = m_pModelCom;
+ 
+    Desc.IsLoop = true;
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Animatio_Controller"),
         TEXT("Com_AnimCom"), reinterpret_cast<CComponent**>(&m_pAnimCom), &Desc)))
         return E_FAIL;
  
+    
     return S_OK;
 }
 
 HRESULT CBody_Player::Bind_ShaderResources()
 {
-    if (FAILED(m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix")))
+    if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
         return E_FAIL;
 
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW))))
@@ -138,6 +143,11 @@ HRESULT CBody_Player::Bind_ShaderResources()
         return E_FAIL;
 
     return S_OK;
+}
+
+void CBody_Player::Anim_State(_float fTimeDelta)
+{
+    m_pAnimCom->Player_Animation(*m_pWeaponState, *m_pAnimTag, true, m_pModelCom, fTimeDelta, m_iRootLodeIndex);
 }
 
 CBody_Player* CBody_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -169,7 +179,6 @@ CGameObject* CBody_Player::Clone(void* pArg)
 void CBody_Player::Free()
 {
     __super::Free();
-    //m_pState = nullptr;
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
     Safe_Release(m_pAnimCom);

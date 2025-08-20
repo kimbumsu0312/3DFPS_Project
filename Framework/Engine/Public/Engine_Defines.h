@@ -17,13 +17,21 @@
 #include "DirectXTK/DDSTextureLoader.h"
 #include "DirectXTK/WICTextureLoader.h"
 
+//폰트 렌더 헤더
+#include "DirectXTK/SpriteBatch.h"
+#include "DirectXTK/SpriteFont.h"
+
+//충돌 랜더 관련
+#include "DirectXTK/PrimitiveBatch.h"
+#include "DirectXTK/VertexTypes.h"
+#include "DirectXTK/Effects.h"
+
 using namespace DirectX;
 
 //Json 로드
 #include <fstream>
 #include "nlohmann/json.hpp"
 using namespace nlohmann;
-
 #include <vector>
 #include <list>
 #include <map>
@@ -38,7 +46,7 @@ using namespace std;
 
 namespace Engine
 {
-	static const unsigned int g_iMaxNumBones = 512;
+	static const unsigned int g_iMaxNumBones = 900;
 }
 
 #include "Engine_Enum.h"

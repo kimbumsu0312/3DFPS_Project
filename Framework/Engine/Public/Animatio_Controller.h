@@ -7,8 +7,11 @@ class ENGINE_DLL CAnimatio_Controller final : public CComponent
 public:
 	typedef struct tagAnimtioDesc
 	{
-		string szFile_Path = {};
-		string szCulAnimName = {};
+		_int				iAnimIndex = {};
+		string				szFile_Path = {};
+		string				szCulAnimName = {};
+		_bool				IsLoop = { false };
+		class CModel*		pModel;
 	}ANIMTION_DESC;
 private:
 	CAnimatio_Controller(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -18,9 +21,8 @@ public:
 	virtual HRESULT					Initialize_Prototype();
 	virtual HRESULT					Initialize(void* pArg);
 
-	_bool							Player_Animation(string szAnimName, class CModel* pModel, _float fTimeDelta, _int RootNodeIndex, class CTransform* pTransform);
+	_bool							Player_Animation(_int iAnimIndex, string szAnimName, _bool IsLoop, class CModel* pModel, _float fTimeDelta, _int RootNodeIndex);
 	void							Set_AnimStatus(ANIM_STATUS eStatus);
-	void							Set_Animetion(class CModel* pModel,_int iAnimIndex, _bool IsLoop);
 
 private:
 	_int							m_iCulAnimIndex = {};

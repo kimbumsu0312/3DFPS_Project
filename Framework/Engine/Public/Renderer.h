@@ -11,8 +11,6 @@ private:
 public:
 	HRESULT						Initialize();
 	HRESULT						Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
-	HRESULT						Add_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates, const void* pDesc);
-	HRESULT						Switching_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates);
 	HRESULT						Draw();
 
 private:
@@ -24,9 +22,6 @@ private:
 	
 	_uint						m_iNumRederStates = {};
 
-	map<const _wstring,
-		ID3D11DeviceChild*>		m_pRenderState[ENUM_CLASS(RENDERSTATE::END)];
-
 private:
 	HRESULT						Render_Priority();
 	HRESULT						Render_NonBlend();
@@ -35,9 +30,6 @@ private:
 	HRESULT						Render_UI_Effect();
 	HRESULT						Render_Last();
 
-	ID3D11DeviceChild*			Find_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates);
-
-	HRESULT						Ready_RenderState();
 public:
 	static CRenderer*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void				Free() override;

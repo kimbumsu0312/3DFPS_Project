@@ -317,11 +317,10 @@ void CVIBuffer_Terrain::Terrain_Hight(bool raise, _float brushRadius, _float int
 
 	for (_int z = - brushRadius; z <= brushRadius; ++z) {
 		for (_int x = -brushRadius; x <= brushRadius; ++x) {
-			// 거리 계산 (XZ 평면)
 			_float distance = sqrt(x * x + z * z);
 			if (distance > brushRadius) continue;
 
-			// 부드러운 감쇠 (cosine falloff)
+			//감쇠
 			_float falloff = 0.5f * (1 + cos(XM_PI * distance / brushRadius));
 
 			// 현재 정점의 월드 위치 계산
@@ -330,18 +329,18 @@ void CVIBuffer_Terrain::Terrain_Hight(bool raise, _float brushRadius, _float int
 			worldPos.y = fMousePos.y + worldPos.y;
 			worldPos.z = fMousePos.z + worldPos.z;
 
-			// 터레인 그리드 인덱스 계산
+			// 터레인에 그릴 인덱스 계산
 			_int gridX = (_int)((worldPos.x) / 1.f);
 			_int gridZ = (_int)((worldPos.z) / 1.f);
 
-			// 경계 체크
+			
 			if (gridX < 0 || gridX >= m_TerrainData.iNumverticesX || gridZ < 0 || gridZ >= m_TerrainData.iNumverticesZ)
 				continue;
 
 			// 정점 인덱스 계산
 			_uint idx = gridZ * m_TerrainData.iNumverticesX + gridX;
 
-			// 높이 변경 (Y축만 조정)
+			// 터레인 높이 변경
 			_float fHeight = (raise ? 1.0f : -1.0f) * intensity * falloff;
 			if (m_TerrainData.pVertexPositions[idx].y + fHeight <= vMinMax.x )
 			{

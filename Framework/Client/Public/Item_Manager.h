@@ -11,11 +11,9 @@ private:
 
 public:
 	HRESULT Initialize();
-	HRESULT Add_2DRenderGroup(const ITEM_2DRENDER_TYPE& eRenderType, _uint ItemIndex, _float2 vPos);
 
 private:
 	CGameInstance*					m_pGameInstance = { nullptr };
-	vector<class CItem*>			m_ItemObjects[ENUM_CLASS(ITEM_2DRENDER_TYPE::END)];
 
 public:
 	virtual void Free() override;

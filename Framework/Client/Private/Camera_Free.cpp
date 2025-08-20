@@ -23,34 +23,17 @@ HRESULT CCamera_Free::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-    m_pGameInstance->Subscribe<Event_Camera_Zoom>([&](const Event_Camera_Zoom& e) { 
-        switch (e.eState)
-        {
-        case CAMERA_STATE::ZOOM_IN:
-            m_bIsZoomIn = true;
-            break;
-        case CAMERA_STATE::ZOOM_OUT:
-            m_bIsZoomout = true;
-            break;
-        case CAMERA_STATE::ZOOM_RESET:
-            m_fFovy = m_fResetFovy;
-            m_bIsZoomIn = false;
-            m_bIsZoomout = false;
-            return;
-        }
-        m_fResetFovy = m_fFovy;
-        m_fMoveFovy = e.fZoomFov;
-        m_fZoomSpeed = e.fZoomSpeed;
-     });
-
 	return S_OK;
 }
 
 void CCamera_Free::Priority_Update(_float fTimeDelta)
 {
+    if (!m_pGameInstance->IsKeyHold(DIK_Y))
+        return;
     KeyInput(fTimeDelta);
     Zoom_In(fTimeDelta);
     Zoom_Out(fTimeDelta);
+
     __super::Update_PipeLines();
 }
 

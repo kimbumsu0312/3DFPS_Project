@@ -69,9 +69,6 @@ public:
 #pragma region RENDERER
 public:
 	HRESULT				Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
-	HRESULT				Add_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates, const void* pDesc);
-	HRESULT				Switching_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates);
-
 #pragma endregion
 
 #pragma region EVENT_MANAGER
@@ -128,6 +125,11 @@ public:
 public:
 	void						TransformToLocalSpace(class CTransform& pTransformCom);
 	_bool						isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float3& pOut);
+	_bool						isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float& pDist);
+	_vector						Get_LocalRayPos();
+	_vector						Get_LocalRayDir();
+
+	RAY_DESC					Create_FpsRayDesc(_int iOffSetX, _int iOffSetY);
 #pragma endregion
 
 #pragma region SaveLoader
@@ -141,10 +143,27 @@ public:
 
 	HRESULT						Load_Terrain(string FilePath, SAVE_TERRAIN& pOut);
 	HRESULT						Load_Level(string FilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex);
+	HRESULT						Load_Level(string szFilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex, _wstring szPrototypeTag);
+
 	HRESULT						Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _wstring szPrototypeTag);
 
 	void						Clear_Object();
+	vector<class CGameObject*>* Get_Objects();
 #pragma endregion
+
+#pragma region Font_Manager
+	HRESULT						Add_Font(const _wstring& strFontTag, const _tchar* pFontFilePath);
+	void						DrawText(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f), _float fRadian = 0.f, const _float2& vOrigin = _float2(0.f, 0.f), const _float2& vScale = _float2(1.f, 1.f));
+#pragma endregion
+
+#pragma region Collision_Manager
+	HRESULT						Add_ColliderCheck(class CGameObject* pObject, class CCollider* pCollider);
+	HRESULT						Add_ColliderRay(_uint iLayLayer, _uint iObjType, RAY_DESC& RayDesc);
+
+	HRESULT						Set_LayerFilter(_uint iLayerNum, _uint iLayerFilter);
+#pragma endregion 
+
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CInput_Device*		m_pInput_Device = { nullptr };
@@ -159,6 +178,9 @@ private:
 	class CGarbage_Collector*	m_pGarbage_Collector = { nullptr };
 	class CPicking*				m_pPicking = { nullptr };
 	class CSaveLoader*			m_pSaveLoader = { nullptr };
+	class CFont_Manager*		m_pFont_Manager = { nullptr };
+	class CCollision_Manager*	m_pCollision_Manager = { nullptr };
+
 public:
 	void						Release_Engine();
 	virtual void				Free() override;

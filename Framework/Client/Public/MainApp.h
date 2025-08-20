@@ -26,8 +26,9 @@ private:
 	
 private:
 	HRESULT							Ready_Prototype_ForStatic();
+	HRESULT							Ready_PrototypeUI_ForStatic();
 	HRESULT							Start_Level(LEVEL eStartLevelID);
-
+	HRESULT							Ready_Collider();
 public:
 	static CMainApp*				Create();
 	virtual void					Free() override;

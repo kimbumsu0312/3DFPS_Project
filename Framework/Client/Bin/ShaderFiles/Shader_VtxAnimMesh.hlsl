@@ -1,3 +1,6 @@
+#include "Engine_Shader_Defines.hlsli"
+
+
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
@@ -7,18 +10,11 @@ vector g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
 vector g_vCamPosition;
 
-texture2D g_DiffuseTexture;
+texture2D   g_DiffuseTexture;
 vector      g_vMtrlAmbient = 1.f;
 vector      g_vMtrlSpecular = 1.f;
 
-matrix      g_BoneMatrices[512];
-
-sampler DefaultSampler = sampler_state
-{
-    filter = min_mag_mip_linear;
-    AddressU = wrap;
-    AddressV = wrap;
-};
+matrix      g_BoneMatrices[950];
 
 struct VS_IN
 {
@@ -100,40 +96,44 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
-
-PS_OUT PS_Selete(PS_IN In)
+PS_OUT PS_TEST(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
-    //if (vMtrlDiffuse.a < 0.3f)
+    //if(vMtrlDiffuse.a < 0.3f)
     //    discard;
     
     float fShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f);
     vector vReflect = reflect(normalize(g_vLightDir), In.vNormal);
     vector vLook = In.vWorldPos - g_vCamPosition;
     float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 10.f);
-    Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(fShade + (g_vLightAmbient * g_vMtrlAmbient))
-                    + (g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
     
-    Out.vColor.g += 0.4f;
+    Out.vColor = 1.f;
+
     return Out;
 }
-
 
 technique11 DefaultTechnique
 {
     pass DefaultPass
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
-    pass SeletePass
+    pass TESTPass
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
         VertexShader = compile vs_5_0 VS_MAIN();
-        PixelShader = compile ps_5_0 PS_Selete();
+        PixelShader = compile ps_5_0 PS_TEST();
     }
 }
 

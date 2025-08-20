@@ -15,6 +15,8 @@
 #include "Garbage_Collector.h"
 #include "Picking.h"
 #include "SaveLoader.h"
+#include "Font_Manager.h"
+#include "Collision_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -81,6 +83,14 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pSaveLoader)
 		return E_FAIL;
 
+	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pFont_Manager)
+		return E_FAIL;
+
+	m_pCollision_Manager = CCollision_Manager::Create(EngineDesc.iNumLayerFilter);
+	if (nullptr == m_pCollision_Manager)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -95,6 +105,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pObject_Manager->Update(fTimeDelta);
 	m_pObject_Manager->Late_Update(fTimeDelta);
 
+	m_pCollision_Manager->Update();
 	m_pLevel_Manager->Update(fTimeDelta);
 }
 
@@ -147,6 +158,7 @@ _float CGameInstance::Rand(_float fMin, _float fMax)
 {
 	return fMin + Rand_Normal() * (fMax - fMin);
 }
+
 #pragma endregion
 
 _byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
@@ -264,16 +276,6 @@ HRESULT CGameInstance::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pR
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
-HRESULT CGameInstance::Add_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates, const void* pDesc)
-{
-	return m_pRenderer->Add_RenderState(szRenderTag, eRenderStates, pDesc);
-}
-
-HRESULT CGameInstance::Switching_RenderState(_wstring szRenderTag, RENDERSTATE eRenderStates)
-{
-	return m_pRenderer->Switching_RenderState(szRenderTag, eRenderStates);
-}
-
 _matrix CGameInstance::Get_Transform_Matrix(D3DTS eTransformState) const
 {
 	return m_pPipeLine->Get_Transform_Matrix(eTransformState);
@@ -354,6 +356,26 @@ _bool CGameInstance::isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _flo
 	return m_pPicking->isPickedInLocalSpace(vPointA, vPointB, vPointC, pOut);
 }
 
+_bool CGameInstance::isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float& pDist)
+{
+	return m_pPicking->isPickedInLocalSpace(vPointA, vPointB, vPointC, pDist);
+}
+
+_vector CGameInstance::Get_LocalRayPos()
+{
+	return m_pPicking->Get_LocalRayPos();
+}
+
+_vector CGameInstance::Get_LocalRayDir()
+{
+	return m_pPicking->Get_LocalRayDir();
+}
+
+RAY_DESC CGameInstance::Create_FpsRayDesc(_int iOffSetX, _int iOffSetY)
+{
+	return m_pPicking->Create_FpsRayDesc(iOffSetX, iOffSetY);
+}
+
 HRESULT CGameInstance::File_Save_TerrainLevel(DATA_TYPE eData, string szFilename, CVIBuffer* pVIBuffer)
 {
 	return m_pSaveLoader->File_Save_TerrainLevel(eData, szFilename, pVIBuffer);
@@ -389,6 +411,11 @@ HRESULT CGameInstance::Load_Level(string FilePath, _uint iLevelIndex, _wstring s
 	return m_pSaveLoader->Load_Level(FilePath, iLevelIndex, szLayerTag, iPrototypeLevelIndex);
 }
 
+HRESULT CGameInstance::Load_Level(string szFilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex, _wstring szPrototypeTag)
+{
+	return m_pSaveLoader->Load_Level(szFilePath, iLevelIndex, szLayerTag, iPrototypeLevelIndex, szPrototypeTag);
+}
+
 HRESULT CGameInstance::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _wstring szPrototypeTag)
 {
 	return m_pSaveLoader->Load_Objcet(FilePath, iPrototypeLevelIndex, szPrototypeTag);
@@ -399,9 +426,41 @@ void CGameInstance::Clear_Object()
 	m_pSaveLoader->Clear_Object();
 }
 
+vector<class CGameObject*>* CGameInstance::Get_Objects()
+{
+	return m_pSaveLoader->Get_Objects();
+}
+
+HRESULT CGameInstance::Add_Font(const _wstring& strFontTag, const _tchar* pFontFilePath)
+{
+	return m_pFont_Manager->Add_Font(strFontTag, pFontFilePath);
+}
+
+void CGameInstance::DrawText(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float fRadian, const _float2& vOrigin, const _float2& vScale)
+{
+	m_pFont_Manager->DrawText(strFontTag, pText, vPosition, vColor, fRadian, vOrigin, vScale);
+}
+
+HRESULT CGameInstance::Add_ColliderCheck(CGameObject* pObject, CCollider* pCollider)
+{
+	return m_pCollision_Manager->Add_ColliderCheck(pObject, pCollider);
+}
+
+HRESULT CGameInstance::Add_ColliderRay(_uint iLayLayer, _uint iObjType, RAY_DESC& RayDesc)
+{
+	return m_pCollision_Manager->Add_ColliderRay(iLayLayer, iObjType, RayDesc);
+}
+
+HRESULT CGameInstance::Set_LayerFilter(_uint iLayerNum, _uint iLayerFilter)
+{
+	return m_pCollision_Manager->Set_LayerFilter(iLayerNum, iLayerFilter);
+}
+
 void CGameInstance::Release_Engine()
 {
 	Release();
+	Safe_Release(m_pCollision_Manager);
+	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pSaveLoader);
 	Safe_Release(m_pPicking);
 	Safe_Release(m_pGarbage_Collector);

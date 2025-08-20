@@ -25,10 +25,10 @@ public:
 
 	virtual void			On_Dead() override;
 public:
-	virtual HRESULT			Initialize_Pool(void *pArg);
+	virtual HRESULT			Initialize_Pool(void *pArg) = 0;
 	virtual void			Return_Pool() = 0;
-	
-private:
+	virtual void			OnCollision(_uint MyObjectType, _uint TargetObjectType)override {};
+protected:
 	_wstring				m_szPoolingPath;
 
 public:

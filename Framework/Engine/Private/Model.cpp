@@ -11,7 +11,7 @@ CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CComponen
 
 CModel::CModel(const CModel& Prototype) : CComponent(Prototype), m_Meshes(Prototype.m_Meshes), m_iNumMeshes(Prototype.m_iNumMeshes)
 , m_Materials(Prototype.m_Materials), m_iNumMaterials(Prototype.m_iNumMaterials), m_PreTransformMatrix{ Prototype.m_PreTransformMatrix }, m_eModelType(Prototype.m_eModelType)
-, m_iCurrentAnimIndex(Prototype.m_iCurrentAnimIndex), m_iNumAnimations(Prototype.m_iNumAnimations), m_bisFinished{false}
+, m_iCurrentAnimIndex(Prototype.m_iCurrentAnimIndex), m_iNumAnimations(Prototype.m_iNumAnimations)
 {
     for (auto& pPrototypeBone : Prototype.m_Bones)
         m_Bones.push_back(pPrototypeBone->Clone());
@@ -40,13 +40,13 @@ HRESULT CModel::Initialize_Prototype(const SAVE_MODEL& pModelData)
     if (FAILED(Ready_Meshes(pModelData)))
         return E_FAIL;
 
-    if (FAILED(Ready_Materials(pModelData)))
+     if (FAILED(Ready_Materials(pModelData)))
         return E_FAIL;
-
+    
     if (FAILED(Ready_Animations(pModelData)))
         return E_FAIL;
-
-    return S_OK;
+    
+       return S_OK;
 }
 
 HRESULT CModel::Initialize(void* pArg)
@@ -86,52 +86,104 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, 
     return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones);
 }
 
-_bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex, class CTransform* pTransform, _bool IsAnimChange)
+_bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex)
 {
-    if (m_eModelType != MODELTYPE::ANIM)
-        return false;
-    m_bisFinished = false;
+    m_bIsAnimFished = false;
 
-    m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &m_bisFinished, pAnimFrameData, IsAnimChange);
+    if (m_bIsAnimFished)
+        m_bPreRootSet = true;
+    _vector vCombinedScale = {};
+    _vector vCombinedPos = {};
+    _vector vCombinedRot = {};
 
-    _vector vCurPos= {};
-    
-    for (_int i = 0; i < m_Bones.size(); ++i)
+    if (m_fTransitionTime < m_fTransitionDuration)
     {
-        m_Bones[i]->Update_CombinedTransformationMatrix(m_PreTransformMatrix, m_Bones);
-        if (RootNodeIndex == i)
+        m_bPreRootSet = true;
+        m_fTransitionTime += 0.016;
+        _float fRatio = min(m_fTransitionTime / m_fTransitionDuration, 1.0f);
+       
+        m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices_Transition(m_Bones, pAnimFrameData, fRatio);
+
+        for (_int i = 0; i < m_Bones.size(); ++i)
         {
-            vCurPos = m_Bones[RootNodeIndex]->Get_CombinedTransformationMatrix().r[3];
-            m_Bones[i]->Set_CombindMationMatinMatrix_PosReset();
-         }
-    }
-
-
-    if (m_bisFinished || IsAnimChange)
-    {
-        _vector vAdjustment = XMVectorSetY(vCurPos - m_vPreRootPos, 0.f) * 0.5f;
-        m_vPreRootPos = vCurPos;
-        m_bisMotionChange = true;
-        return m_bisFinished;
-    }
-    
-    _vector vMovePos{};
-    if (m_Animations[m_iCurrentAnimIndex]->IsAnimChange())
-    {
-        vMovePos = { 0.f, 0.f, 0.f };
+            if (m_bIsUpperSet)
+            {
+                if (m_bIsUpperSet && m_iUpperBoneIndex == i)
+                {
+                    m_Bones[i]->Set_RotBonePitch(m_fPitch, true);
+                }
+            }
+            m_Bones[i]->Update_CombinedTransformationMatrix_Transition(m_PreTransformMatrix, m_Bones);
+            if (RootNodeIndex == i)
+            {
+                XMMatrixDecompose(&vCombinedScale, &vCombinedRot, &vCombinedPos, m_Bones[i]->Get_CombinedTransformationMatrix());
+                m_Bones[i]->Set_CombindMationMatinMatrix_PosReset();
+                m_Bones[i]->Set_CombindMationMatinMatrix_RotReset(m_PreTransformMatrix);
+            }
+        }
     }
     else
     {
-        m_bisMotionChange = false;
-        vMovePos = vCurPos - m_vPreRootPos;
+        m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, 0.016, m_bisLoop, eAnimStatus, &m_bIsAnimFished, pAnimFrameData);
+
+        for (_int i = 0; i < m_Bones.size(); ++i)
+        {
+            if (m_bIsUpperSet && m_iUpperBoneIndex == i)
+            {
+                m_Bones[i]->Set_RotBonePitch(m_fPitch, false);
+            }
+            m_Bones[i]->Update_CombinedTransformationMatrix(m_PreTransformMatrix, m_Bones);
+
+            if (RootNodeIndex == i)
+            {
+                XMMatrixDecompose(&vCombinedScale, &vCombinedRot, &vCombinedPos, m_Bones[i]->Get_CombinedTransformationMatrix());
+                if (m_bPreRootSet)
+                {
+                    m_vPreRootRot = vCombinedRot;
+                    m_vPreRootPos = vCombinedPos;
+                    m_bPreRootSet = false;
+                }
+                m_Bones[i]->Set_CombindMationMatinMatrix_PosReset();
+                m_Bones[i]->Set_CombindMationMatinMatrix_RotReset(m_PreTransformMatrix);
+            }
+        }
+
+        if (!m_bIsAnimFished)
+        {
+            XMStoreFloat3(&m_vMovePos, vCombinedPos - m_vPreRootPos);
+            m_vPreRootPos = vCombinedPos;
+      
+            XMStoreFloat4(&m_vMoveRot, XMQuaternionMultiply( XMQuaternionInverse(m_vPreRootRot), vCombinedRot));
+            m_vPreRootRot = vCombinedRot;
+        }
+        else
+        {
+            m_vPreRootRot = vCombinedRot;
+            m_vPreRootPos = vCombinedPos;
+            m_bPreRootSet = true;
+        }
     }
-    vMovePos = XMVectorSetY(vMovePos, 0.f);
-    _vector vWolrdPos = pTransform->Get_State(STATE::POSITION) + vMovePos;
-    pTransform->Set_State(STATE::POSITION, XMVectorSetW(vWolrdPos, 1.f));
+    
+    return m_bIsAnimFished;
+    
+}
 
-    m_vPreRootPos = vCurPos;
+_bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex, _int UperBone)
+{
+    return _bool();
+}
 
-    return m_bisFinished;
+_float4x4* CModel::Get_BoneMatrix(const _wstring pBoneName)
+{
+    auto iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone) {
+        if (true == pBone->Compare_Name(pBoneName))
+            return true;
+        return false;
+        });
+    if(iter == m_Bones.end())
+        return nullptr;
+
+    return (*iter)->Get_PtrCombinedTransformationMatrix();
 }
 
 void CModel::Set_Animations(_uint AnimiIndex, _bool IsLoop)
@@ -141,11 +193,20 @@ void CModel::Set_Animations(_uint AnimiIndex, _bool IsLoop)
 
     m_iCurrentAnimIndex = AnimiIndex;
     m_bisLoop = IsLoop;
+    m_bIsAnimFished = true;
+
+    m_fTransitionTime = 0.f;
+
+    for (auto Anim : m_Animations)
+        Anim->Reset_Anim();
+
 }
 
-void CModel::AnimChage()
+void CModel::Set_Upper(_int BoneIndex, _float fPitch, _bool IsUpperSet)
 {
-    m_Animations[m_iCurrentAnimIndex]->Anim_Change_Reset();
+    m_iUpperBoneIndex = BoneIndex;
+    m_fPitch = fPitch;
+    m_bIsUpperSet = IsUpperSet;
 }
 
 HRESULT CModel::Ready_Meshes(const SAVE_MODEL& pModelData)

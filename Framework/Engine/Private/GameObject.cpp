@@ -40,8 +40,12 @@ HRESULT CGameObject::Initialize(void* pArg)
 	if (FAILED(m_pTransformCom->Initialize(pArg)))
 		return E_FAIL;
 	
-	if (pDesc != nullptr && pDesc->isLoad)
-		m_pTransformCom->Set_WorldMatrix(pDesc->WolrdMatrix);
+	if (pDesc != nullptr &&true == pDesc->isLoad)
+	{
+		_float4x4 TransMatrix{};
+		XMStoreFloat4x4(&TransMatrix, pDesc->WolrdMatrix);
+		m_pTransformCom->Set_WorldMatrix(TransMatrix);
+	}
 	m_Components.emplace(TEXT("Com_Transform"), m_pTransformCom);
 
 	

@@ -8,6 +8,13 @@ Engine.dll
 Engine.lib
 Engine.exp
 Engine.pdb
+Engined.pdb
+Engined.exp
+Engined.dll
+Engined.lib
+
 Inc/
 Lib/
+Edit/
+Resources/
 copy.bat

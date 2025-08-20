@@ -47,6 +47,33 @@ void CPicking::Update()
 
 }
 
+RAY_DESC CPicking::Create_FpsRayDesc(_int iOffSetX, _int iOffSetY)
+{
+	RAY_DESC Desc;
+
+	POINT	ptMouse{};
+	
+	ptMouse.x = (m_iWinSizeX >> 1) + iOffSetX;
+	ptMouse.y = (m_iWinSizeY >> 1) + iOffSetY;
+
+	_float3	vMousePos{};
+
+	vMousePos.x = ptMouse.x / (m_iWinSizeX * 0.5f) - 1.f;
+	vMousePos.y = 1.f - ptMouse.y / (m_iWinSizeY * 0.5f);
+	vMousePos.z = 0.f;
+	XMVECTOR vMouseNDC = XMLoadFloat3(&vMousePos);
+
+	vMouseNDC = XMVector3TransformCoord(vMouseNDC, m_pGameInstance->Get_Transform_Matrix_Inverse(D3DTS::PROJ));
+
+	XMVECTOR vWolrdPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+
+	vMouseNDC = XMVector3TransformNormal(vMouseNDC, m_pGameInstance->Get_Transform_Matrix_Inverse(D3DTS::VIEW));
+	Desc.RayPos = XMVector3TransformCoord(vWolrdPos, m_pGameInstance->Get_Transform_Matrix_Inverse(D3DTS::VIEW));
+	Desc.RayDIr = XMVector3Normalize(vMouseNDC);
+
+	return Desc;
+}
+
 void CPicking::TransformToLocalSpace(CTransform& pTransformCom)
 {
 	m_vLocalRayPos = XMVector3TransformCoord(m_vWorldRayPos, pTransformCom.Get_WorldMatrix_Inverse());
@@ -63,6 +90,18 @@ _bool CPicking::isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 v
 	if (true == isPicked)
 		XMStoreFloat3(&pOut, m_vLocalRayPos + m_vLocalRayDir * fDist);
 	
+	return isPicked;
+}
+
+_bool CPicking::isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float& pDist)
+{
+	_float fDist{};
+	_bool isPicked = false;
+	isPicked = DirectX::TriangleTests::Intersects(m_vLocalRayPos, m_vLocalRayDir, XMLoadFloat3(&vPointA), XMLoadFloat3(&vPointB), XMLoadFloat3(&vPointC), fDist);
+
+	if (true == isPicked)
+		pDist = fDist;
+
 	return isPicked;
 }
 

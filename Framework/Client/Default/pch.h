@@ -7,4 +7,7 @@
 #include "Client_Defines.h"
 #include "GameInstance.h"
 #include "Client_Event.h"
+#include "Client_Enum.h"
+#include "PoolingObject.h"
+#include "Player_Manager.h"
 #endif //PCH_H

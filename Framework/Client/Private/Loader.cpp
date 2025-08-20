@@ -1,23 +1,18 @@
 #include "pch.h"
 #include "Loader.h"
-
 #include "BackGround.h"
 #include "Terrain.h"
-#include "Logo_UI.h"
-#include "Inventory.h"
 #include "Camera_Free.h"
-#include "Aim_Pistol.h"
-#include "Aim_Shotgun.h"
-#include "Aim_Line.h"
-#include "Aim_Sniper.h"
-#include "Quick_Slot.h"
-#include "Player_Hp.h"
-#include "Player.h"
-#include "UI_Tex.h"
-#include "UI_Slot.h"
-#include "Announce.h"
-#include "Player.h"
-#include "Body_Player.h"
+#include "Sky.h"
+#include "BaseMapObj.h"
+#include "MapNevi.h"
+#include "SpawnPoint.h"
+#include "MonSpawner.h"
+
+
+#include "UI_Header.h"
+#include "Player_Header.h"
+#include "Monster_Header.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_pDevice{ pDevice }, m_pContext { pContext }, m_pGameInstance { CGameInstance::GetInstance()}
 {
@@ -124,18 +119,148 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Bullet/Aim_%d.png"), 2))))
 		return E_FAIL;
 
+	/* Prototype_Component_Texture_Sky */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Sky"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Sky/Sky_3.dds"), 1))))
+		return E_FAIL;
 	lstrcpy(m_szLoadingText, TEXT("모델을 로딩중입니다."));
+	
+	/* Prototype_Component_VIBuffer_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp")))))
 		return E_FAIL;
+	/* Prototype_Component_VIBuffer_Cube */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Cube"),
+		CVIBuffer_Cube::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
+#pragma region Player_Model
+	/* Prototype_Model_Player*/
+    if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Player/Player.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Player"))))
+		return E_FAIL;
+	/* Prototype_Model_Knife*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Knife/Knife.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Knife"))))
+		return E_FAIL;
+	/* Prototype_Model_HandGun*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/HandGun/HandGun.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_HandGun"))))
+		return E_FAIL;
+	/* Prototype_Model_ShotGun*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/ShotGun/ShotGun.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_ShotGun"))))
+		return E_FAIL;
+	/* Prototype_Model_Sniper*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Sniper/Sniper.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Sniper"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Mon_Normal_Model
+	/* Prototype_Model_Normal_Mon_1*/
+  	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Normal_Mon_1/Normal_Mon_1.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Normal_Mon_1"))))
+		return E_FAIL;
+	/* Prototype_Model_Halberd*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Weapon/Halberd/Halberd.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Halberd"))))
+		return E_FAIL;
+	/* Prototype_Model_Shotel*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Weapon/Shotel/Shotel.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Shotel"))))
+		return E_FAIL;
+	/* Prototype_Model_Sword*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Weapon/Sword/Sword.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Sword"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Mon_Boss_Model
+	/* Prototype_Model_Bela*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Boss/Bela/Bela.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Bela"))))
+		return E_FAIL;
+
+	/* Prototype_Model_Daniela*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Boss/Daniela/Daniela.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Daniela"))))
+		return E_FAIL;
+
+	/* Prototype_Model_Boss_Shotel*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Weapon/Boss_Shotel/Boss_Shotel.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Boss_Shotel"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region MapObject
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Badroom/Badroom.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_BadRoom"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Courtyardground/Courtyardground.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Courtyardground"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Diningroom/Diningroom.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Diningroom"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Entrancehalla/Entrancehalla.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Entrancehalla"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Livingroom/Livingroom.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Livingroom"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/MainHall/MainHall.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_MainHall"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/SafeRoom/SafeRoom.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_SafeRoom"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/WoodEncorridora/WoodEncorridora.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_WoodEncorridora"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Woodencorridorb/Woodencorridorb.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Woodencorridorb"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Chapel/Chapel.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Chapel"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Concerthall/Concerthall.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Concerthall"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Kitchen/Kitchen.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Kitchen"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Library/Library.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Library"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Storageroom/Storageroom.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Storageroom"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/TastingRoom/TastingRoom.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_TastingRoom"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Woodencorridorc/Woodencorridorc.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Woodencorridorc"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Woodencorridord/Woodencorridord.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Woodencorridord"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Woodencorridore/Woodencorridore.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Woodencorridore"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Room/Woodencorridorf/Woodencorridorf.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Woodencorridorf"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/DoorFrame/DoorFrame.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_DoorFrame"))))
+		return E_FAIL;
+
+#pragma endregion
 	lstrcpy(m_szLoadingText, TEXT("쉐이더를 로딩중입니다."));
+	/* Prototype_Component_Shader_VtxNorTex */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Shader_VtxNorTex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
 		return E_FAIL;
+	/* Prototype_Component_Shader_VtxCube */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Shader_VtxCube"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxCube.hlsl"), VTXCUBE::Elements, VTXCUBE::iNumElements))))
+		return E_FAIL;
 
-	/* Player_Model_Prototype*/
-    	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Player/Player.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Player"))))
+	lstrcpy(m_szLoadingText, TEXT("네비게이션을 로딩중입니다."));
+	/* Prototype_Component_Navigation */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
+		CNavigation::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Navigation/Level_GamePlay.dat"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_MapNevi"),
+		CMapNevi::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("게임오브젝트원형를 로딩중입니다."));
@@ -147,7 +272,20 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
 		CCamera_Free::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	/* Prototype_GameObject_Sky */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sky"),
+		CSky::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
+	if(FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_MonSpawneer"),
+		CMonSpawner::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_SpawnPoint"),
+		CSpawnPoint::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+		
+#pragma region Player_Object
 	if(FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Player"),
 		CPlayer::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -156,8 +294,72 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CBody_Player::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	
-#pragma region UIOBJ
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Player"),
+		CCamera_Player::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Knife_Player"),
+		CKnife::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_ShotGun_Player"),
+		CShotGun::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sniper_Player"),
+		CSniper::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_HandGun_Player"),
+		CHandGun::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Monster_Object
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1"),
+		CMonster_Normal::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Monster_Normal_1"),
+		CBody_NorMon::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1_Sword"),
+		CNormon_Sword::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1_Halberd"),
+		CNormon_Halberd::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1_Shotel"),
+		CNormon_Shotel::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region Monster_Boss_Object
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Bela"),
+		CBela::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Bela"),
+		CBody_Bela::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Daniela"),
+		CDaniela::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Daniela"),
+		CBody_Daniela::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Boss_Shotel"),
+		CBoss_Shotel::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region UI_Object
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Inventroy"),
 		CInventory::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -197,7 +399,12 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Announce"),
 		CAnnounce::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
 #pragma endregion
+	/* Prototype_GameObject_BaseMapObj */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Map"),
+		CBaseMapObj::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
 	m_isFinished = true;

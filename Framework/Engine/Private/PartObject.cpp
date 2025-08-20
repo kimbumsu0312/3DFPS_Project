@@ -16,6 +16,10 @@ HRESULT CPartObject::Initialize_Prototype()
 
 HRESULT CPartObject::Initialize(void* pArg)
 {
+	PARTOBJECT_DESC* pDesc = static_cast<PARTOBJECT_DESC*>(pArg);
+
+	m_pParentMatrix = pDesc->pParentMatrix;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -37,6 +41,11 @@ void CPartObject::Late_Update(_float fTimeDelta)
 HRESULT CPartObject::Render()
 {
 	return S_OK;
+}
+
+void CPartObject::Update_CombinedMatrix()
+{
+	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
 }
 
 void CPartObject::Free()

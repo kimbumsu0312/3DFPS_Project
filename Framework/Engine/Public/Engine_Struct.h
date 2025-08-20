@@ -1,6 +1,6 @@
 #ifndef Engine_Struct_h__
 #define Engine_Struct_h__
-
+#include "Engine_Enum.h"
 
 
 namespace Engine
@@ -10,9 +10,30 @@ namespace Engine
 		HINSTANCE		hInst;
 		HWND			hWnd;
 		WINMODE			eWinMode;
+
 		unsigned int	iWinSizeX, iWinSizeY;
 		unsigned int	iNumLevels;
+		unsigned int	iNumLayerFilter;
+
 	}ENGINE_DESC;	
+
+	typedef struct tagCollisionRayDesc
+	{
+		XMVECTOR	RayPos;
+		XMVECTOR	RayDIr;
+
+	}RAY_DESC;
+
+	typedef struct tagCollisionDesc
+	{
+		class CGameObject*	pObject;
+		class CCollider*	pCollider;
+		unsigned int		iLayer;
+		unsigned int		iObjType;
+
+		COLLIDER			eCollider;
+		RAY_DESC			RayDesc;
+	}COLLISIONENTRY;
 
 	typedef struct tagLightDesc
 	{
@@ -47,6 +68,16 @@ namespace Engine
 	}ANIMEFRAME;
 
 	//쉐이더 관련 구조체
+	typedef struct tagVertexPosition
+	{
+		XMFLOAT3	vPosition;
+
+		static const unsigned int	iNumElements = { 1 };
+		static constexpr D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+	}VTXPOS;
+
 	typedef struct tagVertexPositionTexcoord
 	{
 		XMFLOAT3	vPosition;
@@ -60,6 +91,18 @@ namespace Engine
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		};
 	}VTXPOSTEX;
+
+	typedef struct tagVertexCube
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT3		vTexcoord;
+
+		static const unsigned int	iNumElements = { 2 };
+		static constexpr D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements] = {
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+	}VTXCUBE;
 
 	typedef struct tagVertexPositionNormalTexcoord
 	{
@@ -176,7 +219,7 @@ namespace Engine
 		wstring					szName;
 		XMFLOAT4X4				TransformationMatrix;
 		int						iParentBoneIndex;
-		XMFLOAT4X4				matOffset;				
+		XMFLOAT4X4				matOffset;		
 	}SAVE_BONE;
 
 	typedef struct tagChannels
@@ -226,6 +269,14 @@ namespace Engine
 		float			fTickPerSecond;
 
 	}SAVE_ANIMDATA;
+
+	typedef struct tagSaveCell
+	{
+		XMFLOAT3		Point_A;
+		XMFLOAT3		Point_B;
+		XMFLOAT3		Point_C;
+		unsigned int	iCellType;
+	}SAVE_CELLDATA;
 
 }
 

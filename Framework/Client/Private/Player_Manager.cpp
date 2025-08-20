@@ -11,7 +11,7 @@ HRESULT CPlayer_Manager::Initialize()
 {
 	m_pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(m_pGameInstance);
-
+	m_iDamage = 20;
 	m_fMaxHp = 100;
 	m_fCulHp = m_fMaxHp;
 	m_fPreHp = 0.f;
@@ -20,8 +20,12 @@ HRESULT CPlayer_Manager::Initialize()
 
 void CPlayer_Manager::Player_Hp(_int iValue)
 {
-	m_fCulHp += iValue;
+	if (m_bIsDamage)
+		return;
 
+	m_bIsDamage = true;
+	m_fCulHp += iValue;
+	m_pGameInstance->Publish(Event_Player_Hp_UI_Open{ 0 });
 	if (m_fPreHp != m_fCulHp)
 	{
 		if (m_fCulHp >= m_fMaxHp * 0.75)
