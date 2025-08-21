@@ -8,6 +8,10 @@ Engine.dll
 Engine.lib
 Engine.exp
 Engine.pdb
+Engined.dll
+Engined.lib
+Engined.exp
+Engined.pdb
 Inc/
 Lib/
 Edit/
