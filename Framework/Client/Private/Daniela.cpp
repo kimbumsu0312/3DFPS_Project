@@ -55,6 +55,7 @@ HRESULT CDaniela::Initialize(void* pArg)
 
 void CDaniela::Priority_Update(_float fTimeDelta)
 {
+	m_pTransformCom->PrePostion_Update();
 	m_State = {};
 
 	m_pBodyObject->Priority_Update(fTimeDelta);
@@ -119,8 +120,8 @@ void CDaniela::Target_LookTurn(_float fTimeDelta)
 	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
 	_vector vPlayerPos = CPlayer_Manager::GetInstance()->Get_PlayerPos();
 
-	_vector vDir = XMVector3Normalize(vPlayerPos - vMonPos);
-	_vector vLook = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
+	_vector vDir = XMVector3Normalize(XMVectorSetY(vPlayerPos - vMonPos, 0.f));
+	_vector vLook = XMVector3Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK),0.f));
 
 	_vector vAxis = XMVector3Normalize(XMVector3Cross(vLook, vDir));
 
@@ -146,19 +147,25 @@ void CDaniela::IsDamage()
 		m_iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
 }
 
-void CDaniela::OnCollision(_uint MyObjectType, _uint TargetObjectType)
+void CDaniela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
 {
-	switch (TargetObjectType)
+	if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::RESIST))
+	{
+		if (TargetCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::RESIST))
+			m_pTransformCom->Is_Sliding(m_pNavigationCom, XMLoadFloat3(&TargetCollision.pCollider->Get_Intersect_Normal()));
+	}
+
+	switch (TargetCollision.iObjType)
 	{
 	case ENUM_CLASS(OBJECT_TYPE::RAY):
 
-		if (MyObjectType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
+		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
 			m_IsHitPoint.IsHead = true;
-		if(MyObjectType == ENUM_CLASS(OBJECT_TYPE::MON_BODY))
+		if(MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_BODY))
 			m_IsHitPoint.IsBody = true;
-		if (MyObjectType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_R))
+		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_R))
 			m_IsHitPoint.isSholder_R = true;
-		if (MyObjectType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L))
+		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L))
 			m_IsHitPoint.IsSholder_L = true;
 
 		m_bIsDamage = true;
@@ -170,6 +177,16 @@ void CDaniela::OnCollision(_uint MyObjectType, _uint TargetObjectType)
 HRESULT CDaniela::Ready_Components()
 {
 	CBounding_OBB::BOUNDING_OBB_DESC  OBBDesc{};
+	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::RESIST);
+	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::RESIST);
+	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
+	OBBDesc.vExtents = _float3(0.4f, 0.4f, 0.4f);
+	OBBDesc.vCenter = _float3(0.f, 0.5f, 0.f);
+
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
+		TEXT("Com_Collider_Resist"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::RESIST]), &OBBDesc)))
+		return E_FAIL;
+
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::MON_BODY);
 	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
@@ -187,6 +204,7 @@ HRESULT CDaniela::Ready_Components()
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
 		TEXT("Com_Collider_Head"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::Head]), &OBBDesc)))
 		return E_FAIL;
+
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_R);
 	OBBDesc.vExtents = _float3(0.2f, 0.07f, 0.07f);
 	OBBDesc.vCenter = _float3(0.1f, 0.f, 0.f);
@@ -325,8 +343,6 @@ void CDaniela::State_Change()
 
 void CDaniela::Root_Move()
 {
-	_vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
-
 	//월드 분해
 	_vector vScale, vWorldRot, vWorldTrans;
 	XMMatrixDecompose(&vScale, &vWorldRot, &vWorldTrans, m_pTransformCom->Get_WorldMatrix());
@@ -350,10 +366,7 @@ void CDaniela::Root_Move()
 	XMStoreFloat4x4(&WorldMatrix, XMMatrixAffineTransformation(vScale, XMVectorSet(0.0f, 0.0f, 0.0f, 1.f), vWorldRot, vWorldTrans));
 
 	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
-
-	if (false == m_pNavigationCom->isMove(m_pTransformCom->Get_State(STATE::POSITION)))
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(vPos, 1.f));
-
+	m_pTransformCom->Is_Sliding(m_pNavigationCom);
 }
 
 void CDaniela::Collider_Update()
@@ -363,6 +376,11 @@ void CDaniela::Collider_Update()
 
 	for (_int i = 0; i < ColliderType_Mon::End; ++i)
 	{
+		if (ColliderType_Mon::RESIST == i)
+		{
+			m_pColliderCom[i]->Update(m_pTransformCom->Get_WorldMatrix());
+			continue;
+		}
 		_matrix BoneMat = XMLoadFloat4x4(m_pColliderBone[i]);
 		_vector vScale, vRot, vTrans;
 		XMMatrixDecompose(&vScale, &vRot, &vTrans, BoneMat);

@@ -41,7 +41,7 @@ public:
 	void						Reset_DamageCheck() { m_bIsDamage = false; m_IsHitPoint = {}; }
 	void						Attack_Collision();
 	void						IsDamage();
-	virtual void				OnCollision(_uint MyObjectType, _uint TargetObjectType) override;
+	virtual void				OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 
 private:
 	CNavigation*				m_pNavigationCom = { nullptr };

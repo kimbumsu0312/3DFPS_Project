@@ -108,10 +108,17 @@ void CNeviMesh::Update(_float fTimeDelta)
 	{
 		m_iSeletePoint = 2;
 	}
-	
-	if (m_pGameInstance->IsKeyDown(DIK_U))
+	if (m_pGameInstance->IsKeyHold(DIK_LCONTROL) && m_pGameInstance->IsKeyDown(DIK_X))
 	{
-		m_pNevigationCom->Add_Cell(m_fCellPoint);
+		m_pNevigationCom->Erase_LastCell();
+	}
+	if (m_pGameInstance->IsKeyHold(DIK_LCONTROL) && m_pGameInstance->IsKeyDown(DIK_X))
+	{
+		m_pNevigationCom->Add_Cell(m_fCellPoint, CImgui_Manger::GetInstance()->Get_NeviIndex());
+	}
+	if (m_pGameInstance->IsKeyHold(DIKEYBOARD_LSHIFT) && m_pGameInstance->IsMouseDown(MOUSEKEYSTATE::RB))
+	{
+		CImgui_Manger::GetInstance()->Set_SeleteCell(Get_CellIndex());
 	}
 	m_pNevigationCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
@@ -125,9 +132,21 @@ void CNeviMesh::Late_Update(_float fTimeDelta)
 
 HRESULT CNeviMesh::Render()
 {
+
+	m_pNevigationCom->Chage_Color(_float4{ 1.f, 0.f, 0.f, 1.f });
 	m_pNevigationCom->Render();
 
 	return S_OK;
+}
+
+_int CNeviMesh::Get_CellCount()
+{
+	return m_pNevigationCom->Count_Cell();
+}
+
+_int CNeviMesh::Get_CellIndex()
+{
+	return m_pNevigationCom->Selete_CellIndex(*m_pTransformCom);
 }
 
 void CNeviMesh::Set_Objcets()
@@ -138,6 +157,13 @@ void CNeviMesh::Set_Objcets()
 void CNeviMesh::Save_Nevi(string szFileName)
 {
 	m_pNevigationCom->Save_Cell(szFileName);
+}
+
+void CNeviMesh::Load_Nevi(string szFileName)
+{
+	Safe_Release(m_pNevigationCom);
+
+	m_pNevigationCom = CNavigation::Create(m_pDevice, m_pContext, szFileName);
 }
 
 HRESULT CNeviMesh::Ready_Components()

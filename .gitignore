@@ -17,3 +17,5 @@ Lib/
 Edit/
 Resources/
 copy.bat
+/Framework/Edit/Default/Edit.vcxproj
+/Framework/Edit/Default/Edit.vcxproj.filters

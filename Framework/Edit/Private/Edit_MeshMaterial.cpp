@@ -63,6 +63,46 @@ HRESULT CEdit_MeshMaterial::Initialize(const _char* pModelFilePath, const aiMate
 	return S_OK;
 }
 
+HRESULT CEdit_MeshMaterial::Initialize(const SAVE_MESHMATERIAL& pMaterialData)
+{
+	for (size_t i = 0; i < pMaterialData.Materials.size(); i++)
+	{
+		_uint		iNumTextures = pMaterialData.Materials[i].iTexCount;
+
+		for (size_t j = 0; j < iNumTextures; j++)
+		{
+			ID3D11ShaderResourceView* pSRV = { nullptr };
+
+			const _char* szFilePath = pMaterialData.Materials[i].szFullPath[j].c_str();
+
+			_char			szExt[MAX_PATH] = {};
+			_splitpath_s(szFilePath, nullptr, 0, nullptr, 0, nullptr, 0, szExt, MAX_PATH);
+
+
+			_tchar			szFileFullPath[MAX_PATH] = {};
+			MultiByteToWideChar(CP_ACP, 0, szFilePath, strlen(szFilePath), szFileFullPath, MAX_PATH);
+
+
+			HRESULT		hr = {};
+
+			if (false == strcmp(".tga", szExt))
+				hr = E_FAIL;
+
+			if (false == strcmp(".dds", szExt))
+				hr = CreateDDSTextureFromFile(m_pDevice, szFileFullPath, nullptr, &pSRV);
+			else
+				hr = CreateWICTextureFromFile(m_pDevice, szFileFullPath, nullptr, &pSRV);
+
+			if (FAILED(hr))
+				return E_FAIL;
+
+			m_SRVs[i+1].push_back(pSRV);
+		}
+	}
+
+	return S_OK;
+}
+
 HRESULT CEdit_MeshMaterial::Bind_Shader_Resource(CShader* pShader, const _char* pConstantName, aiTextureType eTextureType, _uint iIndex)
 {
 	if (iIndex >= m_SRVs[eTextureType].size())
@@ -76,6 +116,19 @@ CEdit_MeshMaterial* CEdit_MeshMaterial::Create(ID3D11Device* pDevice, ID3D11Devi
 	CEdit_MeshMaterial* pInstance = new CEdit_MeshMaterial(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize(pModelFilePath, pAIMaterial, ModelData)))
+	{
+		MSG_BOX(TEXT("Failed to Created : CEdit_MeshMaterial"));
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CEdit_MeshMaterial* CEdit_MeshMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const SAVE_MESHMATERIAL& pMaterialData)
+{
+	CEdit_MeshMaterial* pInstance = new CEdit_MeshMaterial(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize(pMaterialData)))
 	{
 		MSG_BOX(TEXT("Failed to Created : CEdit_MeshMaterial"));
 		Safe_Release(pInstance);

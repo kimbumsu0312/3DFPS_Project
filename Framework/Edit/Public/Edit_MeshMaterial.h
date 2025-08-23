@@ -11,6 +11,7 @@ private:
 
 public:
 	HRESULT								Initialize(const _char* pModelFilePath, const aiMaterial* pAIMaterial, SAVE_MODEL* ModelData);
+	HRESULT								Initialize(const SAVE_MESHMATERIAL& pMaterialData);
 	HRESULT								Bind_Shader_Resource(CShader* pShader, const _char* pConstantName, aiTextureType eTextureType, _uint iIndex);
 
 private:
@@ -19,7 +20,9 @@ private:
 	vector<ID3D11ShaderResourceView*>	m_SRVs[AI_TEXTURE_TYPE_MAX];
 
 public:
-	static CEdit_MeshMaterial*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const aiMaterial* pAIMaterial, SAVE_MODEL* ModelData);
+	static CEdit_MeshMaterial*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const aiMaterial* pAIMaterial, SAVE_MODEL* ModelData);
+	static CEdit_MeshMaterial*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const SAVE_MESHMATERIAL& pMaterialData);
+
 	virtual void						Free() override;
 
 };

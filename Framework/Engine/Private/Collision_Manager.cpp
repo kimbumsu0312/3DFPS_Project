@@ -39,7 +39,7 @@ HRESULT CCollision_Manager::Update()
                 if ((*iter_B).pCollider->Intersect((*iter_A).RayDesc))
                 {
                     if (IsCheckBA)
-                        (*iter_B).pObject->OnCollision((*iter_B).iObjType, (*iter_A).iObjType);
+                        (*iter_B).pObject->OnCollision((*iter_B), (*iter_A));
                 }
             }
             else if ((*iter_B).eCollider == COLLIDER::RAY)
@@ -47,7 +47,7 @@ HRESULT CCollision_Manager::Update()
                 if ((*iter_A).pCollider->Intersect((*iter_B).RayDesc))
                 {
                     if (IsCheckAB)
-                        (*iter_A).pObject->OnCollision((*iter_A).iObjType, (*iter_B).iObjType);
+                        (*iter_A).pObject->OnCollision((*iter_A), (*iter_B));
                 }
             }
             else
@@ -55,10 +55,10 @@ HRESULT CCollision_Manager::Update()
                 if ((*iter_A).pCollider->Intersect((*iter_B).pCollider))
                 {
                     if (IsCheckAB)
-                        (*iter_A).pObject->OnCollision((*iter_A).iObjType, (*iter_B).iObjType);
+                        (*iter_A).pObject->OnCollision((*iter_A), (*iter_B));
 
                     if (IsCheckBA)
-                        (*iter_B).pObject->OnCollision((*iter_B).iObjType, (*iter_A).iObjType);
+                        (*iter_B).pObject->OnCollision((*iter_B), (*iter_A));
                 }
             }
         }

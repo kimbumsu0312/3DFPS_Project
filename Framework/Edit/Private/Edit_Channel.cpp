@@ -74,6 +74,29 @@ HRESULT CEdit_Channel::Initialize(const aiNodeAnim* pAIChannel, const vector<cla
     return S_OK;
 }
 
+HRESULT CEdit_Channel::Initialize(const SAVE_CHANNEL& pChannel, const vector<class CEdit_Bone*>& Bones)
+{
+    m_iBoneIndex = pChannel.iBoneIndex;
+    m_iNumKeyFrames = pChannel.iNumKeyFrames;
+
+    _float3     vScale{};
+    _float4     vRotation{};
+    _float3     vTranslation{};
+
+    for (size_t i = 0; i < m_iNumKeyFrames; i++)
+    {
+        KEYFRAME            KeyFrame{};
+
+        KeyFrame.vScale = pChannel.KeyFrames[i].vScale;
+        KeyFrame.vRotation = pChannel.KeyFrames[i].vRotation;
+        KeyFrame.vTranslation = pChannel.KeyFrames[i].vTranslation;
+        KeyFrame.fTrackPosition = pChannel.KeyFrames[i].fTrackPosition;
+
+        m_KeyFrames.push_back(KeyFrame);
+    }
+    return S_OK;
+}
+
 void CEdit_Channel::Update_TransformationMatrix(const vector<class CEdit_Bone*>& Bones, _float fCurrentTrackPosition, _float fPreTrackPosition, _uint* iCurrentKeyFrameIndex)
 {
     //트랙 포지션 값을 0을 받으면 키 프레임 인덱스를 0으로 초기화 시킨다.
@@ -132,6 +155,19 @@ CEdit_Channel* CEdit_Channel::Create(const aiNodeAnim* pAIChannel, const vector<
     if (FAILED(pInstance->Initialize(pAIChannel, Bones, pAnim)))
     {
         MSG_BOX(TEXT("Failed to Created :CEdit_Channel"));
+        Safe_Release(pInstance);
+    }
+
+    return pInstance;
+}
+
+CEdit_Channel* CEdit_Channel::Create(const SAVE_CHANNEL& pChannel, const vector<class CEdit_Bone*>& Bones)
+{
+    CEdit_Channel* pInstance = new CEdit_Channel();
+
+    if (FAILED(pInstance->Initialize(pChannel, Bones)))
+    {
+        MSG_BOX(TEXT("Failed to Created : CEdit_Channel"));
         Safe_Release(pInstance);
     }
 

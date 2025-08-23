@@ -12,7 +12,7 @@ NS_BEGIN(Client)
 class CDaniela final : public CContainerObject
 {
 private:
-	enum ColliderType_Mon { Body = 0, Head, L_ARM, R_ARM, End };
+	enum ColliderType_Mon { Body = 0, Head, L_ARM, R_ARM, RESIST, End };
 private:
 	CDaniela(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CDaniela(const CDaniela& Prototype);
@@ -41,7 +41,7 @@ public:
 	void						Reset_DamageCheck() { m_bIsDamage = false; m_IsHitPoint = {}; }
 	void						Attack_Collision();
 	void						IsDamage();
-	virtual void				OnCollision(_uint MyObjectType, _uint TargetObjectType) override;
+	virtual void				OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 
 private:
 	CNavigation*				m_pNavigationCom = { nullptr };

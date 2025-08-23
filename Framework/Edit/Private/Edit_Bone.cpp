@@ -37,6 +37,18 @@ HRESULT CEdit_Bone::Initialize(const aiNode* pAINode, _int iParentBoneIndex, SAV
 	return S_OK;
 }
 
+HRESULT CEdit_Bone::Initialize(const SAVE_BONE& pBone)
+{
+	WideCharToMultiByte(CP_ACP, 0, pBone.szName.c_str(), -1,
+		m_szName, sizeof(m_szName),
+		nullptr, nullptr);
+	m_TransformationMatrix = pBone.TransformationMatrix;
+	XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());
+	m_iParentBoneIndex = pBone.iParentBoneIndex;
+
+	return S_OK;
+}
+
 void CEdit_Bone::Update_CombinedTransformationMatrix(const _float4x4& PreTransformMatrix, const vector<CEdit_Bone*>& Bones)
 {
 	//부모 뼈 인덱스가 -1이면 부모뼈가 없는 걸로 판단
@@ -58,6 +70,19 @@ CEdit_Bone* CEdit_Bone::Create(const aiNode* pAINode, _int iParentBoneIndex, SAV
 	CEdit_Bone* pInstance = new CEdit_Bone();
 
 	if (FAILED(pInstance->Initialize(pAINode, iParentBoneIndex, pModelData)))
+	{
+		MSG_BOX(TEXT("Failed to Created : CEdit_Bone"));
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CEdit_Bone* CEdit_Bone::Create(const SAVE_BONE& pBone)
+{
+	CEdit_Bone* pInstance = new CEdit_Bone();
+
+	if (FAILED(pInstance->Initialize(pBone)))
 	{
 		MSG_BOX(TEXT("Failed to Created : CEdit_Bone"));
 		Safe_Release(pInstance);

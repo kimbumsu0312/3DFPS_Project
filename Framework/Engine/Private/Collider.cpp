@@ -73,7 +73,7 @@ void CCollider::Update(_fmatrix WorldMatrix)
 
 _bool CCollider::Intersect(CCollider* pTarget)
 {
-    return m_isColl = m_pBounding->Intersect(pTarget->m_eType, pTarget->m_pBounding);
+    return m_isColl = m_pBounding->Intersect(pTarget->m_eType, pTarget->m_pBounding, m_vIntersect_Nromal, pTarget->Get_Intersect_Normal());
 }
 
 _bool CCollider::Intersect(RAY_DESC& RayDesc)

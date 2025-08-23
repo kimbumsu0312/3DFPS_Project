@@ -11,6 +11,8 @@ NS_BEGIN(Client)
 class CPlayer final : public CContainerObject
 {
 private:
+	enum ColliderType_Player { BODY = 0, RESIST, END };
+private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
 	virtual ~CPlayer() = default;
@@ -33,11 +35,11 @@ public:
 	const PLAYER_ATTACK_STATE&	Get_AttackState() { return m_AttackState; }
 	const PLAYER_MOVE_STATE&	Get_MoveState() { return m_MoveState; }
 	const _int&					Get_WeaponType() { return m_iCulWeponState; }
-	virtual void				OnCollision(_uint MyObjectType, _uint TargetObjectType) override;
+	virtual void				OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 
 private:
 	CNavigation*				m_pNavigationCom = { nullptr };
-	CCollider*					m_pColliderCom = { nullptr };
+	CCollider*					m_pColliderCom[ColliderType_Player::END] = {nullptr};
 	_float4x4*					m_pColliderBone = { nullptr };
 
 	_uint						m_iPreWeponState = {};

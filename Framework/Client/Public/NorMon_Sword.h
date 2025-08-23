@@ -24,7 +24,7 @@ public:
 	virtual HRESULT			Render();
 
 	virtual HRESULT			Add_Collider() override;
-	virtual void			OnCollision(_uint MyObjectType, _uint TargetObjectType) override;
+	virtual void			OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 
 private:
 	CCollider*				m_pColliderCom = { nullptr };

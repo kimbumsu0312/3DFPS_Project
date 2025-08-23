@@ -81,9 +81,9 @@ HRESULT CNormon_Halberd::Add_Collider()
         return E_FAIL;
 }
 
-void CNormon_Halberd::OnCollision(_uint MyObjectType, _uint TargetObjectType)
+void CNormon_Halberd::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
 {
-    switch (TargetObjectType)
+    switch (TargetCollision.iObjType)
     {
     case ENUM_CLASS(OBJECT_TYPE::PLAYER):
         CPlayer_Manager::GetInstance()->Player_Hp(-25);

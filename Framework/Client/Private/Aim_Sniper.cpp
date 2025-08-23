@@ -27,8 +27,6 @@ HRESULT CAim_Sniper::Initialize(void* pArg)
     m_vLocalSize.x = g_iWinSizeX;
     m_vLocalSize.y = g_iWinSizeY;
 
-    m_eWeapon_Type = WEAPON_TYPE::SNIPER;
-
     if (FAILED(__super::Initialize()))
         return E_FAIL;
 

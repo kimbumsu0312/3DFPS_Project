@@ -100,20 +100,8 @@
     <Filter Include="95.Manager\Item_Manager">
       <UniqueIdentifier>{d6152359-cdde-4ae0-828d-f97188b5c5bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Item">
-      <UniqueIdentifier>{2b9bcc29-43e2-4b25-a43c-d19615f4ac92}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96.SuperClass\UIObject\Button">
       <UniqueIdentifier>{e2b2e3b2-6bae-449c-8044-cc419dc87070}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96.SuperClass\Item">
-      <UniqueIdentifier>{49da3a7c-86c6-461d-ac35-62bef35a2952}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96.SuperClass\Item\3D">
-      <UniqueIdentifier>{47a6f88c-9a1f-4a30-ac39-7e3454eace8c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Item\Render_Item">
-      <UniqueIdentifier>{5b702a78-cd5d-4049-9366-f6f6c3cd74d9}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\UIObject\Inventory\Base">
       <UniqueIdentifier>{78f55f92-14de-4fc3-a107-38dba95891c9}</UniqueIdentifier>
@@ -283,6 +271,9 @@
     <Filter Include="02.GameObject\Spawner\MonSpawner\SpawnPoint">
       <UniqueIdentifier>{b6d8e30b-8142-47fb-8ec8-0cd9bb378c0c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Item">
+      <UniqueIdentifier>{49da3a7c-86c6-461d-ac35-62bef35a2952}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -387,14 +378,11 @@
     <ClInclude Include="..\public\Player_Manager.h">
       <Filter>95.Manager\Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Item_Manager.h">
+    <ClInclude Include="..\public\Inven_Manager.h">
       <Filter>95.Manager\Item_Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Item.h">
-      <Filter>96.SuperClass\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\3DItem.h">
-      <Filter>96.SuperClass\Item\3D</Filter>
+    <ClInclude Include="..\public\InvenItem.h">
+      <Filter>02.GameObject\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Inventory_Node.h">
       <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
@@ -603,6 +591,9 @@
     <ClInclude Include="..\public\SpawnPoint.h">
       <Filter>02.GameObject\Spawner\MonSpawner\SpawnPoint</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\PoolUIObj.h">
+      <Filter>96.SuperClass\UIObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -702,14 +693,11 @@
     <ClCompile Include="..\private\Player_Manager.cpp">
       <Filter>95.Manager\Player</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Item_Manager.cpp">
+    <ClCompile Include="..\private\Inven_Manager.cpp">
       <Filter>95.Manager\Item_Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Item.cpp">
-      <Filter>96.SuperClass\Item</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\3DItem.cpp">
-      <Filter>96.SuperClass\Item\3D</Filter>
+    <ClCompile Include="..\private\InvenItem.cpp">
+      <Filter>02.GameObject\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Inventory_Node.cpp">
       <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
@@ -902,6 +890,9 @@
     </ClCompile>
     <ClCompile Include="..\private\SpawnPoint.cpp">
       <Filter>02.GameObject\Spawner\MonSpawner\SpawnPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PoolUIObj.cpp">
+      <Filter>96.SuperClass\UIObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

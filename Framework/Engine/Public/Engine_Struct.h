@@ -26,11 +26,12 @@ namespace Engine
 
 	typedef struct tagCollisionDesc
 	{
+		
 		class CGameObject*	pObject;
 		class CCollider*	pCollider;
 		unsigned int		iLayer;
 		unsigned int		iObjType;
-
+		
 		COLLIDER			eCollider;
 		RAY_DESC			RayDesc;
 	}COLLISIONENTRY;

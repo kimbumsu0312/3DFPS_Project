@@ -12,6 +12,8 @@ private:
 
 public:
 	HRESULT							Initialize(const aiNodeAnim* pAIChannel, const vector<class CEdit_Bone*>& Bones, SAVE_ANIM* pAnim);
+	HRESULT							Initialize(const SAVE_CHANNEL& pChannel, const vector<class CEdit_Bone*>& Bones);
+
 	void							Update_TransformationMatrix(const vector<class CEdit_Bone*>& Bones, _float fCurrentTrackPosition, _float fPreTrackPosition, _uint* iCurrentKeyFrameIndex);
 
 private:
@@ -23,6 +25,7 @@ private:
 
 public:
 	static CEdit_Channel*			Create(const aiNodeAnim* pAIChannel, const vector<class CEdit_Bone*>& Bones, SAVE_ANIM* pAnim);
+	static CEdit_Channel*			Create(const SAVE_CHANNEL& pChannel, const vector<class CEdit_Bone*>& Bones);
 	virtual void					Free() override;
 };
 

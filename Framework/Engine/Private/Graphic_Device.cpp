@@ -40,7 +40,7 @@ HRESULT CGraphic_Device::Initialize(HWND hWnd, WINMODE isWindowed, _uint iWinSiz
 	ViewProtDesc.Height = (_float)iWinSizeY;
 	ViewProtDesc.MinDepth = 0.f;
 	ViewProtDesc.MaxDepth = 1.f;
-
+	
 	m_pDeviceContext->RSSetViewports(1, &ViewProtDesc);
 
 	*ppDevice = m_pDevice;

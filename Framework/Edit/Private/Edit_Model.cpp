@@ -63,6 +63,27 @@ HRESULT CEdit_Model::Initialize_Prototype(MODELTYPE eModelType, const _char* pMo
 	return S_OK;
 }
 
+HRESULT CEdit_Model::Initialize_Prototype(const SAVE_MODEL& pModelData)
+{
+	m_ModelData.szName = pModelData.szName;
+	m_ModelData.eModel = pModelData.eModel;
+	m_PreTransformMatrix = pModelData.PreTransformMatrix;
+
+	if (FAILED(Ready_Bones(pModelData)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Meshes(pModelData)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Materials(pModelData)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Animations(pModelData)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CEdit_Model::Initialize(void* pArg)
 {
 	return S_OK;
@@ -269,11 +290,261 @@ HRESULT CEdit_Model::Ready_Animations()
 	return S_OK;
 }
 
+HRESULT CEdit_Model::Ready_Meshes(const SAVE_MODEL& pModelData)
+{
+	m_ModelData.iNumMeshes = pModelData.iNumMeshes;
+
+	for (size_t i = 0; i < m_ModelData.iNumMeshes; i++)
+	{
+		CEdit_Mesh* pMesh = CEdit_Mesh::Create(m_pDevice, m_pContext, m_ModelData.eModel, pModelData.Meshs[i], m_Bones, pModelData.Bones);
+		if (nullptr == pMesh)
+			return E_FAIL;
+
+		m_Meshes.push_back(pMesh);
+	}
+
+	return S_OK;
+}
+
+HRESULT CEdit_Model::Ready_Materials(const SAVE_MODEL& pModelData)
+{
+	m_ModelData.iNumMaterials = pModelData.iNumMaterials;
+
+	for (size_t i = 0; i < m_ModelData.iNumMaterials; i++)
+	{
+
+		CEdit_MeshMaterial* pMeshMaterial = CEdit_MeshMaterial::Create(m_pDevice, m_pContext, pModelData.MeshMaterials[i]);
+		if (nullptr == pMeshMaterial)
+			return E_FAIL;
+
+		m_Materials.push_back(pMeshMaterial);
+	}
+
+	return S_OK;
+}
+
+HRESULT CEdit_Model::Ready_Bones(const SAVE_MODEL& pModelData)
+{
+	for (auto& BoneData : pModelData.Bones)
+	{
+		CEdit_Bone* pBone = CEdit_Bone::Create(BoneData);
+
+		if (pBone == nullptr)
+			return E_FAIL;
+
+		m_Bones.push_back(pBone);
+	}
+
+	return S_OK;
+}
+
+HRESULT CEdit_Model::Ready_Animations(const SAVE_MODEL& pModelData)
+{
+	m_iNumAnimations = pModelData.iNumAnimations;;
+
+	for (size_t i = 0; i < m_iNumAnimations; i++)
+	{
+		CEdit_Animation* pAnimation = CEdit_Animation::Create(pModelData.Animations[i], m_Bones);
+		if (nullptr == pAnimation)
+			return E_FAIL;
+
+		m_Animations.push_back(pAnimation);
+	}
+
+	return S_OK;
+}
+
+SAVE_MODEL CEdit_Model::Load_File(string szFilePath)
+{
+	string DataFilePath = {};
+	SAVE_MODEL ModelData = {};
+
+	ifstream file(szFilePath);
+	if (!file.is_open())
+	{
+		MSG_BOX(TEXT("불러오기 실패"));
+		return ModelData;
+	}
+
+	json jData;
+	file >> jData;
+	file.close();
+
+	ModelData.szName = jData["Model_name"];
+	ModelData.eModel = jData["Model_type"];
+	ModelData.iNumMaterials = jData["iNumMaterials"];
+	DataFilePath = jData["Data_Path"];
+
+
+	size_t szSlash = szFilePath.find_last_of("/\\");
+	string directory = (szSlash == string::npos) ? "" : szFilePath.substr(0, szSlash);
+
+	szSlash = DataFilePath.find_last_of("/\\");
+	string filename = (szSlash == string::npos) ? DataFilePath : DataFilePath.substr(szSlash + 1);
+
+	if (directory.back() == '/' || directory.back() == '\\')
+		DataFilePath = directory + filename;
+	else
+		DataFilePath = directory + "/" + filename;
+
+	for (int i = 0; i < ModelData.iNumMaterials; ++i)
+	{
+		SAVE_MESHMATERIAL MeshMaterial;
+		const auto& jMeshMaterial = jData["MeshMaterial"][i];
+
+		for (const auto& jMaterial : jMeshMaterial["Materials"])
+		{
+			SAVE_MATERIAL material;
+			material.iTexCount = jMaterial["iTexCount"];
+
+			for (int k = 0; k < material.iTexCount; ++k)
+			{
+				string path = jMaterial["szFullPath"][k]["Path"];
+				material.szFullPath.push_back(path);
+			}
+
+			MeshMaterial.Materials.push_back(material);
+		}
+
+		ModelData.MeshMaterials.push_back(MeshMaterial);
+	}
+
+
+	ifstream DatFile(DataFilePath, ios::binary);
+	if (!DatFile)
+	{
+		MSG_BOX(TEXT("데이터 파일 불러오기 실패"));
+		return ModelData;
+	}
+
+	DatFile.read(reinterpret_cast<_char*>(&ModelData.PreTransformMatrix), sizeof(_float4x4));
+
+	size_t iMeshCount = 0;
+	DatFile.read(reinterpret_cast<_char*>(&iMeshCount), sizeof(size_t));
+	ModelData.iNumMeshes = static_cast<_int>(iMeshCount);
+	ModelData.Meshs.resize(iMeshCount);
+	//매쉬 로드
+	for (auto& mesh : ModelData.Meshs)
+	{
+		size_t nameSize = 0;
+		DatFile.read(reinterpret_cast<_char*>(&nameSize), sizeof(size_t));
+
+		_wstring name(nameSize, L'\0');
+		DatFile.read(reinterpret_cast<_char*>(&name[0]), nameSize * sizeof(_tchar));
+		mesh.szName = name;
+
+		DatFile.read(reinterpret_cast<_char*>(&mesh.iMaterialIndex), sizeof(_uint));
+		DatFile.read(reinterpret_cast<_char*>(&mesh.iNumVertices), sizeof(_uint));
+		DatFile.read(reinterpret_cast<_char*>(&mesh.iVertexStride), sizeof(_uint));
+		DatFile.read(reinterpret_cast<_char*>(&mesh.iNumIndices), sizeof(_uint));
+		DatFile.read(reinterpret_cast<_char*>(&mesh.iNumFaces), sizeof(_uint));
+
+		size_t faceCount = 0;
+		DatFile.read(reinterpret_cast<_char*>(&faceCount), sizeof(size_t));
+		mesh.iFaces.resize(faceCount);
+		DatFile.read(reinterpret_cast<_char*>(mesh.iFaces.data()), faceCount * sizeof(Face));
+
+		if (MODELTYPE::ANIM == ModelData.eModel)
+		{
+			size_t vertexCount = 0;
+			DatFile.read(reinterpret_cast<_char*>(&vertexCount), sizeof(size_t));
+			mesh.AnimVertex.resize(vertexCount);
+			DatFile.read(reinterpret_cast<_char*>(mesh.AnimVertex.data()), vertexCount * sizeof(VTXANIMMESH));
+
+			DatFile.read(reinterpret_cast<_char*>(&mesh.iNumBones), sizeof(_uint));
+
+			size_t boneIndexCount = 0;
+			DatFile.read(reinterpret_cast<_char*>(&boneIndexCount), sizeof(size_t));
+			mesh.BoneIndices.resize(boneIndexCount);
+			DatFile.read(reinterpret_cast<_char*>(mesh.BoneIndices.data()), boneIndexCount * sizeof(_int));
+		}
+		else
+		{
+			size_t vertexCount = 0;
+			DatFile.read(reinterpret_cast<_char*>(&vertexCount), sizeof(size_t));
+			mesh.NonAnimVertex.resize(vertexCount);
+			DatFile.read(reinterpret_cast<_char*>(mesh.NonAnimVertex.data()), vertexCount * sizeof(VTXMESH));
+		}
+	}
+
+	if (ModelData.eModel != MODELTYPE::ANIM)
+	{
+		DatFile.close();
+		return ModelData;
+	}
+
+	//뼈 로드
+	size_t iBoneCount = 0;
+	DatFile.read(reinterpret_cast<_char*>(&iBoneCount), sizeof(size_t));
+	ModelData.iNumBone = static_cast<_int>(iBoneCount);
+	ModelData.Bones.resize(iBoneCount);
+
+	for (auto& Bone : ModelData.Bones)
+	{
+		size_t nameSize = 0;
+		DatFile.read(reinterpret_cast<_char*>(&nameSize), sizeof(size_t));
+
+		vector<_tchar> buffer(nameSize);
+		DatFile.read(reinterpret_cast<_char*>(buffer.data()), nameSize * sizeof(_tchar));
+		Bone.szName.assign(buffer.data(), nameSize);
+
+		DatFile.read(reinterpret_cast<_char*>(&Bone.TransformationMatrix), sizeof(_float4x4));
+		DatFile.read(reinterpret_cast<_char*>(&Bone.matOffset), sizeof(_float4x4));
+		DatFile.read(reinterpret_cast<_char*>(&Bone.iParentBoneIndex), sizeof(_int));
+	}
+
+	//애니메이션 로드
+	size_t iAnimCount = 0;
+	DatFile.read(reinterpret_cast<_char*>(&iAnimCount), sizeof(size_t));
+	ModelData.iNumAnimations = static_cast<_int>(iAnimCount);
+	ModelData.Animations.resize(iAnimCount);
+
+	for (auto& Anim : ModelData.Animations)
+	{
+		DatFile.read(reinterpret_cast<_char*>(&Anim.iNumChannels), sizeof(_int));
+		DatFile.read(reinterpret_cast<_char*>(&Anim.fDuration), sizeof(_float));
+		DatFile.read(reinterpret_cast<_char*>(&Anim.fTickPerSecond), sizeof(_float));
+
+		Anim.Channels.resize(Anim.iNumChannels);
+		for (auto& Channel : Anim.Channels)
+		{
+			DatFile.read(reinterpret_cast<_char*>(&Channel.iBoneIndex), sizeof(_int));
+			DatFile.read(reinterpret_cast<_char*>(&Channel.iNumKeyFrames), sizeof(_int));
+
+			Channel.KeyFrames.resize(Channel.iNumKeyFrames);
+			for (auto& Keyframe : Channel.KeyFrames)
+			{
+				DatFile.read(reinterpret_cast<_char*>(&Keyframe.vScale), sizeof(_float3));
+				DatFile.read(reinterpret_cast<_char*>(&Keyframe.vRotation), sizeof(_float4));
+				DatFile.read(reinterpret_cast<_char*>(&Keyframe.vTranslation), sizeof(_float3));
+				DatFile.read(reinterpret_cast<_char*>(&Keyframe.fTrackPosition), sizeof(_float));
+			}
+		}
+	}
+
+	DatFile.close();
+
+	return ModelData;
+}
+
 CEdit_Model* CEdit_Model::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODELTYPE eModelType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, void* pArg)
 {
 	CEdit_Model* pInstance = new CEdit_Model(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(eModelType, pModelFilePath, PreTransformMatrix, pArg)))
+	{
+		MSG_BOX(TEXT("Failed to Created : CEdit_Model"));
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CEdit_Model* CEdit_Model::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, string szFilePath)
+{
+	CEdit_Model* pInstance = new CEdit_Model(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype(pInstance->Load_File(szFilePath))))
 	{
 		MSG_BOX(TEXT("Failed to Created : CEdit_Model"));
 		Safe_Release(pInstance);

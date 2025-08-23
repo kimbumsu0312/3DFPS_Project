@@ -23,7 +23,7 @@ public:
 	virtual HRESULT				Render();
 
 private:
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	_int						m_iIndex = {};
 	_int						m_iMaxIndex = {};
 	_float						m_fRotation = {};

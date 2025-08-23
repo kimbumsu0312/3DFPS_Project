@@ -23,7 +23,7 @@ public:
 
 public:
 	_bool							isMove(_fvector vCulPosition);
-	_bool							isSlide(CTransform* pTransform, _fvector vPrePosition, _float fTimeDelta);
+	_bool							isOutNormal(_fvector vPosition, _float3& pOut);
 	_vector							Compute_OnCell(_fvector vPosition);
 	void							Set_CellIndex(_int iCellIndex) { m_iCurrentCellIndex = iCellIndex; }
 #ifdef _DEBUG

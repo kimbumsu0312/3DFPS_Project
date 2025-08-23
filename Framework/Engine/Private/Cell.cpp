@@ -65,7 +65,7 @@ _bool CCell::isIn(_fvector vPosition, _int* pNeighborIndex)
 	for (_uint i = 0; i < ENUM_CLASS(CELL_LINE::END); ++i)
 	{
 		//각 점 별로 플레이어의 방향과 노말을 내적한다.
-		_vector vDir = XMVector3Normalize(vPosition - XMVectorSetW(XMLoadFloat3(&m_vPoints[i]), 1.f));
+		_vector vDir = XMVector3Normalize(vPosition - XMLoadFloat3(&m_vPoints[i]));
 		_vector vNormal = XMVector3Normalize(XMLoadFloat3(&m_vNormals[i]));
 
 		if (0 < XMVectorGetX(XMVector3Dot(vDir, vNormal)))
@@ -81,29 +81,24 @@ _bool CCell::isIn(_fvector vPosition, _int* pNeighborIndex)
 	return true;
 }
 
-_bool CCell::isSlide(_fvector vCulPosition, _fvector vPrePosition,_float3& pOut)
+_bool CCell::isIn(_fvector vPosition, _float3& pOut)
 {
-	
-	_vector vMoveDelta = XMVectorSetY(vCulPosition, 0.f) - XMVectorSetY(vPrePosition, 0.f);
-	_vector vMoveDir = XMVector3Normalize(XMVectorSetY(vCulPosition, 0.f) - XMVectorSetY(vPrePosition, 0.f));
-
-	const float fThreshold = 0.5f;
-
 	for (_uint i = 0; i < ENUM_CLASS(CELL_LINE::END); ++i)
 	{
-		_vector vDir = XMVector3Normalize(vCulPosition - XMVectorSetW(XMLoadFloat3(&m_vPoints[i]), 1.f));
+
+		_vector vDir = XMVector3Normalize(vPosition - XMLoadFloat3(&m_vPoints[i]));
 		_vector vNormal = XMVector3Normalize(XMLoadFloat3(&m_vNormals[i]));
-		_vector vSlideDir{};
 
 		if (0 < XMVectorGetX(XMVector3Dot(vDir, vNormal)))
 		{
-			XMStoreFloat3(&pOut, (vMoveDelta - XMVector3Dot(vMoveDelta, vNormal * -1) * (vNormal * -1)));// * vMoveDelta);
-			return true;
+			XMStoreFloat3(&pOut, vNormal);
+			return false;
 		}
-	}
 
-	return false;
+	}
+	return true;
 }
+
 
 _bool CCell::Compare_Points(_fvector vSourPoint, _fvector vDestPoint)
 {

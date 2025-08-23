@@ -82,9 +82,9 @@ HRESULT CBoss_Shotel::Add_Collider()
         return E_FAIL;
 }
 
-void CBoss_Shotel::OnCollision(_uint MyObjectType, _uint TargetObjectType)
+void CBoss_Shotel::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
 {
-    switch (TargetObjectType)
+    switch (TargetCollision.iObjType)
     {
     case ENUM_CLASS(OBJECT_TYPE::PLAYER):
         CPlayer_Manager::GetInstance()->Player_Hp(-25);

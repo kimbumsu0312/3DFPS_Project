@@ -41,6 +41,26 @@ HRESULT CEdit_Animation::Initialize(const aiAnimation* pAIAnimation, const vecto
 	return S_OK;
 }
 
+HRESULT CEdit_Animation::Initialize(const SAVE_ANIM& pAnimation, const vector<class CEdit_Bone*>& Bones)
+{
+    m_iNumChannels = pAnimation.iNumChannels;
+    m_fDuration = pAnimation.fDuration;
+    m_fTickPerSecond = pAnimation.fTickPerSecond;
+
+    m_CurrentKeyFrameIndices.resize(m_iNumChannels);
+
+    for (size_t i = 0; i < m_iNumChannels; i++)
+    {
+        CEdit_Channel* pChannel = CEdit_Channel::Create(pAnimation.Channels[i], Bones);
+        if (nullptr == pChannel)
+            return E_FAIL;
+
+        m_Channels.push_back(pChannel);
+    }
+
+    return S_OK;
+}
+
 void CEdit_Animation::Update_TransformationMatrices(const vector<class CEdit_Bone*>& Bones, _float fTimeDelta, _bool isLoop, _bool* pFinished, _bool bIsAnimStop, _int iStartFrame, _int iEndFrame)
 {
     if(!bIsAnimStop)
@@ -102,6 +122,19 @@ CEdit_Animation* CEdit_Animation::Create(const aiAnimation* pAiAnimation, const 
     if (FAILED(pInstance->Initialize(pAiAnimation, Bones, pModelData)))
     {
         MSG_BOX(TEXT("Failed to Created : CAniCEdit_Animationmation"));
+        Safe_Release(pInstance);
+    }
+
+    return pInstance;
+}
+
+CEdit_Animation* CEdit_Animation::Create(const SAVE_ANIM& pAnimation, const vector<class CEdit_Bone*>& Bones)
+{
+    CEdit_Animation* pInstance = new CEdit_Animation();
+
+    if (FAILED(pInstance->Initialize(pAnimation, Bones)))
+    {
+        MSG_BOX(TEXT("Failed to Created : CEdit_Animation"));
         Safe_Release(pInstance);
     }
 

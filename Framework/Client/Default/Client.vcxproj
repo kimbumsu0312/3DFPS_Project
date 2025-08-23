@@ -176,7 +176,6 @@
     <ClInclude Include="..\public\Boss_Shotel.h" />
     <ClInclude Include="..\public\Button.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
-    <ClInclude Include="..\public\3DItem.h" />
     <ClInclude Include="..\public\Camera_Player.h" />
     <ClInclude Include="..\public\Chase_Bela.h" />
     <ClInclude Include="..\public\Chase_Daniela.h" />
@@ -217,6 +216,7 @@
     <ClInclude Include="..\public\NorMon_Shotel.h" />
     <ClInclude Include="..\public\NorMon_Sword.h" />
     <ClInclude Include="..\public\PlayerState.h" />
+    <ClInclude Include="..\public\PoolUIObj.h" />
     <ClInclude Include="..\public\Reload_Player.h" />
     <ClInclude Include="..\Public\Scouting_NorMon_1.h" />
     <ClInclude Include="..\public\ShotGun.h" />
@@ -229,8 +229,8 @@
     <ClInclude Include="..\Public\UI_Header.h" />
     <ClInclude Include="..\public\UI_Tex.h" />
     <ClInclude Include="..\public\Inventory_Node.h" />
-    <ClInclude Include="..\public\Item.h" />
-    <ClInclude Include="..\public\Item_Manager.h" />
+    <ClInclude Include="..\public\InvenItem.h" />
+    <ClInclude Include="..\public\Inven_Manager.h" />
     <ClInclude Include="..\public\UI_Slot.h" />
     <ClInclude Include="..\public\Logo_Button.h" />
     <ClInclude Include="..\public\Logo_Button_Line.h" />
@@ -284,7 +284,6 @@
     <ClCompile Include="..\private\Boss_Shotel.cpp" />
     <ClCompile Include="..\private\Button.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
-    <ClCompile Include="..\private\3DItem.cpp" />
     <ClCompile Include="..\private\Camera_Player.cpp" />
     <ClCompile Include="..\private\Chase_Bela.cpp" />
     <ClCompile Include="..\private\Chase_Daniela.cpp" />
@@ -321,6 +320,7 @@
     <ClCompile Include="..\private\NorMon_Shotel.cpp" />
     <ClCompile Include="..\private\NorMon_Sword.cpp" />
     <ClCompile Include="..\private\PlayerState.cpp" />
+    <ClCompile Include="..\private\PoolUIObj.cpp" />
     <ClCompile Include="..\private\Reload_Player.cpp" />
     <ClCompile Include="..\Private\Scouting_NorMon_1.cpp" />
     <ClCompile Include="..\private\ShotGun.cpp" />
@@ -331,8 +331,8 @@
     <ClCompile Include="..\Private\StateObject.cpp" />
     <ClCompile Include="..\private\UI_Tex.cpp" />
     <ClCompile Include="..\private\Inventory_Node.cpp" />
-    <ClCompile Include="..\private\Item.cpp" />
-    <ClCompile Include="..\private\Item_Manager.cpp" />
+    <ClCompile Include="..\private\InvenItem.cpp" />
+    <ClCompile Include="..\private\Inven_Manager.cpp" />
     <ClCompile Include="..\private\UI_Slot.cpp" />
     <ClCompile Include="..\private\Logo_Button.cpp" />
     <ClCompile Include="..\private\Logo_Button_Line.cpp" />

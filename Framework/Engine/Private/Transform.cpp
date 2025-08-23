@@ -32,6 +32,69 @@ HRESULT CTransform::Bind_Shader_Resource(CShader* pShader, const _char* pConstan
 	return pShader->Bind_Matrix(pConstantName, &m_WorldMatrix);
 }
 
+void CTransform::PrePostion_Update()
+{
+	XMStoreFloat3(&m_PrePosition, Get_State(STATE::POSITION));
+}
+
+void CTransform::Is_Sliding(class CNavigation* pNaviCom, const _fvector& vTargetNormal)
+{
+	_vector vMoveDelta = XMVectorSetY(Get_State(STATE::POSITION) - XMLoadFloat3(&m_PrePosition), 0.f);
+	_vector vNormal = XMVector3Normalize(vTargetNormal);
+	_vector CulPos = {};
+
+	_float fDot = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vMoveDelta), vNormal));
+	if(fDot > 0)
+		CulPos = Get_State(STATE::POSITION);
+	else
+		CulPos = XMLoadFloat3(&m_PrePosition) + (vMoveDelta - XMVector3Dot(vMoveDelta, vNormal) * (vNormal));
+	
+	if(pNaviCom->isMove(CulPos))
+		Set_State(STATE::POSITION, XMVectorSetW(CulPos, 1.f));
+	else
+	{
+		_float3 vNaviNormal{};
+		
+		if (pNaviCom->isOutNormal(Get_State(STATE::POSITION), vNaviNormal))
+		{
+			Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_PrePosition), 1.f));
+			return;
+		}
+
+		_fvector CellNormal = XMLoadFloat3(&vNaviNormal);
+		CulPos = XMLoadFloat3(&m_PrePosition) + (vMoveDelta - XMVector3Dot(vMoveDelta, CellNormal * -1) * (CellNormal * -1));
+		if (pNaviCom->isMove(CulPos))
+			Set_State(STATE::POSITION, XMVectorSetW(CulPos, 1.f));
+		else
+			Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_PrePosition), 1.f));
+	}
+
+}
+
+void CTransform::Is_Sliding(CNavigation* pNaviCom)
+{
+	_vector vCulPos = Get_State(STATE::POSITION);
+	_vector vMoveDelta = XMVectorSetY(Get_State(STATE::POSITION) - XMLoadFloat3(&m_PrePosition), 0.f);
+	if (pNaviCom->isMove(vCulPos))
+		Set_State(STATE::POSITION, XMVectorSetW(vCulPos, 1.f));
+	else
+	{
+		_float3 vNaviNormal{};
+
+		if (pNaviCom->isOutNormal(Get_State(STATE::POSITION), vNaviNormal))
+		{
+			Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_PrePosition), 1.f));
+			return;
+		}
+		_fvector CellNormal = XMLoadFloat3(&vNaviNormal);
+		vCulPos = XMLoadFloat3(&m_PrePosition) + (vMoveDelta - XMVector3Dot(vMoveDelta, CellNormal * -1) * (CellNormal * -1));
+		if (pNaviCom->isMove(vCulPos))
+			Set_State(STATE::POSITION, XMVectorSetW(vCulPos, 1.f));
+		else
+			Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_PrePosition), 1.f));
+	}
+}
+
 void CTransform::Scale(_float3 vScale)
 {
 	Set_State(STATE::RIGHT, XMVector3Normalize(Get_State(STATE::RIGHT)) * vScale.x);
@@ -134,6 +197,11 @@ void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 	Set_State(STATE::UP, XMVector4Transform(vUp, RotationMatrix));
 	Set_State(STATE::LOOK, XMVector4Transform(vLook, RotationMatrix));
 
+
+}
+
+void CTransform::Turn_Y(_fvector vAxis, _float fTimeDelta)
+{
 }
 
 void CTransform::LookAt(_fvector vAt)

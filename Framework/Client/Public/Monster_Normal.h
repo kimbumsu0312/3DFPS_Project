@@ -12,7 +12,7 @@ NS_BEGIN(Client)
 class CMonster_Normal final : public CPoolingContainer
 {
 private:
-	enum ColliderType_Mon { Body = 0, Head, Hand, End };
+	enum ColliderType_Mon { BODY = 0, Head, Hand, RESIST, END };
 private:
 	CMonster_Normal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMonster_Normal(const CMonster_Normal& Prototype);
@@ -41,7 +41,7 @@ public:
 	void						Reset_DamageCheck() { m_bIsDamage = false; m_bIsHeadShot = false; }
 	void						Attack_Collision();
 
-	virtual void				OnCollision(_uint MyObjectType, _uint TargetObjectType) override;
+	virtual void				OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 
 public:
 	virtual HRESULT				Initialize_Pool(void* pArg) override;
@@ -50,8 +50,8 @@ public:
 private:
 	CNavigation*				m_pNavigationCom = { nullptr };
 	//콜리전
-	CCollider*					m_pColliderCom[ColliderType_Mon::End] = {nullptr};
-	_float4x4*					m_pColliderBone[ColliderType_Mon::End] = {nullptr};
+	CCollider*					m_pColliderCom[ColliderType_Mon::END] = {nullptr};
+	_float4x4*					m_pColliderBone[ColliderType_Mon::END] = {nullptr};
 
 	//파츠 오브젝트 관련
 	class CWeaponObject*		m_pWeaponObject = { nullptr };

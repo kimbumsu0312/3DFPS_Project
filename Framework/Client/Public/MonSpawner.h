@@ -29,7 +29,7 @@ public:
 	virtual void					Late_Update(_float fTimeDelta) override;
 	virtual HRESULT					Render() override;
 
-	virtual void					OnCollision(_uint MyObjectType, _uint TargetObjectType)override;
+	virtual void					OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)override;
 private:
 	CCollider*						m_pColliderCom = { nullptr };
 	vector<POOLMONDESC>				m_MonDesc;

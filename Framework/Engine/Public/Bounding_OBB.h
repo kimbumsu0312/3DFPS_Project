@@ -10,6 +10,14 @@ public:
 		_float3		vExtents;
 		_float3		vAngles;
 	}BOUNDING_OBB_DESC;
+
+	typedef struct tagOBBDesc
+	{
+		_float3		vCenter;
+		_float3		vAlignDir[3];
+		_float3		vCenterDir[3];
+	}OBBDESC;
+
 private:
 	CBounding_OBB(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CBounding_OBB() = default;
@@ -20,18 +28,20 @@ public:
 public:
 	HRESULT					Initialize(const CBounding::BOUNDING_DESC* pDesc);
 	virtual void			Update(_fmatrix WorldMatrix) override;
-	virtual _bool			Intersect(COLLIDER eType, CBounding* pTarget) override;
+	virtual _bool			Intersect(COLLIDER eType, CBounding* pTarget, _float3& pOutNroaml, _float3& pTargetNroaml) override;
 	virtual _bool			Intersect(_vector RayPos, _vector RayDir) override;
 
+	virtual _bool			Intersect_OBB(CBounding_OBB* pTarget, _float3& pOut, _float3& pTargetNroaml);
 #ifdef _DEBUG
 public:
 	virtual HRESULT			Render(PrimitiveBatch<VertexPositionColor>* pBatch, _fvector vColor) override;
 #endif
 
-public:
+private:
 	BoundingOrientedBox*	m_pOriginalDesc{};
 	BoundingOrientedBox*	m_pDesc{};
 
+	OBBDESC					Compute_OBBDesc() const;
 public:
 	static CBounding_OBB*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const CBounding::BOUNDING_DESC* pDesc);
 	virtual void			Free() override;

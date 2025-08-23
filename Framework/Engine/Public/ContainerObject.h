@@ -17,7 +17,7 @@ public:
 	virtual void					Late_Update(_float fTimeDelta) override;
 	virtual HRESULT					Render() override;
 
-	virtual void					OnCollision(_uint MyObjectType, _uint TargetObjectType)override {};
+	virtual void					OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)override {};
 protected:
 	unordered_map<_wstring,
 		class CPartObject*>			m_PartObjects;

@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Camera_Free.h"
 #include "MonSpawner.h"
+#include "Inven_Manager.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CLevel{ pDevice, pContext }
 {
@@ -34,16 +35,36 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Event(TEXT("Layer_Event"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Item()))
+		return E_FAIL;
+
+	CInventory_Manager::GetInstance()->Level_Init(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Event"));
+
 	return S_OK;
 }
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
+		CInventory_Manager::GetInstance()->Add_ItemSlot(0, TEXT("Pool_Item"));
+
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
+		CInventory_Manager::GetInstance()->Add_ItemSlot(1, TEXT("Pool_Item"));
+
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
+		CInventory_Manager::GetInstance()->Add_ItemSlot(2, TEXT("Pool_Item"));
+
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
+		CInventory_Manager::GetInstance()->Add_ItemSlot(3, TEXT("Pool_Item"));
+
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
+		CInventory_Manager::GetInstance()->Add_ItemSlot(4, TEXT("Pool_Item"));
+
 }
 
 HRESULT CLevel_GamePlay::Render()
 {
-	//SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
+	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
 
 	return S_OK;
 }
@@ -54,7 +75,7 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 	LightDesc.eType = LIGHT_DESC::TYPE::DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vDiffuse = _float4(0.4f, 0.4f, 0.4f, 1.f);
 	LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
@@ -115,17 +136,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring& strLayerTag)
 {
-	//CGameObject::GAMEOBJECT_DESC Desc;
-	//Desc.fSpeedPerSec = 1.f;
-	//Desc.fRotationPerSec = 1.f;
-	//	
+	CGameObject::GAMEOBJECT_DESC Desc;
+	Desc.fSpeedPerSec = 1.f;
+	Desc.fRotationPerSec = 1.f;
+		
 	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 	//	ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Bela"), &Desc)))
 	//	return E_FAIL;
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-	//	ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Daniela"), &Desc)))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Daniela"), &Desc)))
+		return E_FAIL;
 
 	CPoolingObject::POOLOBJECT_DESC PoolDesc{};
 	PoolDesc.fRotationPerSec = 1.f;
@@ -226,6 +247,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	Desc.MonDesc.push_back(MonDesc);
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_MonSpawneer"), &Desc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Item()
+{
+	CPoolingObject::POOLOBJECT_DESC PoolDesc{};
+	PoolDesc.fRotationPerSec = 1.f;
+	PoolDesc.fSpeedPerSec = 1.f;
+	PoolDesc.szPoolingPath = TEXT("Pool_Item");
+
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven"), 10, &PoolDesc)))
 		return E_FAIL;
 
 	return S_OK;

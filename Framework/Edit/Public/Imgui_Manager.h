@@ -27,12 +27,13 @@ public:
 
 	void					Move_Model(_float3 fPos);
 
+	_int					Get_NeviIndex() { return m_pNaviIndex; }
 	_float					Get_Brash() { return m_fBrash; }
 	_float					Get_Height() { return m_fHeight; }
 	_bool					Get_HeightUp() { return m_bIsHeightUP; }
 	_float2					Get_MinMaxHeight() { return m_fMinMaxHeight; }
 	void					Set_NeviMesh(class CNeviMesh* pNeviMesh) { m_pNaviMesh = pNeviMesh; }
-
+	void					Set_SeleteCell(_int i) { m_iSelete_CellIndex = i; }
 private:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
@@ -62,6 +63,9 @@ private:
 	_float2					m_fMinMaxHeight = {0.f, 400.f};
 
 	class CNeviMesh*		m_pNaviMesh = { nullptr };
+	_int					m_pNaviIndex = {};
+	_int					m_iSelete_CellIndex = { -1 };
+
 
 	//세이브 타입
 	_int					m_iMapSaveType = {0};
@@ -69,6 +73,7 @@ private:
 	
 	DATA_TYPE				m_eSaveType = { DATA_TYPE::END };
 	char					m_szFileName[MAX_PATH] = {};
+	char					m_szModelName[MAX_PATH] = {};
 
 	vector<
 		vector<SAVE_ANIMDATA>>	m_SaveAnimData;

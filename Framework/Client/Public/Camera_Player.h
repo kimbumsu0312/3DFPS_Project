@@ -8,7 +8,7 @@ class CCamera_Player final : public CCamera
 public:
 	typedef struct tagCameraPlayerDesc : public CCamera::CAMERA_DESC
 	{
-		_float				fMouseSensor;
+		_float				fMouseSensor{};
 		const _float4x4*	pSocketMatrix1 = { nullptr };
 		const _float4x4*	pSocketMatrix2 = { nullptr };
 		const _float4x4*	pParentMatrix = { nullptr };

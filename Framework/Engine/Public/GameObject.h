@@ -34,7 +34,7 @@ public:
 	virtual void			Late_Update(_float fTimeDelta);
 	virtual HRESULT			Render();
 
-	virtual void			OnCollision(_uint MyObjectType, _uint TargetObjectType) {};
+	virtual void			OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) {};
 
 	virtual void			On_Dead();
 	const OBJCET_DATA&		Get_Data();

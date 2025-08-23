@@ -61,6 +61,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
+	m_pTransformCom->PrePostion_Update();
 	if (!m_bisCameraLock)
 		Rotaion_Upper(fTimeDelta);
 	m_pCamera->Priority_Update(fTimeDelta);
@@ -114,8 +115,11 @@ void CPlayer::Update(_float fTimeDelta)
 
 void CPlayer::Late_Update(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom)))
-		return;
+	for (_int i = 0; i < ColliderType_Player::END; ++i)
+	{
+		if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
+			return;
+	}
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
 		return;
@@ -130,8 +134,10 @@ void CPlayer::Late_Update(_float fTimeDelta)
 HRESULT CPlayer::Render()
 {
 #ifdef _DEBUG
-	
-	m_pColliderCom->Render();
+	for (_int i = 0; i < ColliderType_Player::END; ++i)
+	{
+		m_pColliderCom[i]->Render();
+	}
 	
 #endif
 	return S_OK;
@@ -143,9 +149,15 @@ void CPlayer::Switch_Anim(string szAnimTag, _bool IsLoop)
 	m_bIsAnimLoop = IsLoop;
 }
 
-void CPlayer::OnCollision(_uint MyObjectType, _uint TargetObjectType)
+void CPlayer::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
 {
-	switch (TargetObjectType)
+	if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::RESIST))
+	{
+		if (TargetCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::RESIST))
+			m_pTransformCom->Is_Sliding(m_pNavigationCom, XMLoadFloat3(&TargetCollision.pCollider->Get_Intersect_Normal()));
+	}
+
+	switch (TargetCollision.iObjType)
 	{
 	case ENUM_CLASS(OBJECT_TYPE::WEAPON):
 		if (!m_bIsDamage)
@@ -154,13 +166,22 @@ void CPlayer::OnCollision(_uint MyObjectType, _uint TargetObjectType)
 			m_fDamageCool = 3.f;
 		}
 		break;
-
 	}
 }
 
 HRESULT CPlayer::Ready_Components()
 {
 	CBounding_OBB::BOUNDING_OBB_DESC  OBBDesc{};
+	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::RESIST);
+	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::RESIST);
+	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
+	OBBDesc.vExtents = _float3(0.4f, 0.4f, 0.4f);
+	OBBDesc.vCenter = _float3(0.f, 0.5f, 0.f);
+
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
+		TEXT("Com_Collider_Resist"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Player::RESIST]), &OBBDesc)))
+		return E_FAIL;
+
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::PLAYER);
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::PLAYER);
 	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
@@ -315,12 +336,7 @@ void CPlayer::InputKey_MoveState(_float fTimeDelta)
 	if (IsMove)
 	{
 		m_AttackState.isMove = true;
-		if (false == m_pNavigationCom->isMove(m_pTransformCom->Get_State(STATE::POSITION)))
-			m_pNavigationCom->isSlide(m_pTransformCom, vPos, fTimeDelta);
-
-		m_pTransformCom->Set_State(Engine::STATE::POSITION,
-			m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
-
+		m_pTransformCom->Is_Sliding(m_pNavigationCom);
 	}
 }
 
@@ -426,7 +442,7 @@ _bool CPlayer::InputKey_UI()
 
 void CPlayer::Rotaion_Upper(_float fTimeDelta)
 {
- 	m_fPitch -= m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::Y) * 0.1 * fTimeDelta;
+	m_fPitch -= _float(m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::Y) * 0.1 * fTimeDelta);
 	
 	if (m_fPitch >= XMConvertToRadians(45.f))
 		m_fPitch = XMConvertToRadians(45.f);
@@ -450,7 +466,8 @@ void CPlayer::Collider_Update()
 	_matrix WorldTransMat = XMMatrixTranslationFromVector(vTrans);
 	_matrix WorldMatrix = WorldRotMat * WorldTransMat * Worldmat;
 	
-	m_pColliderCom->Update(WorldMatrix);
+	m_pColliderCom[ColliderType_Player::BODY]->Update(WorldMatrix);
+	m_pColliderCom[ColliderType_Player::RESIST]->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CPlayer::IsDmage(_float fTimeDelta)
@@ -505,5 +522,8 @@ void CPlayer::Free()
 	m_StateObjects.clear();
 	Safe_Release(m_CulStateObject);
 	Safe_Release(m_pNavigationCom);
-	Safe_Release(m_pColliderCom);
+
+	for (auto& pCollider : m_pColliderCom)
+		Safe_Release(pCollider);
+
 }

@@ -22,7 +22,7 @@ void CBounding_Sphere::Update(_fmatrix WorldMatrix)
     m_pOriginalDesc->Transform(*m_pDesc, WorldMatrix);
 }
 
-_bool CBounding_Sphere::Intersect(COLLIDER eType, CBounding* pTarget)
+_bool CBounding_Sphere::Intersect(COLLIDER eType, CBounding* pTarget, _float3& pOutNroaml, _float3& pTargetNroaml)
 {
     _bool isColl = { false };
 

@@ -142,9 +142,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    g_hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
    RECT     rcWindow = { 0, 0, g_iWinSizeX, g_iWinSizeY };
-   AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, true);
+   AdjustWindowRect(&rcWindow, WS_POPUP, true);
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_POPUP,
        CW_USEDEFAULT, 0, rcWindow.right - rcWindow.left, rcWindow.bottom - rcWindow.top, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
@@ -202,6 +202,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+    case WM_KEYDOWN:
+        switch (wParam)
+        {
+        case VK_ESCAPE:
+            DestroyWindow(hWnd);
+            break;
+        default:
+            break;
+        }
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }

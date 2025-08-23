@@ -7,7 +7,7 @@ class CCamera_Free final : public CCamera
 public:
 	typedef struct tagCameraFreeDesc : public CCamera::CAMERA_DESC
 	{
-		_float	fMouseSensor;
+		_float	fMouseSensor{};
 	}CAMERA_FREE_DESC;
 
 public:

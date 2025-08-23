@@ -141,28 +141,9 @@ _bool CNavigation::isMove(_fvector vCulPosition)
 	return false;
 }
 
-_bool CNavigation::isSlide(CTransform* pTransform, _fvector vPrePosition ,_float fTimeDelta)
+_bool CNavigation::isOutNormal(_fvector vPosition, _float3& pOut)
 {
-	_vector vCulPosition = pTransform->Get_State(STATE::POSITION);
-	
-	_float3 vSlideOut = {};
-	if (m_Cells[m_iCurrentCellIndex]->isSlide(vCulPosition, vPrePosition, vSlideOut))
-	{
-		// 보정된 위치 적용
-		_vector vSlidePos = vPrePosition + XMLoadFloat3(&vSlideOut);
-		if (isMove(vSlidePos))
-		{
-			pTransform->Set_State(STATE::POSITION, XMVectorSetW(vSlidePos, 1.f));
-			return true;
-		}
-		else
-		{
-			pTransform->Set_State(STATE::POSITION, XMVectorSetW(vPrePosition, 1.f));
-			return false;
-		}
-	}
-
-	return false;
+	return m_Cells[m_iCurrentCellIndex]->isIn(vPosition, pOut);
 }
 
 _vector CNavigation::Compute_OnCell(_fvector vPosition)

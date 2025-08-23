@@ -136,20 +136,51 @@ void CImgui_Manger::Update_Map()
 				Text("선택된 항목: %s", g_ModelPath[m_iCurModel_Index]);
 
 			}
+			InputText("Model Name: ", m_szModelName, MAX_PATH);
 			if (Button("Model_Create"))
 			{
+				wstring ModelPath = TEXT("Prototype_GameObject_");
+
+				int length = MultiByteToWideChar(CP_ACP, 0, m_szModelName, -1, nullptr, 0);
+				wchar_t* wideArray = new wchar_t[length];
+				MultiByteToWideChar(CP_ACP, 0, m_szModelName, -1, wideArray, length);
+				ModelPath = ModelPath + wideArray;
+
 				CMapObject::MODEL_OBJECT_DESC Desc{};
 				Desc.vPos.x = 0.f;
 				Desc.vPos.y = 0.f;
 				Desc.vPos.z = 0.f;
 				Desc.vPos.w = 1.f;
 				Desc.szModel_Path = CImgui_Manger::GetInstance()->Get_ModelPath();
-				Desc.szObject_Path = TEXT("Prototype_GameObject_Model");
+				Desc.szObject_Path = ModelPath;
 
 				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Model"),
 					ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Model"), &Desc)))
 					return;
 			}
+
+			if (Button("Model_Create_Cam"))
+			{
+				wstring ModelPath = TEXT("Prototype_GameObject_");
+
+				int length = MultiByteToWideChar(CP_ACP, 0, m_szModelName, -1, nullptr, 0);
+				wchar_t* wideArray = new wchar_t[length];
+				MultiByteToWideChar(CP_ACP, 0, m_szModelName, -1, wideArray, length);
+				ModelPath = ModelPath + wideArray;
+
+				CMapObject::MODEL_OBJECT_DESC Desc{};
+				Desc.vPos.x = m_pGameInstance->Get_CamPosition()->x;
+				Desc.vPos.y = m_pGameInstance->Get_CamPosition()->y;
+				Desc.vPos.z = m_pGameInstance->Get_CamPosition()->z;
+				Desc.vPos.w = 1.f;
+				Desc.szModel_Path = CImgui_Manger::GetInstance()->Get_ModelPath();
+				Desc.szObject_Path = ModelPath;
+				
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Model"),
+					ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Model"), &Desc)))
+					return;
+			}
+
 			Checkbox("Create Model(1)", &g_CreateModel);
 			Checkbox("Selete Model(2)", &g_SeleteModel);
 			Checkbox("Move Model(3)", &g_MoveModel);
@@ -304,11 +335,20 @@ void CImgui_Manger::Update_Map()
 
 			if (m_pNaviMesh != nullptr)
 			{
+				Text("CellCount : %d", m_pNaviMesh->Get_CellCount());
+				Text("Index : %d", m_iSelete_CellIndex);
+				InputInt("NaviIndex", &m_pNaviIndex);
 				Text("A: %.2f %.2f %.2f", m_pNaviMesh->Get_SeletePoint(0).x, m_pNaviMesh->Get_SeletePoint(0).y, m_pNaviMesh->Get_SeletePoint(0).z);
 				Text("B: %.2f %.2f %.2f", m_pNaviMesh->Get_SeletePoint(1).x, m_pNaviMesh->Get_SeletePoint(1).y, m_pNaviMesh->Get_SeletePoint(1).z);
 				Text("C: %.2f %.2f %.2f", m_pNaviMesh->Get_SeletePoint(2).x, m_pNaviMesh->Get_SeletePoint(2).y, m_pNaviMesh->Get_SeletePoint(2).z);
 				Text("SeleteCell : %d", m_pNaviMesh->Get_SeleteNum()+1);
+
+				if (Button("Save"))
+					m_pNaviMesh->Save_Nevi("Level_GamePlay");
+				if (Button("Load"))
+					m_pNaviMesh->Load_Nevi("../Bin/Data/NavigationData/Level_GamePlay.dat");
 			}
+
 
 			EndTabItem();
 		}
@@ -384,7 +424,7 @@ void CImgui_Manger::Update_Map()
 				{
 					m_pNaviMesh->Set_Objcets();
 					string szFileName = m_szFileName;
-					m_pGameInstance->Load_Level(szFileName, ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Object"), ENUM_CLASS(LEVEL::STATIC));
+					m_pGameInstance->Load_Level(szFileName, ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Object"), ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Model"));
 				}
 				else
 					MSG_BOX(TEXT("로드 실패"));

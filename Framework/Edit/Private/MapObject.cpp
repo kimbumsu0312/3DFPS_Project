@@ -52,6 +52,7 @@ HRESULT CMapObject::Initialize(void* pArg)
 	m_pGameInstance->Subscribe<Event_Model_Index_Set>([&](const Event_Model_Index_Set& e) {if (e.i < m_iIndex) { m_iIndex -= 1; } });
 
 	m_pModelCom->Set_Animations(0, true);
+	CImgui_Manger::GetInstance()->Selete_Object(*this, *m_pTransformCom);
 	return S_OK;
 }
 
@@ -81,13 +82,12 @@ void CMapObject::Update(_float fTimeDelta)
 	if (m_pModelCom->Play_Animation(fTimeDelta, m_bisAnimstop))
 		_int a = 10;
 
-	if (m_pGameInstance->Get_CulLevelID() == ENUM_CLASS(LEVEL::MODEL))
+
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_TAB))
 	{
-		if (m_pGameInstance->IsKeyDown(DIK_TAB))
-		{
-			m_pGameInstance->File_Save_Object(m_pModelCom->Get_ModelData().szName, m_pModelCom->Get_ModelData().eModel, m_pModelCom->Get_ModelData());
-		}
+		m_pGameInstance->File_Save_Object(m_pModelCom->Get_ModelData().szName, m_pModelCom->Get_ModelData().eModel, m_pModelCom->Get_ModelData());
 	}
+
 }
 
 void CMapObject::Late_Update(_float fTimeDelta)
@@ -124,7 +124,11 @@ HRESULT CMapObject::Render()
 
 _bool CMapObject::IsPick_Objcet(_float& pOut)
 {
-	return m_pModelCom->Selete_Model(*m_pTransformCom, pOut);
+	if (m_bIsSelete)
+	{
+		return m_pModelCom->Selete_Model(*m_pTransformCom, pOut);
+	}
+	return false;
 }
 
 HRESULT CMapObject::Ready_Components()

@@ -102,14 +102,37 @@ void CChannel::Update_TransformationMatirx_Transition(const vector<class CBone*>
     Bones[m_iBoneIndex]->Set_CombinedTransformationMatrix(TransformationMatrix);
 }
 
-_uint CChannel::Finde_KeyFrameIndex(_float fTrackPotion)
+_uint CChannel::Finde_KeyFrameIndex(_float fTrackPosition)
 {
-    for (_uint i = 0; i + 1 < m_KeyFrames.size(); ++i)
+    if (m_KeyFrames.empty())
+        return 0;
+
+    _uint iSize = _uint(m_KeyFrames.size());
+
+    if (fTrackPosition <= m_KeyFrames[0].fTrackPosition)
+        return 0;
+
+    if (fTrackPosition >= m_KeyFrames[iSize - 1].fTrackPosition)
+        return iSize - 1;
+
+    _uint iLeft = 0;
+    _uint iRight = _uint(m_KeyFrames.size()) - 1;
+    _uint iKeyFrameIndex = 0;
+
+    while (iLeft <= iRight)
     {
-        if (fTrackPotion < m_KeyFrames[i + 1].fTrackPosition)
-            return i;
+        _uint imid = iLeft + (iRight - iLeft) / 2;
+
+        if (m_KeyFrames[imid].fTrackPosition < fTrackPosition)
+        {
+            iKeyFrameIndex = imid;
+            iLeft = imid + 1;
+        }
+        else
+            iRight = imid - 1;
     }
-    return static_cast<_uint>(m_KeyFrames.size() - 1);
+
+    return iKeyFrameIndex;
 }
 
 CChannel* CChannel::Create(const SAVE_CHANNEL& pChannel, const vector<class CBone*>& Bones)

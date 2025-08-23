@@ -8,7 +8,7 @@
 #include "MapNevi.h"
 #include "SpawnPoint.h"
 #include "MonSpawner.h"
-
+#include "InvenItem.h"
 
 #include "UI_Header.h"
 #include "Player_Header.h"
@@ -401,10 +401,14 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		return E_FAIL;
 
 #pragma endregion
-	/* Prototype_GameObject_BaseMapObj */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Map"),
 		CBaseMapObj::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven"),
+		CInvenItem::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
 	m_isFinished = true;

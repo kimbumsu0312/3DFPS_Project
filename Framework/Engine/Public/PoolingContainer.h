@@ -19,7 +19,7 @@ public:
 public:
 	virtual HRESULT					Initialize_Pool(void* pArg) = 0;
 	virtual void					Return_Pool() = 0;
-	virtual void					OnCollision(_uint MyObjectType, _uint TargetObjectType)override {};
+	virtual void					OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)override {};
 protected:
 	unordered_map<_wstring,
 		class CPartObject*>			m_PartObjects;

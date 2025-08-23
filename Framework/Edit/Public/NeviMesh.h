@@ -23,9 +23,13 @@ public:
 public:
 	_float3					Get_SeletePoint(_int i) { return m_fCellPoint[i]; }
 	_int					Get_SeleteNum() { return m_iSeletePoint; }
+	_int					Get_CellCount();
+	_int					Get_CellIndex();
 	void					Set_Objcets();
 
 	void					Save_Nevi(string szFileName);
+	void					Load_Nevi(string szFileName);
+
 private:
 	CNavigation*			m_pNevigationCom = { nullptr };
 	vector<CGameObject*>*	m_fObjects = { nullptr };

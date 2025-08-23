@@ -144,19 +144,19 @@ void CBela::IsDamage()
 	else
 		m_iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
 }
-void CBela::OnCollision(_uint MyObjectType, _uint TargetObjectType)
+void CBela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
 {
-	switch (TargetObjectType)
+	switch (TargetCollision.iObjType)
 	{
 	case ENUM_CLASS(OBJECT_TYPE::RAY):
 
-		if (MyObjectType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
+		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
 			m_IsHitPoint.IsHead = true;
-		if (MyObjectType == ENUM_CLASS(OBJECT_TYPE::MON_BODY))
+		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_BODY))
 			m_IsHitPoint.IsBody = true;
-		if (MyObjectType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_R))
+		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_R))
 			m_IsHitPoint.isSholder_R = true;
-		if (MyObjectType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L))
+		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L))
 			m_IsHitPoint.IsSholder_L = true;
 
 		m_bIsDamage = true;

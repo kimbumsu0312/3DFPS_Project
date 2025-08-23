@@ -1,0 +1,38 @@
+{
+    "Animetions": [
+        {
+            "Anim": [
+                {
+                    "AnimeName": "Aim_Shot",
+                    "EndFrame": 10,
+                    "StartFrame": 2,
+                    "TickPerSecond": 30.0
+                },
+                {
+                    "AnimeName": "Reload",
+                    "EndFrame": 352,
+                    "StartFrame": 230,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Reload_Empty",
+                    "EndFrame": 548,
+                    "StartFrame": 353,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "Idle",
+                    "EndFrame": 98,
+                    "StartFrame": 78,
+                    "TickPerSecond": 25.0
+                },
+                {
+                    "AnimeName": "GetWep",
+                    "EndFrame": 196,
+                    "StartFrame": 99,
+                    "TickPerSecond": 25.0
+                }
+            ]
+        }
+    ]
+}

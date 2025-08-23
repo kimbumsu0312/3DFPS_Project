@@ -12,6 +12,7 @@ private:
 
 public:
 	virtual HRESULT			Initialize_Prototype(MODELTYPE eType, const aiMesh* pAIMesh, const vector<class CEdit_Bone*>& Bones, _fmatrix PreTransformMatrix, SAVE_MODEL* pModelData);
+	virtual HRESULT			Initialize_Prototype(MODELTYPE eType, const SAVE_MESH& pMesh, const vector<class CEdit_Bone*>& Bones, const vector<SAVE_BONE>& BonesData);
 	virtual HRESULT			Initialize(void* pArg) override;
 
 public:
@@ -34,8 +35,12 @@ private:
 	HRESULT					Ready_Vertices_For_NonAnim(const aiMesh* pAiMesh, _fmatrix PreTransformMatrix);
 	HRESULT					Ready_Vertices_For_Anim(const aiMesh* pAiMesh, const vector<class CEdit_Bone*>& Bones, SAVE_MODEL* pModelData);
 
+	HRESULT					Ready_Vertices_For_NonAnim(const SAVE_MESH& pMesh);
+	HRESULT					Ready_Vertices_For_Anim(const SAVE_MESH& pMesh, const vector<CEdit_Bone*>& Bones, const vector<SAVE_BONE>& BonesData);
+
 public:
 	static CEdit_Mesh*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODELTYPE eType, const aiMesh* pAIMesh, const vector<class CEdit_Bone*>& Bones, _fmatrix PreTransformMatrix, SAVE_MODEL* pModelData);
+	static CEdit_Mesh*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODELTYPE eType, const SAVE_MESH& pMesh, const vector<class CEdit_Bone*>& Bones, const vector<SAVE_BONE>& BonesData);
 	virtual CComponent*		Clone(void* pArg) override;
 	virtual void			Free() override;
 };

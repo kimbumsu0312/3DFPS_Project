@@ -4,6 +4,8 @@
 #include "Level_Loading.h"
 #include "Fade_UI.h"
 #include "Player_Manager.h"
+#include "Inven_Manager.h"
+
 #include "Mouse.h"
 #include "Mouse_Click_Fx.h"
 #include "Animatio_Controller.h"
@@ -18,7 +20,7 @@ HRESULT CMainApp::Initialize()
 
 	EngineDesc.hInst = g_hInst;
 	EngineDesc.hWnd = g_hWnd;
-	EngineDesc.eWinMode = WINMODE::WIN;
+	EngineDesc.eWinMode = WINMODE::FULL;
 	EngineDesc.iWinSizeX = g_iWinSizeX;
 	EngineDesc.iWinSizeY = g_iWinSizeY;
 	EngineDesc.iNumLevels = ENUM_CLASS(LEVEL::END);
@@ -34,6 +36,17 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 	if (FAILED(CPlayer_Manager::GetInstance()->Initialize()))
+		return E_FAIL;
+
+	CInventory_Manager::INVENTORY_DESC InvenDesc{};
+	
+	InvenDesc.vInvenCenter = _float2{ g_iWinSizeX * 0.5, g_iWinSizeY * 0.5 };
+
+	InvenDesc.iSlotNumX = 10;
+	InvenDesc.iSlotNumY = 10;
+	InvenDesc.iSlotSize = 64;
+
+	if (FAILED(CInventory_Manager::GetInstance()->Initialize(InvenDesc)))
 		return E_FAIL;
 
 	if (FAILED(Start_Level(LEVEL::LOGO)))
@@ -159,13 +172,15 @@ HRESULT CMainApp::Start_Level(LEVEL eStartLevelID)
 
 HRESULT CMainApp::Ready_Collider()
 {
-	if(FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::PLAYER), (1 << ENUM_CLASS(COLLISION_LAYER::WEAPON)) | (1 << ENUM_CLASS(COLLISION_LAYER::ITEM)))))
+	if(FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::PLAYER), (1 << ENUM_CLASS(COLLISION_LAYER::WEAPON))
+											|  (1 << ENUM_CLASS(COLLISION_LAYER::ITEM)))))
 		return E_FAIL;
 	
 	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::RAY), (1 << ENUM_CLASS(COLLISION_LAYER::MONSTER)))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::MONSTER), (1 << ENUM_CLASS(COLLISION_LAYER::WEAPON) | (1 << ENUM_CLASS(COLLISION_LAYER::RAY))))))
+	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::MONSTER), (1 << ENUM_CLASS(COLLISION_LAYER::WEAPON)) 
+										| (1 << ENUM_CLASS(COLLISION_LAYER::RAY)))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::ITEM), (1 << ENUM_CLASS(COLLISION_LAYER::PLAYER)))))
@@ -175,6 +190,9 @@ HRESULT CMainApp::Ready_Collider()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::TRIGGER), (1 << ENUM_CLASS(COLLISION_LAYER::PLAYER)))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::RESIST), (1 << ENUM_CLASS(COLLISION_LAYER::RESIST)))))
 		return E_FAIL;
 
 	return S_OK;

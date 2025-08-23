@@ -11,7 +11,9 @@ private:
 	virtual ~CEdit_Animation() = default;
 
 public:
-	HRESULT							Initialize(const aiAnimation* pAIAnimation, const vector<class CEdit_Bone*>& Bones, SAVE_MODEL* pModelData);
+	HRESULT							Initialize(const aiAnimation* pAIAnimation, const vector<class CEdit_Bone*>& Bones, SAVE_MODEL* pModelData);	
+	HRESULT							Initialize(const SAVE_ANIM& pAnimation, const vector<class CEdit_Bone*>& Bones);
+
 	void							Update_TransformationMatrices(const vector<class CEdit_Bone*>& Bones, _float fTimeDelta, _bool isLoop, _bool* pFinished, _bool bIsAnimStop, _int iStartFrame, _int iEndFrame);
 	void							Update_TransformationMatrices(const vector<class CEdit_Bone*>& Bones, _float fTimeDelta, _bool isLoop, _bool* pFinished, _bool bIsAnimStop);
 	void							Set_TickPerSecond(_float fTickPerSecond) { m_fTickPerSecond = fTickPerSecond; }
@@ -33,6 +35,7 @@ private:
 
 public:
 	static CEdit_Animation*			Create(const aiAnimation* pAiAnimation, const vector<class CEdit_Bone*> Bones, SAVE_MODEL* pModelData);
+	static CEdit_Animation*			Create(const SAVE_ANIM& pAnimation, const vector<class CEdit_Bone*>& Bones);
 	CEdit_Animation*				Clone();
 	virtual void					Free() override;
 };

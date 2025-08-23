@@ -19,7 +19,7 @@ protected:
 public:
 	virtual HRESULT				Initialize();
 	virtual void				Update(_fmatrix WorldMatrix) {};
-	virtual _bool				Intersect(COLLIDER eType, CBounding* pTarget) = 0;
+	virtual _bool				Intersect(COLLIDER eType, CBounding* pTarget, _float3& pOutNroaml, _float3& pTargetNroaml) = 0;
 	virtual _bool				Intersect(_vector RayPos, _vector RayDir) = 0;
 
 #ifdef _DEBUG

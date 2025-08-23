@@ -68,9 +68,9 @@ HRESULT CMonSpawner::Render()
 	return S_OK;
 }
 
-void CMonSpawner::OnCollision(_uint MyObjectType, _uint TargetObjectType)
+void CMonSpawner::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
 {
-	switch (TargetObjectType)
+	switch (TargetCollision.iObjType)
 	{
 	case ENUM_CLASS(OBJECT_TYPE::PLAYER):
 		for (_int i = 0; i < m_MonDesc.size(); ++i)

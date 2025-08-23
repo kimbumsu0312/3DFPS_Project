@@ -22,6 +22,7 @@ private:
 
 public:
 	virtual HRESULT						Initialize_Prototype(MODELTYPE eModelType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, void* pArg);
+	virtual HRESULT						Initialize_Prototype(const SAVE_MODEL& pModelData);
 	virtual HRESULT						Initialize(void* pArg);
 
 	virtual HRESULT						Render(_uint iMeshIndex);
@@ -65,8 +66,16 @@ private:
 	HRESULT								Ready_Bones(const aiNode* pAINode, _int iParentIndex);
 	HRESULT								Ready_Animations();
 
+	HRESULT								Ready_Meshes(const SAVE_MODEL& pModelData);
+	HRESULT								Ready_Materials(const SAVE_MODEL& pModelData);
+	HRESULT								Ready_Bones(const SAVE_MODEL& pModelData);
+	HRESULT								Ready_Animations(const SAVE_MODEL& pModelData);
+
+	SAVE_MODEL							Load_File(string szFilePath);
 public:
 	static CEdit_Model*					Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODELTYPE eModelType, const _char* pModelFilePath, _fmatrix PreTransformMatrix, void* pArg);
+	static CEdit_Model*					Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, string szFilePath);
+
 	virtual CComponent*					Clone(void* pArg) override;
 	virtual void						Free() override;
 };

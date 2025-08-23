@@ -38,6 +38,10 @@ public:
 	virtual HRESULT			Initialize(void* pArg);
 
 public:
+	void					PrePostion_Update();
+	void					Is_Sliding(class CNavigation* pNaviCom, const _fvector& vTargetNormal);
+	void					Is_Sliding(class CNavigation* pNaviCom);
+
 	void					Scale(_float3 vScale);
 	void					Scaling(_float3 vScale);
 	void					Go_Straight(_float fTimeDelta);
@@ -47,9 +51,12 @@ public:
 	void					Rotation(_fvector vAxis, _float fRadian);
 	void					Rotation_All(_float3 fRadian);
 	void					Turn(_fvector vAxis, _float fTimeDelta);
+	void					Turn_Y(_fvector vAxis, _float fTimeDelta);
 	void					LookAt(_fvector vAt);
+
 	void					Chase(_fvector vTargetPos, _float fTimeDelta, _float fLimit = 0.f);
 private:
+	_float3					m_PrePosition = {};
 	_float4x4				m_WorldMatrix = {};
 	_float					m_fSpeedPerSec = {};
 	_float					m_fRotationPerSec = {};

@@ -16,7 +16,7 @@ public:
 	HRESULT					Initialize(const _float3* pPoints, _int iIndex, _uint iCellType);
 	HRESULT					Initialize_Load(const _float3* pPoints, _int iIndex, _uint iCellType);
 	_bool					isIn(_fvector vPosition, _int* pNeighborIndex);
-	_bool					isSlide(_fvector vCulPosition, _fvector vPrePosition, _float3& pOut);
+	_bool					isIn(_fvector vPosition, _float3& pOut);
 
 	_bool					Compare_Points(_fvector vSourPoint, _fvector vDestPoint);
 	_float					Compute_Height(_fvector vLocalPos);

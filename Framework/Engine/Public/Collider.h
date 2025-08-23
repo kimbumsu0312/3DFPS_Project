@@ -26,7 +26,7 @@ public:
 public:
 	_bool									Intersect(CCollider* pTarget);
 	_bool									Intersect(RAY_DESC& RayDesc);
-
+	_float3&								Get_Intersect_Normal() { return m_vIntersect_Nromal;}
 	COLLIDER								Get_ColliderType() { return m_eType; }
 	_uint									Get_Layer() { return m_iLayer; }
 	_uint									Get_ObjType() { return m_iObjType; }
@@ -41,6 +41,7 @@ private:
 	_bool									m_isColl = { false };
 	_uint									m_iLayer;
 	_uint									m_iObjType;
+	_float3									m_vIntersect_Nromal = {};
 
 #ifdef _DEBUG
 	PrimitiveBatch<VertexPositionColor>*	m_pBatch = { nullptr };

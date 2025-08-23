@@ -5,29 +5,29 @@ namespace Client
 {
 	enum class WEAPON_TYPE { PISTOL, SHOTGUN, SNIPER, END };
 	enum class ITEM_TYPE { WEAPON, END };
-	
-	struct ItemData
+
+	struct InvenItemData
 	{
 		_uint			m_iItemID;
-		_float4			m_vHudUV;
-		_uint			m_vHudSizeType;
-		_float4			m_vInvenUV;
-		_float2			m_vInvenSize;
-		_wstring		m_szName;
-		_wstring		m_szDescription;
-		ITEM_TYPE		m_eItemType = { ITEM_TYPE::END };
-		WEAPON_TYPE		m_eWeaponType = { WEAPON_TYPE::END };
+		_int			m_iInvenSizeX;
+		_int			m_iInvenSizeY;
+		_float2			m_vSize;
+		_float2			m_vMinUV;
+		_float2			m_vMaxUV;
+
 	public:
-		ItemData(_uint iItemID, _float4 iHudUV, _uint vHudSize, _float4 iInvenUV, _float2 vInvenSize, _wstring szName,
-			_wstring szDescription, ITEM_TYPE eItemType, WEAPON_TYPE eWeaponType) :
-			m_iItemID(iItemID), m_vHudUV(iHudUV), m_vHudSizeType(vHudSize), m_vInvenUV(iInvenUV),
-			m_vInvenSize(vInvenSize), m_szName(szName), m_szDescription(szDescription), m_eItemType(eItemType), m_eWeaponType(eWeaponType) {};
+		InvenItemData(_uint iItemID, _int iInvenSizeX, _int iInvenSizeY, _float2 vSize, _float2 vMinUV, _float2 vMaxUV) :
+			m_iItemID(iItemID), m_iInvenSizeX(iInvenSizeX), m_iInvenSizeY(iInvenSizeY), m_vSize(vSize), m_vMinUV(vMinUV), m_vMaxUV(vMaxUV){
+		};
 	};
 
-	const vector<ItemData> g_ItemData =
+	const vector<InvenItemData> g_ItemData =
 	{
-		ItemData(0,	{4, 87, 160, 105}, 1, {13, 1263, 89, 1328}, {2, 2}, L"Pistol", L"±ÇÃÑ",ITEM_TYPE::WEAPON, WEAPON_TYPE::PISTOL),
-		ItemData(0,	{590, 22, 880, 92}, 2, {189, 1261, 385, 1320}, {3, 2}, L"Shotgun", L"¼¦±Ç",ITEM_TYPE::WEAPON, WEAPON_TYPE::SHOTGUN),
+		InvenItemData(0, 1, 1, { 0, 0 }, {0, 0}, {1, 1}),
+		InvenItemData(1, 2, 2, { 0, 0 }, {0, 0}, {1, 1}),
+		InvenItemData(2, 3, 3, { 0, 0 }, {0, 0}, {1, 1}),
+		InvenItemData(3, 3, 2, { 0, 0 }, {0, 0}, {1, 1}),
+		InvenItemData(4, 2, 4, { 0, 0 }, {0, 0}, {1, 1}),
 
 	};
 }
