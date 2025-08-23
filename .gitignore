@@ -14,8 +14,6 @@ Engined.exp
 Engined.pdb
 Inc/
 Lib/
-Edit/
-Resources/
+Framework/Edit/
+Framework/Client/Bin/Resources/
 copy.bat
-/Framework/Edit/Default/Edit.vcxproj
-/Framework/Edit/Default/Edit.vcxproj.filters
