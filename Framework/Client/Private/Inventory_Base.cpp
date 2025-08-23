@@ -28,8 +28,8 @@ HRESULT CInventory_Base::Initialize(void* pArg)
     m_fOpenTexValueY = 0.15f;
    
     m_vLocalPos = { 0.f, 0.f };
-    m_vLocalSize.x = 1280 * 0.7;
-    m_vLocalSize.y = 1080 * 0.7;
+    m_vLocalSize.x = g_iWinSizeX * 0.65f;
+    m_vLocalSize.y = g_iWinSizeY;
 
     if (FAILED(__super::Initialize()))
         return E_FAIL;
@@ -118,8 +118,8 @@ HRESULT CInventory_Base::Ready_Children()
     _float fTexSizeX = 512.f;
     _float fTexSizeY = 256.f;
 
-    Desc.vPos = { 0.f, -225.f };
-    Desc.vSize = { 43.f * 3.f, 32.f * 1.4f};
+    Desc.vPos = { 0.f, -315.f };
+    Desc.vSize = { 66.f * 3.f, 48.f * 1.4f};
     Desc.vMinUV = {67/ fTexSizeX, 83/ fTexSizeY };
     Desc.vMaxUV = {110/ fTexSizeX , 115/ fTexSizeY };
     Desc.iIndex = 0;
@@ -132,8 +132,8 @@ HRESULT CInventory_Base::Ready_Children()
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
 
-    Desc.vPos = { -85.f, -225.f };
-    Desc.vSize = { 17.f, 19.f };
+    Desc.vPos = { -125.f, -317.f };
+    Desc.vSize = { 34.f, 38.f };
     Desc.vMinUV = { 36 / fTexSizeX, 84 / fTexSizeY };
     Desc.vMaxUV = { 53 / fTexSizeX , 103 / fTexSizeY };
     Desc.iIndex = 1;
@@ -143,8 +143,8 @@ HRESULT CInventory_Base::Ready_Children()
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
 
-    Desc.vPos = { 85.f, -225.f };
-    Desc.vSize = { 17.f, 19.f };
+    Desc.vPos = { 125.f, -317.f };
+    Desc.vSize = { 34.f, 38.f };
     Desc.vMinUV = { 36 / fTexSizeX, 84 / fTexSizeY };
     Desc.vMaxUV = { 53 / fTexSizeX , 103 / fTexSizeY };
     Desc.iIndex = 2;
@@ -154,24 +154,24 @@ HRESULT CInventory_Base::Ready_Children()
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
-
-    Desc.vPos = { 0.f, -200.f };
-    Desc.vSize = { 20.f, 20.f };
+     
+    Desc.vPos = { 0.f, -290.f };
+    Desc.vSize = { 25.f, 25.f };
     Desc.vMinUV = { 118 / fTexSizeX, 84 / fTexSizeY };
     Desc.vMaxUV = { 138 / fTexSizeX , 104 / fTexSizeY };
-    Desc.iMaxIndex = 4;
+    Desc.iMaxIndex = 2;
     Desc.OffsetX = 20.f;
     for (_uint i = 0; i < Desc.iMaxIndex ; i++)
     {
         Desc.iIndex = i;
         pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Node"), &Desc));
         if (nullptr == pGameObject)
-            return E_FAIL;
+            return E_FAIL; 
         Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
     }
-
-    Desc.vPos = { 250.f, -225.f };
-    Desc.vSize = { 35.f, 35.f };
+     
+    Desc.vPos = { 300.f, -320.f };
+    Desc.vSize = { 40.f, 40.f };
     Desc.vMinUV = { 589.f / 2048.f, 13.f / 2048.f };
     Desc.vMaxUV = { 659.f / 2048.f , 86.f / 2048.f };
     pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_Coin"), &Desc));

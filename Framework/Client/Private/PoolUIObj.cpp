@@ -84,6 +84,7 @@ HRESULT CPoolUIObj::Initialize_Pool(void* pArg)
 	m_vSize = pDesc->vSize;
 	m_vLocalPos = pDesc->vPos;
 
+	Update_Position();
 	return S_OK;
 }
 

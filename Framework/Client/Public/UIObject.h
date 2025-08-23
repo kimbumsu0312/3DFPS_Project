@@ -35,6 +35,8 @@ public:
 	virtual HRESULT			Render();
 	
 protected:
+	CShader*				m_pShaderCom = { nullptr };
+	CTexture*				m_pTextureCom = { nullptr };
 	vector<CUIObject*>		m_vecChildren;
 
 	_float2					m_vLocalPos = {};
@@ -45,9 +47,6 @@ protected:
 
 	_float4x4				m_ViewMatrix = {};
 	_float4x4				m_ProjMatrix = {};
-
-	CShader*				m_pShaderCom = { nullptr };
-	CTexture*				m_pTextureCom = { nullptr };
 
 	_float2					m_vMinUV = {0.f,0.f}, m_vMaxUV = {1.f,1.f};
 protected:

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Item_Penal.h"
 #include "UI_Slot.h"
+#include "Inven_Manager.h"
+
 CItem_Penal::CItem_Penal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
 }
@@ -82,26 +84,27 @@ HRESULT CItem_Penal::Ready_Components()
 HRESULT CItem_Penal::Ready_Children()
 {
     CUIObject* pGameObject = nullptr;
+    CInven_Manager::INVENTORY_DESC InvenDesc = CInven_Manager::GetInstance()->Get_InvenData();
     CUI_Slot::UI_SLOT_DESC Desc;
-
+    
     _float fTexSizeX = 512.f;
     _float fTexSizeY = 512.f;
     Desc.iPassIndex = 2;
-    Desc.vPos = { 0.f, -140.f };
-    Desc.vSize = { 55.f, 55.f };
+    Desc.vPos = { 0.f, -220.f + InvenDesc.iSlotSize * 0.5f };
+    Desc.vSize = { _float(InvenDesc.iSlotSize), _float(InvenDesc.iSlotSize) };
     Desc.vMinUV = { 0.f, 0.f };
     Desc.vMaxUV = { 60.f / fTexSizeX , 60.f / fTexSizeY };
-    Desc.OffsetX = 65.f;
+    Desc.OffsetX = InvenDesc.iSlotSize;
     Desc.iIndex = 0;
-    Desc.iMaxIndex = 10;
+    Desc.iMaxIndex = InvenDesc.iSlotNumX;
     Desc.iTexIndex = 1;
 
-    for (_uint i = 0; i < 6; ++i)
+        
+    for (_uint i = 0; i < InvenDesc.iSlotNumY; ++i)
     {
         Desc.OffsetY = (_float)i;
-        for (_uint j = 0; j < Desc.iMaxIndex; ++j)
+        for (_uint j = 0; j < InvenDesc.iSlotNumX; ++j)
         {
-
             pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Slot"), &Desc));
             if (nullptr == pGameObject)
                 return E_FAIL;

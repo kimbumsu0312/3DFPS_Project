@@ -124,7 +124,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const A
     }
     else
     {
-        m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, 0.016, m_bisLoop, eAnimStatus, &m_bIsAnimFished, pAnimFrameData);
+        m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &m_bIsAnimFished, pAnimFrameData);
 
         for (_int i = 0; i < m_Bones.size(); ++i)
         {

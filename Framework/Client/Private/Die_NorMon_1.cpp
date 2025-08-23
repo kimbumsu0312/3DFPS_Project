@@ -22,7 +22,7 @@ void CDie_Normon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
 {
     if (pContainer->IsAnimFinsh())
     {
-        pContainer->IsDead();
+        pContainer->SetDead();
     }
 
 }

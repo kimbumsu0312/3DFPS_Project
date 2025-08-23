@@ -35,10 +35,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Event(TEXT("Layer_Event"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Item()))
-		return E_FAIL;
-
-	CInventory_Manager::GetInstance()->Level_Init(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Event"));
+	CInven_Manager::GetInstance()->Level_Init(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Event"));
 
 	return S_OK;
 }
@@ -46,19 +43,21 @@ HRESULT CLevel_GamePlay::Initialize()
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
-		CInventory_Manager::GetInstance()->Add_ItemSlot(0, TEXT("Pool_Item"));
-
-	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
-		CInventory_Manager::GetInstance()->Add_ItemSlot(1, TEXT("Pool_Item"));
-
-	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
-		CInventory_Manager::GetInstance()->Add_ItemSlot(2, TEXT("Pool_Item"));
-
-	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
-		CInventory_Manager::GetInstance()->Add_ItemSlot(3, TEXT("Pool_Item"));
-
-	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
-		CInventory_Manager::GetInstance()->Add_ItemSlot(4, TEXT("Pool_Item"));
+		CInven_Manager::GetInstance()->Add_ItemSlot(0, TEXT("Pool_Item"));
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_2))
+		CInven_Manager::GetInstance()->Add_ItemSlot(1, TEXT("Pool_Item"));
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_3))
+		CInven_Manager::GetInstance()->Add_ItemSlot(2, TEXT("Pool_Item"));
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_4))
+		CInven_Manager::GetInstance()->Add_ItemSlot(3, TEXT("Pool_Item"));
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_5))
+		CInven_Manager::GetInstance()->Add_ItemSlot(4, TEXT("Pool_Item"));
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_6))
+		CInven_Manager::GetInstance()->Add_ItemSlot(5, TEXT("Pool_Item"));
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_7))
+		CInven_Manager::GetInstance()->Add_ItemSlot(6, TEXT("Pool_Item"));
+	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_8))
+		CInven_Manager::GetInstance()->Add_ItemSlot(7, TEXT("Pool_Item"));
 
 }
 
@@ -247,19 +246,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	Desc.MonDesc.push_back(MonDesc);
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_MonSpawneer"), &Desc)))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_Item()
-{
-	CPoolingObject::POOLOBJECT_DESC PoolDesc{};
-	PoolDesc.fRotationPerSec = 1.f;
-	PoolDesc.fSpeedPerSec = 1.f;
-	PoolDesc.szPoolingPath = TEXT("Pool_Item");
-
-	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven"), 10, &PoolDesc)))
 		return E_FAIL;
 
 	return S_OK;

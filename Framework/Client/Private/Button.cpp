@@ -57,7 +57,7 @@ _bool CButton::IsPick()
 _bool CButton::IsClick_Up(MOUSEKEYSTATE iKey)
 {
 	if (IsPick())
-		return m_pGameInstance->IsMouseDown(iKey);
+		return m_pGameInstance->IsMouseUp(iKey);
 	else
 		return false;
 }

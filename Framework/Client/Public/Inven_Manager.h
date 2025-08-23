@@ -3,9 +3,9 @@
 #include "InvenItem.h"
 
 NS_BEGIN(Client)
-class CInventory_Manager final : public CBase
+class CInven_Manager final : public CBase
 {
-	DECLARE_SINGLETON(CInventory_Manager)
+	DECLARE_SINGLETON(CInven_Manager)
 public:
 	typedef struct Inventory_Desc {
 		_float2	vInvenCenter = {};
@@ -16,16 +16,18 @@ public:
 	}INVENTORY_DESC;
 
 private:
-	CInventory_Manager();
-	virtual ~CInventory_Manager() = default;
+	CInven_Manager();
+	virtual ~CInven_Manager() = default;
 
 public:
 	HRESULT						Initialize(const INVENTORY_DESC& pDesc);
 	HRESULT						Level_Init(_uint iLayerLevel, _wstring szLayerTag);
 	_bool						Add_ItemSlot(_int iItemIndex, _wstring szPoolPath);
+	_bool						Change_ItemSlot(CInvenItem* pItem);
 	void						Add_Item(class CInvenItem* pItem);
 	_bool						Erase_ItemSlot(class CInvenItem* pItem);
 
+	const INVENTORY_DESC&		Get_InvenData();
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
 
@@ -45,12 +47,14 @@ private:
 
 private:
 	_bool						AddItem_Check(const _int& SizeX, const _int& SizeY, _int& iItemGridX, _int& iItemGridY);
+
 	_bool						ItemSlot_Check(const _int& pSizeX, const _int& pSizeY, _int iStartX, _int iStartY);
-	
+	_bool						ItemSlot_Check(_int iStartX, _int iStartY, const INVEN_ITEM& Desc);
+
 	CInvenItem::ITEM_DESC		Setting_Item(_int iItemIndex, _int iItemGridX, _int iItemGridY);
 
 	void						Convert_InvenGrid(_int& iX, _int& iY);
-	void						Convert_InvenWorld(_int& iX, _int& iY);
+	void						Convert_InvenWorld(_float& iX, _float& iY);
 
 public:
 	virtual void				Free() override;

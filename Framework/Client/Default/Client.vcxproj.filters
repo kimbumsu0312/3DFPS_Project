@@ -97,9 +97,6 @@
     <Filter Include="95.Manager\Player">
       <UniqueIdentifier>{c02b7756-3276-4d56-a2b5-bd3d1f4312a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="95.Manager\Item_Manager">
-      <UniqueIdentifier>{d6152359-cdde-4ae0-828d-f97188b5c5bf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96.SuperClass\UIObject\Button">
       <UniqueIdentifier>{e2b2e3b2-6bae-449c-8044-cc419dc87070}</UniqueIdentifier>
     </Filter>
@@ -274,6 +271,12 @@
     <Filter Include="02.GameObject\Item">
       <UniqueIdentifier>{49da3a7c-86c6-461d-ac35-62bef35a2952}</UniqueIdentifier>
     </Filter>
+    <Filter Include="95.Manager\Inven_Manager">
+      <UniqueIdentifier>{d6152359-cdde-4ae0-828d-f97188b5c5bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Item\Slot">
+      <UniqueIdentifier>{2c7276ac-35e5-422f-bd24-cf2f089d2069}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -379,7 +382,7 @@
       <Filter>95.Manager\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Inven_Manager.h">
-      <Filter>95.Manager\Item_Manager</Filter>
+      <Filter>95.Manager\Inven_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\InvenItem.h">
       <Filter>02.GameObject\Item</Filter>
@@ -594,6 +597,9 @@
     <ClInclude Include="..\public\PoolUIObj.h">
       <Filter>96.SuperClass\UIObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Item_Slot.h">
+      <Filter>02.GameObject\Item\Slot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -694,7 +700,7 @@
       <Filter>95.Manager\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Inven_Manager.cpp">
-      <Filter>95.Manager\Item_Manager</Filter>
+      <Filter>95.Manager\Inven_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\InvenItem.cpp">
       <Filter>02.GameObject\Item</Filter>
@@ -893,6 +899,9 @@
     </ClCompile>
     <ClCompile Include="..\private\PoolUIObj.cpp">
       <Filter>96.SuperClass\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_Slot.cpp">
+      <Filter>02.GameObject\Item\Slot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -38,7 +38,7 @@ HRESULT CUI_Slot::Initialize(void* pArg)
  	m_vLocalPos.x = Desc->vPos.x + iIndex * Desc->OffsetX - (Desc->iMaxIndex - 1) * Desc->OffsetX / 2;;;
 	m_vLocalPos.y = Desc->vPos.y + Desc->OffsetX * Desc->OffsetY;
 
-	if (FAILED(__super::Initialize(pArg)))
+ 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components()))

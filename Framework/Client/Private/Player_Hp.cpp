@@ -26,7 +26,7 @@ HRESULT CPlayer_Hp::Initialize(void* pArg)
 
     m_vLocalPos.x = g_iWinSizeX * 0.5f;
     m_vLocalPos.y = g_iWinSizeY * 0.5f;
-    m_vLocalSize.x = 250.f;
+    m_vLocalSize.x = 300.f;
     m_vLocalSize.y = 75.f;
     m_bIsInven = false;
     if (FAILED(__super::Initialize()))
@@ -96,7 +96,7 @@ HRESULT CPlayer_Hp::Render()
     if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
             return E_FAIL;
     
-    _float fSizeClip = 15.f;
+    _float fSizeClip = 25.f;
     _float4 fSize = { m_vPos.x - m_vSize.x * 0.5f + fSizeClip , m_vPos.y - m_vSize.y * 0.5f , m_vPos.x + m_vSize.x * 0.5f - fSizeClip , m_vPos.y + m_vSize.y * 0.5f };
 
     if (FAILED(m_pShaderCom->Bind_RawValue("g_Size", &fSize, sizeof(_float4))))
@@ -123,7 +123,7 @@ HRESULT CPlayer_Hp::Ready_Components()
         TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
         return E_FAIL;
 
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Inventory"),
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Inventory"),
         TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
         return E_FAIL;
 
@@ -195,7 +195,7 @@ HRESULT CPlayer_Hp::Ready_Children()
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
 
     Desc.vPos = { 0.f, 0.f };
-    Desc.vSize = { 120.f, 50.f };
+    Desc.vSize = { 110.f, 50.f };
     Desc.OffsetX = { m_vSize.x };
     Desc.vMinUV = { 144 / fTexSizeX, 88 / fTexSizeY };
     Desc.vMaxUV = { 192 / fTexSizeX , 111 / fTexSizeY };
@@ -230,7 +230,7 @@ void CPlayer_Hp::UIOpen_Inventory(_bool bIsOpen)
         m_bIsOpen = true;
         m_bIsInven = true;
         m_bIsClose = false;
-        m_vPos = { 380.f, 140.f };
+        m_vPos = { 600.f, 225.f };
         Update_Position_Children(this);
         m_fAlpha = 1.f;
     }

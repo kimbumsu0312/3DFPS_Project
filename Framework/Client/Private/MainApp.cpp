@@ -9,6 +9,7 @@
 #include "Mouse.h"
 #include "Mouse_Click_Fx.h"
 #include "Animatio_Controller.h"
+#include "Item_Slot.h"
 CMainApp::CMainApp() : m_pGameInstance{ CGameInstance::GetInstance()}
 {
 	Safe_AddRef(m_pGameInstance);
@@ -38,15 +39,15 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(CPlayer_Manager::GetInstance()->Initialize()))
 		return E_FAIL;
 
-	CInventory_Manager::INVENTORY_DESC InvenDesc{};
+	CInven_Manager::INVENTORY_DESC InvenDesc{};
 	
-	InvenDesc.vInvenCenter = _float2{ g_iWinSizeX * 0.5, g_iWinSizeY * 0.5 };
+	InvenDesc.vInvenCenter = _float2{ g_iWinSizeX * 0.5, g_iWinSizeY * 0.5 + 4};
 
-	InvenDesc.iSlotNumX = 10;
-	InvenDesc.iSlotNumY = 10;
+	InvenDesc.iSlotNumX = 11;
+	InvenDesc.iSlotNumY = 7;
 	InvenDesc.iSlotSize = 64;
 
-	if (FAILED(CInventory_Manager::GetInstance()->Initialize(InvenDesc)))
+	if (FAILED(CInven_Manager::GetInstance()->Initialize(InvenDesc)))
 		return E_FAIL;
 
 	if (FAILED(Start_Level(LEVEL::LOGO)))
@@ -99,6 +100,15 @@ HRESULT CMainApp::Ready_Prototype_ForStatic()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxNorTex"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX::Elements, VTXNORTEX::iNumElements))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxCube"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxCube.hlsl"), VTXCUBE::Elements, VTXCUBE::iNumElements))))
+		return E_FAIL;
+
+
 	//유틸 셋팅
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Animatio_Controller"),
 		CAnimatio_Controller::Create(m_pDevice, m_pContext))))
@@ -131,6 +141,14 @@ HRESULT CMainApp::Ready_PrototypeUI_ForStatic()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Mouse/Mouse_%d.png"), 1))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Item"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Item/Item_%d.png"), 2))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Inventory"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Inventory/Inven_%d.png"), 6))))
+		return E_FAIL;
+
 	//UI 모델 셋팅
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
@@ -145,6 +163,10 @@ HRESULT CMainApp::Ready_PrototypeUI_ForStatic()
 		CMouse::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Item_Slot"),
+		CItem_Slot::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Mouse_Click_Fx"),
 		CMouse_Click_Fx::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -157,6 +179,19 @@ HRESULT CMainApp::Ready_PrototypeUI_ForStatic()
 
 	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Mouse_Click_Fx"), 10, &Desc)))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Inven"),
+		CInvenItem::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	CPoolingObject::POOLOBJECT_DESC PoolDesc{};
+	PoolDesc.fRotationPerSec = 1.f;
+	PoolDesc.fSpeedPerSec = 1.f;
+	PoolDesc.szPoolingPath = TEXT("Pool_Item");
+
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Inven"), 30, &PoolDesc)))
+		return E_FAIL;
+
 
 	return S_OK;
 
@@ -215,7 +250,9 @@ void CMainApp::Free()
 {
 	__super::Free();
 	CPlayer_Manager::GetInstance()->Free();
-	CPlayer_Manager::GetInstance()->DestroyInstance();
+	CPlayer_Manager::DestroyInstance();
+	CInven_Manager::GetInstance()->Free();
+	CInven_Manager::DestroyInstance();
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 

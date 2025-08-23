@@ -2,15 +2,15 @@
 #include "Inven_Manager.h"
 #include "Client_Item.h"
 
-IMPLEMENT_SINGLETON(CInventory_Manager)
+IMPLEMENT_SINGLETON(CInven_Manager)
 
-CInventory_Manager::CInventory_Manager()
+CInven_Manager::CInven_Manager()
 {
 	m_pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(m_pGameInstance);
 }
 
-HRESULT CInventory_Manager::Initialize(const INVENTORY_DESC& pDesc)
+HRESULT CInven_Manager::Initialize(const INVENTORY_DESC& pDesc)
 {
 	m_vInvenCenter = pDesc.vInvenCenter;
 	m_iSlotNumX = pDesc.iSlotNumX;
@@ -37,7 +37,7 @@ HRESULT CInventory_Manager::Initialize(const INVENTORY_DESC& pDesc)
 	return S_OK;
 }
 
-HRESULT CInventory_Manager::Level_Init(_uint iLayerLevel, _wstring szLayerTag)
+HRESULT CInven_Manager::Level_Init(_uint iLayerLevel, _wstring szLayerTag)
 {
 	if (iLayerLevel <= 0)
 		return E_FAIL;
@@ -47,7 +47,7 @@ HRESULT CInventory_Manager::Level_Init(_uint iLayerLevel, _wstring szLayerTag)
 	return S_OK;
 }
 
-_bool CInventory_Manager::Add_ItemSlot(_int iItemIndex, _wstring szPoolPath)
+_bool CInven_Manager::Add_ItemSlot(_int iItemIndex, _wstring szPoolPath)
 {
 	_int ItemSizeX = g_ItemData[iItemIndex].m_iInvenSizeX;
 	_int ItemSizeY = g_ItemData[iItemIndex].m_iInvenSizeY;
@@ -71,7 +71,61 @@ _bool CInventory_Manager::Add_ItemSlot(_int iItemIndex, _wstring szPoolPath)
 	return false;
 }
 
-void CInventory_Manager::Add_Item(CInvenItem* pItem)
+_bool CInven_Manager::Change_ItemSlot(CInvenItem* pItem)
+{
+	POINT	ptMouse{};
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+	
+	_int iMouseX = ptMouse.x;
+	_int iMouseY = ptMouse.y;
+
+	Convert_InvenGrid(iMouseX, iMouseY);
+
+	INVEN_ITEM Desc = pItem->Get_ItemData();
+	_int ItemSizeX = Desc.iInvenSizeX;
+	_int ItemSizeY = Desc.iInvenSizeY;
+
+	_int iStartGridX = iMouseX - ((ItemSizeX) / 2);
+	_int iStartGridY = iMouseY - ((ItemSizeY) / 2);
+
+	if (iStartGridX < 0 || iStartGridY < 0 || iStartGridX + ItemSizeX > m_iSlotNumX || iStartGridY + ItemSizeY > m_iSlotNumY)
+		return false;
+	
+	if (ItemSlot_Check(iStartGridX, iStartGridY, Desc))
+	{
+		for (_int i = Desc.iItemGridY; i < Desc.iItemGridY + ItemSizeY; ++i)
+		{
+			for (_int j = Desc.iItemGridX; j < Desc.iItemGridX + ItemSizeX; ++j)
+			{
+				m_InvenSlot[i][j] = false;
+			}
+		}
+
+		for (_int i = iStartGridY; i < iStartGridY + ItemSizeY; ++i)
+		{
+			for (_int j = iStartGridX; j < iStartGridX + ItemSizeX; ++j)
+			{
+				m_InvenSlot[i][j] = true;
+			}
+		}
+
+		_float2 vCenter{};
+
+		vCenter.x = ((_float)iStartGridX + _float(iStartGridX + Desc.iInvenSizeX - 1)) * 0.5f;
+		vCenter.y = ((_float)iStartGridY + _float(iStartGridY + Desc.iInvenSizeY - 1)) * 0.5f;
+
+		Convert_InvenWorld(vCenter.x, vCenter.y);
+
+		pItem->Change_Slot(vCenter, iStartGridX, iStartGridY);
+		return true;
+	}
+
+	return false;
+
+}
+
+void CInven_Manager::Add_Item(CInvenItem* pItem)
 {
 	if (pItem == nullptr)
 		return;
@@ -80,7 +134,7 @@ void CInventory_Manager::Add_Item(CInvenItem* pItem)
 
 }
 
-_bool CInventory_Manager::Erase_ItemSlot(CInvenItem* pItem)
+_bool CInven_Manager::Erase_ItemSlot(CInvenItem* pItem)
 {
 	for (auto iter = m_InvenItems.begin(); iter < m_InvenItems.end(); iter++)
 	{
@@ -111,10 +165,25 @@ _bool CInventory_Manager::Erase_ItemSlot(CInvenItem* pItem)
 	return false;
 }
 
-_bool CInventory_Manager::AddItem_Check(const _int& pSizeX, const _int& pSizeY, _int& iItemGridX, _int& iItemGridY)
+const CInven_Manager::INVENTORY_DESC& CInven_Manager::Get_InvenData()
+{
+	INVENTORY_DESC Data{};
+	Data.iSlotNumX = m_iSlotNumX;
+	Data.iSlotNumY = m_iSlotNumY;
+	Data.iSlotSize = m_iSlotSize;
+	Data.vInvenCenter = m_vInvenCenter;
+
+	return Data;
+
+}
+
+_bool CInven_Manager::AddItem_Check(const _int& pSizeX, const _int& pSizeY, _int& iItemGridX, _int& iItemGridY)
 {
 	for (_uint i = 0; i < m_iSlotNumY; ++i )
 	{
+		if (i + pSizeY > m_iSlotNumY)
+			break;
+
 		for (_uint j = 0; j < m_iSlotNumX; ++j)
 		{
 			if(m_InvenSlot[i][j])
@@ -132,13 +201,12 @@ _bool CInventory_Manager::AddItem_Check(const _int& pSizeX, const _int& pSizeY, 
 			}
 		}
 
-		if (i + pSizeY > m_iSlotNumY)
-			break;
+
 	}
 	return false;
 }
 
-_bool CInventory_Manager::ItemSlot_Check(const _int& pSizeX, const _int& pSizeY, _int iStartX, _int iStartY)
+_bool CInven_Manager::ItemSlot_Check(const _int& pSizeX, const _int& pSizeY, _int iStartX, _int iStartY)
 {
 	for (_int i = iStartY; i < iStartY + pSizeY; ++i)
 	{
@@ -151,41 +219,75 @@ _bool CInventory_Manager::ItemSlot_Check(const _int& pSizeX, const _int& pSizeY,
 	return true;
 }
 
-CInvenItem::ITEM_DESC CInventory_Manager::Setting_Item(_int iItemIndex, _int iItemGridX, _int iItemGridY)
+_bool CInven_Manager::ItemSlot_Check(_int iStartX, _int iStartY, const INVEN_ITEM& Desc)
+{
+	_int ItemSizeX = Desc.iInvenSizeX;
+	_int ItemSizeY = Desc.iInvenSizeY;
+
+	if (iStartX < 0 || iStartY < 0 || iStartX + ItemSizeX > m_iSlotNumX || iStartY + ItemSizeY > m_iSlotNumY)
+		return false;
+
+	_int iItemLeft = Desc.iItemGridX;
+	_int iItemTop = Desc.iItemGridY;
+	_int iItemRight = Desc.iItemGridX + Desc.iInvenSizeX - 1;
+	_int iItemBottom = Desc.iItemGridY + Desc.iInvenSizeY - 1;
+
+	for (_int i = iStartY; i < iStartY + Desc.iInvenSizeY; ++i)
+	{
+		for (_int j = iStartX; j < iStartX + Desc.iInvenSizeX; ++j)
+		{
+			if (iItemTop <= i && iItemBottom >= i && iItemLeft <= j && iItemRight >= j)
+				continue;
+
+			if (m_InvenSlot[i][j])
+				return false;
+		}
+	}
+	return true;
+}
+
+CInvenItem::ITEM_DESC CInven_Manager::Setting_Item(_int iItemIndex, _int iItemGridX, _int iItemGridY)
 {
 	CInvenItem::ITEM_DESC Desc{};
 
 	Desc.ItemData.iItemIndex = g_ItemData[iItemIndex].m_iItemID;
 	Desc.ItemData.iInvenSizeX = g_ItemData[iItemIndex].m_iInvenSizeX;
 	Desc.ItemData.iInvenSizeY = g_ItemData[iItemIndex].m_iInvenSizeY;
-	Desc.vSize = g_ItemData[iItemIndex].m_vSize;
+	Desc.vSize.x = _float(m_iSlotSize) * g_ItemData[iItemIndex].m_iSizeX;
+	Desc.vSize.y = _float(m_iSlotSize) * g_ItemData[iItemIndex].m_iSizeY;
 	Desc.vMinUV = g_ItemData[iItemIndex].m_vMinUV;
 	Desc.vMaxUV = g_ItemData[iItemIndex].m_vMaxUV;
 	Desc.ItemData.iItemGridX = iItemGridX;
 	Desc.ItemData.iItemGridY = iItemGridY;
 
-	Convert_InvenWorld(iItemGridX, iItemGridY);
+	_float iCenterX = (iItemGridX + (iItemGridX + Desc.ItemData.iInvenSizeX - 1)) * 0.5;
+	_float iCenterY = (iItemGridY + (iItemGridY + Desc.ItemData.iInvenSizeY - 1)) * 0.5;
 
-	Desc.vPos.x = iItemGridX;
-	Desc.vPos.y = iItemGridY;
+	Convert_InvenWorld(iCenterX, iCenterY);
+
+	Desc.vPos.x = iCenterX;
+	Desc.vPos.y = iCenterY;
 
 	return Desc;
 }
 
 
-void CInventory_Manager::Convert_InvenGrid(_int& iX, _int& iY)
+void CInven_Manager::Convert_InvenGrid(_int& iX, _int& iY)
 {
-	iX = (iX - m_InvenWinPos.left) / m_iSlotSize;
-	iY = (iY - m_InvenWinPos.top) / m_iSlotSize;
+	_float fX = _float(iX - m_InvenWinPos.left) / m_iSlotSize;
+	_float fY = _float(iY - m_InvenWinPos.top) / m_iSlotSize;
+
+	iX = round(fX);
+	iY = round(fY);
 }
 
-void CInventory_Manager::Convert_InvenWorld(_int& iX, _int& iY)
+void CInven_Manager::Convert_InvenWorld(_float& iX, _float& iY)
 {
-	iX = m_InvenWinPos.left + iX * m_iSlotSize;
-	iY = m_InvenWinPos.top + iY * m_iSlotSize;
+	iX = (m_InvenWinPos.left + m_iSlotSize * 0.5f) + iX * m_iSlotSize;
+	iY = (m_InvenWinPos.top + m_iSlotSize * 0.5f) + iY * m_iSlotSize;
 }
 
-void CInventory_Manager::Free()
+void CInven_Manager::Free()
 {
 	__super::Free();
 	for (auto Item : m_InvenItems)

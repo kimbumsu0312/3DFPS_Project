@@ -68,9 +68,9 @@ void CMonster_Normal::Update(_float fTimeDelta)
 	State_Change();
 	m_pTransformCom->Set_State(Engine::STATE::POSITION,
 		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
-	Root_Move();
 
 	//모델 랜더
+	Root_Move();
 	m_pBodyObject->Update(fTimeDelta);
 	
 	//무기 랜더
@@ -384,7 +384,7 @@ void CMonster_Normal::Root_Move()
 
 	//월드 기준으로 방향 보정
 	vMovePos = XMVector3Rotate(vMovePos, vWorldRot);
-
+	  
 	//이동량 누적
 	vWorldTrans += vMovePos;
 	//회전량 누적

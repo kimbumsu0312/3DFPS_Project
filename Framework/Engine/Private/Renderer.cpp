@@ -108,7 +108,7 @@ HRESULT CRenderer::Render_UI()
     }
 
     m_RenderObjects[ENUM_CLASS(RENDERGROUP::UI)].clear();
-
+    m_RenderObjects[ENUM_CLASS(RENDERGROUP::LATE_UI)].clear();
     return S_OK;
 }
 
