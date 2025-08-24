@@ -2,6 +2,7 @@
 #include "Quick_Slot.h"
 #include "Quick_Slot_Guide.h"
 #include "QuicK_Slot_Icon.h"
+#include "Quick_Slot_Item.h"
 CQuick_Slot::CQuick_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
 }
@@ -33,23 +34,15 @@ HRESULT CQuick_Slot::Initialize(void* pArg)
     if (FAILED(Ready_Children()))
         return E_FAIL;
 
+    m_pGameInstance->Subscribe<Event_QUICK_UI_OPEN>([&](const Event_QUICK_UI_OPEN& e)
+        { Open_UI(); });
+
+
     return S_OK;
 }
 
 void CQuick_Slot::Priority_Update(_float fTimeDelta)
 {
-    if (m_pGameInstance->IsKeyDown(DIK_7))
-    {
-        m_bIsOpen = true;
-        m_bIsClose = false;
-        m_fAlpha = 0.f;
-    }
-    if (m_pGameInstance->IsKeyDown(DIK_6))
-    {
-        m_bIsClose = true;
-        m_fAlpha = 1.f;
-
-    }
     __super::Priority_Update(fTimeDelta);
 }
 
@@ -59,8 +52,15 @@ void CQuick_Slot::Update(_float fTimeDelta)
         return;
 
     if (!m_bIsClose && m_fAlpha < 1.f)
+    {
         m_fAlpha += 0.1f;
-
+    }
+    else
+    {
+        m_fDelay += fTimeDelta;
+        if (m_fDelay > 2.f)
+            m_bIsClose = true;
+    }
     if (m_bIsClose && m_bIsOpen)
     {
         if (m_fAlpha >= 0.f)
@@ -95,8 +95,6 @@ HRESULT CQuick_Slot::Render()
     if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
         return E_FAIL;
 
-    if (FAILED(m_pTextureCom->Bind_Shader_Resource(m_pShaderCom, "g_Texture", 1)))
-        return E_FAIL;
     
     return S_OK;
 }
@@ -128,6 +126,10 @@ HRESULT CQuick_Slot::Ready_Children_Prototype()
         CQuick_Slot_Icon::Create(m_pDevice, m_pContext))))
         return E_FAIL;
 
+    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Quick_Slot_Item"),
+        CQuick_Slot_Item::Create(m_pDevice, m_pContext))))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -138,8 +140,10 @@ HRESULT CQuick_Slot::Ready_Children()
     UIOBJECT_DESC Desc;
 
     Desc.iMaxIndex = 4;
-    Desc.vSize = { 20.f, 20.f };
-    Desc.OffsetX = 40.f;
+    Desc.vSize = { 30.f, 30.f };
+    Desc.vMinUV = { 216.f / 512.f, 166.f / 256.f };
+    Desc.vMaxUV = { 245.f / 512.f, 195.f / 256.f };
+    Desc.OffsetX = 50.f;
 
     for (_uint i = 1; i <= Desc.iMaxIndex; i++)
     {
@@ -157,7 +161,7 @@ HRESULT CQuick_Slot::Ready_Children()
     Desc.vSize = { 70.f, 70.f };
     Desc.vMinUV = { 61.f / fTexSize, 1.f / fTexSize };
     Desc.vMaxUV = { 118.f / fTexSize, 58.f / fTexSize };
-    Desc.OffsetX = 90.f;
+    Desc.OffsetX = 110.f;
 
     for (_uint i = 1; i <= Desc.iMaxIndex; i++)
     {
@@ -169,6 +173,22 @@ HRESULT CQuick_Slot::Ready_Children()
         Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
     }
     return S_OK;
+}
+
+void CQuick_Slot::Open_UI()
+{
+    if (!m_bIsOpen)
+    {
+        m_bIsOpen = true;
+        m_bIsClose = false;
+        m_fDelay = 0.f;
+        m_fAlpha = 0.f;
+    }
+    else
+    {
+        m_bIsClose = false;
+        m_fDelay = 0.f;
+    }
 }
 
 CQuick_Slot* CQuick_Slot::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

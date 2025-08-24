@@ -106,9 +106,6 @@
     <Filter Include="02.GameObject\UIObject\Inventory\Base\Inventory_ETC">
       <UniqueIdentifier>{04024d18-add6-4381-8cd9-8a7d3107037e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Defines">
-      <UniqueIdentifier>{d8d16bc1-2149-41f4-8de6-cbcd337bba3b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\UIObject\Player_Hp">
       <UniqueIdentifier>{a1b43b96-d8d4-48c5-83d0-0941ea3591ca}</UniqueIdentifier>
     </Filter>
@@ -276,6 +273,9 @@
     </Filter>
     <Filter Include="02.GameObject\Item\Slot">
       <UniqueIdentifier>{2c7276ac-35e5-422f-bd24-cf2f089d2069}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Defines">
+      <UniqueIdentifier>{d8d16bc1-2149-41f4-8de6-cbcd337bba3b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -600,6 +600,18 @@
     <ClInclude Include="..\public\Item_Slot.h">
       <Filter>02.GameObject\Item\Slot</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Item_Selete.h">
+      <Filter>02.GameObject\Item\Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_Info.h">
+      <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quick_Slot_Item.h">
+      <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Item_QuickSlot.h">
+      <Filter>02.GameObject\Item\Slot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -701,9 +713,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Inven_Manager.cpp">
       <Filter>95.Manager\Inven_Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\InvenItem.cpp">
-      <Filter>02.GameObject\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Inventory_Node.cpp">
       <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
@@ -901,6 +910,21 @@
       <Filter>96.SuperClass\UIObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_Slot.cpp">
+      <Filter>02.GameObject\Item\Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_Selete.cpp">
+      <Filter>02.GameObject\Item\Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_Info.cpp">
+      <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\InvenItem.cpp">
+      <Filter>02.GameObject\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quick_Slot_Item.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Item_QuickSlot.cpp">
       <Filter>02.GameObject\Item\Slot</Filter>
     </ClCompile>
   </ItemGroup>

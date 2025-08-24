@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Quick_Slot_Icon.h"
+#include "QuicK_Slot_Item.h"
 
 CQuick_Slot_Icon::CQuick_Slot_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
@@ -49,17 +50,18 @@ HRESULT CQuick_Slot_Icon::Initialize(void* pArg)
 
     if (FAILED(Ready_Components()))
         return E_FAIL;
+    if (FAILED(Ready_ItemSlot()))
+        return E_FAIL;
 
+    m_pGameInstance->Subscribe<Event_Equip_QuickSlot>([&](const Event_Equip_QuickSlot& e)
+        { if (m_iIndex == e.iQuickSlotIndex) Set_Item(e.iItemIndex); });
+      
     return S_OK;
 }
 
 void CQuick_Slot_Icon::Priority_Update(_float fTimeDelta)
 {
-    if (m_pGameInstance->IsKeyDown(DIK_O))
-        m_iITemType = 0;
-
-    if (m_pGameInstance->IsKeyDown(DIK_P))
-        m_iITemType = 1;
+    m_pItemSlot->Priority_Update(fTimeDelta);
 }
 
 void CQuick_Slot_Icon::Update(_float fTimeDelta)
@@ -75,16 +77,22 @@ void CQuick_Slot_Icon::Update(_float fTimeDelta)
         break;
 
     }
+
+    m_pItemSlot->Update(fTimeDelta);
 }
 
 void CQuick_Slot_Icon::Late_Update(_float fTimeDelta)
 {
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
         return;
+    if(m_iItemIndex >= 0)
+        m_pItemSlot->Late_Update(fTimeDelta);
 }
 
 HRESULT CQuick_Slot_Icon::Render()
 {
+        if (FAILED(m_pTextureCom->Bind_Shader_Resource(m_pShaderCom, "g_Texture", 1)))
+        return E_FAIL;
 
     m_pTransformCom->Scale(_float3(m_vSize.x, m_vSize.y, 1.f));
     
@@ -129,6 +137,38 @@ HRESULT CQuick_Slot_Icon::Ready_Components()
     return S_OK;
 }
 
+HRESULT CQuick_Slot_Icon::Ready_ItemSlot()
+{
+    CQuick_Slot_Item* pGameObject = nullptr;
+
+    UIOBJECT_DESC Desc;
+    Desc.iIndex = m_iIndex;
+    Desc.vPos = m_vPos;
+    Desc.vSize.x = m_vSize.x * 0.95;
+    Desc.vSize.y = m_vSize.y * 0.95;
+
+    Desc.vMinUV = { 0.f, 0.f};
+    Desc.vMaxUV = { 1.f, 1.f };
+    pGameObject = dynamic_cast<CQuick_Slot_Item*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Quick_Slot_Item"), &Desc));
+    if (pGameObject == nullptr)
+        return E_FAIL;
+
+
+    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+
+    m_pItemSlot = pGameObject;
+
+    Safe_AddRef(m_pItemSlot);
+    return S_OK;
+}
+
+void CQuick_Slot_Icon::Set_Item(_int iItemIndex)
+{
+    m_iItemIndex = iItemIndex;
+    m_iITemType = g_ItemData[m_iItemIndex].m_iQuickSlotType;
+    m_pItemSlot->Set_Item(iItemIndex);
+}
+
 CQuick_Slot_Icon* CQuick_Slot_Icon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
     CQuick_Slot_Icon* pInstance = new CQuick_Slot_Icon(pDevice, pContext);
@@ -160,4 +200,5 @@ void CQuick_Slot_Icon::Free()
     __super::Free();
 
     Safe_Release(m_pVIBufferCom);
+    Safe_Release(m_pItemSlot);
 }

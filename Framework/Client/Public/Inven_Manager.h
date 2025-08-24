@@ -27,6 +27,7 @@ public:
 	void						Add_Item(class CInvenItem* pItem);
 	_bool						Erase_ItemSlot(class CInvenItem* pItem);
 
+	void						InvenOpen(_bool IsOpen);
 	const INVENTORY_DESC&		Get_InvenData();
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
@@ -45,11 +46,13 @@ private:
 	_uint						m_iSlotNumY = {};
 	_uint						m_iSlotSize = {};
 
+	_bool						m_IsInvenOpen = { false };
+
 private:
 	_bool						AddItem_Check(const _int& SizeX, const _int& SizeY, _int& iItemGridX, _int& iItemGridY);
 
 	_bool						ItemSlot_Check(const _int& pSizeX, const _int& pSizeY, _int iStartX, _int iStartY);
-	_bool						ItemSlot_Check(_int iStartX, _int iStartY, const INVEN_ITEM& Desc);
+	_bool						ItemSlot_Check(_int iStartX, _int iStartY, _int iSizeX, _int iSizeY, const INVEN_ITEM& Desc);
 
 	CInvenItem::ITEM_DESC		Setting_Item(_int iItemIndex, _int iItemGridX, _int iItemGridY);
 

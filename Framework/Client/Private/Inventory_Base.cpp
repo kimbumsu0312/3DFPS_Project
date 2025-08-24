@@ -5,7 +5,7 @@
 #include "Inventory_Coin.h"
 #include "Item_Penal.h"
 #include "Create_Penal.h"
-
+#include "Item_Info.h"
 CInventory_Base::CInventory_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
 }
@@ -47,13 +47,16 @@ HRESULT CInventory_Base::Initialize(void* pArg)
 
 void CInventory_Base::Priority_Update(_float fTimeDelta)
 {
-    Change_Penal();
+    //Change_Penal();
+    __super::Priority_Update(fTimeDelta);
 }
 
 void CInventory_Base::Update(_float fTimeDelta)
 {
     if(m_bIsOpen)
         Opening(fTimeDelta);
+
+    __super::Update(fTimeDelta);
 }
 
 void CInventory_Base::Late_Update(_float fTimeDelta)
@@ -66,6 +69,7 @@ void CInventory_Base::Late_Update(_float fTimeDelta)
 
 HRESULT CInventory_Base::Render()
 {
+    
     if (FAILED(m_pShaderCom->Bind_RawValue("g_Vector", &m_vOpenTex, sizeof(_float4))))
          return E_FAIL;
 
@@ -76,6 +80,7 @@ HRESULT CInventory_Base::Render()
 
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();
+
 
     return S_OK;
 }
@@ -107,6 +112,10 @@ HRESULT CInventory_Base::Ready_Children_Prototype()
         CCreate_Penal::Create(m_pDevice, m_pContext))))
         return E_FAIL;
 
+    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_ItemInfo"),
+        CItem_Info::Create(m_pDevice, m_pContext))))
+        return E_FAIL;
+
     return S_OK;
 }
 
@@ -119,19 +128,28 @@ HRESULT CInventory_Base::Ready_Children()
     _float fTexSizeY = 256.f;
 
     Desc.vPos = { 0.f, -315.f };
-    Desc.vSize = { 66.f * 3.f, 48.f * 1.4f};
-    Desc.vMinUV = {67/ fTexSizeX, 83/ fTexSizeY };
-    Desc.vMaxUV = {110/ fTexSizeX , 115/ fTexSizeY };
+
+    Desc.vSize = { 200.f * 1.5f, 27.f * 2.f };
+    Desc.vMinUV = { 239.f / fTexSizeX, 95.f / 256.f };
+    Desc.vMaxUV = { 438.f / fTexSizeX , 121.f / 256.f };
+
     Desc.iIndex = 0;
     Desc.fRot = 0.f;
     Desc.iTexIndex = 3;
     Desc.iPassIndex = 2;
+    Desc.IsFont = true;
+    Desc.szText = TEXT("æ∆¿Ã≈€");
 
     pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Tex"), &Desc));
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
 
+    Desc.IsFont = false;
+    Desc.szText = {};
+
+
+    /*
     Desc.vPos = { -125.f, -317.f };
     Desc.vSize = { 34.f, 38.f };
     Desc.vMinUV = { 36 / fTexSizeX, 84 / fTexSizeY };
@@ -169,7 +187,8 @@ HRESULT CInventory_Base::Ready_Children()
             return E_FAIL; 
         Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
     }
-     
+     */
+
     Desc.vPos = { 300.f, -320.f };
     Desc.vSize = { 40.f, 40.f };
     Desc.vMinUV = { 589.f / 2048.f, 13.f / 2048.f };
@@ -200,7 +219,6 @@ HRESULT CInventory_Base::Ready_Children()
     
     m_pCreatePenal = static_cast<CCreate_Penal*>(pGameObject);
     Safe_AddRef(m_pCreatePenal);
-
 
     return S_OK;
 }

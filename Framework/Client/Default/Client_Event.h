@@ -57,4 +57,19 @@ namespace Client
 		_uint itype;
 	}Event_Player_Hp_UI_Open;
 
+	typedef struct Event_Inven_Info
+	{
+		_uint iItemIndex;
+	}Event_Inven_Info;
+
+	typedef struct Event_Equip_QuickSlot
+	{
+		_uint iItemIndex;
+		_uint iQuickSlotIndex;
+	}Event_Equip_QuickSlot;
+
+	typedef struct Event_QUICK_UI_OPEN
+	{
+	}Event_QUICK_UI_OPEN;
+
 }

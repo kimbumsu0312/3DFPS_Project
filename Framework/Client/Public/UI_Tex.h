@@ -11,8 +11,10 @@ class CUI_Tex final : public CUIObject
 public:
 	typedef struct tagInven_Tex_Desc : public CUIObject::UIOBJECT_DESC
 	{
-		_uint iTexIndex{};
-		_uint iPassIndex{};
+		_uint		iTexIndex{};
+		_uint		iPassIndex{};
+		_wstring	szText{};
+		_bool		IsFont =false;
 	}UI_TEX_DESC;
 private:
 	CUI_Tex(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -33,9 +35,13 @@ private:
 	_float						m_fRotation = {};
 	_uint						m_iTexIndex = {};
 	_uint						m_iPassIndex = {};
+	
+	_wstring					m_szText = {};
+	_bool						m_bIsFont = {};
 
 private:
 	HRESULT						Ready_Components();
+	void						Render_Font();
 
 public:
 	static CUI_Tex* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

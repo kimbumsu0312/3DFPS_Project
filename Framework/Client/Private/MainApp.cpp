@@ -10,6 +10,9 @@
 #include "Mouse_Click_Fx.h"
 #include "Animatio_Controller.h"
 #include "Item_Slot.h"
+#include "Item_Selete.h"
+#include "Item_QuickSlot.h"
+
 CMainApp::CMainApp() : m_pGameInstance{ CGameInstance::GetInstance()}
 {
 	Safe_AddRef(m_pGameInstance);
@@ -70,7 +73,6 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Render_Begin(&vClearColor);
 
 	m_pGameInstance->Draw();
-	m_pGameInstance->DrawText(TEXT("Font_Godic"), TEXT("배고파 피곤해"), _float2(100.f, 0.f));
 
 	m_pGameInstance->Render_End();
 
@@ -166,6 +168,15 @@ HRESULT CMainApp::Ready_PrototypeUI_ForStatic()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Item_Slot"),
 		CItem_Slot::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Item_Slot_Quick"),
+		CItem_QuikSlot::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Item_Slot_Selete"),
+		CItem_Selete::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Object_Mouse_Click_Fx"),
 		CMouse_Click_Fx::Create(m_pDevice, m_pContext))))

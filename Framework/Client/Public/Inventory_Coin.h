@@ -27,7 +27,7 @@ private:
 
 private:
 	HRESULT						Ready_Components();
-
+	void						Render_Font();
 public:
 	static CInventory_Coin*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;

@@ -28,6 +28,9 @@ HRESULT CUI_Tex::Initialize(void* pArg)
     m_fRotation = Desc->fRot;
     m_iTexIndex = Desc->iTexIndex;
     m_iPassIndex = Desc->iPassIndex;
+
+    m_szText = Desc->szText;
+    m_bIsFont = Desc->IsFont;
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
@@ -67,6 +70,9 @@ HRESULT CUI_Tex::Render()
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();
 
+    if(m_bIsFont)
+        Render_Font();
+
     return S_OK;
 }
 
@@ -77,6 +83,17 @@ HRESULT CUI_Tex::Ready_Components()
         return E_FAIL;
 
     return S_OK;
+}
+
+void CUI_Tex::Render_Font()
+{
+    _float2 vFontPos = {};
+    vFontPos.x = m_vPos.x;
+    vFontPos.y = m_vPos.y;
+
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), m_szText.c_str(), _float2{vFontPos.x + 2, vFontPos.y + 2}, _fvector{0.f, 0.f, 0.f, 0.8f}, 0.f, _float2{0.5f, 0.5f}, {0.8f, 0.8f});
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), m_szText.c_str(), vFontPos, _fvector{1.f, 1.f, 1.f, 0.8f}, 0.f, _float2{0.5f, 0.5f}, {0.8f, 0.8f});
+
 }
 
 CUI_Tex* CUI_Tex::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -44,6 +44,7 @@ private:
 	void						Opening(_float fTimeDelta);
 	void						Change_Penal();
 	void						Selete_Penal(_uint iIndex);
+
 public:
 	static CInventory_Base*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;

@@ -16,6 +16,8 @@ namespace Client
 		_int iInvenSizeY;
 		_int iItemGridX;
 		_int iItemGridY;
+
+		_int iItemCount;
 	}INVEN_ITEM;
 
 	//스테이터스 관련 구조체

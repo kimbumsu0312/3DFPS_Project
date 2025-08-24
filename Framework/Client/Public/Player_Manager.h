@@ -17,6 +17,7 @@ public:
 	void			Damage_On() { m_bIsDamage = false; }
 
 	_vector			Get_PlayerPos() { return m_vPlayerPos; }
+	_int			Get_Coin() { return m_iCoin; }
 	const _int&		Get_Damage() { return m_iDamage; }
 	void			Set_Damage(_int iDamage) { m_iDamage = iDamage; }
 private:
@@ -24,7 +25,7 @@ private:
 	_float			m_fMaxHp = {};
 	_float			m_fPreHp = {};
 	_float			m_fCulHp = {};
-
+	_int			m_iCoin = {};
 	_int			m_iDamage = {};
 	_vector			m_vPlayerPos = {};
 

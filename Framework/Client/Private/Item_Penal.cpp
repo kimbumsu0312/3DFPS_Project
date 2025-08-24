@@ -2,6 +2,7 @@
 #include "Item_Penal.h"
 #include "UI_Slot.h"
 #include "Inven_Manager.h"
+#include "Item_Info.h"
 
 CItem_Penal::CItem_Penal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
@@ -39,10 +40,17 @@ HRESULT CItem_Penal::Initialize(void* pArg)
 
 void CItem_Penal::Priority_Update(_float fTimeDelta)
 {
+    if (!m_bIsSelete)
+        return;
+    __super::Priority_Update(fTimeDelta);
 }
 
 void CItem_Penal::Update(_float fTimeDelta)
 {
+    if (!m_bIsSelete)
+        return;
+    __super::Update(fTimeDelta);
+
 }
 
 void CItem_Penal::Late_Update(_float fTimeDelta)
@@ -98,7 +106,7 @@ HRESULT CItem_Penal::Ready_Children()
     Desc.iIndex = 0;
     Desc.iMaxIndex = InvenDesc.iSlotNumX;
     Desc.iTexIndex = 1;
-
+   
         
     for (_uint i = 0; i < InvenDesc.iSlotNumY; ++i)
     {
@@ -112,6 +120,24 @@ HRESULT CItem_Penal::Ready_Children()
             Desc.iIndex += 1;
         }
     }
+
+    CItem_Info::UI_TEX_DESC InfoDesc;
+
+    InfoDesc.vPos = { 0.f, 300.f };
+    InfoDesc.vSize = { 200.f * 4.f, 46.f * 3.f };
+    InfoDesc.vMinUV = { 0 / fTexSizeX, 210 / 256.f };
+    InfoDesc.vMaxUV = { 200 / fTexSizeX , 256 / 256. };
+
+    InfoDesc.iIndex = 0;
+    InfoDesc.fRot = 0.f;
+    InfoDesc.iTexIndex = 3;
+    InfoDesc.iPassIndex = 2;
+
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Inven_ItemInfo"), &InfoDesc));
+    if (nullptr == pGameObject)
+        return E_FAIL;
+    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+
 
     return S_OK;
 }

@@ -26,9 +26,14 @@ private:
 	_float4						m_vBackGroundColor = {};
 	_int						m_iIndex = {};
 	_int						m_iITemType = {};
+	_int						m_iItemIndex = { -1};
+	class CQuick_Slot_Item*		m_pItemSlot = {nullptr};
+
 private:
 	HRESULT						Ready_Components();
+	HRESULT						Ready_ItemSlot();
 
+	void						Set_Item(_int iItemIndex);
 public:
 	static CQuick_Slot_Icon*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;

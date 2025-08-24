@@ -17,8 +17,16 @@ HRESULT CCustomFont::Initialize(const _tchar* pFontFilePath)
 void CCustomFont::DrawText(const _tchar* pText, const _float2& vPosition, _fvector vColor, _float fRadian, const _float2& vOrigin, const _float2& vScale)
 {
 	m_pBatch->Begin();
+	_float2 vPos = vPosition;
+	_vector textSize = m_pFont->MeasureString(pText);
 
-	m_pFont->DrawString(m_pBatch, pText, vPosition, vColor, fRadian, vOrigin, vScale);
+	_float textWidth = (XMVectorGetX(textSize) * vScale.x) * vOrigin.x;
+	_float textHight = (XMVectorGetY(textSize) * vScale.y) * vOrigin.y;
+	vPos.x -= textWidth;
+	vPos.y -= textHight;
+
+
+	m_pFont->DrawString(m_pBatch, pText, vPos, vColor, fRadian, vOrigin, vScale);
 
 	m_pBatch->End();
 }

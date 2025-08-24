@@ -3,7 +3,7 @@
 #include "Inventory_Base.h"
 #include "UI_Tex.h"
 #include "UI_Slot.h"
-
+#include "Inven_Manager.h"
 CInventory::CInventory(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
 }
@@ -38,7 +38,10 @@ HRESULT CInventory::Initialize(void* pArg)
     if (FAILED(Ready_Children()))
         return E_FAIL;
 
-    m_pGameInstance->Subscribe<Event_Inventory_Open>([&](const Event_Inventory_Open& e) { m_bIsOpen = e.bIsOpen; });
+    m_pGameInstance->Subscribe<Event_Inventory_Open>([&](const Event_Inventory_Open& e) 
+    { m_bIsOpen = e.bIsOpen;
+      CInven_Manager::GetInstance()->InvenOpen(e.bIsOpen);
+    });
 
     return S_OK;
 }
@@ -69,6 +72,7 @@ void CInventory::Late_Update(_float fTimeDelta)
 
 HRESULT CInventory::Render()
 {
+   
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
         return E_FAIL;
 

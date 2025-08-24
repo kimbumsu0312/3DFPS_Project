@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Inventory_Coin.h"
+#include "Player_Manager.h"
+
 CInventory_Coin::CInventory_Coin(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
 }
@@ -58,7 +60,7 @@ HRESULT CInventory_Coin::Render()
 
     m_pVIBufferCom->Bind_Resources();
     m_pVIBufferCom->Render();
-
+    Render_Font();
     return S_OK;
 }
 
@@ -69,6 +71,28 @@ HRESULT CInventory_Coin::Ready_Components()
         return E_FAIL;
 
     return S_OK;
+}
+
+void CInventory_Coin::Render_Font()
+{
+    _float2 vFontPos = {};
+    vFontPos.x = m_vPos.x + 170.f;
+    vFontPos.y = m_vPos.y;
+
+    _tchar szCountChar[MAX_PATH] = {  };
+    _int iCoin = CPlayer_Manager::GetInstance()->Get_Coin();
+    wsprintf(szCountChar, L"%d", iCoin);
+    
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, 0.8f }, 0.f, _float2{ 1.f,0.5f }, { 1.2f, 1.2f });
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, vFontPos, _fvector{ 1.f, 1.f, 1.f, 0.8f }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
+
+    vFontPos.x = m_vPos.x + 200.f;
+    vFontPos.y = m_vPos.y + 5.f;
+    _wstring szText = TEXT("Lei");
+
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), szText.c_str(), _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, 0.8f }, 0.f, _float2{ 1.f,0.5f }, { 0.8f, 0.8f });
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), szText.c_str(), vFontPos, _fvector{ 1.f, 1.f, 1.f, 0.8f }, 0.f, _float2{ 1.f, 0.5f }, { 0.8f, 0.8f });
+
 }
 
 CInventory_Coin* CInventory_Coin::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

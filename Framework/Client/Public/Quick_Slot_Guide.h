@@ -26,11 +26,12 @@ private:
 	_float4						m_vBackGroundColor = {};
 	_int						m_iIndex = {};
 
+	_wstring					m_szIndex = {};
 private:
 	HRESULT						Ready_Components();
-
+	void						Render_Font();
 public:
-	static CQuick_Slot_Guide*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CQuick_Slot_Guide*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;
 	virtual void				Free() override;
 };

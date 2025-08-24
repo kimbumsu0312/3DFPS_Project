@@ -21,12 +21,15 @@ public:
 	virtual void				Late_Update(_float fTimeDelta);
 	virtual HRESULT				Render();
 
+	void						Open_UI();
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	_float						m_fAlpha = {};
+	_float						m_fDelay = {};
+
 	_bool						m_bIsOpen = {};
 	_bool						m_bIsClose = {};
-
+	
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children_Prototype();

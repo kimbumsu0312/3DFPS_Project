@@ -6,18 +6,17 @@ class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
-class CItem_Slot final : public CButton
+class CItem_Selete final : public CButton
 {
 public:
 	typedef struct Slot_Desc {
 		_int itemIndex;
 		_float2 vPos;
-	}ITEM_SLOT_DESC;
-
+	}ITEM_SELETE_DESC;
 private:
-	CItem_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CItem_Slot(const CItem_Slot& Prototype);
-	virtual ~CItem_Slot() = default;
+	CItem_Selete(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CItem_Selete(const CItem_Selete& Prototype);
+	virtual ~CItem_Selete() = default;
 
 public:
 	virtual HRESULT				Initialize_Prototype();
@@ -28,25 +27,36 @@ public:
 	virtual HRESULT				Render();
 
 public:
-	HRESULT						Item_Init(const ITEM_SLOT_DESC& pDesc);
+	HRESULT						Item_Init(const ITEM_SELETE_DESC& pDesc);
 	void						Update_Pos(_float2 vPos);
 	void						IsRotation(_float fAngle);
-	void						Equip_QuickSlot();
+	void						IsSelete(_bool IsSelete);
+	void						IsClick(_bool IsSelete);
+	_bool						IsClick();
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
+	class CItem_QuikSlot*		m_pItemGuide[5] = {nullptr};
+	
 
-	class CItem_Selete*			m_pItemSelete = { nullptr };
+
 	_uint						m_iPassIndex = {};
 	_uint						m_iItemIndex = {};
 
+	_float						m_fAlpha = {};
+	_float4						m_fColor = {};
+
+	_float						m_fAlphaTime = {};
+	_bool						m_bIsSelete = { false };
+	_bool						m_bIsClick = { false };
 private:
 	HRESULT						Ready_Components();
-	HRESULT						Ready_Children();
+	HRESULT						Ready_Childeren();
 	void						Default_Slot();
 
+
 public:
-	static CItem_Slot*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CGameObject*		Clone(void* pArg) override;
+	static CItem_Selete* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject* Clone(void* pArg) override;
 	virtual void				Free() override;
 };
 NS_END

@@ -26,6 +26,7 @@ public:
 	void						Selete_Penal(_uint iIndex);
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
+	class CItem_Info*			m_pItemInfo = { nullptr };
 	_bool						m_bIsSelete = { false };
 	_int						m_iIndex = {};
 

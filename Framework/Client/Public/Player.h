@@ -78,7 +78,7 @@ private:
 	HRESULT						Ready_PartObjects();
 	HRESULT						Ready_StateObjects();
 
-	HRESULT						Add_StateObject(const _wstring& strStateObjectTag, CPlayerState* pStateObject);
+	HRESULT						Add_StateObject(const _wstring& strStateObjectTag, class CPlayerState* pStateObject);
 	class CPlayerState*			Find_StateObject(const _wstring& strPartObjectTag);
 
 	void						InputKey_MoveState(_float fTimeDelta);

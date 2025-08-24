@@ -15,6 +15,7 @@ HRESULT CPlayer_Manager::Initialize()
 	m_fMaxHp = 100;
 	m_fCulHp = m_fMaxHp;
 	m_fPreHp = 0.f;
+	m_iCoin = 1000;
 	return S_OK;
 }
 

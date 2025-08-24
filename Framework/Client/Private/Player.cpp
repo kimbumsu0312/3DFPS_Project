@@ -374,22 +374,26 @@ void CPlayer::InputKey_WeaponChange(_float fTimeDelta)
 	if (m_pGameInstance->IsKeyDown(DIK_1) && m_iCulWeponState != ENUM_CLASS(PLAYER_WEAPON::KNIFE))
 	{
 		m_iNextWeponState = ENUM_CLASS(PLAYER_WEAPON::KNIFE);
+		m_pGameInstance->Publish(Event_QUICK_UI_OPEN{});
 		m_AttackState.isWeaponSwap = true;
 	}
 
 	if (m_pGameInstance->IsKeyDown(DIK_2) && m_iCulWeponState != ENUM_CLASS(PLAYER_WEAPON::SHOTGUN))
 	{
 		m_iNextWeponState = ENUM_CLASS(PLAYER_WEAPON::SHOTGUN);
+		m_pGameInstance->Publish(Event_QUICK_UI_OPEN{});
 		m_AttackState.isWeaponSwap = true;
 	}
 	if (m_pGameInstance->IsKeyDown(DIK_3) && m_iCulWeponState != ENUM_CLASS(PLAYER_WEAPON::SNIPER))
 	{
 		m_iNextWeponState = ENUM_CLASS(PLAYER_WEAPON::SNIPER);
+		m_pGameInstance->Publish(Event_QUICK_UI_OPEN{});
 		m_AttackState.isWeaponSwap = true;
 	}
 	if (m_pGameInstance->IsKeyDown(DIK_4) && m_iCulWeponState != ENUM_CLASS(PLAYER_WEAPON::HANDGUN))
 	{
 		m_iNextWeponState = ENUM_CLASS(PLAYER_WEAPON::HANDGUN);
+		m_pGameInstance->Publish(Event_QUICK_UI_OPEN{});
 		m_AttackState.isWeaponSwap = true;
 	}
 	if (m_iPreWeponState != m_iCulWeponState)
