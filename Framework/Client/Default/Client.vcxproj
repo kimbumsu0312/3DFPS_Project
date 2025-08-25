@@ -195,6 +195,7 @@
     <ClInclude Include="..\public\Idle_Daniela.h" />
     <ClInclude Include="..\public\Idle_Player.h" />
     <ClInclude Include="..\public\Announce_Icon.h" />
+    <ClInclude Include="..\public\SpawnItem.h" />
     <ClInclude Include="..\public\Item_Info.h" />
     <ClInclude Include="..\public\Item_Penal.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
@@ -260,6 +261,7 @@
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\public\WeaponObject.h" />
     <ClInclude Include="..\public\WeaponSwap_Player.h" />
+    <ClInclude Include="..\public\WorldItem.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Client_Event.h" />
     <ClInclude Include="Client_Item.h" />
@@ -307,6 +309,7 @@
     <ClCompile Include="..\private\Idle_Daniela.cpp" />
     <ClCompile Include="..\private\Idle_Player.cpp" />
     <ClCompile Include="..\private\Announce_Icon.cpp" />
+    <ClCompile Include="..\private\SpawnItem.cpp" />
     <ClCompile Include="..\private\Item_Info.cpp" />
     <ClCompile Include="..\private\Item_Penal.cpp" />
     <ClCompile Include="..\private\Create_Penal.cpp" />
@@ -368,6 +371,7 @@
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\WeaponObject.cpp" />
     <ClCompile Include="..\private\WeaponSwap_Player.cpp" />
+    <ClCompile Include="..\private\WorldItem.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

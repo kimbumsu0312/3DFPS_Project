@@ -241,14 +241,8 @@
     <Filter Include="02.GameObject\Spawner\MonSpawner\SpawnPoint">
       <UniqueIdentifier>{b6d8e30b-8142-47fb-8ec8-0cd9bb378c0c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Item">
-      <UniqueIdentifier>{49da3a7c-86c6-461d-ac35-62bef35a2952}</UniqueIdentifier>
-    </Filter>
     <Filter Include="95.Manager\Inven_Manager">
       <UniqueIdentifier>{d6152359-cdde-4ae0-828d-f97188b5c5bf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Item\Slot">
-      <UniqueIdentifier>{2c7276ac-35e5-422f-bd24-cf2f089d2069}</UniqueIdentifier>
     </Filter>
     <Filter Include="99.Defines">
       <UniqueIdentifier>{d8d16bc1-2149-41f4-8de6-cbcd337bba3b}</UniqueIdentifier>
@@ -276,6 +270,15 @@
     </Filter>
     <Filter Include="02.GameObject\Player\PlayerState\State\WeponSwap">
       <UniqueIdentifier>{dc01baf9-0b9e-4b12-bfbb-2573f53210b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\2DItem">
+      <UniqueIdentifier>{49da3a7c-86c6-461d-ac35-62bef35a2952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\2DItem\Slot">
+      <UniqueIdentifier>{2c7276ac-35e5-422f-bd24-cf2f089d2069}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\3DItem">
+      <UniqueIdentifier>{12e3b22c-f3d0-4f19-b110-6d8489370f7e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -385,7 +388,7 @@
       <Filter>95.Manager\Inven_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\InvenItem.h">
-      <Filter>02.GameObject\Item</Filter>
+      <Filter>02.GameObject\2DItem</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Inventory_Node.h">
       <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
@@ -598,10 +601,10 @@
       <Filter>96.SuperClass\UIObject</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Item_Slot.h">
-      <Filter>02.GameObject\Item\Slot</Filter>
+      <Filter>02.GameObject\2DItem\Slot</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Item_Selete.h">
-      <Filter>02.GameObject\Item\Slot</Filter>
+      <Filter>02.GameObject\2DItem\Slot</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Item_Info.h">
       <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
@@ -610,10 +613,16 @@
       <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Item_QuickSlot.h">
-      <Filter>02.GameObject\Item\Slot</Filter>
+      <Filter>02.GameObject\2DItem\Slot</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Announce_Icon.h">
       <Filter>02.GameObject\UIObject\Announce\Item_Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\WorldItem.h">
+      <Filter>02.GameObject\3DItem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpawnItem.h">
+      <Filter>02.GameObject\3DItem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -913,25 +922,31 @@
       <Filter>96.SuperClass\UIObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_Slot.cpp">
-      <Filter>02.GameObject\Item\Slot</Filter>
+      <Filter>02.GameObject\2DItem\Slot</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_Selete.cpp">
-      <Filter>02.GameObject\Item\Slot</Filter>
+      <Filter>02.GameObject\2DItem\Slot</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_Info.cpp">
       <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
     </ClCompile>
     <ClCompile Include="..\private\InvenItem.cpp">
-      <Filter>02.GameObject\Item</Filter>
+      <Filter>02.GameObject\2DItem</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Quick_Slot_Item.cpp">
       <Filter>02.GameObject\UIObject\Hud\Quick_Slot\ETC</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Item_QuickSlot.cpp">
-      <Filter>02.GameObject\Item\Slot</Filter>
+      <Filter>02.GameObject\2DItem\Slot</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Announce_Icon.cpp">
       <Filter>02.GameObject\UIObject\Announce\Item_Icon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\WorldItem.cpp">
+      <Filter>02.GameObject\3DItem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpawnItem.cpp">
+      <Filter>02.GameObject\3DItem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
