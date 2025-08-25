@@ -26,25 +26,25 @@ HRESULT CCamera_Player::Initialize(void* pArg)
         return E_FAIL;
     m_DefultWorldMatrix = m_pTransformCom->Get_WorldMatrix();
 
-    //m_pGameInstance->Subscribe<Event_Camera_Zoom>([&](const Event_Camera_Zoom& e) {
-    //    switch (e.eState)
-    //    {
-    //    case CAMERA_STATE::ZOOM_IN:
-    //        m_bIsZoomIn = true;
-    //        break;
-    //    case CAMERA_STATE::ZOOM_OUT:
-    //        m_bIsZoomout = true;
-    //        break;
-    //    case CAMERA_STATE::ZOOM_RESET:
-    //        m_fFovy = m_fResetFovy;
-    //        m_bIsZoomIn = false;
-    //        m_bIsZoomout = false;
-    //        return;
-    //    }
-    //    m_fResetFovy = m_fFovy;
-    //    m_fMoveFovy = e.fZoomFov;
-    //    m_fZoomSpeed = e.fZoomSpeed;
-    //    });
+    m_pGameInstance->Subscribe<Event_Camera_Zoom>([&](const Event_Camera_Zoom& e) {
+        switch (e.eState)
+        {
+        case CAMERA_STATE::ZOOM_IN:
+            m_bIsZoomIn = true;
+            break;
+        case CAMERA_STATE::ZOOM_OUT:
+            m_bIsZoomout = true;
+            break;
+        case CAMERA_STATE::ZOOM_RESET:
+            m_fFovy = m_fResetFovy;
+            m_bIsZoomIn = false;
+            m_bIsZoomout = false;
+            return;
+        }
+        m_fResetFovy = m_fFovy;
+        m_fMoveFovy = e.fZoomFov;
+        m_fZoomSpeed = e.fZoomSpeed;
+        });
     return S_OK;
 }
 
@@ -78,12 +78,13 @@ void CCamera_Player::Zoom_In(_float fTimeDelta)
 {
     if (!m_bIsZoomIn)
         return;
+    _float fRadinan = XMConvertToRadians(m_fMoveFovy);
 
-    if (XMConvertToRadians(m_fMoveFovy) < m_fFovy)
+    if (fRadinan < m_fFovy)
         m_fFovy -= XMConvertToRadians(m_fZoomSpeed * fTimeDelta);
     else
     {
-        m_fFovy = XMConvertToRadians(m_fMoveFovy);
+        m_fFovy = fRadinan;
         m_bIsZoomIn = false;
     }
 }

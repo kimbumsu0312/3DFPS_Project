@@ -56,7 +56,7 @@ void CUI_Tex::Update(_float fTimeDelta)
 
 void CUI_Tex::Late_Update(_float fTimeDelta)
 {
-    if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
+    if (FAILED(m_pGameInstance->Add_RenderGroup(m_eRanderGroup, this)))
         return;
 }
 
@@ -74,6 +74,22 @@ HRESULT CUI_Tex::Render()
         Render_Font();
 
     return S_OK;
+}
+
+void CUI_Tex::Set_Size(_float2 vSize)
+{
+    m_vSize = vSize;
+}
+
+void CUI_Tex::Set_RenderGroup(RENDERGROUP eRenderGroup)
+{
+    m_eRanderGroup = eRenderGroup;
+}
+
+void CUI_Tex::Set_Font(_bool isRender, _wstring szText)
+{
+    m_bIsFont = isRender;
+    m_szText = szText;
 }
 
 HRESULT CUI_Tex::Ready_Components()

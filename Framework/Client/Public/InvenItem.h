@@ -46,7 +46,7 @@ private:
 	class CItem_Slot*		m_pItemSlot = { nullptr };
 
 	INVEN_ITEM				m_ItemData = {};
-	_uint					m_iPassIndex = { 8 };
+	_uint					m_iPassIndex = { 2 };
 	_uint					m_iTexIndex = { 1 };
 
 	_bool					m_bIsSelete = { false };

@@ -20,8 +20,7 @@ HRESULT CAim_Pistol::Initialize_Prototype()
 HRESULT CAim_Pistol::Initialize(void* pArg)
 {
     _float fTexSize = 512.f;
-    m_vMinUV = { 128.f / fTexSize, 3.f / fTexSize };
-    m_vMaxUV = { 139.f / fTexSize, 16.f / fTexSize };
+
     m_vLocalPos.x = g_iWinSizeX >> 1;
     m_vLocalPos.y = g_iWinSizeY >> 1;
     m_vLocalSize.x = 11.f;
@@ -31,6 +30,9 @@ HRESULT CAim_Pistol::Initialize(void* pArg)
 
     if (FAILED(__super::Initialize()))
         return E_FAIL;
+
+    m_vMinUV = { 128.f / fTexSize, 3.f / fTexSize };
+    m_vMaxUV = { 139.f / fTexSize, 16.f / fTexSize };
 
     if (FAILED(Ready_Components()))
         return E_FAIL;
@@ -168,7 +170,7 @@ void CAim_Pistol::KeyInput()
         {
             m_bIsZoomIn = true;
             m_pGameInstance->Publish(Event_HUD_GUN_AIM{ true });
-            m_pGameInstance->Publish(Event_Camera_Zoom{ CAMERA_STATE::ZOOM_IN, 50.f, 50.f });
+            m_pGameInstance->Publish(Event_Camera_Zoom{ CAMERA_STATE::ZOOM_IN, 50.f, 40.f });
         }
     }
 

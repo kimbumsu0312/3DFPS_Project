@@ -24,20 +24,29 @@ public:
 
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
+	class CAnnounce_Icon*		m_pIcon	= { nullptr };
+	class CUI_Tex*				m_pSlot = { nullptr };
+	class CUI_Tex*				m_pInfo = { nullptr };
+
+	_int						m_iITemType = {};
 	_float						m_fAlpha = {};
 	_bool						m_bIsOpen = {};
 	_bool						m_bIsClose = {};
 	_float						m_fIsOpenTime = {};
 
+	RENDERGROUP					m_eRnderGroup = { RENDERGROUP::UI };
 private:
+	HRESULT						Ready_Children_Prototype();
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children();
 
-	void						UIOpen();
+	void						UIOpen(_int iType, _int iItemIndex, _wstring szFont, RENDERGROUP eRenderGroup);
 	void						UIAlpha_OnOff(_float fTimeDelta);
+
+
 public:
-	static CAnnounce* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CGameObject* Clone(void* pArg) override;
+	static CAnnounce*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject*		Clone(void* pArg) override;
 	virtual void				Free() override;
 };
 

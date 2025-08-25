@@ -20,16 +20,17 @@ HRESULT CAim_Sniper::Initialize_Prototype()
 HRESULT CAim_Sniper::Initialize(void* pArg)
 {
     _float fTexSize = 512.f;
-    m_vMinUV = { 0.f, 0.f };
-    m_vMaxUV = { 1.f, 1.f };
     m_vLocalPos.x = g_iWinSizeX >> 1;
     m_vLocalPos.y = g_iWinSizeY >> 1;
     m_vLocalSize.x = g_iWinSizeX;
     m_vLocalSize.y = g_iWinSizeY;
-
+    m_eWeapon_Type = WEAPON_TYPE::SNIPER;
     if (FAILED(__super::Initialize()))
         return E_FAIL;
 
+    m_vMinUV = { 0.f, 0.f };
+    m_vMaxUV = { 1.f, 1.f };
+    
     if (FAILED(Ready_Components()))
         return E_FAIL;
 
@@ -37,8 +38,7 @@ HRESULT CAim_Sniper::Initialize(void* pArg)
         return E_FAIL;
 
     m_pGameInstance->Subscribe<Event_Weapon_Selete>([&](const Event_Weapon_Selete& e)
-        { if (e.eType == m_eWeapon_Type) { m_bIsSelete = true; }
-        else { m_bIsSelete = false; } });
+        { e.eType == m_eWeapon_Type ? m_bIsSelete = true : m_bIsSelete = false; } );
 
     m_pGameInstance->Subscribe<Event_HUD_GUN>([&](const Event_HUD_GUN& e) { if (m_bIsSelete) { m_bZoom = e.bZoom; } });
     m_pGameInstance->Subscribe<Hud_Weapon_Shoting>([&](const Hud_Weapon_Shoting& e) { if (m_bIsSelete) { Shoting(); } });
@@ -160,12 +160,13 @@ void CAim_Sniper::KeyInput()
         {
             m_bIsZoomIn = true;
             m_pGameInstance->Publish(Event_HUD_GUN_AIM{ true });
-            m_pGameInstance->Publish(Event_Camera_Zoom{ CAMERA_STATE::ZOOM_IN, 130.f, 30.f });
+            m_pGameInstance->Publish(Event_Camera_Zoom{ CAMERA_STATE::ZOOM_IN, 130.f, 20.f });
         }
     }
 
     if (m_pGameInstance->IsMouseUp(MOUSEKEYSTATE::RB))
     {
+        m_bIsZoomIn = false;
         m_pGameInstance->Publish(Event_HUD_GUN_AIM{ false });
         m_pGameInstance->Publish(Event_Camera_Zoom{ CAMERA_STATE::ZOOM_RESET, 0.f, 0.f });
     }

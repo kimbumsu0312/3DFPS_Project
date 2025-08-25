@@ -29,6 +29,10 @@ public:
 	virtual void				Late_Update(_float fTimeDelta);
 	virtual HRESULT				Render();
 
+public:
+	void						Set_Size(_float2 vSize);
+	void						Set_RenderGroup(RENDERGROUP eRenderGroup);
+	void						Set_Font(_bool isRender,_wstring szText);
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	_int						m_iIndex = {};
@@ -38,7 +42,7 @@ private:
 	
 	_wstring					m_szText = {};
 	_bool						m_bIsFont = {};
-
+	RENDERGROUP					m_eRanderGroup = { RENDERGROUP::UI };
 private:
 	HRESULT						Ready_Components();
 	void						Render_Font();

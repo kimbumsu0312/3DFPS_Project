@@ -21,8 +21,6 @@ HRESULT CAim_Shotgun::Initialize_Prototype()
 HRESULT CAim_Shotgun::Initialize(void* pArg)
 {
     _float fTexSize = 512.f;
-    m_vMinUV = { 142.f / fTexSize, 94.f / fTexSize };
-    m_vMaxUV = { 194.f / fTexSize, 144.f / fTexSize };
     m_vLocalPos.x = g_iWinSizeX >> 1;
     m_vLocalPos.y = g_iWinSizeY >> 1;
     m_vLocalSize.x = 50.f;
@@ -32,6 +30,9 @@ HRESULT CAim_Shotgun::Initialize(void* pArg)
 
     if (FAILED(__super::Initialize()))
         return E_FAIL;
+
+    m_vMinUV = { 142.f / fTexSize, 94.f / fTexSize };
+    m_vMaxUV = { 194.f / fTexSize, 144.f / fTexSize };
 
     if (FAILED(Ready_Components()))
         return E_FAIL;
@@ -162,12 +163,13 @@ void CAim_Shotgun::KeyInput()
         {
             m_bIsZoomIn = true;
             m_pGameInstance->Publish(Event_HUD_GUN_AIM{ true });
-            m_pGameInstance->Publish(Event_Camera_Zoom{ CAMERA_STATE::ZOOM_IN, 30.f, 55.f });
+            m_pGameInstance->Publish(Event_Camera_Zoom{ CAMERA_STATE::ZOOM_IN, 30.f, 35.f });
         }
     }
 
     if (m_pGameInstance->IsMouseUp(MOUSEKEYSTATE::RB))
     {
+        m_bIsZoomIn = false;
         m_pGameInstance->Publish(Event_HUD_GUN_AIM{ false });
         m_pGameInstance->Publish(Event_Camera_Zoom{ CAMERA_STATE::ZOOM_RESET, 0.f, 0.f });
     }

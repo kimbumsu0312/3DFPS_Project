@@ -153,7 +153,6 @@ HRESULT CQuick_Slot_Icon::Ready_ItemSlot()
     if (pGameObject == nullptr)
         return E_FAIL;
 
-
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
 
     m_pItemSlot = pGameObject;
@@ -167,6 +166,9 @@ void CQuick_Slot_Icon::Set_Item(_int iItemIndex)
     m_iItemIndex = iItemIndex;
     m_iITemType = g_ItemData[m_iItemIndex].m_iQuickSlotType;
     m_pItemSlot->Set_Item(iItemIndex);
+
+    _wstring szText = TEXT("'") + g_ItemData[m_iItemIndex].m_szName + TEXT("' À» Äü½½·Ô¿¡ ÀåÂøÇÏ¿´½À´Ï´Ù.");
+    m_pGameInstance->Publish(Event_Announce_UI_OPEN{ 1, (_uint)iItemIndex,szText, RENDERGROUP::LATE_UI});
 }
 
 CQuick_Slot_Icon* CQuick_Slot_Icon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

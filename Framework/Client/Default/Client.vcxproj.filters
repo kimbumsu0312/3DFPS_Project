@@ -211,27 +211,6 @@
     <Filter Include="02.GameObject\Player\PlayerState\State">
       <UniqueIdentifier>{3bede824-e979-478f-a8a3-484e328807f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Player\PlayerState\State\Action">
-      <UniqueIdentifier>{6e66e602-1d8a-4155-b98f-6fce3e8cb3cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Player\PlayerState\State\Action\Reload">
-      <UniqueIdentifier>{1d851e46-3185-497b-a86a-82ffa43770bd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Player\PlayerState\State\Action\Attack">
-      <UniqueIdentifier>{017e5d35-1f22-41ef-b9ef-078584f6bec3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Player\PlayerState\State\Action\Aim">
-      <UniqueIdentifier>{ba1f2610-4302-4794-ad99-fc5528f9369f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Player\PlayerState\State\Action\Guard">
-      <UniqueIdentifier>{73195018-432f-4243-bba1-7fe1455e3363}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Player\PlayerState\State\Action\Idle">
-      <UniqueIdentifier>{211497e3-ea5c-4832-b27f-1eb9a11c5822}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Player\PlayerState\State\Action\WeponSwap">
-      <UniqueIdentifier>{dc01baf9-0b9e-4b12-bfbb-2573f53210b4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Monster\NormalMon\MonState_Normal">
       <UniqueIdentifier>{a0cd18b7-9c95-4b3f-bd30-3d01e0c6baec}</UniqueIdentifier>
     </Filter>
@@ -253,9 +232,6 @@
     <Filter Include="02.GameObject\MapNevi">
       <UniqueIdentifier>{44c76977-7ae8-4ba8-8685-1096bfe61e7f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Player\PlayerState\State\Action\Move">
-      <UniqueIdentifier>{d0dc55ad-8002-49dd-bd01-3c244b5843a5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Spawner">
       <UniqueIdentifier>{e2b43840-9439-4b95-9925-5256fbd9a9b0}</UniqueIdentifier>
     </Filter>
@@ -276,6 +252,30 @@
     </Filter>
     <Filter Include="99.Defines">
       <UniqueIdentifier>{d8d16bc1-2149-41f4-8de6-cbcd337bba3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Announce\Item_Icon">
+      <UniqueIdentifier>{55af56a8-9fbc-4093-8390-4a46c2db6060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\PlayerState\State\Aim">
+      <UniqueIdentifier>{ba1f2610-4302-4794-ad99-fc5528f9369f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\PlayerState\State\Attack">
+      <UniqueIdentifier>{017e5d35-1f22-41ef-b9ef-078584f6bec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\PlayerState\State\Guard">
+      <UniqueIdentifier>{73195018-432f-4243-bba1-7fe1455e3363}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\PlayerState\State\Idle">
+      <UniqueIdentifier>{211497e3-ea5c-4832-b27f-1eb9a11c5822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\PlayerState\State\Move">
+      <UniqueIdentifier>{d0dc55ad-8002-49dd-bd01-3c244b5843a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\PlayerState\State\Reload">
+      <UniqueIdentifier>{1d851e46-3185-497b-a86a-82ffa43770bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Player\PlayerState\State\WeponSwap">
+      <UniqueIdentifier>{dc01baf9-0b9e-4b12-bfbb-2573f53210b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -445,16 +445,16 @@
       <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Aim_Player.h">
-      <Filter>02.GameObject\Player\PlayerState\State\Action\Aim</Filter>
+      <Filter>02.GameObject\Player\PlayerState\State\Aim</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Guard_Player.h">
-      <Filter>02.GameObject\Player\PlayerState\State\Action\Guard</Filter>
+      <Filter>02.GameObject\Player\PlayerState\State\Guard</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Reload_Player.h">
-      <Filter>02.GameObject\Player\PlayerState\State\Action\Reload</Filter>
+      <Filter>02.GameObject\Player\PlayerState\State\Reload</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Attack_Player.h">
-      <Filter>02.GameObject\Player\PlayerState\State\Action\Attack</Filter>
+      <Filter>02.GameObject\Player\PlayerState\State\Attack</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Sky.h">
       <Filter>02.GameObject\Sky</Filter>
@@ -469,7 +469,7 @@
       <Filter>02.GameObject\Player\Object\Weapon\HandGun</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Idle_Player.h">
-      <Filter>02.GameObject\Player\PlayerState\State\Action\Idle</Filter>
+      <Filter>02.GameObject\Player\PlayerState\State\Idle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Struct.h">
       <Filter>99.Defines</Filter>
@@ -520,7 +520,7 @@
       <Filter>02.GameObject\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\public\WeaponSwap_Player.h">
-      <Filter>02.GameObject\Player\PlayerState\State\Action\WeponSwap</Filter>
+      <Filter>02.GameObject\Player\PlayerState\State\WeponSwap</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\StateObject.h">
       <Filter>96.SuperClass\StateObject</Filter>
@@ -586,7 +586,7 @@
       <Filter>02.GameObject\MapNevi</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Move_Player.h">
-      <Filter>02.GameObject\Player\PlayerState\State\Action\Move</Filter>
+      <Filter>02.GameObject\Player\PlayerState\State\Move</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MonSpawner.h">
       <Filter>02.GameObject\Spawner\MonSpawner</Filter>
@@ -611,6 +611,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Item_QuickSlot.h">
       <Filter>02.GameObject\Item\Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Announce_Icon.h">
+      <Filter>02.GameObject\UIObject\Announce\Item_Icon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -763,16 +766,16 @@
       <Filter>02.GameObject\Player\Object\Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Aim_Player.cpp">
-      <Filter>02.GameObject\Player\PlayerState\State\Action\Aim</Filter>
+      <Filter>02.GameObject\Player\PlayerState\State\Aim</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Guard_Player.cpp">
-      <Filter>02.GameObject\Player\PlayerState\State\Action\Guard</Filter>
+      <Filter>02.GameObject\Player\PlayerState\State\Guard</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Reload_Player.cpp">
-      <Filter>02.GameObject\Player\PlayerState\State\Action\Reload</Filter>
+      <Filter>02.GameObject\Player\PlayerState\State\Reload</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Attack_Player.cpp">
-      <Filter>02.GameObject\Player\PlayerState\State\Action\Attack</Filter>
+      <Filter>02.GameObject\Player\PlayerState\State\Attack</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Sky.cpp">
       <Filter>02.GameObject\Sky</Filter>
@@ -787,7 +790,7 @@
       <Filter>02.GameObject\Player\Object\Weapon\HandGun</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Idle_Player.cpp">
-      <Filter>02.GameObject\Player\PlayerState\State\Action\Idle</Filter>
+      <Filter>02.GameObject\Player\PlayerState\State\Idle</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerState.cpp">
       <Filter>02.GameObject\Player\PlayerState</Filter>
@@ -835,7 +838,7 @@
       <Filter>02.GameObject\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\private\WeaponSwap_Player.cpp">
-      <Filter>02.GameObject\Player\PlayerState\State\Action\WeponSwap</Filter>
+      <Filter>02.GameObject\Player\PlayerState\State\WeponSwap</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\StateObject.cpp">
       <Filter>96.SuperClass\StateObject</Filter>
@@ -898,7 +901,7 @@
       <Filter>02.GameObject\MapNevi</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Move_Player.cpp">
-      <Filter>02.GameObject\Player\PlayerState\State\Action\Move</Filter>
+      <Filter>02.GameObject\Player\PlayerState\State\Move</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MonSpawner.cpp">
       <Filter>02.GameObject\Spawner\MonSpawner</Filter>
@@ -926,6 +929,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Item_QuickSlot.cpp">
       <Filter>02.GameObject\Item\Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Announce_Icon.cpp">
+      <Filter>02.GameObject\UIObject\Announce\Item_Icon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

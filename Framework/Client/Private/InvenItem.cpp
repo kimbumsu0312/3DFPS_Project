@@ -2,6 +2,8 @@
 #include "InvenItem.h"
 #include "Item_Slot.h"
 #include "Inven_Manager.h"
+#include "Player_Manager.h"
+
 CInvenItem::CInvenItem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CPoolUIObj{ pDevice, pContext }
 {
 }
@@ -48,13 +50,25 @@ void CInvenItem::Update(_float fTimeDelta)
 	if (m_bIsClick)
 	{
 		if (m_pGameInstance->IsKeyDown(DIK_1))
+		{
 			m_pGameInstance->Publish(Event_Equip_QuickSlot{ (_uint)m_ItemData.iItemIndex, 1 });
+			CPlayer_Manager::GetInstance()->Add_QuickSlotItem(1, m_ItemData.iItemIndex);
+		}
 		if (m_pGameInstance->IsKeyDown(DIK_2))
+		{
 			m_pGameInstance->Publish(Event_Equip_QuickSlot{ (_uint)m_ItemData.iItemIndex, 2 });
+			CPlayer_Manager::GetInstance()->Add_QuickSlotItem(2, m_ItemData.iItemIndex);
+		}
 		if (m_pGameInstance->IsKeyDown(DIK_3))
+		{
 			m_pGameInstance->Publish(Event_Equip_QuickSlot{ (_uint)m_ItemData.iItemIndex, 3 });
+			CPlayer_Manager::GetInstance()->Add_QuickSlotItem(3, m_ItemData.iItemIndex);
+		}
 		if (m_pGameInstance->IsKeyDown(DIK_4))
+		{
 			m_pGameInstance->Publish(Event_Equip_QuickSlot{ (_uint)m_ItemData.iItemIndex, 4 });
+			CPlayer_Manager::GetInstance()->Add_QuickSlotItem(4, m_ItemData.iItemIndex);
+		}
 	}
 
 	m_pItemSlot->Update(fTimeDelta, this);
@@ -88,13 +102,19 @@ HRESULT CInvenItem::Render()
 
 	_float fAlpha = 1.f;
 	if (m_bIsClick)
+	{
 		fAlpha = 0.5f;
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &fAlpha, sizeof(_float))))
-		return E_FAIL;
-
-	__super::Bind_ShaderTransform_Resourc(m_iPassIndex);
-
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &fAlpha, sizeof(_float))))
+			return E_FAIL;
+		__super::Bind_ShaderTransform_Resourc(m_iPassIndex);
+	}
+	else
+	{
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &fAlpha, sizeof(_float))))
+			return E_FAIL;
+		__super::Bind_ShaderTransform_Resourc(2);
+	}
 	m_pVIBufferCom->Bind_Resources();
 	m_pVIBufferCom->Render();
 

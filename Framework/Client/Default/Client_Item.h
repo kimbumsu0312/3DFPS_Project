@@ -41,8 +41,8 @@ namespace Client
 		InvenItemData(2			,TEXT("F2 ¼ÒÃÑ"),				ITEM_TYPE::WEAPON		,6			,2			,5			,2		,{765, 1258}	,{965, 1332}	,5			,0			,QUICKSLOT_TYPE::EQUIP			,1		,TEXT("¼öµ¿À¸·Î ³ë¸®¼è¸¦ ÀÚµ¿ÇÏ´Â Àú°Ý ¼ÒÃÑ.")		),
 		InvenItemData(3			,TEXT("Ä®"),					ITEM_TYPE::WEAPON		,2			,2			,2			,2		,{0, 1351}		,{87, 1440}		,0			,0			,QUICKSLOT_TYPE::EQUIP			,0		,TEXT("Å« ³¯ÀÌ ´Þ¸° ¼Õ¶§ ¹¯Àº Ä®.")				),
 		InvenItemData(4			,TEXT("È¸º¹¾à"),				ITEM_TYPE::ITEM			,1			,2			,1.2f		,1.5f	,{0, 0}			,{96, 96}		,1			,1			,QUICKSLOT_TYPE::EQUIP			,0		,TEXT("È¸º¹¾à")			),
-		InvenItemData(5			,TEXT("±ÇÃÑ ÃÑ¾Ë"),				ITEM_TYPE::ITEM			,2			,1			,1.5f		,1.f	,{5, 215}		,{89, 259}		,30			,10			,QUICKSLOT_TYPE::NONE			,-1		,TEXT("±ÇÃÑ ÃÑ¾Ë")		),
-		InvenItemData(6			,TEXT("¼¦°Ç ÃÑ¾Ë"),				ITEM_TYPE::ITEM			,2			,1			,1.5f		,0.9f	,{103, 215}		,{189, 259}		,6			,3			,QUICKSLOT_TYPE::NONE			,-1		,TEXT("¼¦°Ç ÃÑ¾Ë")		),
-		InvenItemData(7			,TEXT("½º³ªÀÌÆÛ ÃÑ¾Ë"),			ITEM_TYPE::ITEM			,2			,1			,2			,0.9f	,{483, 215}		,{576, 259}		,12			,1			,QUICKSLOT_TYPE::NONE			,-1		,TEXT("½º³ªÀÌÆÛ ÃÑ¾Ë")	),
+		InvenItemData(5			,TEXT("±ÇÃÑ ÃÑ¾Ë"),				ITEM_TYPE::ITEM			,2			,1			,1.5f		,1.f	,{5, 215}		,{89, 259}		,30			,10			,QUICKSLOT_TYPE::NONE			,0		,TEXT("±ÇÃÑ ÃÑ¾Ë")		),
+		InvenItemData(6			,TEXT("¼¦°Ç ÃÑ¾Ë"),				ITEM_TYPE::ITEM			,2			,1			,1.5f		,0.9f	,{103, 215}		,{189, 259}		,6			,3			,QUICKSLOT_TYPE::NONE			,0		,TEXT("¼¦°Ç ÃÑ¾Ë")		),
+		InvenItemData(7			,TEXT("½º³ªÀÌÆÛ ÃÑ¾Ë"),			ITEM_TYPE::ITEM			,2			,1			,2			,0.9f	,{483, 215}		,{576, 259}		,12			,1			,QUICKSLOT_TYPE::NONE			,1		,TEXT("½º³ªÀÌÆÛ ÃÑ¾Ë")	),
 	};	
 }

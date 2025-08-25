@@ -72,4 +72,11 @@ namespace Client
 	{
 	}Event_QUICK_UI_OPEN;
 
+	typedef struct Event_Announce_UI_OPEN
+	{
+		_uint		iType;
+		_uint		iItemIndex;
+		_wstring	szText;
+		RENDERGROUP eRenderGroup;
+	}Event_Announce_UI_OPEN;
 }

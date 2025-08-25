@@ -16,6 +16,13 @@ HRESULT CPlayer_Manager::Initialize()
 	m_fCulHp = m_fMaxHp;
 	m_fPreHp = 0.f;
 	m_iCoin = 1000;
+
+	for (_int i = 0; i < ENUM_CLASS(QUICKSLOT::END); ++i)
+	{
+		m_iQuickSlot[i] = -1;
+	}
+		
+
 	return S_OK;
 }
 
@@ -37,6 +44,55 @@ void CPlayer_Manager::Player_Hp(_int iValue)
 			m_pGameInstance->Publish(Event_Player_Hp_Set{ {0.7f, 0.3f, 0.f, 0.7f} });
 		else if (m_fCulHp < m_fMaxHp * 0.25)
 			m_pGameInstance->Publish(Event_Player_Hp_Set{ {0.7f, 0.f, 0.f, 0.7f} });
+	}
+}
+
+void CPlayer_Manager::Add_QuickSlotItem(_int iSlotIndex, _int iItemIndex)
+{
+	m_iQuickSlot[iSlotIndex - 1] = iItemIndex;
+
+	if(m_iQuickSlot[m_iSeleteItem] != -1)
+	{
+		if (g_ItemData[m_iQuickSlot[m_iSeleteItem]].m_eType == ITEM_TYPE::WEAPON)
+		{
+			if (g_ItemData[m_iQuickSlot[m_iSeleteItem]].m_iItemID == 0)
+				m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::PISTOL });
+			else if (g_ItemData[m_iQuickSlot[m_iSeleteItem]].m_iItemID == 1)
+				m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::SHOTGUN });
+			else if (g_ItemData[m_iQuickSlot[m_iSeleteItem]].m_iItemID == 2)
+				m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::SNIPER });
+			else
+				m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::END });
+		}
+	}
+	else
+		m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::END });
+	m_iPreSeleteItem = m_iSeleteItem;
+}
+
+void CPlayer_Manager::Selete_Slot(_int i)
+{
+	m_iSeleteItem = i - 1;
+
+	if (m_iPreSeleteItem != m_iSeleteItem)
+	{
+		if (m_iQuickSlot[m_iSeleteItem] != -1)
+		{
+			if (g_ItemData[m_iQuickSlot[m_iSeleteItem]].m_eType == ITEM_TYPE::WEAPON)
+			{
+				if (g_ItemData[m_iQuickSlot[m_iSeleteItem]].m_iItemID == 0)
+					m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::PISTOL });
+				else if (g_ItemData[m_iQuickSlot[m_iSeleteItem]].m_iItemID == 1)
+					m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::SHOTGUN });
+				else if (g_ItemData[m_iQuickSlot[m_iSeleteItem]].m_iItemID == 2)
+					m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::SNIPER });
+				else
+					m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::END });
+			}
+		}
+		else
+			m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::END });
+		m_iPreSeleteItem = m_iSeleteItem;
 	}
 }
 

@@ -81,9 +81,10 @@ _bool CInven_Manager::Add_ItemSlot(_int iItemIndex, _wstring szPoolPath)
 		}
 		CInvenItem::ITEM_DESC Desc = Setting_Item(iItemIndex, iGridX, iGridY);
 		m_pGameInstance->Add_Pool_ToLayer(szPoolPath, m_iLayerLevel, m_szLayertag, &Desc);
+		m_pGameInstance->Publish(Event_Announce_UI_OPEN{ 0, (_uint)iItemIndex, TEXT(""), RENDERGROUP::PRIORITY_UI });
 		return true;
 	}
-
+	m_pGameInstance->Publish(Event_Announce_UI_OPEN{ 1, (_uint)iItemIndex, TEXT("인벤토리 공간이 부족합니다."), RENDERGROUP::PRIORITY_UI });
 	return false;
 }
 

@@ -2,6 +2,8 @@
 #include "Announce.h"
 #include "UI_Tex.h"
 #include "UI_Slot.h"
+#include "Announce_Icon.h"
+
 CAnnounce::CAnnounce(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {
 }
@@ -12,6 +14,8 @@ CAnnounce::CAnnounce(const CAnnounce& Prototype) : CUIObject(Prototype)
 
 HRESULT CAnnounce::Initialize_Prototype()
 {
+    if (FAILED(Ready_Children_Prototype()))
+        return E_FAIL;
 
     return S_OK;
 }
@@ -21,7 +25,7 @@ HRESULT CAnnounce::Initialize(void* pArg)
     m_fAlpha = 1.f;
 
     m_vLocalPos.x = g_iWinSizeX * 0.5f;
-    m_vLocalPos.y = g_iWinSizeY * 0.7f;
+    m_vLocalPos.y = g_iWinSizeY * 0.8f;
     m_vLocalSize.x = 0.f;
     m_vLocalSize.y = 0.f;
 
@@ -37,13 +41,14 @@ HRESULT CAnnounce::Initialize(void* pArg)
     if (FAILED(Ready_Children()))
         return E_FAIL;
 
+    m_pGameInstance->Subscribe<Event_Announce_UI_OPEN>([&](const Event_Announce_UI_OPEN& e)
+        { UIOpen(e.iType, e.iItemIndex, e.szText, e.eRenderGroup); });
+
     return S_OK;
 }
 
 void CAnnounce::Priority_Update(_float fTimeDelta)
 {
-    if (m_pGameInstance->IsKeyDown(DIK_M))
-        UIOpen();
 }
 
 void CAnnounce::Update(_float fTimeDelta)
@@ -52,6 +57,12 @@ void CAnnounce::Update(_float fTimeDelta)
         return;
     UIAlpha_OnOff(fTimeDelta);
 
+    if(m_iITemType == -1)
+        m_pSlot->Set_Size({ 0.f, 0.f });
+    else if (m_iITemType == 1)
+        m_pSlot->Set_Size({ 64.f * 2.f, 64.f });
+    else
+        m_pSlot->Set_Size({ 64.f, 64.f });
     __super::Update(fTimeDelta);
 }
 
@@ -60,7 +71,7 @@ void CAnnounce::Late_Update(_float fTimeDelta)
     if (!m_bIsOpen)
         return;
 
-    if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
+    if (FAILED(m_pGameInstance->Add_RenderGroup(m_eRnderGroup, this)))
         return;
     __super::Late_Update(fTimeDelta);
 }
@@ -123,9 +134,12 @@ HRESULT CAnnounce::Ready_Children()
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+    m_pSlot = static_cast<CUI_Tex*>(pGameObject);
+    Safe_AddRef(m_pSlot);
 
-    TexDesc.vPos = { 0.f, 55.f };
-    TexDesc.vSize = { 450.f, 50.f };
+    m_pSlot->Set_RenderGroup(RENDERGROUP::PRIORITY_UI);
+    TexDesc.vPos = { 0.f, 75.f };
+    TexDesc.vSize = { 500.f, 70.f };
     TexDesc.vMinUV = { 0.f / fTexSizeX , 214.f / fTexSizeY };
     TexDesc.vMaxUV = { 194.f / fTexSizeX , 250.f / fTexSizeY };
 
@@ -133,21 +147,78 @@ HRESULT CAnnounce::Ready_Children()
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+    m_pInfo = static_cast<CUI_Tex*>(pGameObject);
+    Safe_AddRef(m_pInfo);
+    m_pInfo->Set_RenderGroup(RENDERGROUP::PRIORITY_UI);
+
+    UIOBJECT_DESC Desc;
+    Desc.vPos = m_vPos;
+    Desc.vSize.x = 64.f * 0.95;
+    Desc.vSize.y = 64.f * 0.95;
+
+    Desc.vMinUV = { 0.f, 0.f };
+    Desc.vMaxUV = { 1.f, 1.f };
+    pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Announce_Icon"), &Desc));
+    if (pGameObject == nullptr)
+        return E_FAIL;
+    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+
+    m_pIcon = static_cast<CAnnounce_Icon*>(pGameObject);
+    Safe_AddRef(m_pIcon);
 
     return S_OK;
 }
 
-void CAnnounce::UIOpen()
+void CAnnounce::UIOpen(_int iType, _int iItemIndex, _wstring szFont, RENDERGROUP eRenderGroup)
 {
-    if (!m_bIsOpen == true)
+    m_eRnderGroup = eRenderGroup;
+    m_pSlot->Set_RenderGroup(m_eRnderGroup);
+    m_pInfo->Set_RenderGroup(m_eRnderGroup);
+    m_pIcon->Set_RenderGroup(m_eRnderGroup);
+    if (iType == 0)
     {
-        m_bIsOpen = true;
-        m_bIsClose = false;
-        m_fAlpha = 0.f;
+        if (!m_bIsOpen == true)
+        {
+            m_iITemType = g_ItemData[iItemIndex].m_iQuickSlotType;
+            m_bIsOpen = true;
+            m_bIsClose = false;
+            m_fAlpha = 0.f;
+            m_pIcon->Set_Item(iItemIndex);
+
+            _wstring szGetFont = TEXT("'") + g_ItemData[iItemIndex].m_szName + TEXT("' À» È¹µæÇÏ¿´½À´Ï´Ù.");
+            m_pInfo->Set_Font(true, szGetFont);
+        }
+        else
+        {
+            m_iITemType = g_ItemData[iItemIndex].m_iQuickSlotType;
+            m_fAlpha = 0.f;
+            m_pIcon->Set_Item(iItemIndex);
+            _wstring szGetFont = TEXT("'") + g_ItemData[iItemIndex].m_szName + TEXT("' À» È¹µæÇÏ¿´½À´Ï´Ù.");
+            m_pInfo->Set_Font(true, szGetFont);
+
+            m_fIsOpenTime = 2.f;
+        }
     }
-    else
+    else if(iType == 1)
     {
-        m_fIsOpenTime = 2.f;
+        if (!m_bIsOpen == true)
+        {
+            m_iITemType = -1;
+            m_bIsOpen = true;
+            m_bIsClose = false;
+            m_fAlpha = 0.f;
+            m_pIcon->Set_Item(-1);
+            m_pInfo->Set_Font(true, szFont);
+
+        }
+        else
+        {
+            m_iITemType = -1;
+            m_fAlpha = 0.f;
+            m_pIcon->Set_Item(-1);
+            m_pInfo->Set_Font(true, szFont);
+            m_fIsOpenTime = 2.f;
+        }
     }
 }
 
@@ -176,6 +247,15 @@ void CAnnounce::UIAlpha_OnOff(_float fTimeDelta)
             m_bIsClose = false;
         }
     }
+}
+
+HRESULT CAnnounce::Ready_Children_Prototype()
+{
+    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Announce_Icon"),
+        CAnnounce_Icon::Create(m_pDevice, m_pContext))))
+        return E_FAIL;
+    
+    return S_OK;
 }
 
 CAnnounce* CAnnounce::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -209,4 +289,7 @@ void CAnnounce::Free()
     __super::Free();
 
     Safe_Release(m_pVIBufferCom);
+    Safe_Release(m_pIcon);
+    Safe_Release(m_pInfo);
+    Safe_Release(m_pSlot);
 }
