@@ -124,6 +124,11 @@ void CMonster_Normal::Switch_Anim(string szAnimTag, _bool IsLoop)
 	m_bIsAnimLoop = IsLoop;
 }
 
+const _int CMonster_Normal::Get_CulNaviIndex()
+{
+	return m_pNavigationCom->Get_CulIndex();
+}
+
 void CMonster_Normal::Target_LookAt(_float fTimeDelta)
 {
 	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);

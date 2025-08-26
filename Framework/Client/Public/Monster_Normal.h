@@ -36,7 +36,7 @@ public:
 	const NORMON_STATE&			Get_State() { return m_NorMonState;}
 	const _int&					Get_WeaponType() { return m_iWeaponType; }
 	const _vector				Get_TransformState(STATE eState) { return m_pTransformCom->Get_State(eState); }
-
+	const _int					Get_CulNaviIndex();
 	void						Target_LookAt(_float fTimeDelta);
 	void						Reset_DamageCheck() { m_bIsDamage = false; m_bIsHeadShot = false; }
 	void						Attack_Collision();

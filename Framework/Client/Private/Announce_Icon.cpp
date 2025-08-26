@@ -126,6 +126,7 @@ void CAnnounce_Icon::Set_RenderGroup(RENDERGROUP eRenderGroup)
 
 CAnnounce_Icon* CAnnounce_Icon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
+    
     CAnnounce_Icon* pInstance = new CAnnounce_Icon(pDevice, pContext);
 
     if (FAILED(pInstance->Initialize_Prototype()))
@@ -133,7 +134,7 @@ CAnnounce_Icon* CAnnounce_Icon::Create(ID3D11Device* pDevice, ID3D11DeviceContex
         MSG_BOX(TEXT("Failed to Created : CAnnounce_Icon"));
         Safe_Release(pInstance);
     }
-
+    
     return pInstance;
 }
 

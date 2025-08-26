@@ -52,8 +52,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_StateObjects()))
 		return E_FAIL;
 
-	m_pColliderBone = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
-	
+	m_pColliderBone[BODY] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
+	m_pColliderBone[PLAYER_VIEW] = m_pBodyObject->Get_BoneMatrix(TEXT("Cam"));
+
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-61.f, -8.5f, 13.5f, 1.f));
 
 	return S_OK;
@@ -83,7 +84,7 @@ void CPlayer::Update(_float fTimeDelta)
 		InputKey_AttackState(fTimeDelta);
 		InputKey_WeaponChange(fTimeDelta);
 	}
-
+	
 	m_CulStateObject->Update(this, fTimeDelta);
 	if (m_szPreStateTag != m_szCulStateTag)
 	{
@@ -107,12 +108,15 @@ void CPlayer::Update(_float fTimeDelta)
 		m_fYaw += m_pGameInstance->Get_DIMouseMove(MOUSEMOVESTATE::X) * 0.1f * fTimeDelta;
 		m_pTransformCom->Rotation_All(_float3{ 0.f, m_fYaw, 0.f });
 	}
-	CPlayer_Manager::GetInstance()->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 
 	IsDmage(fTimeDelta);
+	m_pTransformCom->Set_State(Engine::STATE::POSITION,
+		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
 	Collider_Update();
-}
+	CPlayer_Manager::GetInstance()->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 
+}
+	
 void CPlayer::Late_Update(_float fTimeDelta)
 {
 	for (_int i = 0; i < ColliderType_Player::END; ++i)
@@ -181,6 +185,17 @@ HRESULT CPlayer::Ready_Components()
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
 		TEXT("Com_Collider_Resist"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Player::RESIST]), &OBBDesc)))
 		return E_FAIL;
+
+	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::PLAYER_VIEW);
+	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::PLAYER_VIEW);
+	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
+	OBBDesc.vExtents = _float3(0.1f, 0.1f, 1.f);
+	OBBDesc.vCenter = _float3(0.f, 0.0f, -1.0f);
+
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
+		TEXT("Com_Collider_View"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Player::PLAYER_VIEW]), &OBBDesc)))
+		return E_FAIL;
+
 
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::PLAYER);
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::PLAYER);
@@ -299,7 +314,7 @@ CPlayerState* CPlayer::Find_StateObject(const _wstring& strStateObjectTag)
 
 void CPlayer::InputKey_MoveState(_float fTimeDelta)
 {
-	_bool IsMove = false;
+	_bool IsMove = true;
 
 	//이동 상태 값
 	_vector vPos =	m_pTransformCom->Get_State(STATE::POSITION);
@@ -428,6 +443,7 @@ void CPlayer::InputKey_WeaponChange(_float fTimeDelta)
 
 _bool CPlayer::InputKey_UI()
 {
+
 	if (m_szCulStateTag == TEXT("Attack") || m_szCulStateTag == TEXT("Reload") || m_szCulStateTag == TEXT("Aim") || m_szCulStateTag == TEXT("Guard"))
 		return false;
 
@@ -442,6 +458,7 @@ _bool CPlayer::InputKey_UI()
 		m_bIsUIOpen = false;
 	}
 
+	
 	return m_bIsUIOpen;
 }
 
@@ -460,18 +477,36 @@ void CPlayer::Rotaion_Upper(_float fTimeDelta)
 
 void CPlayer::Collider_Update()
 {
-	_matrix Worldmat = m_pTransformCom->Get_WorldMatrix();
-	_vector vRotation = XMQuaternionRotationMatrix(Worldmat);
+	{
+		_matrix Worldmat = m_pTransformCom->Get_WorldMatrix();
+		_vector vRotation = XMQuaternionRotationMatrix(Worldmat);
 
-	_matrix BoneMat = XMLoadFloat4x4(m_pColliderBone);
-	_vector vScale, vRot, vTrans;
-	XMMatrixDecompose(&vScale, &vRot, &vTrans, BoneMat);
-	
-	_matrix WorldRotMat = XMMatrixRotationQuaternion(vRot);
-	_matrix WorldTransMat = XMMatrixTranslationFromVector(vTrans);
-	_matrix WorldMatrix = WorldRotMat * WorldTransMat * Worldmat;
-	
-	m_pColliderCom[ColliderType_Player::BODY]->Update(WorldMatrix);
+		_matrix BoneMat = XMLoadFloat4x4(m_pColliderBone[BODY]);
+		_vector vScale, vRot, vTrans;
+		XMMatrixDecompose(&vScale, &vRot, &vTrans, BoneMat);
+
+		_matrix WorldRotMat = XMMatrixRotationQuaternion(vRot);
+		_matrix WorldTransMat = XMMatrixTranslationFromVector(vTrans);
+		_matrix WorldMatrix = WorldRotMat * WorldTransMat * Worldmat;
+
+		m_pColliderCom[ColliderType_Player::BODY]->Update(WorldMatrix);
+	}
+
+	{
+		_matrix matPitch = XMMatrixRotationX(m_fPitch);
+		_matrix Worldmat = m_pTransformCom->Get_WorldMatrix();
+		_vector vRotation = XMQuaternionRotationMatrix(Worldmat);
+
+		_matrix BoneMat = XMLoadFloat4x4(m_pColliderBone[PLAYER_VIEW]);
+		_vector vScale, vRot, vTrans;
+		XMMatrixDecompose(&vScale, &vRot, &vTrans, BoneMat);
+
+		_matrix WorldRotMat = XMMatrixRotationQuaternion(vRot);
+		_matrix WorldTransMat = XMMatrixTranslationFromVector(vTrans);
+		_matrix WorldMatrix = WorldRotMat * WorldTransMat * Worldmat;
+
+		m_pColliderCom[ColliderType_Player::PLAYER_VIEW]->Update(WorldMatrix);
+	}
 	m_pColliderCom[ColliderType_Player::RESIST]->Update(m_pTransformCom->Get_WorldMatrix());
 }
 

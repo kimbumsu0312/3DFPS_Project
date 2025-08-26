@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Die_NorMon_1.h"
 #include "Monster_Normal.h"
-
+#include "ItemSpawner.h"
 CDie_Normon_1::CDie_Normon_1()
 {
 }
@@ -23,6 +23,9 @@ void CDie_Normon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
     if (pContainer->IsAnimFinsh())
     {
         pContainer->SetDead();
+        _int i = m_pGameInstance->Rand(5.f, 8.f);
+
+        CItemSpawner::GetInstance()->Spawn_Item(i, pContainer->Get_TransformState(STATE::POSITION), pContainer->Get_CulNaviIndex());
     }
 
 }

@@ -107,8 +107,8 @@ void CUI_Tex::Render_Font()
     vFontPos.x = m_vPos.x;
     vFontPos.y = m_vPos.y;
 
-    m_pGameInstance->DrawText(TEXT("Font_Godic"), m_szText.c_str(), _float2{vFontPos.x + 2, vFontPos.y + 2}, _fvector{0.f, 0.f, 0.f, 0.8f}, 0.f, _float2{0.5f, 0.5f}, {0.8f, 0.8f});
-    m_pGameInstance->DrawText(TEXT("Font_Godic"), m_szText.c_str(), vFontPos, _fvector{1.f, 1.f, 1.f, 0.8f}, 0.f, _float2{0.5f, 0.5f}, {0.8f, 0.8f});
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), m_szText.c_str(), _float2{vFontPos.x + 2, vFontPos.y + 2}, _fvector{0.f, 0.f, 0.f, m_fAlpha }, 0.f, _float2{0.5f, 0.5f}, {0.8f, 0.8f});
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), m_szText.c_str(), vFontPos, _fvector{1.f, 1.f, 1.f, m_fAlpha }, 0.f, _float2{0.5f, 0.5f}, {0.8f, 0.8f});
 
 }
 

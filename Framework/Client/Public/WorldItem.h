@@ -4,6 +4,7 @@
 NS_BEGIN(Engine)
 class CShader;
 class CModel;
+class CCollider;
 NS_END
 
 NS_BEGIN(Client)
@@ -23,16 +24,17 @@ public:
 	virtual HRESULT			Render();
 
 private:
-	class CModel*			m_pModelCom = { nullptr };
+	CModel*					m_pModelCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
+	CCollider*				m_pColliderCom = { nullptr };
 
 private:
 	HRESULT					Ready_Components(_wstring szModelPath);
 	HRESULT					Bind_ShaderResources();
 
 public:
-	static CWorldItem* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CGameObject* Clone(void* pArg);
+	static CWorldItem*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject*	Clone(void* pArg);
 	virtual void			Free();
 };
 

@@ -12,6 +12,7 @@
 #include "Item_Slot.h"
 #include "Item_Selete.h"
 #include "Item_QuickSlot.h"
+#include "ItemSpawner.h"
 
 CMainApp::CMainApp() : m_pGameInstance{ CGameInstance::GetInstance()}
 {
@@ -229,7 +230,8 @@ HRESULT CMainApp::Ready_Collider()
 										| (1 << ENUM_CLASS(COLLISION_LAYER::RAY)))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::ITEM), (1 << ENUM_CLASS(COLLISION_LAYER::PLAYER)))))
+	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::ITEM), (1 << ENUM_CLASS(COLLISION_LAYER::PLAYER))
+										| (1 << ENUM_CLASS(COLLISION_LAYER::PLAYER_VIEW)))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::WEAPON), (1 << ENUM_CLASS(COLLISION_LAYER::PLAYER)))))
@@ -239,6 +241,9 @@ HRESULT CMainApp::Ready_Collider()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::RESIST), (1 << ENUM_CLASS(COLLISION_LAYER::RESIST)))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::PLAYER_VIEW), (1 << ENUM_CLASS(COLLISION_LAYER::ITEM)))))
 		return E_FAIL;
 
 	return S_OK;
@@ -264,6 +269,9 @@ void CMainApp::Free()
 	CPlayer_Manager::DestroyInstance();
 	CInven_Manager::GetInstance()->Free();
 	CInven_Manager::DestroyInstance();
+	CItemSpawner::GetInstance()->Free();
+	CItemSpawner::DestroyInstance();
+
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 

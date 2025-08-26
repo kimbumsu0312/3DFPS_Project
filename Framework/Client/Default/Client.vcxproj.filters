@@ -241,9 +241,6 @@
     <Filter Include="02.GameObject\Spawner\MonSpawner\SpawnPoint">
       <UniqueIdentifier>{b6d8e30b-8142-47fb-8ec8-0cd9bb378c0c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="95.Manager\Inven_Manager">
-      <UniqueIdentifier>{d6152359-cdde-4ae0-828d-f97188b5c5bf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Defines">
       <UniqueIdentifier>{d8d16bc1-2149-41f4-8de6-cbcd337bba3b}</UniqueIdentifier>
     </Filter>
@@ -279,6 +276,15 @@
     </Filter>
     <Filter Include="02.GameObject\3DItem">
       <UniqueIdentifier>{12e3b22c-f3d0-4f19-b110-6d8489370f7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Manager\Spawner">
+      <UniqueIdentifier>{f4e1ac0d-845d-4e1a-9610-f6d0a5a0b1e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95.Manager\Inven">
+      <UniqueIdentifier>{d6152359-cdde-4ae0-828d-f97188b5c5bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\Get_UI">
+      <UniqueIdentifier>{f3ed79dd-6d2a-4d3b-8bed-9aa020d18350}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -385,7 +391,7 @@
       <Filter>95.Manager\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Inven_Manager.h">
-      <Filter>95.Manager\Inven_Manager</Filter>
+      <Filter>95.Manager\Inven</Filter>
     </ClInclude>
     <ClInclude Include="..\public\InvenItem.h">
       <Filter>02.GameObject\2DItem</Filter>
@@ -621,8 +627,14 @@
     <ClInclude Include="..\public\WorldItem.h">
       <Filter>02.GameObject\3DItem</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\SpawnItem.h">
+    <ClInclude Include="..\public\PoolWorldItem.h">
       <Filter>02.GameObject\3DItem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ItemSpawner.h">
+      <Filter>95.Manager\Spawner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Get_UI.h">
+      <Filter>02.GameObject\UIObject\Hud\Get_UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -724,7 +736,7 @@
       <Filter>95.Manager\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Inven_Manager.cpp">
-      <Filter>95.Manager\Inven_Manager</Filter>
+      <Filter>95.Manager\Inven</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Inventory_Node.cpp">
       <Filter>02.GameObject\UIObject\Inventory\Base\Inventory_ETC</Filter>
@@ -945,8 +957,14 @@
     <ClCompile Include="..\private\WorldItem.cpp">
       <Filter>02.GameObject\3DItem</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\SpawnItem.cpp">
+    <ClCompile Include="..\private\PoolWorldItem.cpp">
       <Filter>02.GameObject\3DItem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ItemSpawner.cpp">
+      <Filter>95.Manager\Spawner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Get_UI.cpp">
+      <Filter>02.GameObject\UIObject\Hud\Get_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

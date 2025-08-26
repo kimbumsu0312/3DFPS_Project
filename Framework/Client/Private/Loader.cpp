@@ -8,7 +8,10 @@
 #include "MapNevi.h"
 #include "SpawnPoint.h"
 #include "MonSpawner.h"
+#include "ItemSpawner.h"
+
 #include "InvenItem.h"
+#include "PoolWorldItem.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_pDevice{ pDevice }, m_pContext { pContext }, m_pGameInstance { CGameInstance::GetInstance()}
 {
@@ -232,7 +235,19 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		return E_FAIL;
 
 #pragma endregion
+#pragma region ItemObject
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Item/Bullet_HandGun/Bullet_HandGun.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Bullet_HandGun"))))
+		return E_FAIL;
+	
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Item/Bullet_ShotGun/Bullet_ShotGun.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Bullet_ShotGun"))))
+		return E_FAIL;
+	
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Item/Bullet_Sniper/Bullet_Sniper.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Bullet_Sniper"))))
+		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Item/Potion/Potion.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Potion"))))
+		return E_FAIL;
+#pragma endregion
 	lstrcpy(m_szLoadingText, TEXT("네비게이션을 로딩중입니다."));
 	/* Prototype_Component_Navigation */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
@@ -380,11 +395,19 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CAnnounce::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_GetUI"),
+		CGet_UI::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 #pragma endregion
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Map"),
 		CBaseMapObj::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_WorldItem_Pool"),
+		CPoolWorld_Item::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
 	m_isFinished = true;

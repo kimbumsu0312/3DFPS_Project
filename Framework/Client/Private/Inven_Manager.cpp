@@ -60,6 +60,7 @@ _bool CInven_Manager::Add_ItemSlot(_int iItemIndex, _wstring szPoolPath)
 					continue;
 
 				Item->Add_ItemValue(g_ItemData[iItemIndex].m_iItemValue);
+				m_pGameInstance->Publish(Event_Announce_UI_OPEN{ 0, (_uint)iItemIndex, TEXT(""), RENDERGROUP::PRIORITY_UI });
 				return true;
 			}
 

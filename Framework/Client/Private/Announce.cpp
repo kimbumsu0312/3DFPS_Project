@@ -63,6 +63,7 @@ void CAnnounce::Update(_float fTimeDelta)
         m_pSlot->Set_Size({ 64.f * 2.f, 64.f });
     else
         m_pSlot->Set_Size({ 64.f, 64.f });
+    m_pInfo->Update_Alpha(0.f);
     __super::Update(fTimeDelta);
 }
 
@@ -187,6 +188,7 @@ void CAnnounce::UIOpen(_int iType, _int iItemIndex, _wstring szFont, RENDERGROUP
 
             _wstring szGetFont = TEXT("'") + g_ItemData[iItemIndex].m_szName + TEXT("' À» È¹µæÇÏ¿´½À´Ï´Ù.");
             m_pInfo->Set_Font(true, szGetFont);
+            m_fIsOpenTime = 2.f;
         }
         else
         {
@@ -209,6 +211,7 @@ void CAnnounce::UIOpen(_int iType, _int iItemIndex, _wstring szFont, RENDERGROUP
             m_fAlpha = 0.f;
             m_pIcon->Set_Item(-1);
             m_pInfo->Set_Font(true, szFont);
+            m_fIsOpenTime = 2.f;
 
         }
         else

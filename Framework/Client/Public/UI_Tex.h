@@ -33,6 +33,7 @@ public:
 	void						Set_Size(_float2 vSize);
 	void						Set_RenderGroup(RENDERGROUP eRenderGroup);
 	void						Set_Font(_bool isRender,_wstring szText);
+	void						Update_Alpha(_float fAlpha) { m_fAlpha = fAlpha; }
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	_int						m_iIndex = {};
@@ -43,6 +44,8 @@ private:
 	_wstring					m_szText = {};
 	_bool						m_bIsFont = {};
 	RENDERGROUP					m_eRanderGroup = { RENDERGROUP::UI };
+	_float						m_fAlpha = { 0.8f};
+
 private:
 	HRESULT						Ready_Components();
 	void						Render_Font();

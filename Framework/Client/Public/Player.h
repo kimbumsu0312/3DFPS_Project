@@ -11,7 +11,7 @@ NS_BEGIN(Client)
 class CPlayer final : public CContainerObject
 {
 private:
-	enum ColliderType_Player { BODY = 0, RESIST, END };
+	enum ColliderType_Player { BODY = 0, RESIST, PLAYER_VIEW, END };
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
@@ -40,7 +40,7 @@ public:
 private:
 	CNavigation*				m_pNavigationCom = { nullptr };
 	CCollider*					m_pColliderCom[ColliderType_Player::END] = {nullptr};
-	_float4x4*					m_pColliderBone = { nullptr };
+	_float4x4*					m_pColliderBone[ColliderType_Player::END] = { nullptr };
 
 	_uint						m_iPreWeponState = {};
 	_uint						m_iCulWeponState = {};

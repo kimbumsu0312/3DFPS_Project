@@ -4,6 +4,7 @@
 #include "Camera_Free.h"
 #include "MonSpawner.h"
 #include "Inven_Manager.h"
+#include "ItemSpawner.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CLevel{ pDevice, pContext }
 {
@@ -35,6 +36,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Event(TEXT("Layer_Event"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Item()))
+		return E_FAIL;
+
 	CInven_Manager::GetInstance()->Level_Init(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Event"));
 
 	return S_OK;
@@ -59,6 +63,21 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_8))
 		CInven_Manager::GetInstance()->Add_ItemSlot(7, TEXT("Pool_Item"));
 
+	if (m_pGameInstance->IsKeyHold(DIK_LCONTROL) && m_pGameInstance->IsKeyDown(DIK_1))
+	{
+		if(FAILED(CItemSpawner::GetInstance()->Spawn_Item(5, XMVectorSet(-61.f, -8.5f, 13.5f, 1.f), 0)))
+		{
+			MSG_BOX(TEXT("아이템 생성 실패"));
+		}
+	}
+
+	if (m_pGameInstance->IsKeyHold(DIK_LCONTROL) && m_pGameInstance->IsKeyDown(DIK_2))
+	{
+		if (FAILED(CItemSpawner::GetInstance()->Spawn_Item(6, XMVectorSet(-61.f, -8.5f, 13.5f, 1.f), 0)))
+		{
+			MSG_BOX(TEXT("아이템 생성 실패"));
+		}
+	}
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -246,6 +265,43 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	Desc.MonDesc.push_back(MonDesc);
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_MonSpawneer"), &Desc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Item()
+{
+	CPoolingObject::POOLOBJECT_DESC Desc{};
+	Desc.szPoolingPath = TEXT("Pool_Bullet_HandGun");
+	Desc.szModel_Path = TEXT("Prototype_Component_Model_Bullet_HandGun");
+	Desc.isLoad = false;
+
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_WorldItem_Pool"), 20, &Desc)))
+		return E_FAIL;
+
+	Desc.szPoolingPath = TEXT("Pool_Bullet_ShotGun");
+	Desc.szModel_Path = TEXT("Prototype_Component_Model_Bullet_ShotGun");
+	Desc.isLoad = false;
+
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_WorldItem_Pool"), 20, &Desc)))
+		return E_FAIL;
+
+	Desc.szPoolingPath = TEXT("Pool_Bullet_Sniper");
+	Desc.szModel_Path = TEXT("Prototype_Component_Model_Bullet_Sniper");
+	Desc.isLoad = false;
+
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_WorldItem_Pool"), 20, &Desc)))
+		return E_FAIL;
+
+	Desc.szPoolingPath = TEXT("Pool_Bullet_Potion");
+	Desc.szModel_Path = TEXT("Prototype_Component_Model_Potion");
+	Desc.isLoad = false;
+
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_WorldItem_Pool"), 20, &Desc)))
+		return E_FAIL;
+
+	if (FAILED(CItemSpawner::GetInstance()->Level_Init(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Event"))))
 		return E_FAIL;
 
 	return S_OK;

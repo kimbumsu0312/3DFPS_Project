@@ -157,6 +157,21 @@ PS_OUT PS_Quick_Slot(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_Guide_Ui(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    if (In.vPosition.x <= g_Vector.r || In.vPosition.x >= g_Vector.g || In.vPosition.y <= g_Vector.b || In.vPosition.y >= g_Vector.a)
+        discard;
+    
+    In.vTexcoord = g_MinUV + (g_MaxUV - g_MinUV) * In.vTexcoord;
+     
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vColor.rgb = 1 - Out.vColor.rgb;
+    Out.vColor.a = Out.vColor.a * g_Alpha;
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass UI_TexUV_Pass_0
@@ -248,4 +263,15 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         PixelShader = compile ps_5_0 PS_Quick_Slot();
     }
+
+    pass UI_GuideUI_Pass_9
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_Guide_Ui();
+    }
+
 }

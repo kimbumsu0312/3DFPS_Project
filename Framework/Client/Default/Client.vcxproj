@@ -189,13 +189,14 @@
     <ClInclude Include="..\public\Die_Bela.h" />
     <ClInclude Include="..\public\Die_Daniela.h" />
     <ClInclude Include="..\public\Die_NorMon_1.h" />
+    <ClInclude Include="..\public\Get_UI.h" />
     <ClInclude Include="..\public\Guard_Player.h" />
     <ClInclude Include="..\public\HandGun.h" />
     <ClInclude Include="..\public\Idle_Bela.h" />
     <ClInclude Include="..\public\Idle_Daniela.h" />
     <ClInclude Include="..\public\Idle_Player.h" />
     <ClInclude Include="..\public\Announce_Icon.h" />
-    <ClInclude Include="..\public\SpawnItem.h" />
+    <ClInclude Include="..\public\ItemSpawner.h" />
     <ClInclude Include="..\public\Item_Info.h" />
     <ClInclude Include="..\public\Item_Penal.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
@@ -223,6 +224,7 @@
     <ClInclude Include="..\public\NorMon_Sword.h" />
     <ClInclude Include="..\public\PlayerState.h" />
     <ClInclude Include="..\public\PoolUIObj.h" />
+    <ClInclude Include="..\public\PoolWorldItem.h" />
     <ClInclude Include="..\public\Quick_Slot_Item.h" />
     <ClInclude Include="..\public\Reload_Player.h" />
     <ClInclude Include="..\Public\Scouting_NorMon_1.h" />
@@ -303,13 +305,14 @@
     <ClCompile Include="..\private\Die_Bela.cpp" />
     <ClCompile Include="..\private\Die_Daniela.cpp" />
     <ClCompile Include="..\private\Die_NorMon_1.cpp" />
+    <ClCompile Include="..\private\Get_UI.cpp" />
     <ClCompile Include="..\private\Guard_Player.cpp" />
     <ClCompile Include="..\private\HandGun.cpp" />
     <ClCompile Include="..\private\Idle_Bela.cpp" />
     <ClCompile Include="..\private\Idle_Daniela.cpp" />
     <ClCompile Include="..\private\Idle_Player.cpp" />
     <ClCompile Include="..\private\Announce_Icon.cpp" />
-    <ClCompile Include="..\private\SpawnItem.cpp" />
+    <ClCompile Include="..\private\ItemSpawner.cpp" />
     <ClCompile Include="..\private\Item_Info.cpp" />
     <ClCompile Include="..\private\Item_Penal.cpp" />
     <ClCompile Include="..\private\Create_Penal.cpp" />
@@ -335,6 +338,7 @@
     <ClCompile Include="..\private\NorMon_Sword.cpp" />
     <ClCompile Include="..\private\PlayerState.cpp" />
     <ClCompile Include="..\private\PoolUIObj.cpp" />
+    <ClCompile Include="..\private\PoolWorldItem.cpp" />
     <ClCompile Include="..\private\Quick_Slot_Item.cpp" />
     <ClCompile Include="..\private\Reload_Player.cpp" />
     <ClCompile Include="..\Private\Scouting_NorMon_1.cpp" />

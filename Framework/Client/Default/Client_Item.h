@@ -45,4 +45,29 @@ namespace Client
 		InvenItemData(6			,TEXT("¼¦°Ç ÃÑ¾Ë"),				ITEM_TYPE::ITEM			,2			,1			,1.5f		,0.9f	,{103, 215}		,{189, 259}		,6			,3			,QUICKSLOT_TYPE::NONE			,0		,TEXT("¼¦°Ç ÃÑ¾Ë")		),
 		InvenItemData(7			,TEXT("½º³ªÀÌÆÛ ÃÑ¾Ë"),			ITEM_TYPE::ITEM			,2			,1			,2			,0.9f	,{483, 215}		,{576, 259}		,12			,1			,QUICKSLOT_TYPE::NONE			,1		,TEXT("½º³ªÀÌÆÛ ÃÑ¾Ë")	),
 	};	
+
+	struct WorldItemData
+	{
+		_uint			m_iItemID;
+		_wstring		m_szName;
+		_wstring		m_szPoolPath;
+		_wstring		m_szModelPath;
+
+	public:
+		WorldItemData(_uint iItemID, _wstring szName, _wstring szPoolPath, _wstring szModelPath) :
+			m_iItemID(iItemID), m_szName(szName), m_szPoolPath(szPoolPath), m_szModelPath(szModelPath) {
+		};
+	};
+
+	const vector<WorldItemData> g_3DItemData =
+	{
+		WorldItemData(0			,TEXT("LEMI")					,TEXT("Pool_HandGun")						,TEXT("Prototype_Model_HandGun")),
+		WorldItemData(1			,TEXT("M1897")					,TEXT("Pool_ShotGun")						,TEXT("Prototype_Model_ShotGun")),
+		WorldItemData(2			,TEXT("F2 ¼ÒÃÑ")				,TEXT("Pool_Sniper")						,TEXT("Prototype_Model_Sniper")),
+		WorldItemData(3			,TEXT("Ä®")						,TEXT("Pool_Knife")							,TEXT("Prototype_Model_Knife")),
+		WorldItemData(4			,TEXT("È¸º¹¾à")					,TEXT("Pool_Potion")						,TEXT("Prototype_Component_Model_Potion")),
+		WorldItemData(5			,TEXT("±ÇÃÑ ÃÑ¾Ë")				,TEXT("Pool_Bullet_HandGun")				,TEXT("Prototype_Component_Model_Bullet_HandGun")),
+		WorldItemData(6			,TEXT("¼¦°Ç ÃÑ¾Ë")				,TEXT("Pool_Bullet_ShotGun")				,TEXT("Prototype_Component_Model_Bullet_ShotGun")),
+		WorldItemData(7			,TEXT("½º³ªÀÌÆÛ ÃÑ¾Ë")			,TEXT("Pool_Bullet_Sniper")					,TEXT("Prototype_Component_Model_Bullet_Sniper")),
+	};
 }

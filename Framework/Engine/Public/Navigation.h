@@ -26,6 +26,7 @@ public:
 	_bool							isOutNormal(_fvector vPosition, _float3& pOut);
 	_vector							Compute_OnCell(_fvector vPosition);
 	void							Set_CellIndex(_int iCellIndex) { m_iCurrentCellIndex = iCellIndex; }
+	_int							Get_CulIndex() { return m_iCurrentCellIndex; }
 #ifdef _DEBUG
 public:
 	HRESULT							Add_Cell(const _float3* pPos, _uint iCellType);

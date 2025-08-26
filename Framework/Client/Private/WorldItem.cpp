@@ -33,6 +33,7 @@ void CWorldItem::Priority_Update(_float fTimeDelta)
 
 void CWorldItem::Update(_float fTimeDelta)
 {
+	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CWorldItem::Late_Update(_float fTimeDelta)
@@ -55,11 +56,27 @@ HRESULT CWorldItem::Render()
 		m_pShaderCom->Begin(0);
 		m_pModelCom->Render(i);
 	}
+
+#ifdef _DEBUG
+	m_pColliderCom->Render();
+
+#endif
 	return S_OK;
 }
 
 HRESULT CWorldItem::Ready_Components(_wstring szModelPath)
 {
+	CBounding_OBB::BOUNDING_OBB_DESC  OBBDesc{};
+	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::ITEM);
+	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::ITEM);
+	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
+	OBBDesc.vExtents = _float3(2.f, 2.f, 2.f);
+	OBBDesc.vCenter = _float3(0.f, 0.5f, 0.f);
+
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
+		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &OBBDesc)))
+		return E_FAIL;
+
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), szModelPath,
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pModelCom), nullptr)))
 		return E_FAIL;
@@ -130,7 +147,7 @@ CGameObject* CWorldItem::Clone(void* pArg)
 void CWorldItem::Free()
 {
 	__super::Free();
-
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 }
