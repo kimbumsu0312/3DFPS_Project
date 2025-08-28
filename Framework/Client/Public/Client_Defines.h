@@ -13,6 +13,8 @@ namespace Client
 	enum class ITEM_2DRENDER_TYPE { HUD, INVEN, END };
 }
 
+#define beoumsu "Genius"
+
 extern HWND g_hWnd;
 extern HINSTANCE g_hInst;
 using namespace Client;

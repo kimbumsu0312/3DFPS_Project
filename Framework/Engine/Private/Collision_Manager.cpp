@@ -40,6 +40,7 @@ HRESULT CCollision_Manager::Update()
                 {
                     if (IsCheckBA)
                         (*iter_B).pObject->OnCollision((*iter_B), (*iter_A));
+
                 }
             }
             else if ((*iter_B).eCollider == COLLIDER::RAY)

@@ -244,6 +244,7 @@ HRESULT CDaniela::Ready_PartObjects()
 	if (FAILED(__super::Add_PartObject(TEXT("Part_Body"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Daniela"), &BodyDesc)))
 		return E_FAIL;
 
+
 	CBody_Daniela* pBody = static_cast<CBody_Daniela*>(Find_PartObject(TEXT("Part_Body")));
 
 	if (pBody == nullptr)

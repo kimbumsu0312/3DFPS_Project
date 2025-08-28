@@ -46,7 +46,7 @@ using namespace std;
 
 namespace Engine
 {
-	static const unsigned int g_iMaxNumBones = 900;
+	static const unsigned int g_iMaxNumBones = 950;
 }
 
 #include "Engine_Enum.h"

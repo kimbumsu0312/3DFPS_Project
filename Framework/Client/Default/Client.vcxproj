@@ -161,6 +161,7 @@
     <ClInclude Include="..\public\Aim_Shotgun.h" />
     <ClInclude Include="..\public\Aim_Shotgun_Line.h" />
     <ClInclude Include="..\public\Aim_Sniper.h" />
+    <ClInclude Include="..\public\Alcina.h" />
     <ClInclude Include="..\public\Announce.h" />
     <ClInclude Include="..\public\Attack_Bela.h" />
     <ClInclude Include="..\public\Attack_Daniela.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\BaseMapObj.h" />
     <ClInclude Include="..\public\Bela.h" />
+    <ClInclude Include="..\public\Body_Alchina.h" />
     <ClInclude Include="..\public\Body_Bela.h" />
     <ClInclude Include="..\public\Body_Daniela.h" />
     <ClInclude Include="..\public\Body_NorMon.h" />
@@ -279,6 +281,7 @@
     <ClCompile Include="..\private\Aim_Shotgun.cpp" />
     <ClCompile Include="..\private\Aim_Shotgun_Line.cpp" />
     <ClCompile Include="..\private\Aim_Sniper.cpp" />
+    <ClCompile Include="..\private\Alcina.cpp" />
     <ClCompile Include="..\private\Announce.cpp" />
     <ClCompile Include="..\private\Attack_Bela.cpp" />
     <ClCompile Include="..\private\Attack_Daniela.cpp" />
@@ -287,6 +290,7 @@
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseMapObj.cpp" />
     <ClCompile Include="..\private\Bela.cpp" />
+    <ClCompile Include="..\private\Body_Alchina.cpp" />
     <ClCompile Include="..\private\Body_Bela.cpp" />
     <ClCompile Include="..\Private\Body_Daniela.cpp" />
     <ClCompile Include="..\private\Body_NorMon.cpp" />

@@ -64,7 +64,6 @@ RAY_DESC CPicking::Create_FpsRayDesc(_int iOffSetX, _int iOffSetY)
 	XMVECTOR vMouseNDC = XMLoadFloat3(&vMousePos);
 
 	vMouseNDC = XMVector3TransformCoord(vMouseNDC, m_pGameInstance->Get_Transform_Matrix_Inverse(D3DTS::PROJ));
-
 	XMVECTOR vWolrdPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);
 
 	vMouseNDC = XMVector3TransformNormal(vMouseNDC, m_pGameInstance->Get_Transform_Matrix_Inverse(D3DTS::VIEW));

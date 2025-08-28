@@ -25,6 +25,7 @@ public:
 	void			Set_Damage(_int iDamage) { m_iDamage = iDamage; }
 	void			Add_QuickSlotItem(_int iSlotIndex, _int iItemIndex);
 	void			Selete_Slot(_int i);
+	const _int&		Get_QuickSlotItem(_int index) { return m_iQuickSlot[index - 1]; }
 private:
 	CGameInstance*	m_pGameInstance = { nullptr };
 	_float			m_fMaxHp = {};
@@ -35,7 +36,6 @@ private:
 	_vector			m_vPlayerPos = {};
 
 	_int			m_iQuickSlot[ENUM_CLASS(QUICKSLOT::END)] = { -1};
-	_int			m_iPreSeleteItem = { 0 };
 	_int			m_iSeleteItem = { 0 };
 
 	_bool			m_bIsDamage = { false };

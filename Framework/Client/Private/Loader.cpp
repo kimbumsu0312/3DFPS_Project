@@ -160,6 +160,10 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 #pragma endregion
 
 #pragma region Mon_Boss_Model
+	/* Prototype_Model_Alcina*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Boss/Alcina/Alcina.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Alcina"))))
+		return E_FAIL;
+
 	/* Prototype_Model_Bela*/
 	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Boss/Bela/Bela.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Bela"))))
 		return E_FAIL;

@@ -394,7 +394,7 @@ void CMonster_Normal::Root_Move()
 	vWorldTrans += vMovePos;
 	//회전량 누적
 	vWorldRot = XMQuaternionMultiply(vMoveRot, vWorldRot);
-	vWorldRot = XMQuaternionNormalize(vWorldRot);
+	//vWorldRot = XMQuaternionNormalize(vWorldRot);
 
 	_matrix ScaleMat = XMMatrixScalingFromVector(vScale);
 	_matrix Movemat = XMMatrixTranslationFromVector(vWorldTrans);

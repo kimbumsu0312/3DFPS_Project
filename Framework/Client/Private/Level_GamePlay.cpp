@@ -46,6 +46,9 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
+	_vector vPos = XMVector3Normalize({ 1.f, 1.f, 0.f });
+	
+	_float f = XMVectorGetX(vPos) + XMVectorGetY(vPos) + XMVectorGetZ(vPos);
 	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
 		CInven_Manager::GetInstance()->Add_ItemSlot(0, TEXT("Pool_Item"));
 	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_2))
