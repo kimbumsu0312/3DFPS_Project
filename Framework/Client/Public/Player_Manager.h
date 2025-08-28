@@ -26,6 +26,9 @@ public:
 	void			Add_QuickSlotItem(_int iSlotIndex, _int iItemIndex);
 	void			Selete_Slot(_int i);
 	const _int&		Get_QuickSlotItem(_int index) { return m_iQuickSlot[index - 1]; }
+
+	void			Update_Cell(_int iIndex) { m_iCellIndex = iIndex; }
+	const _int&		Get_CellIndex() {return m_iCellIndex; }
 private:
 	CGameInstance*	m_pGameInstance = { nullptr };
 	_float			m_fMaxHp = {};
@@ -35,6 +38,7 @@ private:
 	_int			m_iDamage = {};
 	_vector			m_vPlayerPos = {};
 
+	_int			m_iCellIndex = {};
 	_int			m_iQuickSlot[ENUM_CLASS(QUICKSLOT::END)] = { -1};
 	_int			m_iSeleteItem = { 0 };
 

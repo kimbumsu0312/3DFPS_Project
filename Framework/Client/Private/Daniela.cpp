@@ -67,6 +67,7 @@ void CDaniela::Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(Engine::STATE::POSITION,
 		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
 
+	m_pNavigationCom->Search_Node(CPlayer_Manager::GetInstance()->Get_CellIndex());
 	//스테이터스 업데이트
 	State_Check();
 	m_pCulStateObject->Update(this, fTimeDelta);

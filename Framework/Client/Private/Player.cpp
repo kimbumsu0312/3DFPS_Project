@@ -35,6 +35,7 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void* pArg)
 {
+
 	m_iCulWeponState = ENUM_CLASS(PLAYER_WEAPON::NONE);
 	m_szAnimTag = "Idle_Loop";
 	m_szCulStateTag = TEXT("Idle");
@@ -56,7 +57,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pColliderBone[PLAYER_VIEW] = m_pBodyObject->Get_BoneMatrix(TEXT("Cam"));
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-61.f, -8.5f, 13.5f, 1.f));
-
+	CPlayer_Manager::GetInstance()->Update_Cell(m_pNavigationCom->Get_CulIndex());
 	return S_OK;
 }
 
@@ -129,7 +130,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 	m_pWeaponObject->Late_Update(fTimeDelta);
 	m_pCamera->Late_Update(fTimeDelta);
-
+	CPlayer_Manager::GetInstance()->Update_Cell(m_pNavigationCom->Get_CulIndex());
 }
 
 HRESULT CPlayer::Render()

@@ -27,6 +27,8 @@ public:
 	_vector							Compute_OnCell(_fvector vPosition);
 	void							Set_CellIndex(_int iCellIndex) { m_iCurrentCellIndex = iCellIndex; }
 	_int							Get_CulIndex() { return m_iCurrentCellIndex; }
+
+	void							Search_Node(_int TargetIndex);
 #ifdef _DEBUG
 public:
 	HRESULT							Add_Cell(const _float3* pPos, _uint iCellType);
@@ -43,7 +45,11 @@ private:
 	_int							m_iCurrentCellIndex = { -1 };
 	vector<class CCell*>			m_Cells;
 
+	vector<Node*>					m_CompleteList;
+	vector<_int>					m_NodePath;
+
 	static _float4x4				m_WorldMatrix;
+	
 #ifdef _DEBUG
 private:
 	class CShader*					m_pShader = { nullptr };
@@ -53,7 +59,7 @@ private:
 
 private:
 	void							SetUp_Neighbors();
-
+	Node*							FindNodeInClosed(_int cellIndex);
 public:
 	static CNavigation*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const string& pNavigationFilePath);
 	static CNavigation*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -21,7 +21,9 @@ public:
 	_bool					Compare_Points(_fvector vSourPoint, _fvector vDestPoint);
 	_float					Compute_Height(_fvector vLocalPos);
 
-	
+	const _int&				Get_NeighborIndeices(_int iLine) { return m_iNeighborIndices[iLine]; }
+	_float					Distance(_vector vCenterPos);
+	const _float3&			Get_Center() { return m_vCenter; }
 #ifdef _DEBUG
 public:
 	HRESULT					Render();
@@ -39,12 +41,15 @@ private:
 	_int					m_iNeighborIndices[ENUM_CLASS(CELL_LINE::END)] = { -1, -1, -1 };
 
 	_uint					m_iCellType = {};
+
+	_float3					m_vCenter = {};
 #ifdef _DEBUG
 private:
 	class CVIBuffer_Cell*	m_pVIBuffer = { nullptr };
 
 #endif
-
+private:
+	void					Center_Update();
 public:
 	static CCell*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _int iIndex, _uint iCellType, _bool IsLoad);
 	virtual void			Free() override;

@@ -42,6 +42,7 @@ using namespace nlohmann;
 #include <queue>
 #include <ctime>
 #include <typeindex>
+#include <stack>
 using namespace std;
 
 namespace Engine

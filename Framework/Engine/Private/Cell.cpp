@@ -50,13 +50,12 @@ HRESULT CCell::Initialize_Load(const _float3* pPoints, _int iIndex, _uint iCellT
 	vLine = XMLoadFloat3(&m_vPoints[ENUM_CLASS(CELL_POINT::A)]) - XMLoadFloat3(&m_vPoints[ENUM_CLASS(CELL_POINT::C)]);
 	m_vNormals[ENUM_CLASS(CELL_LINE::CA)] = _float3(XMVectorGetZ(vLine) * -1.f, 0.f, XMVectorGetX(vLine));
 
-
 #ifdef _DEBUG
 	m_pVIBuffer = CVIBuffer_Cell::Create(m_pDevice, m_pContext, pPoints);
 	if (nullptr == m_pVIBuffer)
 		return E_FAIL;
 #endif
-
+	Center_Update();
 	return S_OK;
 }
 
@@ -141,6 +140,11 @@ _float CCell::Compute_Height(_fvector vLocalPos)
 
 }
 
+_float CCell::Distance(_vector vCenterPos)
+{
+	return XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vCenter) - vCenterPos));
+}
+
 #ifdef _DEBUG
 HRESULT CCell::Render()
 {
@@ -182,6 +186,13 @@ _bool CCell::IsPick(_float& fDist, _int& iIndex)
 	return false;
 }
 #endif
+
+void CCell::Center_Update()
+{
+	m_vCenter.x = (m_vPoints[ENUM_CLASS(CELL_POINT::A)].x + m_vPoints[ENUM_CLASS(CELL_POINT::B)].x + m_vPoints[ENUM_CLASS(CELL_POINT::C)].x) / 3;
+	m_vCenter.y = (m_vPoints[ENUM_CLASS(CELL_POINT::A)].y + m_vPoints[ENUM_CLASS(CELL_POINT::B)].y + m_vPoints[ENUM_CLASS(CELL_POINT::C)].y) / 3;
+	m_vCenter.z = (m_vPoints[ENUM_CLASS(CELL_POINT::A)].z + m_vPoints[ENUM_CLASS(CELL_POINT::B)].z + m_vPoints[ENUM_CLASS(CELL_POINT::C)].z) / 3;
+}
 
 CCell* CCell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _int iIndex, _uint iCellType, _bool IsLoad)
 {

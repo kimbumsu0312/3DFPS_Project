@@ -17,6 +17,19 @@ namespace Engine
 
 	}ENGINE_DESC;	
 
+
+	typedef struct tagNodeDesc
+	{
+		int CellIndex;
+		int PreIndex;
+		XMFLOAT3 vCenter;
+
+		float g;
+		float h;
+		float f;
+
+	}Node;
+
 	typedef struct tagCollisionRayDesc
 	{
 		XMVECTOR	RayPos;
