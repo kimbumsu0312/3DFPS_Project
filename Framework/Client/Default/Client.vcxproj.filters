@@ -295,6 +295,30 @@
     <Filter Include="02.GameObject\Monster\Boss\Alchina\Monstate_Alchina">
       <UniqueIdentifier>{25f56ea3-c599-4255-9749-95d14380d2b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96.SuperClass\BehaviorTree">
+      <UniqueIdentifier>{594ce3db-8b23-4e7c-8f44-ff0fa086e044}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\BlackBord">
+      <UniqueIdentifier>{2020a980-0314-4142-8969-145deadad2f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\BehaviorTree\Node">
+      <UniqueIdentifier>{7e6e108a-896b-46e8-b99a-da44355b4186}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\BehaviorTree\Node\Sequence">
+      <UniqueIdentifier>{149403fa-9165-43b1-bdcc-9afa23ac1597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\BehaviorTree\Node\Selector">
+      <UniqueIdentifier>{7db5b429-a901-4f09-a06a-90f530f9c079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\BehaviorTree\Node\Action">
+      <UniqueIdentifier>{d48b5296-b17a-4aba-bde1-09ab4f7c9122}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96.SuperClass\BehaviorTree\Tree">
+      <UniqueIdentifier>{975ef5fd-db2c-4cca-a885-3d98ffb06da2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Boss\Alchina\BehaviorTree_Alcina">
+      <UniqueIdentifier>{db650bdf-c7e0-46c1-a314-c5e0f60074c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -651,6 +675,27 @@
     <ClInclude Include="..\public\Body_Alchina.h">
       <Filter>02.GameObject\Monster\Boss\Alchina\Body</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\ActionNode.h">
+      <Filter>96.SuperClass\BehaviorTree\Node\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SeletctorNode.h">
+      <Filter>96.SuperClass\BehaviorTree\Node\Selector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SequenceNode.h">
+      <Filter>96.SuperClass\BehaviorTree\Node\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BlackBoard.h">
+      <Filter>96.SuperClass\BlackBord</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Node.h">
+      <Filter>96.SuperClass\BehaviorTree\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BehaviorTree.h">
+      <Filter>96.SuperClass\BehaviorTree\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BehaviorTree_Alcina.h">
+      <Filter>02.GameObject\Monster\Boss\Alchina\BehaviorTree_Alcina</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -986,6 +1031,27 @@
     </ClCompile>
     <ClCompile Include="..\private\Body_Alchina.cpp">
       <Filter>02.GameObject\Monster\Boss\Alchina\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ActionNode.cpp">
+      <Filter>96.SuperClass\BehaviorTree\Node\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SeletctorNode.cpp">
+      <Filter>96.SuperClass\BehaviorTree\Node\Selector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SequenceNode.cpp">
+      <Filter>96.SuperClass\BehaviorTree\Node\Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BlackBoard.cpp">
+      <Filter>96.SuperClass\BlackBord</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Node.cpp">
+      <Filter>96.SuperClass\BehaviorTree\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BehaviorTree.cpp">
+      <Filter>96.SuperClass\BehaviorTree\Tree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BehaviorTree_Alcina.cpp">
+      <Filter>02.GameObject\Monster\Boss\Alchina\BehaviorTree_Alcina</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

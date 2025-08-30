@@ -64,10 +64,14 @@ void CDaniela::Priority_Update(_float fTimeDelta)
 
 void CDaniela::Update(_float fTimeDelta)
 {
-	m_pTransformCom->Set_State(Engine::STATE::POSITION,
-		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
+	_int iTargetCellIndex = CPlayer_Manager::GetInstance()->Get_CellIndex();
 
-	m_pNavigationCom->Search_Node(CPlayer_Manager::GetInstance()->Get_CellIndex());
+	if (m_iPretargIndex != 0)
+	{
+		m_iPretargIndex = 0;
+		m_pNavigationCom->Search_MovePos(0);
+	}
+
 	//스테이터스 업데이트
 	State_Check();
 	m_pCulStateObject->Update(this, fTimeDelta);
@@ -78,7 +82,13 @@ void CDaniela::Update(_float fTimeDelta)
 	m_pWeaponObject->Update(fTimeDelta);
 
 	//위치 보정
+	Target_LookTurn_Navi(fTimeDelta);
 	Root_Move();
+	
+	m_pTransformCom->Set_State(Engine::STATE::POSITION,
+		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
+
+		
 	Collider_Update();
 }
 
@@ -125,13 +135,26 @@ void CDaniela::Target_LookTurn(_float fTimeDelta)
 	_vector vLook = XMVector3Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK),0.f));
 
 	_vector vAxis = XMVector3Normalize(XMVector3Cross(vLook, vDir));
+	 
+	m_pTransformCom->Turn(vAxis, fTimeDelta);
+}
+
+void CDaniela::Target_LookTurn_Navi(_float fTimeDelta)
+{
+	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
+	_vector vPlayerPos = m_pNavigationCom->IsNaviNode();
+
+	_vector vDir = XMVector3Normalize(XMVectorSetY(vPlayerPos - vMonPos, 0.f));
+	_vector vLook = XMVector3Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+
+	_vector vAxis = XMVector3Normalize(XMVector3Cross(vLook, vDir));
 
 	m_pTransformCom->Turn(vAxis, fTimeDelta);
 }
 
 void CDaniela::Target_LookAt()
 {
-	m_pTransformCom->LookAt(CPlayer_Manager::GetInstance()->Get_PlayerPos());
+	//m_pTransformCom->LookAt(CPlayer_Manager::GetInstance()->Get_PlayerPos());
 }
 
 void CDaniela::Attack_Collision()

@@ -30,6 +30,12 @@ namespace Engine
 
 	}Node;
 
+	typedef struct tagPortalDesc
+	{
+		XMFLOAT3 vLeft;
+		XMFLOAT3 vRight;
+	}Portal;
+
 	typedef struct tagCollisionRayDesc
 	{
 		XMVECTOR	RayPos;

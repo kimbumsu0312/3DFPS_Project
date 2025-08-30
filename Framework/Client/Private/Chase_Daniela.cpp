@@ -21,7 +21,7 @@ void CChase_Daniela::Enter(CDaniela* pContainer)
 
 void CChase_Daniela::Update(CDaniela* pContainer, _float fTimeDelta)
 {
-    pContainer->Target_LookTurn(fTimeDelta);
+    //pContainer->Target_LookTurn(fTimeDelta);
 
     if (pContainer->Get_State().isDamage)
         pContainer->Switch_State(TEXT("Damage"));

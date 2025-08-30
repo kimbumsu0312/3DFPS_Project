@@ -221,7 +221,7 @@ void CInvenItem::State_Selete()
 
 		m_vPos.x = ptMouse.x;
 		m_vPos.y = ptMouse.y;
-
+	
 		m_pItemSlot->Update_Pos(m_vPos);
 
 		if (m_pGameInstance->IsKeyDown(DIK_R))

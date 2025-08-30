@@ -37,6 +37,7 @@ public:
 	const _vector				Get_TransformState(STATE eState) { return m_pTransformCom->Get_State(eState); }
 
 	void						Target_LookTurn(_float fTimeDelta);
+	void						Target_LookTurn_Navi(_float fTimeDelta);
 	void						Target_LookAt();
 	void						Reset_DamageCheck() { m_bIsDamage = false; m_IsHitPoint = {}; }
 	void						Attack_Collision();
@@ -53,6 +54,7 @@ private:
 	class CWeaponObject*		m_pWeaponObject = { nullptr };
 	class CBody_Daniela*		m_pBodyObject = { nullptr };
 
+	_bool						m_bIsNavi = { false };
 	_int						m_iWeaponType = {};
 	
 	//상태 관련
@@ -68,6 +70,7 @@ private:
 	_bool						m_bIsDamage = { false };
 
 	_int						m_iHp = {};
+	_int						m_iPretargIndex = {-1};
 	//애니메이션 관련
 	_uint						m_iAnimState = { ENUM_CLASS(NORMAL_MON_STATE::NORMAL) };
 	string						m_szAnimTag;

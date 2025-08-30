@@ -172,6 +172,9 @@
     <Filter Include="01.Utility\95.Collision_Manager">
       <UniqueIdentifier>{aa5ad6c1-75ca-4e8b-8f35-fee0a17b91a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Component\VIBuffer\Line">
+      <UniqueIdentifier>{dfd1a223-1d16-439e-a69d-4b6cfd6e7350}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -354,6 +357,9 @@
     <ClInclude Include="..\public\Collision_Manager.h">
       <Filter>01.Utility\95.Collision_Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Line.h">
+      <Filter>01.Utility\03.Component\VIBuffer\Line</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -517,6 +523,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Collision_Manager.cpp">
       <Filter>01.Utility\95.Collision_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Line.cpp">
+      <Filter>01.Utility\03.Component\VIBuffer\Line</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

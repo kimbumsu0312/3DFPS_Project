@@ -20,6 +20,7 @@ public:
 
 	_bool					Compare_Points(_fvector vSourPoint, _fvector vDestPoint);
 	_float					Compute_Height(_fvector vLocalPos);
+	_bool					Compute_Portal(_int iIndex, Portal& vPortal);
 
 	const _int&				Get_NeighborIndeices(_int iLine) { return m_iNeighborIndices[iLine]; }
 	_float					Distance(_vector vCenterPos);

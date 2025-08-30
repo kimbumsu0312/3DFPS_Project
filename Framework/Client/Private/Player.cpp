@@ -108,10 +108,10 @@ void CPlayer::Update(_float fTimeDelta)
 	m_pCamera->Update(fTimeDelta);
 
 	IsDmage(fTimeDelta);
-	m_pTransformCom->Set_State(Engine::STATE::POSITION,
-		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
-	Collider_Update();
+
+	m_pTransformCom->Set_State(Engine::STATE::POSITION,	m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
 	CPlayer_Manager::GetInstance()->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
+	Collider_Update();
 
 }
 	
@@ -130,7 +130,6 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 	m_pWeaponObject->Late_Update(fTimeDelta);
 	m_pCamera->Late_Update(fTimeDelta);
-	CPlayer_Manager::GetInstance()->Update_Cell(m_pNavigationCom->Get_CulIndex());
 }
 
 HRESULT CPlayer::Render()
@@ -349,8 +348,12 @@ void CPlayer::InputKey_MoveState(_float fTimeDelta)
 	if (IsMove)
 	{
 		m_AttackState.isMove = true;
-		m_pTransformCom->Is_Sliding(m_pNavigationCom);
 	}
+	m_pTransformCom->Is_Sliding(m_pNavigationCom);
+	_int Index = m_pNavigationCom->Get_CulIndex();
+	if (Index == 7)
+		int a = 10;
+	CPlayer_Manager::GetInstance()->Update_Cell(Index);
 }
 
 void CPlayer::InputKey_AttackState(_float fTimeDelta)

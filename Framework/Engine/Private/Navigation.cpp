@@ -8,9 +8,9 @@ _float4x4 CNavigation::m_WorldMatrix = {};
 
 struct CompareNode
 {
-	bool operator()(const Node* a, const Node* b)
+	bool operator()(const Node a, const Node b)
 	{
-		return a->f > b->f;
+		return a.f > b.f;
 	}
 };
 
@@ -135,7 +135,7 @@ _bool CNavigation::isMove(_fvector vCulPosition)
 		{
 			if (-1 == iNeighborIndex)
 				return false;
-			//인접한 셀에 객체가 있는지 판단 후, 없으면 다음 인접 셀로 넘김
+			//인접한 셀에 범수의 객체가 있는지 판단 후, 없으면 다음 인접 셀로 넘김
 			//있는 경우 셀 인덱스를 반환
 			if (true == m_Cells[iNeighborIndex]->isIn(vLocalPos, &iNeighborIndex))
 				break;
@@ -164,46 +164,46 @@ _vector CNavigation::Compute_OnCell(_fvector vPosition)
 	//객체의 월드값을 변경해준다.
 	vLocalPos = XMVectorSetY(vLocalPos, fHeight);
 
-	//월드 값으로 변환해서 월드반환
+	//월드 값으로 변환해서 범수의 월드반환
 	return XMVector3TransformCoord(vLocalPos, XMLoadFloat4x4(&m_WorldMatrix));
 
 }
 #ifdef _DEBUG
 
-void CNavigation::Search_Node(_int TargetIndex)
+void CNavigation::SetUp_Node(_int TargetIndex)
 {
-	priority_queue<Node*, vector<Node*>, CompareNode> SearchList;
+	priority_queue<Node, vector<Node>, CompareNode> SearchList;
 	
-	Node* startNode = new Node();
-	startNode->CellIndex = m_iCurrentCellIndex;
-	startNode->PreIndex = -1;
-	startNode->g = 0;
-	startNode->vCenter = m_Cells[m_iCurrentCellIndex]->Get_Center();
-	startNode->h = m_Cells[m_iCurrentCellIndex]->Distance(XMLoadFloat3(&m_Cells[TargetIndex]->Get_Center()));
-	startNode->f = startNode->g + startNode->h;
+	Node StartNode{};
+	StartNode.CellIndex = m_iCurrentCellIndex;
+	StartNode.PreIndex = -1;
+	StartNode.g = 0;
+	StartNode.vCenter = m_Cells[m_iCurrentCellIndex]->Get_Center();
+	StartNode.h = m_Cells[m_iCurrentCellIndex]->Distance(XMLoadFloat3(&m_Cells[TargetIndex]->Get_Center()));
+	StartNode.f = StartNode.g + StartNode.h;
 
 	//시작 노드를 리스트에 넣는다.
-	SearchList.push(startNode);
+	SearchList.push(StartNode);
 
-	Node* FinalNode = nullptr;
+	Node FinalNode{};
 
 	while (!SearchList.empty())
 	{
 		//우선 순위가 제일 높은 노드를 꺼낸다.
-		Node* Current = SearchList.top();
+		Node Current = SearchList.top();
 		SearchList.pop();
 
 		//인덱스가 목표 인덱스면 반복 종료
-		if (Current->CellIndex == TargetIndex)
+		if (Current.CellIndex == TargetIndex)
 		{
 			FinalNode = Current;
 			break;
 		}
 
+		Node Temp{};
 		//검색한 인덱스인지 체크
-		if (FindNodeInClosed(Current->CellIndex))
+		if (FindNodeInClosed(Current.CellIndex, Temp))
 		{
-			delete Current;
 			continue;
 		}
 		
@@ -212,54 +212,171 @@ void CNavigation::Search_Node(_int TargetIndex)
 		//인접셀 검사
 		for (_int i = 0; i < ENUM_CLASS(CELL_LINE::END); ++i)
 		{
-
-			_int neighborIndex = m_Cells[Current->CellIndex]->Get_NeighborIndeices(i);
-			if (neighborIndex < 0)
+			_int NeighborIndex = m_Cells[Current.CellIndex]->Get_NeighborIndeices(i);
+			if (NeighborIndex < 0)
 				continue;
 
-			//인접셀 중 검사한 곳이 있으면 넘긴다.
-			if (FindNodeInClosed(neighborIndex))
+			//인접범수셀 중 검사한 곳이 있으면 넘긴다.
+			if (FindNodeInClosed(NeighborIndex, Temp))
 				continue;
 
-			Node* neighborNode = new Node();
-			neighborNode->CellIndex = neighborIndex;
-			neighborNode->PreIndex = Current->CellIndex;
-			neighborNode->vCenter = m_Cells[neighborIndex]->Get_Center();
-			neighborNode->g = Current->g + m_Cells[neighborIndex]->Distance(XMLoadFloat3(&Current->vCenter));
-			neighborNode->h = m_Cells[neighborIndex]->Distance(XMLoadFloat3(&m_Cells[TargetIndex]->Get_Center()));
-			neighborNode->f = neighborNode->g + neighborNode->h;
+			Node NeighborNode{};
+			NeighborNode.CellIndex = NeighborIndex;
+			NeighborNode.PreIndex = Current.CellIndex;
+			NeighborNode.vCenter = m_Cells[NeighborIndex]->Get_Center();
+			NeighborNode.g = Current.g + m_Cells[NeighborIndex]->Distance(XMLoadFloat3(&Current.vCenter));
+			NeighborNode.h = m_Cells[NeighborIndex]->Distance(XMLoadFloat3(&m_Cells[TargetIndex]->Get_Center()));
+			NeighborNode.f = NeighborNode.g + NeighborNode.h;
 
-			SearchList.push(neighborNode);
+			SearchList.push(NeighborNode);
 		}
 	}
 
-	while (FinalNode != nullptr)
+	while (true)
 	{
 		//현재의 마지막 노드 셀 인덱스 저장
-		m_NodePath.push_back(FinalNode->CellIndex);
-		Node* parentNode = nullptr;
+		m_NodePath.push_back(FinalNode.CellIndex);
+		Node parentNode{};
 
 		//이전 노드 인덱스가 -1이 아니면 이전 노드를 찾아서 저장
-		if (FinalNode->PreIndex != -1)
-			parentNode = FindNodeInClosed(FinalNode->PreIndex);
-		
-		FinalNode = parentNode;
+		if (FinalNode.PreIndex != -1)
+		{
+			if (!FindNodeInClosed(FinalNode.PreIndex, parentNode))
+				continue;
+
+			FinalNode = parentNode;
+		}
+		else
+			break;
 	}
 
 	//벡터 뒤집기
 	reverse(m_NodePath.begin(), m_NodePath.end());
 
-
 	while (!SearchList.empty())
 	{
-		delete SearchList.top();
 		SearchList.pop();
 	}
-
-	for (auto Node : m_CompleteList)
-		delete Node;
 	
 	m_CompleteList.clear();
+}
+
+_bool CNavigation::SetUp_Portal(vector<Portal>& PortalPath)
+{
+	Portal vPortal{};
+	for (_int i = 1; i < m_NodePath.size(); ++i)
+	{
+		if (!m_Cells[i]->Compute_Portal(i, vPortal))
+			return false;
+
+		PortalPath.push_back(vPortal);
+	}
+	
+	for (auto& portal : PortalPath)
+	{
+		_float3 vCenter{};
+
+		XMStoreFloat3(&vCenter, (XMLoadFloat3(&portal.vRight) + XMLoadFloat3(&portal.vLeft)) * 0.5f);
+		m_Portal.push_back(vCenter);
+		_vector vDir = XMVector3Normalize(XMLoadFloat3(&portal.vRight) - XMLoadFloat3(&portal.vLeft));
+
+		_vector vNormal = XMVectorSet(-XMVectorGetZ(vDir), 0.f, XMVectorGetX(vDir), 0.f);
+
+
+		_vector vOffset = vNormal * 5.f;
+
+		XMStoreFloat3(&portal.vLeft, XMLoadFloat3(&portal.vLeft) + vOffset);
+		XMStoreFloat3(&portal.vRight, XMLoadFloat3(&portal.vRight) + vOffset);
+
+	}
+	return true;
+}
+
+_vector CNavigation::IsNaviMove(_vector vPos)
+{
+	if (XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_NaviPath[m_iNaviMoveIndex]) - vPos)) <= 5.5f)
+		++m_iNaviMoveIndex;
+
+	_vector vDir = XMLoadFloat3(&m_NaviPath[m_iNaviMoveIndex]) - vPos;
+
+	return XMLoadFloat3(&m_NaviPath[m_iNaviMoveIndex]);
+	//return XMVector3Normalize(vDir);
+}
+
+_vector CNavigation::IsNaviNode()
+{
+	if (m_iCurrentCellIndex == m_NodePath[m_iNaviMoveIndex])
+		m_iNaviMoveIndex++;
+
+
+	return XMLoadFloat3(&m_Cells[m_NodePath[m_iNaviMoveIndex]]->Get_Center());
+}
+
+_vector CNavigation::IsNaviPortal(_vector vPos)
+{
+	if (XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_Portal[m_iNaviMoveIndex]) - vPos)) <= 0.1f)
+		++m_iNaviMoveIndex;
+
+
+	return XMLoadFloat3(&m_Portal[m_iNaviMoveIndex]);
+}
+
+void CNavigation::Search_MovePos(_int TargetIndex)
+{
+	auto Cross2D = [](_vector a, _vector b) {
+		return XMVectorGetX(a) * XMVectorGetZ(b) - XMVectorGetZ(a) * XMVectorGetX(b);};
+
+	m_iNaviMoveIndex = 0;
+	SetUp_Node(TargetIndex);
+	
+	vector<Portal> PortalPath;
+	if (!SetUp_Portal(PortalPath))
+		return;
+
+	vector<_float3> Path;
+
+	_vector apex = XMLoadFloat3(&m_Cells[m_NodePath.front()]->Get_Center());
+	_vector vLeft = XMLoadFloat3(&PortalPath[0].vLeft);
+	_vector vRight = XMLoadFloat3(&PortalPath[0].vRight);
+
+	Path.push_back(m_Cells[m_NodePath.front()]->Get_Center());
+
+	_float3 vPos{};
+	for (int i = 1; i < PortalPath.size(); i++) {
+		_vector newvLeft = XMLoadFloat3(&PortalPath[i].vLeft);
+		_vector newvRight = XMLoadFloat3(&PortalPath[i].vRight);
+
+		// 왼쪽 벽 체크
+		if (Cross2D(newvLeft - apex, vLeft - apex) >= 0.f)
+		{
+			if (Cross2D(newvLeft - apex, vRight - apex) > 0.f)
+			{
+				apex = vRight;
+				XMStoreFloat3(&vPos, apex);
+				Path.push_back(vPos);
+				vLeft = apex;
+				vRight = newvRight;
+				continue;
+			}
+			vLeft = newvLeft;
+		}
+
+		// 오른쪽 벽 체크
+		if (Cross2D(newvRight - apex, vRight - apex) <= 0.f) {
+			if (Cross2D(newvRight - apex, vLeft - apex) < 0.f) {
+				apex = vLeft;
+				XMStoreFloat3(&vPos, apex);
+				Path.push_back(vPos);
+				vRight = apex;
+				vLeft = newvLeft;
+				continue;
+			}
+			vRight = newvRight;
+		}
+	}
+
+	Path.push_back(m_Cells[m_NodePath.back()]->Get_Center());
+	m_NaviPath = Path;
 }
 
 HRESULT CNavigation::Add_Cell(const _float3* pPos, _uint iCellType)
@@ -428,14 +545,17 @@ void CNavigation::SetUp_Neighbors()
 	}
 }
 
-Node* CNavigation::FindNodeInClosed(_int cellIndex)
+_bool CNavigation::FindNodeInClosed(_int cellIndex, Node& pOut)
 {
 	for (auto Node : m_CompleteList)
 	{
-		if (Node->CellIndex == cellIndex)
-			return Node;
+		if (Node.CellIndex == cellIndex)
+		{
+			pOut = Node;
+			return true;
+		}
 	}
-	return nullptr;
+	return false;
 }
 
 CNavigation* CNavigation::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const string& pNavigationFilePath)

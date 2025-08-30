@@ -140,6 +140,40 @@ _float CCell::Compute_Height(_fvector vLocalPos)
 
 }
 
+_bool CCell::Compute_Portal(_int iIndex, Portal& vPortal)
+{
+	_int iLine = -1;
+
+	for (_int i = 0; i < ENUM_CLASS(CELL_LINE::END); ++i)
+	{
+		if (m_iNeighborIndices[i] = iIndex)
+		{
+			iLine = i;
+			break;
+		}
+	}
+
+	if (iLine < 0)
+		return false;
+
+	switch (iLine)
+	{
+	case ENUM_CLASS(CELL_LINE::AB):
+		vPortal.vLeft = m_vPoints[ENUM_CLASS(CELL_POINT::A)] ;
+		vPortal.vRight = m_vPoints[ENUM_CLASS(CELL_POINT::B)];
+		break;
+	case ENUM_CLASS(CELL_LINE::BC):
+		vPortal.vLeft = m_vPoints[ENUM_CLASS(CELL_POINT::B)] ;
+		vPortal.vRight = m_vPoints[ENUM_CLASS(CELL_POINT::C)] ;
+		break;
+	case ENUM_CLASS(CELL_LINE::CA):
+		vPortal.vLeft = m_vPoints[ENUM_CLASS(CELL_POINT::C)];
+		vPortal.vRight = m_vPoints[ENUM_CLASS(CELL_POINT::A)] ;
+		break;
+	}
+	return true;
+}
+
 _float CCell::Distance(_vector vCenterPos)
 {
 	return XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vCenter) - vCenterPos));

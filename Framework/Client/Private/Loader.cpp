@@ -1,17 +1,6 @@
 #include "pch.h"
 #include "Loader.h"
-#include "BackGround.h"
-#include "Terrain.h"
-#include "Camera_Free.h"
-#include "Sky.h"
-#include "BaseMapObj.h"
-#include "MapNevi.h"
-#include "SpawnPoint.h"
-#include "MonSpawner.h"
-#include "ItemSpawner.h"
 
-#include "InvenItem.h"
-#include "PoolWorldItem.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_pDevice{ pDevice }, m_pContext { pContext }, m_pGameInstance { CGameInstance::GetInstance()}
 {
@@ -334,9 +323,18 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1_Shotel"),
 		CNormon_Shotel::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
 #pragma endregion
 
 #pragma region Monster_Boss_Object
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Alcina"),
+		CAlcina::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Alcina"),
+		CBody_Alchina::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Bela"),
 		CBela::Create(m_pDevice, m_pContext))))
 		return E_FAIL;

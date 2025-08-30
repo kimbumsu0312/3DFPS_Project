@@ -10,6 +10,7 @@ NS_END
 NS_BEGIN(Client)
 class CBody_Alchina final : public CPartObject
 {
+
 public:
 	typedef struct tagBodyNormalDesc : public CPartObject::PARTOBJECT_DESC {
 		_uint* pState = { nullptr };
@@ -41,6 +42,7 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	CAnimatio_Controller* m_pAnimCom = { nullptr };
+
 
 	_uint* m_pAnimState = { nullptr };
 	string* m_pAnimTag = { nullptr };

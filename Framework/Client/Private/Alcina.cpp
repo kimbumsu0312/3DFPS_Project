@@ -1,25 +1,26 @@
 #include "pch.h"
 #include "Alcina.h"
 #include "Player_Manager.h"
-
 #include "Body_Alchina.h"
+#include "BehaviorTree_Alcina.h"
+#include "BlackBoard.h"
 
-CAlchina::CAlchina(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CContainerObject(pDevice, pContext)
+CAlcina::CAlcina(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CContainerObject(pDevice, pContext)
 {
 }
 
-CAlchina::CAlchina(const CAlchina& Prototype) : CContainerObject(Prototype)
+CAlcina::CAlcina(const CAlcina& Prototype) : CContainerObject(Prototype)
 {
 }
 
-HRESULT CAlchina::Initialize_Prototype()
+HRESULT CAlcina::Initialize_Prototype()
 {
+
 	return S_OK;
 }
 
-HRESULT CAlchina::Initialize(void* pArg)
+HRESULT CAlcina::Initialize(void* pArg)
 {
-	m_iHp = 10000;
 	m_iAnimState = ENUM_CLASS(BOSS_SISTER::NORMAL);
 	m_szAnimTag = "Idle";
 
@@ -35,10 +36,14 @@ HRESULT CAlchina::Initialize(void* pArg)
 	if (FAILED(Ready_StateObjects()))
 		return E_FAIL;
 
-	m_pColliderBone[ColliderType_Mon::Body] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
-	m_pColliderBone[ColliderType_Mon::Head] = m_pBodyObject->Get_BoneMatrix(TEXT("Head"));
-	m_pColliderBone[ColliderType_Mon::L_ARM] = m_pBodyObject->Get_BoneMatrix(TEXT("L_UpperArm"));
-	m_pColliderBone[ColliderType_Mon::R_ARM] = m_pBodyObject->Get_BoneMatrix(TEXT("R_UpperArm"));
+	if (FAILED(Ready_Utility()))
+		return E_FAIL;
+
+
+	//m_pColliderBone[ColliderType_Mon::Body] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
+	//m_pColliderBone[ColliderType_Mon::Head] = m_pBodyObject->Get_BoneMatrix(TEXT("Head"));
+	//m_pColliderBone[ColliderType_Mon::L_ARM] = m_pBodyObject->Get_BoneMatrix(TEXT("L_UpperArm"));
+	//m_pColliderBone[ColliderType_Mon::R_ARM] = m_pBodyObject->Get_BoneMatrix(TEXT("R_UpperArm"));
 
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-55.66f, -8.68f, 30.52f, 1.f));
@@ -46,24 +51,16 @@ HRESULT CAlchina::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CAlchina::Priority_Update(_float fTimeDelta)
+void CAlcina::Priority_Update(_float fTimeDelta)
 {
 	m_pTransformCom->PrePostion_Update();
-	m_State = {};
-
 	m_pBodyObject->Priority_Update(fTimeDelta);
 }
 
-void CAlchina::Update(_float fTimeDelta)
+void CAlcina::Update(_float fTimeDelta)
 {
 	m_pTransformCom->Set_State(Engine::STATE::POSITION,
 		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
-
-	//스테이터스 업데이트
-	State_Check();
-	//m_pCulStateObject->Update(this, fTimeDelta);
-
-	State_Change();
 
 	m_pBodyObject->Update(fTimeDelta);
 
@@ -72,7 +69,7 @@ void CAlchina::Update(_float fTimeDelta)
 	Collider_Update();
 }
 
-void CAlchina::Late_Update(_float fTimeDelta)
+void CAlcina::Late_Update(_float fTimeDelta)
 {
 	for (_int i = 0; i < ColliderType_Mon::End; ++i)
 	{
@@ -86,7 +83,7 @@ void CAlchina::Late_Update(_float fTimeDelta)
 	m_pBodyObject->Late_Update(fTimeDelta);
 }
 
-HRESULT CAlchina::Render()
+HRESULT CAlcina::Render()
 {
 #ifdef _DEBUG
 	for (_int i = 0; i < ColliderType_Mon::End; ++i)
@@ -98,13 +95,7 @@ HRESULT CAlchina::Render()
 	return S_OK;
 }
 
-void CAlchina::Switch_Anim(string szAnimTag, _bool IsLoop)
-{
-	m_szAnimTag = szAnimTag;
-	m_bIsAnimLoop = IsLoop;
-}
-
-void CAlchina::Target_LookTurn(_float fTimeDelta)
+void CAlcina::Target_LookTurn(_float fTimeDelta)
 {
 	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
 	_vector vPlayerPos = CPlayer_Manager::GetInstance()->Get_PlayerPos();
@@ -117,47 +108,20 @@ void CAlchina::Target_LookTurn(_float fTimeDelta)
 	m_pTransformCom->Turn(vAxis, fTimeDelta);
 }
 
-void CAlchina::Target_LookAt()
+void CAlcina::Target_LookAt()
 {
 	m_pTransformCom->LookAt(CPlayer_Manager::GetInstance()->Get_PlayerPos());
 }
 
-void CAlchina::IsDamage()
+void CAlcina::IsDamage()
 {
-	if (m_IsHitPoint.IsHead)
-		m_iHp -= CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f;
-	else
-		m_iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
 }
 
-void CAlchina::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
+void CAlcina::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
 {
-	if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::RESIST))
-	{
-		if (TargetCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::RESIST))
-			m_pTransformCom->Is_Sliding(m_pNavigationCom, XMLoadFloat3(&TargetCollision.pCollider->Get_Intersect_Normal()));
-	}
-
-	switch (TargetCollision.iObjType)
-	{
-	case ENUM_CLASS(OBJECT_TYPE::RAY):
-
-		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
-			m_IsHitPoint.IsHead = true;
-		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_BODY))
-			m_IsHitPoint.IsBody = true;
-		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_R))
-			m_IsHitPoint.isSholder_R = true;
-		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L))
-			m_IsHitPoint.IsSholder_L = true;
-
-		m_bIsDamage = true;
-
-		break;
-	}
 }
 
-HRESULT CAlchina::Ready_Components()
+HRESULT CAlcina::Ready_Components()
 {
 	CBounding_OBB::BOUNDING_OBB_DESC  OBBDesc{};
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::RESIST);
@@ -215,114 +179,32 @@ HRESULT CAlchina::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CAlchina::Ready_PartObjects()
+HRESULT CAlcina::Ready_PartObjects()
 {
-	CBody_Daniela::BODY_DESC BodyDesc{};
-	BodyDesc.pAnimState = &m_iAnimState;
-	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	BodyDesc.pAnimTag = &m_szAnimTag;
-	BodyDesc.pIsAnimLoop = &m_bIsAnimLoop;
-	BodyDesc.pIsAnimFinsh = &m_bIsAnimFinsh;
-
-	if (FAILED(__super::Add_PartObject(TEXT("Part_Body"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Daniela"), &BodyDesc)))
-		return E_FAIL;
-
-
-	CBody_Daniela* pBody = static_cast<CBody_Daniela*>(Find_PartObject(TEXT("Part_Body")));
-
-	if (pBody == nullptr)
-		return E_FAIL;
-
-	m_pBodyObject = pBody;
-	Safe_AddRef(m_pBodyObject);
-
-	CWeaponObject::WEAPON_DESC WeaponDesc{};
-	WeaponDesc.pCulStateTag = &m_szCulStateTag;
-	WeaponDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	WeaponDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_Wep"));
-	if (FAILED(__super::Add_PartObject(TEXT("Part_Shotel"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Boss_Shotel"), &WeaponDesc)))
-		return E_FAIL;
-
-	CWeaponObject* pWeaponObject = static_cast<CWeaponObject*>(Find_PartObject(TEXT("Part_Shotel")));
-
-	if (pWeaponObject == nullptr)
-		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CAlchina::Ready_StateObjects()
+HRESULT CAlcina::Ready_Utility()
 {
-	//Add_StateObject(TEXT("Idle"), CIdle_Daniela::Create());
-	//Add_StateObject(TEXT("Attack"), CAttack_Daniela::Create());
-	//Add_StateObject(TEXT("Chase"), CChase_Daniela::Create());
-	//Add_StateObject(TEXT("Damage"), CDamage_Daniela::Create());
-	//Add_StateObject(TEXT("Die"), CDie_Daniela::Create());
+	m_BlackBoard = CBlackBoard<ALCHINA_DATA>::Create();
+	m_BlackBoard->Set_Data().bIsAnimFinsh = &m_bIsAnimFinsh;
+	m_BlackBoard->Set_Data().bIsAnimLoop = &m_bIsAnimLoop;
+	m_BlackBoard->Set_Data().iAnimState = &m_iAnimState;
+	m_BlackBoard->Set_Data().szAnimTag = &m_szAnimTag;
 
-	//m_pCulStateObject = Find_StateObject(TEXT("Idle"));
-	//Safe_AddRef(m_pCulStateObject);
+	m_pBehaviorTree = CBehaviorTree_Alcina::Create(m_BlackBoard);
+
 	return S_OK;
 }
 
-//HRESULT CAlchina::Add_StateObject(const _wstring& strStateObjectTag, CMonState_Daniela* pStateObject)
-//{
-//	if (nullptr != Find_PartObject(strStateObjectTag))
-//		return E_FAIL;
-//
-//	if (nullptr == pStateObject)
-//		return E_FAIL;
-//
-//	m_StateObjects.emplace(strStateObjectTag, pStateObject);
-//
-//	return S_OK;
-//}
-
-//CMonState_Daniela* CAlchina::Find_StateObject(const _wstring& strStateObjectTag)
-//{
-//	auto    iter = m_StateObjects.find(strStateObjectTag);
-//	if (iter == m_StateObjects.end())
-//		return nullptr;
-//
-//	return iter->second;
-//}
-
-void CAlchina::State_Check()
+HRESULT CAlcina::Ready_StateObjects()
 {
-	_vector vPlayerPos = CPlayer_Manager::GetInstance()->Get_PlayerPos();
-	_float fDis = {};
-	vPlayerPos = XMVector3Length(m_pTransformCom->Get_State(STATE::POSITION) - vPlayerPos);
-	XMStoreFloat(&fDis, vPlayerPos);
-
-	if (fDis <= 3.f)
-		m_State.isAttack = true;
-	if (fDis <= 6.f)
-		m_State.isChase = true;
-	if (m_bIsDamage)
-	{
-		m_bIsDamage = false;
-		m_State.isDamage = true;
-	}
+	return S_OK;
 }
 
-void CAlchina::State_Change()
-{
-	if (m_iHp <= 0)
-		m_szCulStateTag = TEXT("Die");
 
-	//if (m_szPreStateTag != m_szCulStateTag)
-	//{
-	//	m_pCulStateObject->Exit(this);
-	//	Safe_Release(m_pCulStateObject);
-
-	//	m_pCulStateObject = Find_StateObject(m_szCulStateTag);
-	//	Safe_AddRef(m_pCulStateObject);
-
-	//	m_pCulStateObject->Enter(this);
-	//	m_szPreStateTag = m_szCulStateTag;
-	//}
-}
-
-void CAlchina::Root_Move()
+void CAlcina::Root_Move()
 {
 	//월드 분해
 	_vector vScale, vWorldRot, vWorldTrans;
@@ -350,7 +232,7 @@ void CAlchina::Root_Move()
 	m_pTransformCom->Is_Sliding(m_pNavigationCom);
 }
 
-void CAlchina::Collider_Update()
+void CAlcina::Collider_Update()
 {
 	_matrix Worldmat = m_pTransformCom->Get_WorldMatrix();
 	_vector vRotation = XMQuaternionRotationMatrix(Worldmat);
@@ -374,33 +256,33 @@ void CAlchina::Collider_Update()
 	}
 }
 
-CAlchina* CAlchina::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CAlcina* CAlcina::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CAlchina* pInstance = new CAlchina(pDevice, pContext);
+	CAlcina* pInstance = new CAlcina(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX(TEXT("Failed to Crated : CAlchina"));
+		MSG_BOX(TEXT("Failed to Crated : CAlcina"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CAlchina::Clone(void* pArg)
+CGameObject* CAlcina::Clone(void* pArg)
 {
-	CAlchina* pInstance = new CAlchina(*this);
+	CAlcina* pInstance = new CAlcina(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX(TEXT("Failed to Clone : CAlchina"));
+		MSG_BOX(TEXT("Failed to Clone : CAlcina"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CAlchina::Free()
+void CAlcina::Free()
 {
 	__super::Free();
 	//for (auto& Pair : m_StateObjects)

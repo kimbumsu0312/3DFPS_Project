@@ -2,6 +2,7 @@
 #include "Engine_Defines.h"
 #include "ContainerObject.h"
 #include "Client_Struct.h"
+#include "BlackBoard.h"
 
 NS_BEGIN(Engine)
 class CCollider;
@@ -9,14 +10,25 @@ class CNavigation;
 NS_END
 
 NS_BEGIN(Client)
-class CAlchina final : public CContainerObject
+class CAlcina final : public CContainerObject
 {
+public:
+	typedef struct Alchina_Data
+	{
+		//애니메이션 관련
+		_uint*						iAnimState = {nullptr};
+		string*						szAnimTag = { nullptr };
+		_bool*						bIsAnimLoop = { nullptr };
+		_bool*						bIsAnimFinsh = { nullptr };
+
+	}ALCHINA_DATA;
+
 private:
 	enum ColliderType_Mon { Body = 0, Head, L_ARM, R_ARM, RESIST, End };
 private:
-	CAlchina(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CAlchina(const CAlchina& Prototype);
-	virtual ~CAlchina() = default;
+	CAlcina(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CAlcina(const CAlcina& Prototype);
+	virtual ~CAlcina() = default;
 
 public:
 	virtual HRESULT				Initialize_Prototype();
@@ -26,64 +38,45 @@ public:
 	virtual void				Late_Update(_float fTimeDelta);
 	virtual HRESULT				Render();
 
-public:
-	void						Switch_AnimState(_uint iAnimState) { if (iAnimState < ENUM_CLASS(NORMAL_MON_STATE::END)) { m_iAnimState = iAnimState; } }
-	void						Switch_Anim(string szAnimTag, _bool IsLoop);
-	void						Switch_State(_wstring szStateTag) { m_szCulStateTag = szStateTag; }
-	_bool						IsAnimFinsh() { return m_bIsAnimFinsh; }
-	BOSS_SISTER_HIT				IsHitPoint() { return m_IsHitPoint; }
-
-	const BOSS_SISTER_STATE& Get_State() { return m_State; }
+public:	
 	const _vector				Get_TransformState(STATE eState) { return m_pTransformCom->Get_State(eState); }
 
 	void						Target_LookTurn(_float fTimeDelta);
 	void						Target_LookAt();
-	void						Reset_DamageCheck() { m_bIsDamage = false; m_IsHitPoint = {}; }
 	void						IsDamage();
 	virtual void				OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 
 private:
-	CNavigation* m_pNavigationCom = { nullptr };
+	CNavigation*				m_pNavigationCom = { nullptr };
 	//콜리전
-	CCollider* m_pColliderCom[ColliderType_Mon::End] = { nullptr };
-	_float4x4* m_pColliderBone[ColliderType_Mon::End] = { nullptr };
+	CCollider*					m_pColliderCom[ColliderType_Mon::End] = { nullptr };
+	_float4x4*					m_pColliderBone[ColliderType_Mon::End] = { nullptr };
 
-	class CBody_Daniela* m_pBodyObject = { nullptr };
-
-	//상태 관련
-	/*unordered_map<_wstring,
-		class CMonState_Daniela*>m_StateObjects;*/
-
-	//class CMonState_Daniela* m_pCulStateObject = { nullptr };
-	_wstring					m_szPreStateTag = {};
-	_wstring					m_szCulStateTag = {};
-
-	BOSS_SISTER_STATE			m_State = {};
-	BOSS_SISTER_HIT				m_IsHitPoint = { false };
-	_bool						m_bIsDamage = { false };
-
-	_int						m_iHp = {};
-	//애니메이션 관련
 	_uint						m_iAnimState = { ENUM_CLASS(NORMAL_MON_STATE::NORMAL) };
 	string						m_szAnimTag;
-	_bool						m_bIsAnimLoop = { true }; 
+	_bool						m_bIsAnimLoop = { true };
 	_bool						m_bIsAnimFinsh = { false };
+
+	class CBody_Alchina*		m_pBodyObject = { nullptr };
+
+	class CSeletctorNode*		m_pRoot = {nullptr};
+
+
+	CBlackBoard<ALCHINA_DATA>*	m_BlackBoard = { nullptr };
+	class CBehaviorTree_Alcina* m_pBehaviorTree = { nullptr };
+
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_PartObjects();
+	HRESULT						Ready_Utility();
 	HRESULT						Ready_StateObjects();
 
-	//HRESULT						Add_StateObject(const _wstring& strStateObjectTag, CMonState_Daniela* pStateObject);
-	//class CMonState_Daniela* Find_StateObject(const _wstring& strPartObjectTag);
-
-	void						State_Check();
-	void						State_Change();
 	void						Root_Move();
 	void						Collider_Update();
 
 public:
-	static CAlchina* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CGameObject* Clone(void* pArg);
+	static CAlcina*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject*		Clone(void* pArg);
 	virtual void				Free();
 
 
