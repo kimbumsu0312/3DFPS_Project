@@ -38,7 +38,7 @@ void CIdle_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 
 void CIdle_Player::Exit(CPlayer* pContainer)
 {
-    m_eAnimState == STATE_ANIM::END;
+    m_eAnimState = STATE_ANIM::END;
 }
 
 

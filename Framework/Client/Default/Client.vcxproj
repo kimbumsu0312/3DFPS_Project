@@ -164,6 +164,7 @@
     <ClInclude Include="..\public\Alcina.h" />
     <ClInclude Include="..\public\Announce.h" />
     <ClInclude Include="..\public\ActionNode.h" />
+    <ClInclude Include="..\public\Attack_Alcina.h" />
     <ClInclude Include="..\public\Attack_Bela.h" />
     <ClInclude Include="..\public\Attack_Daniela.h" />
     <ClInclude Include="..\Public\Attack_NorMon_1.h" />
@@ -172,10 +173,14 @@
     <ClInclude Include="..\public\BaseMapObj.h" />
     <ClInclude Include="..\public\BehaviorTree.h" />
     <ClInclude Include="..\public\BehaviorTree_Alcina.h" />
+    <ClInclude Include="..\public\Damage_Alcina.h" />
+    <ClInclude Include="..\public\Die_Alcina.h" />
+    <ClInclude Include="..\public\Idle_Alcina.h" />
+    <ClInclude Include="..\public\MonState_Alcina.h" />
     <ClInclude Include="..\public\Node.h" />
     <ClInclude Include="..\public\Bela.h" />
     <ClInclude Include="..\public\BlackBoard.h" />
-    <ClInclude Include="..\public\Body_Alchina.h" />
+    <ClInclude Include="..\public\Body_Alcina.h" />
     <ClInclude Include="..\public\Body_Bela.h" />
     <ClInclude Include="..\public\Body_Daniela.h" />
     <ClInclude Include="..\public\Body_NorMon.h" />
@@ -270,6 +275,7 @@
     <ClInclude Include="..\public\Level_Logo.h" />
     <ClInclude Include="..\public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
+    <ClInclude Include="..\public\Walk_Alcina.h" />
     <ClInclude Include="..\public\WeaponObject.h" />
     <ClInclude Include="..\public\WeaponSwap_Player.h" />
     <ClInclude Include="..\public\WorldItem.h" />
@@ -291,6 +297,7 @@
     <ClCompile Include="..\private\Alcina.cpp" />
     <ClCompile Include="..\private\Announce.cpp" />
     <ClCompile Include="..\private\ActionNode.cpp" />
+    <ClCompile Include="..\private\Attack_Alcina.cpp" />
     <ClCompile Include="..\private\Attack_Bela.cpp" />
     <ClCompile Include="..\private\Attack_Daniela.cpp" />
     <ClCompile Include="..\Private\Attack_NorMon_1.cpp" />
@@ -299,10 +306,14 @@
     <ClCompile Include="..\private\BaseMapObj.cpp" />
     <ClCompile Include="..\private\BehaviorTree.cpp" />
     <ClCompile Include="..\private\BehaviorTree_Alcina.cpp" />
+    <ClCompile Include="..\private\Damage_Alcina.cpp" />
+    <ClCompile Include="..\private\Die_Alcina.cpp" />
+    <ClCompile Include="..\private\Idle_Alcina.cpp" />
+    <ClCompile Include="..\private\MonState_Alcina.cpp" />
     <ClCompile Include="..\private\Node.cpp" />
     <ClCompile Include="..\private\Bela.cpp" />
     <ClCompile Include="..\private\BlackBoard.cpp" />
-    <ClCompile Include="..\private\Body_Alchina.cpp" />
+    <ClCompile Include="..\private\Body_Alcina.cpp" />
     <ClCompile Include="..\private\Body_Bela.cpp" />
     <ClCompile Include="..\Private\Body_Daniela.cpp" />
     <ClCompile Include="..\private\Body_NorMon.cpp" />
@@ -391,6 +402,7 @@
     <ClCompile Include="..\private\Level_Logo.cpp" />
     <ClCompile Include="..\private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
+    <ClCompile Include="..\private\Walk_Alcina.cpp" />
     <ClCompile Include="..\private\WeaponObject.cpp" />
     <ClCompile Include="..\private\WeaponSwap_Player.cpp" />
     <ClCompile Include="..\private\WorldItem.cpp" />

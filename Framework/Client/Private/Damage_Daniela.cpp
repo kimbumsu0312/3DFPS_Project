@@ -46,7 +46,7 @@ void CDamage_Daniela::Exit(CDaniela* pContainer)
     if (eHitPoint == DIRECTION::B)
         pContainer->Target_LookAt();
 
-    m_eAnimState == STATE_ANIM::END;
+    m_eAnimState = STATE_ANIM::END;
     pContainer->Reset_DamageCheck();
 }
 
@@ -85,6 +85,7 @@ void CDamage_Daniela::Big_Damage(CDaniela* pContainer)
             pContainer->Switch_Anim("Damage_FR_Body_Big", false);
         else if (pContainer->IsHitPoint().isSholder_R)
             pContainer->Switch_Anim("Damage_FL_Body_Big", false);
+
     }
     else if (eHitPoint == DIRECTION::B)
         pContainer->Switch_Anim("Damage_B_Body_Big", false);

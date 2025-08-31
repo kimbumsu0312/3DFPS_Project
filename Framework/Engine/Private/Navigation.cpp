@@ -135,7 +135,7 @@ _bool CNavigation::isMove(_fvector vCulPosition)
 		{
 			if (-1 == iNeighborIndex)
 				return false;
-			//인접한 셀에 범수의 객체가 있는지 판단 후, 없으면 다음 인접 셀로 넘김
+			//인접한 셀에 객체가 있는지 판단 후, 없으면 다음 인접 셀로 넘김
 			//있는 경우 셀 인덱스를 반환
 			if (true == m_Cells[iNeighborIndex]->isIn(vLocalPos, &iNeighborIndex))
 				break;
@@ -164,7 +164,7 @@ _vector CNavigation::Compute_OnCell(_fvector vPosition)
 	//객체의 월드값을 변경해준다.
 	vLocalPos = XMVectorSetY(vLocalPos, fHeight);
 
-	//월드 값으로 변환해서 범수의 월드반환
+	//월드 값으로 변환해서 월드반환
 	return XMVector3TransformCoord(vLocalPos, XMLoadFloat4x4(&m_WorldMatrix));
 
 }
@@ -186,7 +186,7 @@ void CNavigation::SetUp_Node(_int TargetIndex)
 	SearchList.push(StartNode);
 
 	Node FinalNode{};
-
+	FinalNode.CellIndex = -1;
 	while (!SearchList.empty())
 	{
 		//우선 순위가 제일 높은 노드를 꺼낸다.
@@ -216,7 +216,7 @@ void CNavigation::SetUp_Node(_int TargetIndex)
 			if (NeighborIndex < 0)
 				continue;
 
-			//인접범수셀 중 검사한 곳이 있으면 넘긴다.
+			//인접셀 중 검사한 곳이 있으면 넘긴다.
 			if (FindNodeInClosed(NeighborIndex, Temp))
 				continue;
 
@@ -231,7 +231,8 @@ void CNavigation::SetUp_Node(_int TargetIndex)
 			SearchList.push(NeighborNode);
 		}
 	}
-
+	if (FinalNode.CellIndex == -1)
+		return;
 	while (true)
 	{
 		//현재의 마지막 노드 셀 인덱스 저장
@@ -305,10 +306,14 @@ _vector CNavigation::IsNaviMove(_vector vPos)
 
 _vector CNavigation::IsNaviNode()
 {
+	_int LastIndex = m_NodePath.size() - 1 ;
+	if(m_iNaviMoveIndex >= LastIndex)
+		return XMLoadFloat3(&m_Cells[m_NodePath[m_iNaviMoveIndex]]->Get_Center());
+
 	if (m_iCurrentCellIndex == m_NodePath[m_iNaviMoveIndex])
 		m_iNaviMoveIndex++;
 
-
+	
 	return XMLoadFloat3(&m_Cells[m_NodePath[m_iNaviMoveIndex]]->Get_Center());
 }
 
@@ -508,6 +513,25 @@ _int CNavigation::Selete_CellIndex(CTransform& pTransformCom)
 	}
 
 	return iIndex;
+}
+_bool CNavigation::Erease_Cell(CTransform& pTransformCom)
+{
+	_float fDis = D3D11_FLOAT32_MAX;
+	_int iIndex = { -1 };
+	m_pGameInstance->TransformToLocalSpace(pTransformCom);
+	
+	for (auto it = m_Cells.begin(); it != m_Cells.end(); )
+	{
+		if ((*it)->IsPick(fDis, iIndex)) {
+			it = m_Cells.erase(it);
+			return true;
+		}
+		else {
+			++it;
+		}
+	}
+	return false;
+
 }
 void CNavigation::Erase_LastCell()
 {

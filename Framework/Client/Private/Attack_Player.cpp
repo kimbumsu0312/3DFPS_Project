@@ -39,7 +39,7 @@ void CAttack_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 
 void CAttack_Player::Exit(CPlayer* pContainer)
 {
-    m_eAnimState == STATE_ANIM::END;
+    m_eAnimState = STATE_ANIM::END;
 }
 
 CAttack_Player* CAttack_Player::Create(void* pArg)

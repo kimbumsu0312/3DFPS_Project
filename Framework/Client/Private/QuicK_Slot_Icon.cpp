@@ -144,8 +144,8 @@ HRESULT CQuick_Slot_Icon::Ready_ItemSlot()
     UIOBJECT_DESC Desc;
     Desc.iIndex = m_iIndex;
     Desc.vPos = m_vPos;
-    Desc.vSize.x = m_vSize.x * 0.95;
-    Desc.vSize.y = m_vSize.y * 0.95;
+    Desc.vSize.x = m_vSize.x * 0.95f;
+    Desc.vSize.y = m_vSize.y * 0.95f;
 
     Desc.vMinUV = { 0.f, 0.f};
     Desc.vMaxUV = { 1.f, 1.f };

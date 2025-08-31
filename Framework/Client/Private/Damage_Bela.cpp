@@ -46,7 +46,7 @@ void CDamage_Bela::Exit(CBela* pContainer)
     if (eHitPoint == DIRECTION::B)
         pContainer->Target_LookAt();
 
-    m_eAnimState == STATE_ANIM::END;
+    m_eAnimState = STATE_ANIM::END;
     pContainer->Reset_DamageCheck();
 }
 

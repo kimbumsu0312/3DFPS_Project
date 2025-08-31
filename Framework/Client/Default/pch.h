@@ -25,7 +25,7 @@
 //몬스터 관련
 #include "Monster_Header.h"
 #include "Alcina.h"
-#include "Body_Alchina.h"
+#include "Body_Alcina.h"
 
 //플레이어 관련
 #include "Player_Header.h"

@@ -154,8 +154,8 @@ HRESULT CAnnounce::Ready_Children()
 
     UIOBJECT_DESC Desc;
     Desc.vPos = m_vPos;
-    Desc.vSize.x = 64.f * 0.95;
-    Desc.vSize.y = 64.f * 0.95;
+    Desc.vSize.x = 64.f * 0.95f;
+    Desc.vSize.y = 64.f * 0.95f;
 
     Desc.vMinUV = { 0.f, 0.f };
     Desc.vMaxUV = { 1.f, 1.f };

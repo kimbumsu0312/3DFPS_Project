@@ -43,6 +43,7 @@ public:
 	_uint							Count_Cell() { return m_pCellPos.size(); }
 	void							Chage_Color(_float4 vColor);
 	_int							Selete_CellIndex(CTransform& pTransformCom);
+	_bool							Erease_Cell(CTransform& pTransformCom);
 	void							Erase_LastCell();
 #endif
 

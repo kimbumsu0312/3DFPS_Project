@@ -111,7 +111,7 @@ HRESULT CItem_Selete::Render()
 
 HRESULT CItem_Selete::Item_Init(const ITEM_SELETE_DESC& pDesc)
 {
-	_float fSlotSize = CInven_Manager::GetInstance()->Get_InvenData().iSlotSize;
+	_float fSlotSize = (_float)CInven_Manager::GetInstance()->Get_InvenData().iSlotSize;
 
 	m_iItemIndex = pDesc.itemIndex;
 	m_vPos = pDesc.vPos;

@@ -31,7 +31,7 @@ void CAim_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 
 void CAim_Player::Exit(CPlayer* pContainer)
 {
-    m_eAnimState == STATE_ANIM::END;
+    m_eAnimState = STATE_ANIM::END;
 }
 
 CAim_Player* CAim_Player::Create(void* pArg)

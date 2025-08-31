@@ -34,7 +34,7 @@ void CScouting_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
 
 void CScouting_NorMon_1::Exit(CMonster_Normal* pContainer)
 {
-    m_eAnimState == STATE_ANIM::END;
+    m_eAnimState = STATE_ANIM::END;
 }
 
 CScouting_NorMon_1* CScouting_NorMon_1::Create(void* pArg)

@@ -1,30 +1,27 @@
 #include "pch.h"
-#include "Body_Alchina.h"
+#include "Body_Alcina.h"
 #include "GameInstance.h"
 
-CBody_Alchina::CBody_Alchina(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CPartObject{ pDevice, pContext }
+CBody_Alcina::CBody_Alcina(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CPartObject{ pDevice, pContext }
 {
 }
 
-CBody_Alchina::CBody_Alchina(const CBody_Alchina& Prototype) : CPartObject(Prototype)
+CBody_Alcina::CBody_Alcina(const CBody_Alcina& Prototype) : CPartObject(Prototype)
 {
 }
 
-HRESULT CBody_Alchina::Initialize_Prototype()
+HRESULT CBody_Alcina::Initialize_Prototype()
 {
     return S_OK;
 }
 
-HRESULT CBody_Alchina::Initialize(void* pArg)
+HRESULT CBody_Alcina::Initialize(void* pArg)
 {
-
     BODY_DESC* pDesc = static_cast<BODY_DESC*>(pArg);
+    m_pBlackBoard = pDesc->pBalckBoard;
+    Safe_AddRef(m_pBlackBoard);
 
-    m_pAnimState = pDesc->pAnimState;
-    m_pAnimTag = pDesc->pAnimTag;
-    m_pIsAnimFinsh = pDesc->pIsAnimFinsh;
-    m_pIsAnimLoop = pDesc->pIsAnimLoop;
-    m_iRootLodeIndex = 32;
+    m_iRootLodeIndex = 40;
 
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
@@ -36,24 +33,26 @@ HRESULT CBody_Alchina::Initialize(void* pArg)
     return S_OK;
 }
 
-void CBody_Alchina::Priority_Update(_float fTimeDelta)
+void CBody_Alcina::Priority_Update(_float fTimeDelta)
 {
 }
 
-void CBody_Alchina::Update(_float fTimeDelta)
+void CBody_Alcina::Update(_float fTimeDelta)
 {
-    *m_pIsAnimFinsh = m_pAnimCom->Player_Animation(*m_pAnimState, *m_pAnimTag, *m_pIsAnimLoop, m_pModelCom, fTimeDelta, m_iRootLodeIndex);
+    CAlcina::ALCHINA_DATA& Alchina_Data = m_pBlackBoard->Set_Data();
+
+    (*Alchina_Data.bIsAnimFinsh) = m_pAnimCom->Player_Animation((*Alchina_Data.iAnimState), (*Alchina_Data.szAnimTag), (*Alchina_Data.bIsAnimLoop), m_pModelCom, fTimeDelta, m_iRootLodeIndex);
 
     Update_CombinedMatrix();
 }
 
-void CBody_Alchina::Late_Update(_float fTimeDelta)
+void CBody_Alcina::Late_Update(_float fTimeDelta)
 {
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
         return;
 }
 
-HRESULT CBody_Alchina::Render()
+HRESULT CBody_Alcina::Render()
 {
 
     if (FAILED(Bind_ShaderResources()))
@@ -77,23 +76,23 @@ HRESULT CBody_Alchina::Render()
     return S_OK;
 }
 
-_float4x4* CBody_Alchina::Get_BoneMatrix(const _wstring pBoneName)
+_float4x4* CBody_Alcina::Get_BoneMatrix(const _wstring pBoneName)
 {
     return m_pModelCom->Get_BoneMatrix(pBoneName);
 }
 
-_float3* CBody_Alchina::Get_MovePos()
+_float3* CBody_Alcina::Get_MovePos()
 {
     return m_pModelCom->Get_PtrMovePos();
 }
 
-_float4* CBody_Alchina::Get_MoveRot()
+_float4* CBody_Alcina::Get_MoveRot()
 {
     return m_pModelCom->Get_PtrMoveRot();;
 
 }
 
-HRESULT CBody_Alchina::Ready_Components()
+HRESULT CBody_Alcina::Ready_Components()
 {
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
@@ -105,8 +104,8 @@ HRESULT CBody_Alchina::Ready_Components()
 
     CAnimatio_Controller::ANIMTION_DESC Desc;
     Desc.szFile_Path = "../Bin/Resources/Models/Boss/Alcina/AlcinaAnim.Json";
-    Desc.szCulAnimName = *m_pAnimTag;
-    Desc.iAnimIndex = *m_pAnimState;
+    Desc.szCulAnimName = *m_pBlackBoard->Get_Data().szAnimTag;
+    Desc.iAnimIndex = *m_pBlackBoard->Get_Data().iAnimState;
     Desc.pModel = m_pModelCom;
 
     Desc.IsLoop = true;
@@ -117,7 +116,7 @@ HRESULT CBody_Alchina::Ready_Components()
     return S_OK;
 }
 
-HRESULT CBody_Alchina::Bind_ShaderResources()
+HRESULT CBody_Alcina::Bind_ShaderResources()
 {
     if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
         return E_FAIL;
@@ -146,36 +145,38 @@ HRESULT CBody_Alchina::Bind_ShaderResources()
     return S_OK;
 }
 
-CBody_Alchina* CBody_Alchina::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBody_Alcina* CBody_Alcina::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-    CBody_Alchina* pInstance = new CBody_Alchina(pDevice, pContext);
+    CBody_Alcina* pInstance = new CBody_Alcina(pDevice, pContext);
 
     if (FAILED(pInstance->Initialize_Prototype()))
     {
-        MSG_BOX(TEXT("Failed to Created : CBody_Alchina"));
+        MSG_BOX(TEXT("Failed to Created : CBody_Alcina"));
         Safe_Release(pInstance);
     }
 
     return pInstance;
 }
 
-CGameObject* CBody_Alchina::Clone(void* pArg)
+CGameObject* CBody_Alcina::Clone(void* pArg)
 {
-    CBody_Alchina* pInstance = new CBody_Alchina(*this);
+    CBody_Alcina* pInstance = new CBody_Alcina(*this);
 
     if (FAILED(pInstance->Initialize(pArg)))
     {
-        MSG_BOX(TEXT("Failed to Created : CBody_Alchina"));
+        MSG_BOX(TEXT("Failed to Created : CBody_Alcina"));
         Safe_Release(pInstance);
     }
 
     return pInstance;
 }
 
-void CBody_Alchina::Free()
+void CBody_Alcina::Free()
 {
     __super::Free();
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
     Safe_Release(m_pAnimCom);
+
+    Safe_Release(m_pBlackBoard);
 }

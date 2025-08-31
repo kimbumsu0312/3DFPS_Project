@@ -22,10 +22,10 @@ HRESULT CInven_Manager::Initialize(const INVENTORY_DESC& pDesc)
 	m_InvenWinSize.right = m_iSlotNumX * m_iSlotSize;
 	m_InvenWinSize.bottom = m_iSlotNumY * m_iSlotSize;
 
-	m_InvenWinPos.left = m_vInvenCenter.x - ((m_InvenWinSize.right - m_InvenWinSize.left) * 0.5);
-	m_InvenWinPos.top = m_vInvenCenter.y - ((m_InvenWinSize.bottom - m_InvenWinSize.top) * 0.5);
-	m_InvenWinPos.right = m_vInvenCenter.x + ((m_InvenWinSize.right - m_InvenWinSize.left) * 0.5);
-	m_InvenWinPos.bottom = m_vInvenCenter.y + ((m_InvenWinSize.bottom - m_InvenWinSize.top) * 0.5);
+	m_InvenWinPos.left = _int(m_vInvenCenter.x - ((m_InvenWinSize.right - m_InvenWinSize.left) * 0.5f));
+	m_InvenWinPos.top = _int(m_vInvenCenter.y - ((m_InvenWinSize.bottom - m_InvenWinSize.top) * 0.5f));
+	m_InvenWinPos.right = _int(m_vInvenCenter.x + ((m_InvenWinSize.right - m_InvenWinSize.left) * 0.5f));
+	m_InvenWinPos.bottom = _int(m_vInvenCenter.y + ((m_InvenWinSize.bottom - m_InvenWinSize.top) * 0.5f));
 
 	m_InvenSlot.resize(m_iSlotNumY);
 
@@ -118,7 +118,7 @@ _bool CInven_Manager::Change_ItemSlot(CInvenItem* pItem)
 	_int iStartGridX = iMouseX - ((ItemSizeX) / 2);
 	_int iStartGridY = iMouseY - ((ItemSizeY) / 2);
 
-	if (iStartGridX < 0 || iStartGridY < 0 || iStartGridX + ItemSizeX > m_iSlotNumX || iStartGridY + ItemSizeY > m_iSlotNumY)
+	if (iStartGridX < 0 || iStartGridY < 0 || iStartGridX + ItemSizeX >(_int)m_iSlotNumX || iStartGridY + ItemSizeY >(_int)m_iSlotNumY)
 		return false;
 	
 	if (ItemSlot_Check(iStartGridX, iStartGridY, ItemSizeX, ItemSizeY, Desc))
@@ -262,7 +262,7 @@ _bool CInven_Manager::ItemSlot_Check(const _int& pSizeX, const _int& pSizeY, _in
 _bool CInven_Manager::ItemSlot_Check(_int iStartX, _int iStartY, _int iSizeX, _int iSizeY, const INVEN_ITEM& Desc)
 {
 
-	if (iStartX < 0 || iStartY < 0 || iStartX + iSizeX > m_iSlotNumX || iStartY + iSizeY > m_iSlotNumY)
+	if (iStartX < 0 || iStartY < 0 || iStartX + iSizeX > (_int)m_iSlotNumX || iStartY + iSizeY >(_int)m_iSlotNumY)
 		return false;
 
 	_int iItemLeft = Desc.iItemGridX;
@@ -300,8 +300,8 @@ CInvenItem::ITEM_DESC CInven_Manager::Setting_Item(_int iItemIndex, _int iItemGr
 	Desc.ItemData.iItemCount = g_ItemData[iItemIndex].m_iItemValue;
 	Desc.IsRender = m_IsInvenOpen;
 
-	_float iCenterX = (iItemGridX + (iItemGridX + Desc.ItemData.iInvenSizeX - 1)) * 0.5;
-	_float iCenterY = (iItemGridY + (iItemGridY + Desc.ItemData.iInvenSizeY - 1)) * 0.5;
+	_float iCenterX = (iItemGridX + (iItemGridX + Desc.ItemData.iInvenSizeX - 1)) * 0.5f;
+	_float iCenterY = (iItemGridY + (iItemGridY + Desc.ItemData.iInvenSizeY - 1)) * 0.5f;
 
 	Convert_InvenWorld(iCenterX, iCenterY);
 
@@ -317,8 +317,8 @@ void CInven_Manager::Convert_InvenGrid(_int& iX, _int& iY)
 	_float fX = _float(iX - m_InvenWinPos.left) / m_iSlotSize;
 	_float fY = _float(iY - m_InvenWinPos.top) / m_iSlotSize;
 
-	iX = round(fX);
-	iY = round(fY);
+	iX = _int(round(fX));
+	iY = _int(round(fY));
 }
 
 void CInven_Manager::Convert_InvenWorld(_float& iX, _float& iY)

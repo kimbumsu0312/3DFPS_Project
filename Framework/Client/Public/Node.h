@@ -13,6 +13,7 @@ protected:
 
 public:
 	virtual TREE_STATE	Evaluat() = 0 ;
+	virtual void		Reset();
 
 protected:
 	_int				m_iTreeIndex = {};

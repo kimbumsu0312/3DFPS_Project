@@ -23,11 +23,10 @@ void CDie_Normon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
     if (pContainer->IsAnimFinsh())
     {
         pContainer->SetDead();
-        _int i = m_pGameInstance->Rand(5.f, 8.f);
-
+        _int i = rand() % 4 + 5;
+        
         CItemSpawner::GetInstance()->Spawn_Item(i, pContainer->Get_TransformState(STATE::POSITION), pContainer->Get_CulNaviIndex());
     }
-
 }
 
 void CDie_Normon_1::Exit(CMonster_Normal* pContainer)

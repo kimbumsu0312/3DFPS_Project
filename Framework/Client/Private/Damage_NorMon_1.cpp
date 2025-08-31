@@ -39,7 +39,7 @@ void CDamage_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
 
 void CDamage_NorMon_1::Exit(CMonster_Normal* pContainer)
 {
-    m_eAnimState == STATE_ANIM::END;
+    m_eAnimState = STATE_ANIM::END;
     pContainer->Reset_DamageCheck();
 }
 

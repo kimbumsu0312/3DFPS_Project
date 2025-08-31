@@ -64,7 +64,7 @@ void CReload_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 
 void CReload_Player::Exit(CPlayer* pContainer)
 {
-    m_eAnimState == STATE_ANIM::END;
+    m_eAnimState = STATE_ANIM::END;
 }
 
 CReload_Player* CReload_Player::Create(void* pArg)

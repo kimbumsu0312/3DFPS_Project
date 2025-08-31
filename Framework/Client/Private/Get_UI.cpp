@@ -118,8 +118,8 @@ void CGet_UI::Update_WorldPos(_vector vPos)
 
     vWinPos = XMVector3TransformCoord(vPos, vVPMatrix);
     
-    _float fWinPosX = (XMVectorGetX(vWinPos) + 1.f) * 0.5 * g_iWinSizeX;
-    _float fWinPosY = (1.f - XMVectorGetY(vWinPos)) * 0.5 * g_iWinSizeY;
+    _float fWinPosX = (XMVectorGetX(vWinPos) + 1.f) * 0.5f * g_iWinSizeX;
+    _float fWinPosY = (1.f - XMVectorGetY(vWinPos)) * 0.5f * g_iWinSizeY;
 
     m_vPos.x = fWinPosX + m_vLocalPos.x;
     m_vPos.y = fWinPosY + m_vLocalPos.y;

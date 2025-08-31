@@ -10,7 +10,8 @@ private:
 
 public:
 	virtual TREE_STATE		Evaluat() override;
-	HRESULT					Add_Tree(CNode* pBehaviorTree);
+	HRESULT					Add_Node(CNode* pBehaviorTree);
+	virtual void			Reset() override;
 
 private:
 	vector<CNode*>			m_Children;

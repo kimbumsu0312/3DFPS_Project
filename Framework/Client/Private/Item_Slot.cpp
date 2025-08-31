@@ -102,7 +102,7 @@ HRESULT CItem_Slot::Render()
 
 HRESULT CItem_Slot::Item_Init(const ITEM_SLOT_DESC& pDesc)
 {
-	_float fSlotSize = CInven_Manager::GetInstance()->Get_InvenData().iSlotSize;
+	_float fSlotSize =(_float) CInven_Manager::GetInstance()->Get_InvenData().iSlotSize;
 
 	m_iItemIndex = pDesc.itemIndex;
 	m_vPos = pDesc.vPos;

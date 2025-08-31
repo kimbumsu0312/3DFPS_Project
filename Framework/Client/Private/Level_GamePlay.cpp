@@ -241,7 +241,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	Desc.vSpawnerPostion = { -53.29f, -8.68f, 28.24f };
 
 	MonDesc.vPostion = { -53.29f, -8.68f, 28.24f };
-	MonDesc.iCellIndex = 101;
+	MonDesc.iCellIndex = 32;
 	MonDesc.iAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
 	MonDesc.szAnimTag = "Idle_Loop";
 	MonDesc.iWeponType = ENUM_CLASS(NORMAL_MON_WEAPON::SWORD);
@@ -249,7 +249,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	Desc.MonDesc.push_back(MonDesc);
 
 	MonDesc.vPostion = { -50.29f, -8.68f, 28.24f };
-	MonDesc.iCellIndex = 101;
+	MonDesc.iCellIndex = 32;
 	MonDesc.iAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
 	MonDesc.szAnimTag = "Idle_Loop";
 	MonDesc.iWeponType = ENUM_CLASS(NORMAL_MON_WEAPON::HALBERD);
@@ -257,7 +257,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	Desc.MonDesc.push_back(MonDesc);
 
 	MonDesc.vPostion = { -50.29f, -8.68f, 32.24f };
-	MonDesc.iCellIndex = 101;
+	MonDesc.iCellIndex = 32;
 	MonDesc.iAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
 	MonDesc.szAnimTag = "Idle_Loop";
 	MonDesc.iWeponType = ENUM_CLASS(NORMAL_MON_WEAPON::END);
@@ -265,7 +265,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	Desc.MonDesc.push_back(MonDesc);
 
 	MonDesc.vPostion = { -48.29f, -8.68f, 30.24f };
-	MonDesc.iCellIndex = 101;
+	MonDesc.iCellIndex = 32;
 	MonDesc.iAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
 	MonDesc.szAnimTag = "Idle_Loop";
 	MonDesc.iWeponType = ENUM_CLASS(NORMAL_MON_WEAPON::SHOTEL);

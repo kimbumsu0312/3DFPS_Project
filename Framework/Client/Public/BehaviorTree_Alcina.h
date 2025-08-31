@@ -18,8 +18,17 @@ private:
 
 private:
 	HRESULT									Ready_Node();
+	
+	CNode::TREE_STATE						Switch_Die();
+	CNode::TREE_STATE						Switch_Damage();
+	
+	CNode::TREE_STATE						Condition_Attack();
+	CNode::TREE_STATE						Switch_Attack();
 
-	CNode::TREE_STATE						Test();
+	CNode::TREE_STATE						Condition_Walk();
+	CNode::TREE_STATE						Switch_Walk();
+	CNode::TREE_STATE						Switch_Idle();
+
 public:
 	static CBehaviorTree_Alcina*			Create(CBlackBoard<CAlcina::ALCHINA_DATA>* pData);
 	virtual void							Free();

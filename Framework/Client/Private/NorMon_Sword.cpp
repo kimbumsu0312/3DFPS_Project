@@ -59,7 +59,7 @@ HRESULT CNormon_Sword::Render()
 
     _uint           iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-    for (size_t i = 0; i < iNumMeshes; i++)
+    for (_uint i = 0; i < iNumMeshes; i++)
     {
         if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_DiffuseTexture", i, 0, 0)))
             continue;
@@ -79,6 +79,8 @@ HRESULT CNormon_Sword::Add_Collider()
 {
     if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom)))
         return E_FAIL;
+
+    return S_OK;
 }
 
 void CNormon_Sword::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)

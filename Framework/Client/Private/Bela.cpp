@@ -140,7 +140,7 @@ void CBela::Attack_Collision()
 void CBela::IsDamage()
 {
 	if (m_IsHitPoint.IsHead)
-		m_iHp -= CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f;
+		m_iHp -= _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
 	else
 		m_iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
 }

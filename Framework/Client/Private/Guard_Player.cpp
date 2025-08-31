@@ -35,7 +35,7 @@ void CGuard_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 
 void CGuard_Player::Exit(CPlayer* pContainer)
 {
-    m_eAnimState == STATE_ANIM::END;
+    m_eAnimState = STATE_ANIM::END;
 }
 
 CGuard_Player* CGuard_Player::Create(void* pArg)

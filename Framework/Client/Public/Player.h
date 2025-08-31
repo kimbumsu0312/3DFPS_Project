@@ -34,7 +34,7 @@ public:
 
 	const PLAYER_ATTACK_STATE&	Get_AttackState() { return m_AttackState; }
 	const PLAYER_MOVE_STATE&	Get_MoveState() { return m_MoveState; }
-	const _int&					Get_WeaponType() { return m_iCulWeponState; }
+	const _int					Get_WeaponType() { return m_iCulWeponState; }
 	virtual void				OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 
 private:

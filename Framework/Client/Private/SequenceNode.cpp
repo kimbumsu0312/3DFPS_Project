@@ -9,25 +9,34 @@ CNode::TREE_STATE CSequenceNode::Evaluat()
 {
 	TREE_STATE eState = {};
 
-	for (_int i = 0; i < m_Children.size(); ++i)
+	for (;m_iTreeIndex < m_Children.size(); ++m_iTreeIndex)
 	{
-		eState = m_Children[i]->Evaluat();
+		eState = m_Children[m_iTreeIndex]->Evaluat();
 		switch (eState)
 		{
 		case CNode::TREE_STATE::RUN:
-			m_iTreeIndex = i;
 			return eState;
 		case CNode::TREE_STATE::SUCCESS:
-			break;
+			continue;
 		case CNode::TREE_STATE::FAILED:
+			m_iTreeIndex = 0;
 			return eState;
 		}
 	}
 
+	m_iTreeIndex = 0;
 	return CNode::TREE_STATE::SUCCESS;
 }
 
-HRESULT CSequenceNode::Add_Tree(CNode* pBehaviorTree)
+void CSequenceNode::Reset()
+{
+	__super::Reset();
+	for (auto Child : m_Children)
+		Child->Reset();
+
+}
+
+HRESULT CSequenceNode::Add_Node(CNode* pBehaviorTree)
 {
 	if (pBehaviorTree == nullptr)
 		return E_FAIL;

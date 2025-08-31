@@ -171,7 +171,7 @@ void CMonster_Normal::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY Tar
 		m_bIsDamage = true;
 
 		if(m_bIsHeadShot)
-			m_iHp -= CPlayer_Manager::GetInstance()->Get_Damage() * 1.3;
+			m_iHp -= _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
 		else
 			m_iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
 		break;
@@ -222,7 +222,7 @@ HRESULT CMonster_Normal::Initialize_Pool(void* pArg)
 
 void CMonster_Normal::Return_Pool()
 {
-	m_iHp = 1.f;
+	m_iHp = 1;
 	m_bIsDead = false;
 }
 

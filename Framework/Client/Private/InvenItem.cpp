@@ -219,8 +219,8 @@ void CInvenItem::State_Selete()
 		GetCursorPos(&ptMouse);
 		ScreenToClient(g_hWnd, &ptMouse);
 
-		m_vPos.x = ptMouse.x;
-		m_vPos.y = ptMouse.y;
+		m_vPos.x = (_float)ptMouse.x;
+		m_vPos.y = (_float)ptMouse.y;
 	
 		m_pItemSlot->Update_Pos(m_vPos);
 
@@ -260,39 +260,39 @@ void CInvenItem::State_Selete()
 
 void CInvenItem::Render_Font()
 {
-	_float fSlotSize = CInven_Manager::GetInstance()->Get_InvenData().iSlotSize;
+	_float fSlotSize = (_float)CInven_Manager::GetInstance()->Get_InvenData().iSlotSize;
 
 	if (!m_bIsCulRotation)
 	{
-		m_ItemRect.left = m_vPos.x - (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeX * 0.5f);
-		m_ItemRect.top = m_vPos.y - (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeY * 0.5f);
-		m_ItemRect.right = m_vPos.x + (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeX * 0.5f) - 10;
-		m_ItemRect.bottom = m_vPos.y + (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeY * 0.5f) - 5;
+		m_ItemRect.left = _int(m_vPos.x - (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeX * 0.5f));
+		m_ItemRect.top = _int(m_vPos.y - (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeY * 0.5f));
+		m_ItemRect.right = _int(m_vPos.x + (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeX * 0.5f) - 10);
+		m_ItemRect.bottom = _int(m_vPos.y + (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeY * 0.5f) - 5);
 	}
 	else
 	{
-		m_ItemRect.left = m_vPos.x - (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeY * 0.5f);
-		m_ItemRect.top = m_vPos.y - (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeX * 0.5f);
-		m_ItemRect.right = m_vPos.x + (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeY * 0.5f) - 10;
-		m_ItemRect.bottom = m_vPos.y + (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeX * 0.5f) - 5;
+		m_ItemRect.left = _int(m_vPos.x - (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeY * 0.5f));
+		m_ItemRect.top = _int(m_vPos.y - (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeX * 0.5f));
+		m_ItemRect.right = _int(m_vPos.x + (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeY * 0.5f) - 10);
+		m_ItemRect.bottom = _int(m_vPos.y + (fSlotSize * g_ItemData[m_ItemData.iItemIndex].m_iInvenSizeX * 0.5f) - 5);
 	}
 	_tchar szCountChar[MAX_PATH] = {  };
 	wsprintf(szCountChar, L"%d", m_ItemData.iItemCount);
 	
 	if (m_ItemData.iItemCount <= 0)
 	{
-		m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2(m_ItemRect.right + 2, m_ItemRect.bottom + 2), _fvector{ 0.f, 0.f, 0.f, 1.f }, 0.f, _float2{ 1.f, 1.f }, { 0.7f, 0.7f });
-		m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2(m_ItemRect.right, m_ItemRect.bottom), _fvector{ 0.8f, 0.4f, 0.f, 1.f }, 0.f, _float2{ 1.f, 1.f }, { 0.7f, 0.7f });
+		m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2((_float)m_ItemRect.right + 2, (_float)m_ItemRect.bottom + 2), _fvector{ 0.f, 0.f, 0.f, 1.f }, 0.f, _float2{ 1.f, 1.f }, { 0.7f, 0.7f });
+		m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2((_float)m_ItemRect.right, (_float)m_ItemRect.bottom), _fvector{ 0.8f, 0.4f, 0.f, 1.f }, 0.f, _float2{ 1.f, 1.f }, { 0.7f, 0.7f });
 	}
 	else if(m_ItemData.iItemCount == g_ItemData[m_ItemData.iItemIndex].m_iMaxItem)
 	{
-		m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2(m_ItemRect.right + 2, m_ItemRect.bottom + 2), _fvector{ 0.f, 0.f, 0.f, 1.f }, 0.f, _float2{ 1.f, 1.f }, { 0.7f, 0.7f });
-		m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2(m_ItemRect.right, m_ItemRect.bottom), _fvector{ 0.f, 0.7f, 0.7f, 1.f }, 0.f, _float2{ 1.f, 1.f }, { 0.7f, 0.7f });
+		m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2((_float)m_ItemRect.right + 2, (_float)m_ItemRect.bottom + 2), _fvector{ 0.f, 0.f, 0.f, 1.f }, 0.f, _float2{ 1.f, 1.f }, { 0.7f, 0.7f });
+		m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2((_float)m_ItemRect.right, (_float)m_ItemRect.bottom), _fvector{ 0.f, 0.7f, 0.7f, 1.f }, 0.f, _float2{ 1.f, 1.f }, { 0.7f, 0.7f });
 	}
 	else
 	{
-		m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2(m_ItemRect.right + 2, m_ItemRect.bottom + 2), _fvector{ 0.f, 0.f, 0.f, 1.f }, 0.f, _float2{ 1.f, 1.f }, { 0.7f, 0.7f });
-		m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2(m_ItemRect.right, m_ItemRect.bottom), _fvector{ 1.f, 1.f, 1.f, 1.f }, 0.f, _float2{ 1.f, 1.f }, { 0.7f, 0.7f });
+		m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2((_float)m_ItemRect.right + 2, (_float)m_ItemRect.bottom + 2), _fvector{ 0.f, 0.f, 0.f, 1.f }, 0.f, _float2{ 1.f, 1.f }, { 0.7f, 0.7f });
+		m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2((_float)m_ItemRect.right, (_float)m_ItemRect.bottom), _fvector{ 1.f, 1.f, 1.f, 1.f }, 0.f, _float2{ 1.f, 1.f }, { 0.7f, 0.7f });
 	}
 }
 

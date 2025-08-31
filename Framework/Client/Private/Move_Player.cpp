@@ -45,7 +45,7 @@ void CMove_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 
 void CMove_Player::Exit(CPlayer* pContainer)
 {
-    m_eAnimState == STATE_ANIM::END;
+    m_eAnimState = STATE_ANIM::END;
 }
 
 

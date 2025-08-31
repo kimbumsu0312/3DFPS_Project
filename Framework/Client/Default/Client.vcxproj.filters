@@ -292,9 +292,6 @@
     <Filter Include="02.GameObject\Monster\Boss\Alchina\Body">
       <UniqueIdentifier>{ac12e696-a585-499b-b1dc-ec85a6527bb5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Monster\Boss\Alchina\Monstate_Alchina">
-      <UniqueIdentifier>{25f56ea3-c599-4255-9749-95d14380d2b7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96.SuperClass\BehaviorTree">
       <UniqueIdentifier>{594ce3db-8b23-4e7c-8f44-ff0fa086e044}</UniqueIdentifier>
     </Filter>
@@ -318,6 +315,12 @@
     </Filter>
     <Filter Include="02.GameObject\Monster\Boss\Alchina\BehaviorTree_Alcina">
       <UniqueIdentifier>{db650bdf-c7e0-46c1-a314-c5e0f60074c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Boss\Alchina\Monstate_Alcina">
+      <UniqueIdentifier>{25f56ea3-c599-4255-9749-95d14380d2b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State">
+      <UniqueIdentifier>{d785a182-6bce-4092-9e1b-6b4662753f79}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -672,7 +675,7 @@
     <ClInclude Include="..\public\Alcina.h">
       <Filter>02.GameObject\Monster\Boss\Alchina</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Body_Alchina.h">
+    <ClInclude Include="..\public\Body_Alcina.h">
       <Filter>02.GameObject\Monster\Boss\Alchina\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\public\ActionNode.h">
@@ -695,6 +698,24 @@
     </ClInclude>
     <ClInclude Include="..\public\BehaviorTree_Alcina.h">
       <Filter>02.GameObject\Monster\Boss\Alchina\BehaviorTree_Alcina</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MonState_Alcina.h">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Idle_Alcina.h">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Walk_Alcina.h">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Damage_Alcina.h">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Attack_Alcina.h">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Die_Alcina.h">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1029,7 +1050,7 @@
     <ClCompile Include="..\private\Alcina.cpp">
       <Filter>02.GameObject\Monster\Boss\Alchina</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Body_Alchina.cpp">
+    <ClCompile Include="..\private\Body_Alcina.cpp">
       <Filter>02.GameObject\Monster\Boss\Alchina\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\private\ActionNode.cpp">
@@ -1052,6 +1073,24 @@
     </ClCompile>
     <ClCompile Include="..\private\BehaviorTree_Alcina.cpp">
       <Filter>02.GameObject\Monster\Boss\Alchina\BehaviorTree_Alcina</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MonState_Alcina.cpp">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Idle_Alcina.cpp">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Walk_Alcina.cpp">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Damage_Alcina.cpp">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Attack_Alcina.cpp">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Die_Alcina.cpp">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

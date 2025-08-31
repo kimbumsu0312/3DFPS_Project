@@ -66,16 +66,15 @@ void CDaniela::Update(_float fTimeDelta)
 {
 	_int iTargetCellIndex = CPlayer_Manager::GetInstance()->Get_CellIndex();
 
-	if (m_iPretargIndex != 0)
+	if (m_iPretargIndex != iTargetCellIndex)
 	{
-		m_iPretargIndex = 0;
-		m_pNavigationCom->Search_MovePos(0);
+		m_iPretargIndex = iTargetCellIndex;
+		m_pNavigationCom->SetUp_Node(iTargetCellIndex);
 	}
 
 	//스테이터스 업데이트
 	State_Check();
 	m_pCulStateObject->Update(this, fTimeDelta);
-
 	State_Change();
 
 	m_pBodyObject->Update(fTimeDelta);
@@ -166,9 +165,9 @@ void CDaniela::Attack_Collision()
 void CDaniela::IsDamage()
 {
 	if (m_IsHitPoint.IsHead)
-		m_iHp -= CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f;
+		m_iHp -= _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
 	else
-		m_iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
+		m_iHp -= _int(CPlayer_Manager::GetInstance()->Get_Damage());
 }
 
 void CDaniela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
@@ -178,23 +177,25 @@ void CDaniela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColl
 		if (TargetCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::RESIST))
 			m_pTransformCom->Is_Sliding(m_pNavigationCom, XMLoadFloat3(&TargetCollision.pCollider->Get_Intersect_Normal()));
 	}
-
-	switch (TargetCollision.iObjType)
+	else
 	{
-	case ENUM_CLASS(OBJECT_TYPE::RAY):
+		switch (TargetCollision.iObjType)
+		{
+		case ENUM_CLASS(OBJECT_TYPE::RAY):
 
-		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
-			m_IsHitPoint.IsHead = true;
-		if(MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_BODY))
-			m_IsHitPoint.IsBody = true;
-		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_R))
-			m_IsHitPoint.isSholder_R = true;
-		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L))
-			m_IsHitPoint.IsSholder_L = true;
+			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
+				m_IsHitPoint.IsHead = true;
+			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_BODY))
+				m_IsHitPoint.IsBody = true;
+			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_R))
+				m_IsHitPoint.isSholder_R = true;
+			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L))
+				m_IsHitPoint.IsSholder_L = true;
 
-		m_bIsDamage = true;
+			m_bIsDamage = true;
 
-		break;
+			break;
+		}
 	}
 }
 
@@ -246,12 +247,12 @@ HRESULT CDaniela::Ready_Components()
 		return E_FAIL;
 
 	CNavigation::NAVIGATION_DESC        NaviDesc{};
-	NaviDesc.iCurrentCellIndex =126;
+	NaviDesc.iCurrentCellIndex =32;
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
-
+	m_pNavigationCom->isMove(m_pTransformCom->Get_State(STATE::POSITION));
 
 	return S_OK;
 }

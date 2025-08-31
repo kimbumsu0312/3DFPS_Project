@@ -36,7 +36,7 @@ void CWeaponSwap_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 
 void CWeaponSwap_Player::Exit(CPlayer* pContainer)
 {
-    m_eAnimState == STATE_ANIM::END;
+    m_eAnimState = STATE_ANIM::END;
     if (pContainer->Get_WeaponType() == ENUM_CLASS(PLAYER_WEAPON::HANDGUN))
         m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::PISTOL });
     else if (pContainer->Get_WeaponType() == ENUM_CLASS(PLAYER_WEAPON::SHOTGUN))

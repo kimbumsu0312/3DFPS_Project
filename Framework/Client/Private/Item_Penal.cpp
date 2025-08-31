@@ -102,7 +102,7 @@ HRESULT CItem_Penal::Ready_Children()
     Desc.vSize = { _float(InvenDesc.iSlotSize), _float(InvenDesc.iSlotSize) };
     Desc.vMinUV = { 0.f, 0.f };
     Desc.vMaxUV = { 60.f / fTexSizeX , 60.f / fTexSizeY };
-    Desc.OffsetX = InvenDesc.iSlotSize;
+    Desc.OffsetX = (_float)InvenDesc.iSlotSize;
     Desc.iIndex = 0;
     Desc.iMaxIndex = InvenDesc.iSlotNumX;
     Desc.iTexIndex = 1;

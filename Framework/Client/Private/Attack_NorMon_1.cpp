@@ -70,7 +70,7 @@ void CAttack_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
 
 void CAttack_NorMon_1::Exit(CMonster_Normal* pContainer)
 {
-    m_eAnimState == STATE_ANIM::END;
+    m_eAnimState = STATE_ANIM::END;
 }
 
 CAttack_NorMon_1* CAttack_NorMon_1::Create(void* pArg)
