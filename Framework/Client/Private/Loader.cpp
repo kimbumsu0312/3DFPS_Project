@@ -227,6 +227,32 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/DoorFrame/DoorFrame.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_DoorFrame"))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/Box1/Box1.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Box1"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/Box2/Box2.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Box2"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/Box3/Box3.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Box3"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/BoxDummy/BoxDummy.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_BoxDummy"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/Closet/Closet.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Closet"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/DrawerChest/DrawerChest.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_DrawerChest"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/Filerack/Filerack.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Filerack"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/Kitchencupboard/Kitchencupboard.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Kitchencupboard"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/Wardrobe/Wardrobe.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Wardrobe"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/WoodBoard/WoodBoard.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_WoodBoard"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/WoodWindow/WoodWindow.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_WoodWindow"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/WoodShelf/WoodShelf.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_WoodShelf"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/WoodTable/WoodTable.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_WoodTable"))))
+		return E_FAIL;
 #pragma endregion
 #pragma region ItemObject
 	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Item/Bullet_HandGun/Bullet_HandGun.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Bullet_HandGun"))))

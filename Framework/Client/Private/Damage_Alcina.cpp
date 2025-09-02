@@ -30,7 +30,6 @@ void CDamage_Alcina::Enter(CAlcina* pContainer)
 
 void CDamage_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
 {
-    pContainer->Get_TransForm()->Go_Straight(fDeltatime);
     if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         *pContainer->Get_BlackBoard()->Set_Data().iDamage = 0;
 }

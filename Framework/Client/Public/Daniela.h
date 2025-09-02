@@ -88,7 +88,7 @@ private:
 	void						State_Change();
 	void						Root_Move();
 	void						Collider_Update();
-	
+	 
 public:
 	static CDaniela*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg);

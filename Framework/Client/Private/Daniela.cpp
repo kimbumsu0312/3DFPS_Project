@@ -230,12 +230,13 @@ HRESULT CDaniela::Ready_Components()
 		TEXT("Com_Collider_Head"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::Head]), &OBBDesc)))
 		return E_FAIL;
 
+
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_R);
 	OBBDesc.vExtents = _float3(0.2f, 0.07f, 0.07f);
 	OBBDesc.vCenter = _float3(0.1f, 0.f, 0.f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-		TEXT("Com_Collider_ARM_L"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::L_ARM]), &OBBDesc)))
+		TEXT("Com_Collider_ARM_L"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::L_ARM]), &OBBDesc )))
 		return E_FAIL;
 
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L);
@@ -247,7 +248,7 @@ HRESULT CDaniela::Ready_Components()
 		return E_FAIL;
 
 	CNavigation::NAVIGATION_DESC        NaviDesc{};
-	NaviDesc.iCurrentCellIndex =32;
+	NaviDesc.iCurrentCellIndex =1265;
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))

@@ -170,9 +170,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring& strLayerTag)
 		return E_FAIL;
 
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Alcina"), &Desc)))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+	//	ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Alcina"), &Desc)))
+	//	return E_FAIL;
 
 	CPoolingObject::POOLOBJECT_DESC PoolDesc{};
 	PoolDesc.fRotationPerSec = 1.f;
@@ -245,7 +245,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	MonDesc.iAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
 	MonDesc.szAnimTag = "Idle_Loop";
 	MonDesc.iWeponType = ENUM_CLASS(NORMAL_MON_WEAPON::SWORD);
-	MonDesc.szState = TEXT("Stand");
+	MonDesc.szState = TEXT("Stand"); 
 	Desc.MonDesc.push_back(MonDesc);
 
 	MonDesc.vPostion = { -50.29f, -8.68f, 28.24f };

@@ -56,7 +56,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pColliderBone[BODY] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
 	m_pColliderBone[PLAYER_VIEW] = m_pBodyObject->Get_BoneMatrix(TEXT("Cam"));
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-61.f, -8.5f, 13.5f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-65.f, -8.5f, 13.5f, 1.f));
 	CPlayer_Manager::GetInstance()->Update_Cell(m_pNavigationCom->Get_CulIndex());
 	return S_OK;
 }

@@ -168,7 +168,19 @@ _vector CNavigation::Compute_OnCell(_fvector vPosition)
 	return XMVector3TransformCoord(vLocalPos, XMLoadFloat4x4(&m_WorldMatrix));
 
 }
-#ifdef _DEBUG
+
+_vector CNavigation::IsNaviNode()
+{
+	_int LastIndex = m_NodePath.size() - 1;
+	if (m_iNaviMoveIndex >= LastIndex)
+		return XMLoadFloat3(&m_Cells[m_NodePath[m_iNaviMoveIndex]]->Get_Center());
+
+	if (m_iCurrentCellIndex == m_NodePath[m_iNaviMoveIndex])
+		m_iNaviMoveIndex++;
+
+
+	return XMLoadFloat3(&m_Cells[m_NodePath[m_iNaviMoveIndex]]->Get_Center());
+}
 
 void CNavigation::SetUp_Node(_int TargetIndex)
 {
@@ -261,7 +273,7 @@ void CNavigation::SetUp_Node(_int TargetIndex)
 	
 	m_CompleteList.clear();
 }
-
+#ifdef _DEBUG
 _bool CNavigation::SetUp_Portal(vector<Portal>& PortalPath)
 {
 	Portal vPortal{};
@@ -302,19 +314,6 @@ _vector CNavigation::IsNaviMove(_vector vPos)
 
 	return XMLoadFloat3(&m_NaviPath[m_iNaviMoveIndex]);
 	//return XMVector3Normalize(vDir);
-}
-
-_vector CNavigation::IsNaviNode()
-{
-	_int LastIndex = m_NodePath.size() - 1 ;
-	if(m_iNaviMoveIndex >= LastIndex)
-		return XMLoadFloat3(&m_Cells[m_NodePath[m_iNaviMoveIndex]]->Get_Center());
-
-	if (m_iCurrentCellIndex == m_NodePath[m_iNaviMoveIndex])
-		m_iNaviMoveIndex++;
-
-	
-	return XMLoadFloat3(&m_Cells[m_NodePath[m_iNaviMoveIndex]]->Get_Center());
 }
 
 _vector CNavigation::IsNaviPortal(_vector vPos)
@@ -426,7 +425,10 @@ HRESULT CNavigation::Add_Cell(const _float3* pPos, _uint iCellType)
 
 HRESULT CNavigation::Render()
 {
-	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+	_float4x4 RenderMat = m_WorldMatrix;
+
+	RenderMat._42 = RenderMat._42 + 1.f;
+	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &RenderMat)))
 		return E_FAIL;
 	if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW))))
 		return E_FAIL;

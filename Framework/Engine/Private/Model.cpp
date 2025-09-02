@@ -150,11 +150,13 @@ _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const A
 
         if (!m_bIsAnimFished)
         {
-            XMStoreFloat3(&m_vMovePos, vCombinedPos - m_vPreRootPos);
-            m_vPreRootPos = vCombinedPos;
-      
             XMStoreFloat4(&m_vMoveRot, XMQuaternionMultiply( XMQuaternionInverse(m_vPreRootRot), vCombinedRot));
             m_vPreRootRot = vCombinedRot;
+            
+            XMStoreFloat3(&m_vMovePos, vCombinedPos - m_vPreRootPos);
+            XMStoreFloat3(&m_vMovePos, XMVector3Rotate(XMLoadFloat3(&m_vMovePos), XMQuaternionInverse(XMLoadFloat4(&m_vMoveRot))));
+            m_vPreRootPos = vCombinedPos;
+            
         }
         else
         {

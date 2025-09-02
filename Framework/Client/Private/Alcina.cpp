@@ -226,7 +226,7 @@ HRESULT CAlcina::Ready_Components()
 		return E_FAIL;
 
 	CNavigation::NAVIGATION_DESC        NaviDesc{};
-	NaviDesc.iCurrentCellIndex = 32;
+	NaviDesc.iCurrentCellIndex = 1265;
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
@@ -338,14 +338,14 @@ void CAlcina::Root_Move()
 	_vector vMovePos = XMLoadFloat3(m_pBodyObject->Get_MovePos());
 	_vector vMoveRot = XMLoadFloat4(m_pBodyObject->Get_MoveRot());
 
-	//월드 기준으로 방향 보정
-	vMovePos = XMVector3Rotate(vMovePos, vWorldRot);
-
-	//이동량 누적
-	vWorldTrans += vMovePos;
 	//회전량 누적
 	vWorldRot = XMQuaternionMultiply(vMoveRot, vWorldRot);
-	vWorldRot = XMQuaternionNormalize(vWorldRot);
+	//vWorldRot = XMQuaternionNormalize(vWorldRot);
+	
+	//월드 기준으로 방향 보정
+	vMovePos = XMVector3Rotate(vMovePos, vWorldRot);
+	//이동량 누적
+	vWorldTrans += vMovePos;
 
 	_matrix ScaleMat = XMMatrixScalingFromVector(vScale);
 	_matrix Movemat = XMMatrixTranslationFromVector(vWorldTrans);
