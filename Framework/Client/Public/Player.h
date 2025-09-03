@@ -73,6 +73,9 @@ private:
 
 	_bool						m_bIsDamage = { false };
 	_float						m_fDamageCool = {};
+
+	_int						m_iRayCount = {};
+	_float						m_fRayRange = {};
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_PartObjects();

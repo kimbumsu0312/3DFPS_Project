@@ -14,33 +14,35 @@ HRESULT CDamage_NorMon_1::Initalize(void* pArg)
 void CDamage_NorMon_1::Enter(CMonster_Normal* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
-    pContainer->Switch_AnimState(ENUM_CLASS(NORMAL_MON_STATE::DAMAGE));
+    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::DAMAGE);
+
     DIRECTION eHitPoint = PlayerDIR(pContainer->Get_TransformState(STATE::POSITION), pContainer->Get_TransformState(STATE::LOOK));
 
+    _bool bHeadShot = pContainer->Get_BlackBoard()->Get_Data().bIsHeadShot;
+
     if(eHitPoint == DIRECTION::F || eHitPoint == DIRECTION::FR || eHitPoint == DIRECTION::FL)
-        (pContainer->IsHeadShot()) ? pContainer->Switch_Anim("Damage_HeadShot_F", false) : pContainer->Switch_Anim("Damage_M_F", false);
+        bHeadShot == true ? pContainer->Switch_Anim("Damage_HeadShot_F", false) : pContainer->Switch_Anim("Damage_M_F", false);
     else if(eHitPoint == DIRECTION::B)
         pContainer->Switch_Anim("Damage_M_B", false);
     else if ( eHitPoint == DIRECTION::R || eHitPoint == DIRECTION::BR)
-        (pContainer->IsHeadShot()) ? pContainer->Switch_Anim("Damage_HeadShot_R", false) : pContainer->Switch_Anim("Damage_M_L", false);
+        bHeadShot == true ? pContainer->Switch_Anim("Damage_HeadShot_R", false) : pContainer->Switch_Anim("Damage_M_L", false);
     else
-        (pContainer->IsHeadShot()) ? pContainer->Switch_Anim("Damage_HeadShot_L", false) : pContainer->Switch_Anim("Damage_M_RB", false);
+        bHeadShot == true ? pContainer->Switch_Anim("Damage_HeadShot_L", false) : pContainer->Switch_Anim("Damage_M_RB", false);
 
 }
 
 void CDamage_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
 {
-    if (pContainer->IsAnimFinsh())
+    if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
     {
         m_eAnimState = STATE_ANIM::LOOP;
-        pContainer->Switch_State(TEXT("Chase"));
+        pContainer->Get_BlackBoard()->Set_Data().iDamage = 0;
     }
 }
 
 void CDamage_NorMon_1::Exit(CMonster_Normal* pContainer)
 {
     m_eAnimState = STATE_ANIM::END;
-    pContainer->Reset_DamageCheck();
 }
 
 CDamage_NorMon_1* CDamage_NorMon_1::Create(void* pArg)

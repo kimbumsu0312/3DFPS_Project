@@ -77,6 +77,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
  {	  
+
 	if (!InputKey_UI() && !m_bisCameraLock)
 	{
 		InputKey_MoveState(fTimeDelta);
@@ -367,14 +368,47 @@ void CPlayer::InputKey_AttackState(_float fTimeDelta)
 		m_AttackState.isAim = true;
 	}
 
-	if (m_pGameInstance->IsMouseHold(MOUSEKEYSTATE::LB))
+	switch (m_iCulWeponState)
 	{
-		m_AttackState.isAttack = true;
-		RAY_DESC RayDesc = m_pGameInstance->Create_FpsRayDesc(0, 0);
-		m_pGameInstance->Add_ColliderRay(ENUM_CLASS(COLLISION_LAYER::RAY), ENUM_CLASS(OBJECT_TYPE::RAY), RayDesc);
+	case ENUM_CLASS(PLAYER_WEAPON::SHOTGUN):
+		m_iRayCount = 8;
+		m_AttackState.isAim ? m_fRayRange = 50 : m_fRayRange = 120;
+		break;
+
+	case ENUM_CLASS(PLAYER_WEAPON::KNIFE):
+		m_iRayCount = 0;
+		m_fRayRange = 0;
+		break;
+
+	case ENUM_CLASS(PLAYER_WEAPON::HANDGUN):
+		m_iRayCount = 1;
+		m_AttackState.isAim ? m_fRayRange = 0 : m_fRayRange = 100;
+		break;
+
+	case ENUM_CLASS(PLAYER_WEAPON::SNIPER):
+		m_iRayCount = 1;
+		m_AttackState.isAim ? m_fRayRange = 0 : m_fRayRange = 50;
+		break;
+
+	case ENUM_CLASS(PLAYER_WEAPON::END):
+		m_iRayCount = 0;
+		m_fRayRange = 0;
+		break;
 	}
 
-	if (m_pGameInstance->IsKeyHold(DIK_R))
+	if (m_pGameInstance->IsMouseDown(MOUSEKEYSTATE::LB))
+	{
+		m_AttackState.isAttack = true;
+		
+		for (_int i = 0; i < m_iRayCount; ++i)
+		{
+
+			RAY_DESC RayDesc = m_pGameInstance->Create_FpsRayDesc(m_fRayRange);
+			m_pGameInstance->Add_ColliderRay(ENUM_CLASS(COLLISION_LAYER::RAY), ENUM_CLASS(OBJECT_TYPE::RAY), RayDesc);
+		}
+	}
+
+	if (m_pGameInstance->IsKeyDown(DIK_R))
 	{
 		m_AttackState.isReload = true;
 	}

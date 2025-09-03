@@ -27,7 +27,7 @@ public:
 	virtual HRESULT				Render();
 
 public:
-	void						Switch_AnimState(_uint iAnimState) { if (iAnimState < ENUM_CLASS(NORMAL_MON_STATE::END)) { m_iAnimState = iAnimState; } }
+	void						Switch_AnimState(_uint iAnimState) { if (iAnimState < ENUM_CLASS(BOSS_SISTER::END)) { m_iAnimState = iAnimState; } }
 	void						Switch_Anim(string szAnimTag, _bool IsLoop);
 	void						Switch_State(_wstring szStateTag) { m_szCulStateTag = szStateTag; }
 	_bool						IsAnimFinsh() { return m_bIsAnimFinsh; }
@@ -69,7 +69,7 @@ private:
 
 	_int						m_iHp = {};
 	//애니메이션 관련
-	_uint						m_iAnimState = { ENUM_CLASS(NORMAL_MON_STATE::NORMAL) };
+	_uint						m_iAnimState = {};
 	string						m_szAnimTag;
 	_bool						m_bIsAnimLoop = { true };
 	_bool						m_bIsAnimFinsh = { false };

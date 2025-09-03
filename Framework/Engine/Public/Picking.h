@@ -13,14 +13,16 @@ public:
 
 	void					Update();
 
-	RAY_DESC				Create_FpsRayDesc(_int iOffSetX, _int iOffSetY);
+	RAY_DESC				Create_FpsRayDesc(_float fOffSet);
 	void					TransformToLocalSpace(class CTransform& pTransformCom);
 	_bool					isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float3& pOut);
 	_bool					isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float& pDist);
 
 	_vector					Get_LocalRayPos() { return m_vLocalRayPos; }
 	_vector					Get_LocalRayDir() { return m_vLocalRayDir; }
-
+#ifdef _DEBUG
+	HRESULT					Ray_Render();
+#endif // _DEBUG
 private:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
@@ -33,6 +35,14 @@ private:
 
 	_vector					m_vWorldRayDir{}, m_vWorldRayPos{};
 	_vector					m_vLocalRayPos{}, m_vLocalRayDir{};
+
+#ifdef _DEBUG
+	PrimitiveBatch<
+		VertexPositionColor>*	m_pBatch = { nullptr };
+	BasicEffect*				m_pEffect = { nullptr };
+	ID3D11InputLayout*			m_pInputLayout = { nullptr };
+	vector<RAY_DESC>			m_RayDescs;
+#endif // _DEBUG
 public:
 	static CPicking*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HWND hWnd);
 	virtual void			Free();

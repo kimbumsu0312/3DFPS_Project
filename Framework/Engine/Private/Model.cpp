@@ -154,7 +154,8 @@ _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const A
             m_vPreRootRot = vCombinedRot;
             
             XMStoreFloat3(&m_vMovePos, vCombinedPos - m_vPreRootPos);
-            XMStoreFloat3(&m_vMovePos, XMVector3Rotate(XMLoadFloat3(&m_vMovePos), XMQuaternionInverse(XMLoadFloat4(&m_vMoveRot))));
+            XMStoreFloat3(&m_vMovePos, XMLoadFloat3(&m_vMovePos));
+            m_vMovePos.y = 0.f;
             m_vPreRootPos = vCombinedPos;
             
         }
@@ -186,6 +187,11 @@ _float4x4* CModel::Get_BoneMatrix(const _wstring pBoneName)
         return nullptr;
 
     return (*iter)->Get_PtrCombinedTransformationMatrix();
+}
+
+void CModel::Set_TransitionTime()
+{
+    m_fTransitionTime = 3.f;
 }
 
 void CModel::Set_Animations(_uint AnimiIndex, _bool IsLoop)

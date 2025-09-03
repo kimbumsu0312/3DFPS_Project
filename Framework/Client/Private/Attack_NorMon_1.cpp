@@ -16,9 +16,9 @@ void CAttack_NorMon_1::Enter(CMonster_Normal* pContainer)
     _int Rand = rand() % 3;
     m_eAnimState = STATE_ANIM::START;
     
-    pContainer->Switch_AnimState(ENUM_CLASS(NORMAL_MON_STATE::ATTACK));
-
-    if (pContainer->Get_WeaponType() == ENUM_CLASS(NORMAL_MON_WEAPON::END))
+    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::ATTACK);
+    
+    if (pContainer->Get_BlackBoard()->Get_Data().iWeapon == ENUM_CLASS(CMonster_Normal::NORMAL_MON_WEAPON::END))
     {
         switch (Rand)
         {
@@ -53,19 +53,6 @@ void CAttack_NorMon_1::Enter(CMonster_Normal* pContainer)
 void CAttack_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
 {
     pContainer->Attack_Collision();
-    if (pContainer->Get_State().isDamage)
-    {
-        pContainer->Switch_State(TEXT("Damage"));
-        return;
-    }
-
-    if (pContainer->IsAnimFinsh())
-    {
-        if (pContainer->Get_State().isChase)
-            pContainer->Switch_State(TEXT("Chase"));
-        else
-            pContainer->Switch_State(TEXT("Scouting"));
-    }
 }
 
 void CAttack_NorMon_1::Exit(CMonster_Normal* pContainer)

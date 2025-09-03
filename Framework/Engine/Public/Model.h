@@ -25,7 +25,7 @@ public:
 	_float4x4*						Get_BoneMatrix(const _wstring pBoneName);
 	_float3*						Get_PtrMovePos() { return &m_vMovePos; }
 	_float4*						Get_PtrMoveRot() { return &m_vMoveRot; }
-
+	void							Set_TransitionTime();
 	void							Set_Animations(_uint AnimiIndex, _bool IsLoop);
 	void							Set_Upper(_int BoneIndex, _float fPeach, _bool IsUpperSet);
 private:

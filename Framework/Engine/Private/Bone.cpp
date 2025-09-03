@@ -18,7 +18,7 @@ HRESULT CBone::Initialize(const SAVE_BONE& pBone)
 void CBone::Set_CombindMationMatinMatrix_PosReset()
 {
     _matrix Combined = XMLoadFloat4x4(&m_CombinedTransformationMatrix);
-    Combined.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+    Combined.r[3] = XMVectorSet(0.f, XMVectorGetY(Combined.r[3]), 0.f, 1.f);
     XMStoreFloat4x4(&m_CombinedTransformationMatrix, Combined);
 }
 

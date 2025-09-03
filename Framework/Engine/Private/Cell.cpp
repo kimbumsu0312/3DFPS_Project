@@ -31,7 +31,7 @@ HRESULT CCell::Initialize(const _float3* pPoints, _int iIndex, _uint iCellType)
 		return E_FAIL;
 #endif
 
-	return S_OK;
+    return S_OK;
 }
 
 HRESULT CCell::Initialize_Load(const _float3* pPoints, _int iIndex, _uint iCellType)

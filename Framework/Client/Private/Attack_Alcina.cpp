@@ -17,7 +17,7 @@ void CAttack_Alcina::Enter(CAlcina* pContainer)
 
     DIRECTION eDir = PlayerDIR(pContainer->Get_TransForm()->Get_State(STATE::POSITION), pContainer->Get_TransForm()->Get_State(STATE::LOOK));
     
-    pContainer->Switch_AnimState(ENUM_CLASS(BOSS_SISTER::ATTACK));
+    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CAlcina::ANIM_STATE::ATTACK);
     if (eDir == DIRECTION::B || eDir == DIRECTION::BL || eDir == DIRECTION::BR)
         pContainer->Switch_Anim("Claw_Behind", false);
     else if (eAttack == CAlcina::Attack_Type::LONG)

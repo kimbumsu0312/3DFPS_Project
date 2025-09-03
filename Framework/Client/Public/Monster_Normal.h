@@ -2,6 +2,7 @@
 #include "Engine_Defines.h"
 #include "PoolingContainer.h"
 #include "Client_Struct.h"
+#include "BlackBoard.h"
 
 NS_BEGIN(Engine)
 class CCollider;
@@ -11,6 +12,31 @@ NS_END
 NS_BEGIN(Client)
 class CMonster_Normal final : public CPoolingContainer
 {
+public:
+	enum class NORMAL_MON_STATE { NORMAL, DAMAGE, ATTACK, END };
+	enum class NORMAL_MON_WEAPON { SWORD, HALBERD, SHOTEL, END };
+public:
+	typedef struct NormalMon_Data
+	{
+		//애니메이션 관련
+		_uint* iAnimState = { nullptr };
+		string* szAnimTag = { nullptr };
+		_bool* bIsAnimLoop = { nullptr };
+		_bool* bIsAnimFinsh = { nullptr };
+
+		_wstring* szCulStateTag = { nullptr };
+		_int iHp = {};
+		_int iDamage = {};
+
+		_bool bIsHeadShot = { false };
+		_bool IsAttack = { false };
+		_bool IsChase = {false};
+		_bool IsIdle = {false};
+		const _float4x4* MonPos = { nullptr };
+
+		_int	iWeapon;
+		_int	iStartMotion;
+	}NORMALMON_DATA;
 private:
 	enum ColliderType_Mon { BODY = 0, Head, Hand, RESIST, END };
 private:
@@ -27,18 +53,15 @@ public:
 	virtual HRESULT				Render();
 
 public:
-	void						Switch_AnimState(_uint iAnimState) { if (iAnimState < ENUM_CLASS(NORMAL_MON_STATE::END)) { m_iAnimState = iAnimState; } }
 	void						Switch_Anim(string szAnimTag, _bool IsLoop);
 	void						Switch_State(_wstring szStateTag) { m_szCulStateTag = szStateTag; }
-	_bool						IsAnimFinsh() { return m_bIsAnimFinsh; }
-	_bool						IsHeadShot() { return m_bIsHeadShot; }
+	CBlackBoard<
+		NORMALMON_DATA>*		Get_BlackBoard() { return m_BlackBoard; }
 
-	const NORMON_STATE&			Get_State() { return m_NorMonState;}
-	const _int&					Get_WeaponType() { return m_iWeaponType; }
+
 	const _vector				Get_TransformState(STATE eState) { return m_pTransformCom->Get_State(eState); }
 	const _int					Get_CulNaviIndex();
 	void						Target_LookAt(_float fTimeDelta);
-	void						Reset_DamageCheck() { m_bIsDamage = false; m_bIsHeadShot = false; }
 	void						Attack_Collision();
 
 	virtual void				OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
@@ -57,21 +80,17 @@ private:
 	class CWeaponObject*		m_pWeaponObject = { nullptr };
 	class CBody_NorMon*			m_pBodyObject = { nullptr };
 
-	_int						m_iWeaponType = {};
-	
-	//상태 관련
+	//유틸 관련
+	CBlackBoard<NORMALMON_DATA>* m_BlackBoard = { nullptr };
+	class CBehaviorTree_Normon_1* m_pBehaviorTree = { nullptr };
+
+	//스테이트 관련
 	unordered_map<_wstring,
 		class CMonState_Normal*>m_StateObjects;
-	
 	class CMonState_Normal*		m_pCulStateObject = { nullptr };
 	_wstring					m_szPreStateTag = {};
 	_wstring					m_szCulStateTag = {};
-
-	NORMON_STATE				m_NorMonState = {};
-	_bool						m_bIsDamage = { false };
-	_bool						m_bIsHeadShot = { false };
-
-	_int						m_iHp = {};
+	
 	//애니메이션 관련
 	_uint						m_iAnimState = { ENUM_CLASS(NORMAL_MON_STATE::NORMAL) };
 	string						m_szAnimTag;
@@ -81,14 +100,12 @@ private:
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_PartObjects();
+	HRESULT						Ready_Utility();
 	HRESULT						Ready_StateObjects();
 
 	HRESULT						Add_StateObject(const _wstring& strStateObjectTag, CMonState_Normal* pStateObject);
 	class CMonState_Normal*		Find_StateObject(const _wstring& strPartObjectTag);
-
-	void						State_Check();
-
-	
+ 	
 	void						State_Change();
 	void						Root_Move();
 	void						Collider_Update();

@@ -1,0 +1,138 @@
+#include "pch.h"
+#include "BehaviorTree_Normon_1.h"
+#include "Alcina.h"
+#include "Player_Manager.h"
+
+CBehaviorTree_Normon_1::CBehaviorTree_Normon_1()
+{
+}
+
+HRESULT CBehaviorTree_Normon_1::Initalize(CBlackBoard<CMonster_Normal::NormalMon_Data>* pData)
+{
+	if (pData == nullptr)
+		return E_FAIL;
+	m_pBlackBoard = pData;
+	Safe_AddRef(m_pBlackBoard);
+
+	if (FAILED(Ready_Node()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CBehaviorTree_Normon_1::Update()
+{
+	if (m_pBlackBoard->Get_Data().iHp <= 0)
+	{
+		Switch_Die();
+		return;
+	}
+
+	if (m_pBlackBoard->Get_Data().iDamage > 0)
+	{
+		Switch_Damage();
+		return;
+	}
+
+	__super::Update();
+}
+
+HRESULT CBehaviorTree_Normon_1::Ready_Node()
+{
+	CSeletctorNode* pRoot = CSeletctorNode::Create();
+
+	CSequenceNode* pAttackSequence = CSequenceNode::Create();
+	CActionNode* pAttackCondition = CActionNode::Create([&]() {return Condition_Attack(); });
+	CActionNode* pAttackSwitch = CActionNode::Create([&]() {return Switch_Attack(); });
+	pAttackSequence->Add_Node(pAttackCondition);
+	pAttackSequence->Add_Node(pAttackSwitch);
+
+	CSequenceNode* pWalkSequence = CSequenceNode::Create();
+	CActionNode* pWalkCondition = CActionNode::Create([&]() {return Condition_Chase(); });
+	CActionNode* pWalkSwitch = CActionNode::Create([&]() {return Switch_Chase(); });
+	pWalkSequence->Add_Node(pWalkCondition);
+	pWalkSequence->Add_Node(pWalkSwitch);
+
+	CActionNode* pIdleSwitch = CActionNode::Create([&]() {return Switch_Idle(); });
+
+	pRoot->Add_Node(pAttackSequence);
+	pRoot->Add_Node(pWalkSequence);
+	pRoot->Add_Node(pIdleSwitch);
+
+	m_pRootNode = pRoot;
+	return S_OK;
+}
+
+CNode::TREE_STATE CBehaviorTree_Normon_1::Switch_Die()
+{
+	*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Die");
+	m_pRootNode->Reset();
+	return CNode::TREE_STATE::SUCCESS;
+}
+
+CNode::TREE_STATE CBehaviorTree_Normon_1::Switch_Damage()
+{
+	*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Damage");
+	m_pRootNode->Reset();
+	return CNode::TREE_STATE::SUCCESS;
+}
+
+CNode::TREE_STATE CBehaviorTree_Normon_1::Condition_Attack()
+{
+	if (m_pBlackBoard->Get_Data().IsAttack != true)
+		return CNode::TREE_STATE::FAILED;
+
+	return CNode::TREE_STATE::SUCCESS;
+}
+
+CNode::TREE_STATE CBehaviorTree_Normon_1::Switch_Attack()
+{
+	*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Attack");
+
+	if (m_pBlackBoard->Get_Data().IsAttack == true)
+		return CNode::TREE_STATE::RUN;
+
+	return CNode::TREE_STATE::SUCCESS;
+}
+
+CNode::TREE_STATE CBehaviorTree_Normon_1::Condition_Chase()
+{
+	if (m_pBlackBoard->Get_Data().IsChase == true)
+		return CNode::TREE_STATE::SUCCESS;
+
+	return CNode::TREE_STATE::FAILED;
+}
+
+CNode::TREE_STATE CBehaviorTree_Normon_1::Switch_Chase()
+{
+	*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Chase");
+
+	return CNode::TREE_STATE::SUCCESS;
+}
+
+CNode::TREE_STATE CBehaviorTree_Normon_1::Switch_Idle()
+{
+	*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Idle");
+
+	return CNode::TREE_STATE::SUCCESS;
+}
+
+CBehaviorTree_Normon_1* CBehaviorTree_Normon_1::Create(CBlackBoard<CMonster_Normal::NormalMon_Data>* pData)
+{
+	CBehaviorTree_Normon_1* pInstance = new CBehaviorTree_Normon_1();
+
+	if (FAILED(pInstance->Initalize(pData)))
+	{
+		MSG_BOX(TEXT("Failed to Create : CBehaviorTree_Normon_1"));
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CBehaviorTree_Normon_1::Free()
+{
+	__super::Free();
+
+	Safe_Release(m_pBlackBoard);
+}

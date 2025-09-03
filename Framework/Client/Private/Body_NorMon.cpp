@@ -91,6 +91,11 @@ _float4* CBody_NorMon::Get_MoveRot()
     return m_pModelCom->Get_PtrMoveRot();;
 }
 
+HRESULT CBody_NorMon::Set_Animation(_int iAnimIndex, string szAnimName, _bool IsLoop)
+{
+    return m_pAnimCom->Set_Animation(m_pModelCom, iAnimIndex, szAnimName, IsLoop);
+}
+
 HRESULT CBody_NorMon::Ready_Components()
 {
     m_iRootLodeIndex = 11;
@@ -114,6 +119,7 @@ HRESULT CBody_NorMon::Ready_Components()
         TEXT("Com_AnimCom"), reinterpret_cast<CComponent**>(&m_pAnimCom), &Desc)))
         return E_FAIL;
 
+    
     return S_OK;
 }
 

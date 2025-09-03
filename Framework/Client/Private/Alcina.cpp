@@ -164,15 +164,15 @@ void CAlcina::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColli
 
 }
 
-void CAlcina::SetUp_Node(_int iTargetCellIndex)
+void CAlcina::SetUp_Node(_int iTargetCellIndex, _float3 vPos)
 {
-	m_pNavigationCom->SetUp_Node(iTargetCellIndex);
+	m_pNavigationCom->SetUp_Node(iTargetCellIndex, vPos);
 }
 
 void CAlcina::Move_Node(_float fTimeDelta)
 {
 	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
-	_vector vPlayerPos = m_pNavigationCom->IsNaviNode();
+	_vector vPlayerPos = m_pNavigationCom->IsNaviNode(vMonPos);
 
 	_vector vDir = XMVector3Normalize(XMVectorSetY(vPlayerPos - vMonPos, 0.f));
 	_vector vLook = XMVector3Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
@@ -264,7 +264,7 @@ HRESULT CAlcina::Ready_Utility()
 	m_BlackBoard->Set_Data().bIsAnimLoop = &m_bIsAnimLoop;
 	m_BlackBoard->Set_Data().iAnimState = &m_iAnimState;
 	m_BlackBoard->Set_Data().szAnimTag = &m_szAnimTag;
-	m_BlackBoard->Set_Data().szCulStateTag = &m_szCulStateTag;
+	m_BlackBoard->Set_Data().szCulStateTag = &m_szCulStateTag; 
 	m_BlackBoard->Set_Data().iHp = &m_iHp;
 	m_BlackBoard->Set_Data().iDamage = &m_iDamage;
 	m_BlackBoard->Set_Data().IsAttack = &m_bIsAttack;

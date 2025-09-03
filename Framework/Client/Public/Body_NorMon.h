@@ -33,9 +33,12 @@ public:
 	virtual HRESULT			Render();
 
 public:
+
 	_float4x4*				Get_BoneMatrix(const _wstring pBoneName);
 	_float3*				Get_MovePos();
 	_float4*				Get_MoveRot();
+
+	HRESULT					Set_Animation(_int iAnimIndex, string szAnimName, _bool IsLoop);
 private:
 	CShader*				m_pShaderCom = { nullptr };
 	CModel*					m_pModelCom = { nullptr };

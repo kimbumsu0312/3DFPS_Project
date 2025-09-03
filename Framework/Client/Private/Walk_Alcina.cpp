@@ -14,7 +14,7 @@ HRESULT CWalk_Alcina::Initalize(void* pArg)
 void CWalk_Alcina::Enter(CAlcina* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
-    pContainer->Switch_AnimState(ENUM_CLASS(BOSS_SISTER::NORMAL));
+    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(BOSS_SISTER::NORMAL);
     DIRECTION eDir = PlayerDIR(pContainer->Get_TransForm()->Get_State(STATE::POSITION), pContainer->Get_TransForm()->Get_State(STATE::LOOK));
     if(eDir == DIRECTION::F || eDir == DIRECTION::FL || eDir == DIRECTION::FR)
         pContainer->Switch_Anim("Walk_F", false);
@@ -35,7 +35,7 @@ void CWalk_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
         if (AnimFinsh)
         {
             m_eAnimState = STATE_ANIM::LOOP;
-            pContainer->Switch_AnimState(ENUM_CLASS(BOSS_SISTER::NORMAL));
+            *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(BOSS_SISTER::NORMAL);
             pContainer->Switch_Anim("Walk_Loop", true);
         }
         pContainer->Target_LookTurn(fDeltatime);
@@ -45,10 +45,12 @@ void CWalk_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
     {
         _int iTargetCellIndex = CPlayer_Manager::GetInstance()->Get_CellIndex();
 
+        _float3 vPlayerPos{};
+        XMStoreFloat3(&vPlayerPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
         if (m_iPreTargetIndex != iTargetCellIndex)
         {
             m_iPreTargetIndex = iTargetCellIndex;
-            pContainer->SetUp_Node(iTargetCellIndex);
+            pContainer->SetUp_Node(iTargetCellIndex, vPlayerPos);
         }
         pContainer->Move_Node(fDeltatime);
     }

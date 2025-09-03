@@ -178,15 +178,6 @@
     <Filter Include="02.GameObject\Monster">
       <UniqueIdentifier>{f717965c-437a-4b5f-bfc1-7cee5288779d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Monster\NormalMon">
-      <UniqueIdentifier>{212b7d12-95f3-495b-87e3-e7af566b68a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Monster\NormalMon\Body">
-      <UniqueIdentifier>{4238a945-7e11-4c23-81d5-e4200cd9609d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Monster\NormalMon\Weapon">
-      <UniqueIdentifier>{c69cfa14-8fe4-490d-b4a5-b0baf80ef120}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\Monster\Boss">
       <UniqueIdentifier>{91bd10cb-45d3-4c84-ab7c-0e904ed81941}</UniqueIdentifier>
     </Filter>
@@ -210,12 +201,6 @@
     </Filter>
     <Filter Include="02.GameObject\Player\PlayerState\State">
       <UniqueIdentifier>{3bede824-e979-478f-a8a3-484e328807f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Monster\NormalMon\MonState_Normal">
-      <UniqueIdentifier>{a0cd18b7-9c95-4b3f-bd30-3d01e0c6baec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Monster\NormalMon\MonState_Normal\State">
-      <UniqueIdentifier>{7f58b992-1e42-486a-b038-780fcacdbe88}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\Monster\Boss\Daniela\MonState_Daniela">
       <UniqueIdentifier>{2a420c53-2d77-4e54-b362-1faafcc2709d}</UniqueIdentifier>
@@ -321,6 +306,24 @@
     </Filter>
     <Filter Include="02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State">
       <UniqueIdentifier>{d785a182-6bce-4092-9e1b-6b4662753f79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Normal_Mon">
+      <UniqueIdentifier>{212b7d12-95f3-495b-87e3-e7af566b68a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Normal_Mon\Body">
+      <UniqueIdentifier>{4238a945-7e11-4c23-81d5-e4200cd9609d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Normal_Mon\Weapon">
+      <UniqueIdentifier>{c69cfa14-8fe4-490d-b4a5-b0baf80ef120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Normal_Mon\MonState_Normal">
+      <UniqueIdentifier>{a0cd18b7-9c95-4b3f-bd30-3d01e0c6baec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Normal_Mon\MonState_Normal\State">
+      <UniqueIdentifier>{7f58b992-1e42-486a-b038-780fcacdbe88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Normal_Mon\BehaviorTree_NorMon_1">
+      <UniqueIdentifier>{6a184f0b-fec0-4272-afd6-9e6eb3906d8b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -529,37 +532,34 @@
       <Filter>02.GameObject\Player\Object\Weapon\Knife</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Monster_Normal.h">
-      <Filter>02.GameObject\Monster\NormalMon</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Body_NorMon.h">
-      <Filter>02.GameObject\Monster\NormalMon\Body</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\public\NorMon_Sword.h">
-      <Filter>02.GameObject\Monster\NormalMon\Weapon</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\public\NorMon_Shotel.h">
-      <Filter>02.GameObject\Monster\NormalMon\Weapon</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\public\NorMon_Halberd.h">
-      <Filter>02.GameObject\Monster\NormalMon\Weapon</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Attack_NorMon_1.h">
-      <Filter>02.GameObject\Monster\NormalMon\MonState_Normal\State</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\MonState_Normal\State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Chase_NorMon_1.h">
-      <Filter>02.GameObject\Monster\NormalMon\MonState_Normal\State</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\MonState_Normal\State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Damage_NorMon_1.h">
-      <Filter>02.GameObject\Monster\NormalMon\MonState_Normal\State</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\MonState_Normal\State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MonState_Normal.h">
-      <Filter>02.GameObject\Monster\NormalMon\MonState_Normal</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\MonState_Normal</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Scouting_NorMon_1.h">
-      <Filter>02.GameObject\Monster\NormalMon\MonState_Normal\State</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Stand_NorMon_1.h">
-      <Filter>02.GameObject\Monster\NormalMon\MonState_Normal\State</Filter>
+    <ClInclude Include="..\Public\Idle_NorMon_1.h">
+      <Filter>02.GameObject\Monster\Normal_Mon\MonState_Normal\State</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BaseMapObj.h">
       <Filter>02.GameObject\Map</Filter>
@@ -571,7 +571,7 @@
       <Filter>96.SuperClass\StateObject</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Die_NorMon_1.h">
-      <Filter>02.GameObject\Monster\NormalMon\MonState_Normal\State</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\MonState_Normal\State</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Bela.h">
       <Filter>02.GameObject\Monster\Boss\Bela</Filter>
@@ -716,6 +716,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Die_Alcina.h">
       <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BehaviorTree_Normon_1.h">
+      <Filter>02.GameObject\Monster\Normal_Mon\BehaviorTree_NorMon_1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Scouting_NorMon_1.h">
+      <Filter>02.GameObject\Monster\Normal_Mon\MonState_Normal\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -904,37 +910,34 @@
       <Filter>02.GameObject\Player\Object\Weapon\Knife</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Monster_Normal.cpp">
-      <Filter>02.GameObject\Monster\NormalMon</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Body_NorMon.cpp">
-      <Filter>02.GameObject\Monster\NormalMon\Body</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\private\NorMon_Sword.cpp">
-      <Filter>02.GameObject\Monster\NormalMon\Weapon</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\private\NorMon_Shotel.cpp">
-      <Filter>02.GameObject\Monster\NormalMon\Weapon</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\private\NorMon_Halberd.cpp">
-      <Filter>02.GameObject\Monster\NormalMon\Weapon</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Chase_NorMon_1.cpp">
-      <Filter>02.GameObject\Monster\NormalMon\MonState_Normal\State</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Scouting_NorMon_1.cpp">
-      <Filter>02.GameObject\Monster\NormalMon\MonState_Normal\State</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\MonState_Normal\State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Damage_NorMon_1.cpp">
-      <Filter>02.GameObject\Monster\NormalMon\MonState_Normal\State</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\MonState_Normal\State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Attack_NorMon_1.cpp">
-      <Filter>02.GameObject\Monster\NormalMon\MonState_Normal\State</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\MonState_Normal\State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MonState_Normal.cpp">
-      <Filter>02.GameObject\Monster\NormalMon\MonState_Normal</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\MonState_Normal</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Stand_NorMon_1.cpp">
-      <Filter>02.GameObject\Monster\NormalMon\MonState_Normal\State</Filter>
+    <ClCompile Include="..\Private\Idle_NorMon_1.cpp">
+      <Filter>02.GameObject\Monster\Normal_Mon\MonState_Normal\State</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BaseMapObj.cpp">
       <Filter>02.GameObject\Map</Filter>
@@ -946,7 +949,7 @@
       <Filter>96.SuperClass\StateObject</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Die_NorMon_1.cpp">
-      <Filter>02.GameObject\Monster\NormalMon\MonState_Normal\State</Filter>
+      <Filter>02.GameObject\Monster\Normal_Mon\MonState_Normal\State</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Bela.cpp">
       <Filter>02.GameObject\Monster\Boss\Bela</Filter>
@@ -1091,6 +1094,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Die_Alcina.cpp">
       <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BehaviorTree_Normon_1.cpp">
+      <Filter>02.GameObject\Monster\Normal_Mon\BehaviorTree_NorMon_1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Scouting_NorMon_1.cpp">
+      <Filter>02.GameObject\Monster\Normal_Mon\MonState_Normal\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

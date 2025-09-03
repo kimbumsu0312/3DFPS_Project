@@ -169,23 +169,23 @@ _vector CNavigation::Compute_OnCell(_fvector vPosition)
 
 }
 
-_vector CNavigation::IsNaviNode()
+_vector CNavigation::IsNaviNode(_vector vPos)
 {
-	_int LastIndex = m_NodePath.size() - 1;
+	_int LastIndex = m_NaviPos.size() - 1;
 	if (m_iNaviMoveIndex >= LastIndex)
-		return XMLoadFloat3(&m_Cells[m_NodePath[m_iNaviMoveIndex]]->Get_Center());
+		return XMLoadFloat3(&m_NaviPos[LastIndex]);
 
-	if (m_iCurrentCellIndex == m_NodePath[m_iNaviMoveIndex])
+	if (XMVectorGetX(XMVector3Length(vPos - XMLoadFloat3(&m_NaviPos[m_iNaviMoveIndex]))) <= 1.f)
 		m_iNaviMoveIndex++;
 
-
-	return XMLoadFloat3(&m_Cells[m_NodePath[m_iNaviMoveIndex]]->Get_Center());
+	return XMLoadFloat3(&m_NaviPos[m_iNaviMoveIndex]);
 }
 
-void CNavigation::SetUp_Node(_int TargetIndex)
+void CNavigation::SetUp_Node(_int TargetIndex, _float3 vLastPos)
 {
 	priority_queue<Node, vector<Node>, CompareNode> SearchList;
-	
+	m_NodePath.clear();
+
 	Node StartNode{};
 	StartNode.CellIndex = m_iCurrentCellIndex;
 	StartNode.PreIndex = -1;
@@ -243,6 +243,7 @@ void CNavigation::SetUp_Node(_int TargetIndex)
 			SearchList.push(NeighborNode);
 		}
 	}
+	
 	if (FinalNode.CellIndex == -1)
 		return;
 	while (true)
@@ -272,8 +273,19 @@ void CNavigation::SetUp_Node(_int TargetIndex)
 	}
 	
 	m_CompleteList.clear();
+	m_NaviPos.clear();
+	
+
+	for (auto CellIndex : m_NodePath)
+	{
+		m_NaviPos.push_back(m_Cells[CellIndex]->Get_Center());
+	}
+	m_NaviPos.push_back(vLastPos);
+
 }
+
 #ifdef _DEBUG
+/*
 _bool CNavigation::SetUp_Portal(vector<Portal>& PortalPath)
 {
 	Portal vPortal{};
@@ -305,18 +317,7 @@ _bool CNavigation::SetUp_Portal(vector<Portal>& PortalPath)
 	return true;
 }
 
-_vector CNavigation::IsNaviMove(_vector vPos)
-{
-	if (XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_NaviPath[m_iNaviMoveIndex]) - vPos)) <= 5.5f)
-		++m_iNaviMoveIndex;
-
-	_vector vDir = XMLoadFloat3(&m_NaviPath[m_iNaviMoveIndex]) - vPos;
-
-	return XMLoadFloat3(&m_NaviPath[m_iNaviMoveIndex]);
-	//return XMVector3Normalize(vDir);
-}
-
-_vector CNavigation::IsNaviPortal(_vector vPos)
+/*_vector CNavigation::IsNaviPortal(_vector vPos)
 {
 	if (XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_Portal[m_iNaviMoveIndex]) - vPos)) <= 0.1f)
 		++m_iNaviMoveIndex;
@@ -381,7 +382,7 @@ void CNavigation::Search_MovePos(_int TargetIndex)
 
 	Path.push_back(m_Cells[m_NodePath.back()]->Get_Center());
 	m_NaviPath = Path;
-}
+}*/
 
 HRESULT CNavigation::Add_Cell(const _float3* pPos, _uint iCellType)
 {	
@@ -466,6 +467,7 @@ HRESULT CNavigation::Render()
 		m_Cells[m_iCurrentCellIndex]->Render();
 	}
 	 
+	
 	return S_OK;
 }
 HRESULT CNavigation::Save_Cell(string szFilename)

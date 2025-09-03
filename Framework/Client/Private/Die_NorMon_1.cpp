@@ -14,13 +14,13 @@ HRESULT CDie_Normon_1::Initalize(void* pArg)
 void CDie_Normon_1::Enter(CMonster_Normal* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
-    pContainer->Switch_AnimState(ENUM_CLASS(NORMAL_MON_STATE::DAMAGE));
+    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::DAMAGE);
     pContainer->Switch_Anim("Die", false);
 }
 
 void CDie_Normon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
 {
-    if (pContainer->IsAnimFinsh())
+    if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
     {
         pContainer->SetDead();
         _int i = rand() % 4 + 5;

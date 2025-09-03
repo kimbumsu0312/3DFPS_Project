@@ -68,8 +68,10 @@ void CDaniela::Update(_float fTimeDelta)
 
 	if (m_iPretargIndex != iTargetCellIndex)
 	{
+		_float3 vPlayerPos{};
+		XMStoreFloat3(&vPlayerPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
 		m_iPretargIndex = iTargetCellIndex;
-		m_pNavigationCom->SetUp_Node(iTargetCellIndex);
+		m_pNavigationCom->SetUp_Node(iTargetCellIndex, vPlayerPos);
 	}
 
 	//스테이터스 업데이트
@@ -141,7 +143,7 @@ void CDaniela::Target_LookTurn(_float fTimeDelta)
 void CDaniela::Target_LookTurn_Navi(_float fTimeDelta)
 {
 	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
-	_vector vPlayerPos = m_pNavigationCom->IsNaviNode();
+	_vector vPlayerPos = m_pNavigationCom->IsNaviNode(vMonPos);
 
 	_vector vDir = XMVector3Normalize(XMVectorSetY(vPlayerPos - vMonPos, 0.f));
 	_vector vLook = XMVector3Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));

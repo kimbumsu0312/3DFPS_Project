@@ -22,6 +22,7 @@ private:
 
 	vector<_uint>				m_LayerFilter;
 	_uint						m_iNumLayerSize = {};
+
 private:
 	_bool						Layer_Check(const COLLISIONENTRY& ObjectA, const COLLISIONENTRY& ObjectB);
 

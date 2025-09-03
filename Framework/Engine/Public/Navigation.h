@@ -28,12 +28,10 @@ public:
 	void							Set_CellIndex(_int iCellIndex) { m_iCurrentCellIndex = iCellIndex; }
 	_int							Get_CulIndex() { return m_iCurrentCellIndex; }
 
-	void							SetUp_Node(_int TargetIndex);
-	_vector							IsNaviNode();
+	void							SetUp_Node(_int TargetIndex, _float3 vLastPos);
+	_vector							IsNaviNode(_vector vPos);
 
-	_vector							IsNaviMove(_vector vPos);
-	_vector							IsNaviPortal(_vector vPos);
-	void							Search_MovePos(_int TargetIndex);
+	//void							Search_MovePos(_int TargetIndex);
 #ifdef _DEBUG
 public:
 	HRESULT							Add_Cell(const _float3* pPos, _uint iCellType);
@@ -54,8 +52,8 @@ private:
 
 	vector<Node>					m_CompleteList;
 	vector<_int>					m_NodePath;
-	vector<_float3>					m_NaviPath;
-	vector<_float3>					m_Portal;
+	vector<_float3>					m_NaviPos;
+	//vector<_float3>					m_Portal;
 
 	_int							m_iNaviMoveIndex = {};
 #ifdef _DEBUG
@@ -68,7 +66,7 @@ private:
 private:
 	void							SetUp_Neighbors();
 	_bool							FindNodeInClosed(_int cellIndex, Node& pOut);
-	_bool							SetUp_Portal(vector<Portal> &PortalPath);
+	//_bool							SetUp_Portal(vector<Portal> &PortalPath);
 
 public:
 	static CNavigation*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const string& pNavigationFilePath);

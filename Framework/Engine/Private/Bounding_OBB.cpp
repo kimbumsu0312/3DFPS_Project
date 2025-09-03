@@ -131,7 +131,6 @@ _bool CBounding_OBB::Intersect_OBB(CBounding_OBB* pTarget, _float3& pOut, _float
 HRESULT CBounding_OBB::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _fvector vColor)
 {
     DX::Draw(pBatch, *m_pDesc, vColor);
-
     return S_OK;
 }
 #endif
@@ -140,7 +139,7 @@ CBounding_OBB::OBBDESC CBounding_OBB::Compute_OBBDesc() const
 {
 	OBBDESC			OBBDesc{};
 
-	_float3			vPoints[8];
+	_float3			 vPoints[8];
 	m_pDesc->GetCorners(vPoints);
 
 

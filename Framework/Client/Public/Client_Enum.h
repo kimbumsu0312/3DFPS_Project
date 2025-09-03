@@ -3,10 +3,7 @@
 namespace Client
 {
 	enum class PLAYER_WEAPON { HANDGUN = 0, NONE = 1, KNIFE = 2 , SHOTGUN = 3, SNIPER = 4, WEAPONCHANGE = 5, END };
-	
-	enum class NORMAL_MON_STATE { NORMAL, DAMAGE, ATTACK, END};
-	enum class NORMAL_MON_WEAPON { SWORD, HALBERD, SHOTEL, END };
-	
+		
 	enum class BOSS_SISTER { NORMAL, ATTACK, DAMAGE, OTHER, END };
 
 	enum class STATE_ANIM { START, LOOP, END };

@@ -13,7 +13,7 @@ HRESULT CDamage_Alcina::Initalize(void* pArg)
 void CDamage_Alcina::Enter(CAlcina* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
-    pContainer->Switch_AnimState(ENUM_CLASS(BOSS_SISTER::DAMAGE));
+    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(BOSS_SISTER::DAMAGE);
     pContainer->IsDamage();
 
     DIRECTION eDir = PlayerDIR(pContainer->Get_TransForm()->Get_State(STATE::POSITION), pContainer->Get_TransForm()->Get_State(STATE::LOOK));

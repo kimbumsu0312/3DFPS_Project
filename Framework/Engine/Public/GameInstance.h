@@ -129,7 +129,7 @@ public:
 	_vector						Get_LocalRayPos();
 	_vector						Get_LocalRayDir();
 
-	RAY_DESC					Create_FpsRayDesc(_int iOffSetX, _int iOffSetY);
+	RAY_DESC					Create_FpsRayDesc(_float iOffSet);
 #pragma endregion
 
 #pragma region SaveLoader

@@ -14,6 +14,7 @@ class CAlcina final : public CContainerObject
 {
 public:
 	enum class Attack_Type {ZERO, SHORT, LONG, BEHIND, END};
+	enum class ANIM_STATE { NORMAL, DAMAGE, ATTACK, END };
 	enum ColliderType_Mon { Body = 0, Head, RESIST, ATTACK, End };
 public:
 	typedef struct Alchina_Data
@@ -48,7 +49,6 @@ public:
 	virtual HRESULT				Render();
 
 public:
-	void						Switch_AnimState(_uint iAnimState) { if (iAnimState < ENUM_CLASS(NORMAL_MON_STATE::END)) { m_iAnimState = iAnimState; } }
 	void						Switch_Anim(string szAnimTag, _bool IsLoop);
 	CBlackBoard<ALCHINA_DATA>*	Get_BlackBoard() { return m_BlackBoard; }
 	CTransform*					Get_TransForm();
@@ -60,7 +60,7 @@ public:
 	virtual void				OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 	
 
-	void						SetUp_Node(_int iTargetCellIndex);
+	void						SetUp_Node(_int iTargetCellIndex, _float3 vPos);
 	void						Move_Node(_float fTimeDelta);
 
 private:
@@ -77,8 +77,8 @@ private:
 	_wstring					m_szCulStateTag = {};
 
 	//애니메이션 관련
-	_uint						m_iAnimState = { ENUM_CLASS(NORMAL_MON_STATE::NORMAL) };
-	string						m_szAnimTag;
+	_uint						m_iAnimState = {};
+	string						m_szAnimTag = {};
 	_bool						m_bIsAnimLoop = { true };
 	_bool						m_bIsAnimFinsh = { false };
 	_bool						m_bIsHeadShot = { false };

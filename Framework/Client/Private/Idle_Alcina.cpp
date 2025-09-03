@@ -13,7 +13,8 @@ HRESULT CIdle_Alcina::Initalize(void* pArg)
 void CIdle_Alcina::Enter(CAlcina* pContainer)
 {
     m_eAnimState = STATE_ANIM::LOOP;
-    pContainer->Switch_AnimState(ENUM_CLASS(BOSS_SISTER::NORMAL));
+    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(BOSS_SISTER::NORMAL);
+
     pContainer->Switch_Anim("Idle", true);
 }
 

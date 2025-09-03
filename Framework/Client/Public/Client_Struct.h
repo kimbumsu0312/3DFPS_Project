@@ -73,6 +73,7 @@ namespace Client
 		_int		iCellIndex;
 		_vector		vPostion;
 		_wstring	szState;
+		_int		iStartMotion;
 	}POOLMONDESC;
 
 }

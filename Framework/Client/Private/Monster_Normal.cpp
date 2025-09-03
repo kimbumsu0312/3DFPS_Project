@@ -5,12 +5,14 @@
 #include "Body_NorMon.h"
 #include "WeaponObject.h"
 
-#include "Stand_NorMon_1.h"
+#include "Idle_NorMon_1.h"
 #include "Scouting_NorMon_1.h"
 #include "Damage_NorMon_1.h"
 #include "Chase_NorMon_1.h"
 #include "Attack_NorMon_1.h"
 #include "Die_NorMon_1.h"
+
+#include "BehaviorTree_Normon_1.h"
 
 CMonster_Normal::CMonster_Normal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CPoolingContainer(pDevice, pContext)
 {
@@ -34,6 +36,9 @@ HRESULT CMonster_Normal::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	if(FAILED(Ready_Utility()))
+		return E_FAIL;
+
 	m_pTransformCom->Scale(_float3(1.f, 1.f, 1.f));
 
 	if (FAILED(Ready_PartObjects()))
@@ -52,7 +57,6 @@ HRESULT CMonster_Normal::Initialize(void* pArg)
 void CMonster_Normal::Priority_Update(_float fTimeDelta)
 {
 	m_pTransformCom->PrePostion_Update();
-	m_NorMonState = {};
 	
 	m_pBodyObject->Priority_Update(fTimeDelta);
 	if(m_pWeaponObject != nullptr)
@@ -61,11 +65,11 @@ void CMonster_Normal::Priority_Update(_float fTimeDelta)
 
 void CMonster_Normal::Update(_float fTimeDelta)
 {
-	//스테이터스 업데이트
-	State_Check();
-	m_pCulStateObject->Update(this, fTimeDelta);
+	m_pBehaviorTree->Update();
 
 	State_Change();
+	m_pCulStateObject->Update(this, fTimeDelta);
+	
 	m_pTransformCom->Set_State(Engine::STATE::POSITION,
 		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
 
@@ -167,13 +171,13 @@ void CMonster_Normal::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY Tar
 	switch (TargetCollision.iObjType)
 	{
 	case ENUM_CLASS(OBJECT_TYPE::RAY):
-		(MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD)) ? m_bIsHeadShot = true : m_bIsHeadShot = false;
-		m_bIsDamage = true;
+		(MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD)) ? m_BlackBoard->Set_Data().bIsHeadShot = true 
+			: m_BlackBoard->Set_Data().bIsHeadShot = false;
 
-		if(m_bIsHeadShot)
-			m_iHp -= _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
+		if(true == m_BlackBoard->Get_Data().bIsHeadShot)
+			m_BlackBoard->Set_Data().iDamage += _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
 		else
-			m_iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
+			m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
 		break;
 	}
 }
@@ -182,30 +186,35 @@ HRESULT CMonster_Normal::Initialize_Pool(void* pArg)
 {
 	POOLMONDESC* pDesc = static_cast<POOLMONDESC*>(pArg);
 
-	m_iHp = 100;
+	m_BlackBoard->Set_Data().iHp = 100;
 	m_iAnimState = pDesc->iAnimState;
 	m_szAnimTag = pDesc->szAnimTag;
+	m_BlackBoard->Set_Data().iStartMotion = pDesc->iStartMotion;
 
+	if (pDesc->iStartMotion == 2)
+	{
+		m_pBodyObject->Set_Animation(m_iAnimState, m_szAnimTag, false);
+	}
 	switch (pDesc->iWeponType)
 	{
 	case ENUM_CLASS(NORMAL_MON_WEAPON::SWORD):
 		m_pWeaponObject = static_cast<CWeaponObject*>(Find_PartObject(TEXT("Part_Sword")));
 		Safe_AddRef(m_pWeaponObject);
-		m_iWeaponType = ENUM_CLASS(NORMAL_MON_WEAPON::SWORD);
+		m_BlackBoard->Set_Data().iWeapon = ENUM_CLASS(NORMAL_MON_WEAPON::SWORD);
 		break;
 	case ENUM_CLASS(NORMAL_MON_WEAPON::SHOTEL):
 		m_pWeaponObject = static_cast<CWeaponObject*>(Find_PartObject(TEXT("Part_Shotel")));
 		Safe_AddRef(m_pWeaponObject);
-		m_iWeaponType = ENUM_CLASS(NORMAL_MON_WEAPON::SHOTEL);
+		m_BlackBoard->Set_Data().iWeapon = ENUM_CLASS(NORMAL_MON_WEAPON::SHOTEL);
 		break;
 	case ENUM_CLASS(NORMAL_MON_WEAPON::HALBERD):
 		m_pWeaponObject = static_cast<CWeaponObject*>(Find_PartObject(TEXT("Part_Halberd")));
 		Safe_AddRef(m_pWeaponObject);
-		m_iWeaponType = ENUM_CLASS(NORMAL_MON_WEAPON::HALBERD);
+		m_BlackBoard->Set_Data().iWeapon = ENUM_CLASS(NORMAL_MON_WEAPON::HALBERD);
 		break;
 	case ENUM_CLASS(NORMAL_MON_WEAPON::END):
 		m_pWeaponObject = nullptr;
-		m_iWeaponType = ENUM_CLASS(NORMAL_MON_WEAPON::END);
+		m_BlackBoard->Set_Data().iWeapon = ENUM_CLASS(NORMAL_MON_WEAPON::END);
 		break;
 
 	}
@@ -222,7 +231,10 @@ HRESULT CMonster_Normal::Initialize_Pool(void* pArg)
 
 void CMonster_Normal::Return_Pool()
 {
-	m_iHp = 1;
+	m_BlackBoard->Set_Data().iHp = 1;
+
+	Safe_Release(m_pWeaponObject);
+	m_pWeaponObject = nullptr;
 	m_bIsDead = false;
 }
 
@@ -310,9 +322,35 @@ HRESULT CMonster_Normal::Ready_PartObjects()
 	return S_OK;
 }
 
+HRESULT CMonster_Normal::Ready_Utility()
+{
+	m_BlackBoard = CBlackBoard<NORMALMON_DATA>::Create();
+	m_BlackBoard->Set_Data().iAnimState = &m_iAnimState;
+	m_BlackBoard->Set_Data().szAnimTag = &m_szAnimTag;
+	m_BlackBoard->Set_Data().bIsAnimFinsh = &m_bIsAnimFinsh;
+	m_BlackBoard->Set_Data().bIsAnimLoop = &m_bIsAnimLoop;
+	m_BlackBoard->Set_Data().szCulStateTag = &m_szCulStateTag;
+
+	m_BlackBoard->Set_Data().iHp = 100;
+	m_BlackBoard->Set_Data().iDamage = 0;
+
+	m_BlackBoard->Set_Data().bIsHeadShot = false;
+	m_BlackBoard->Set_Data().IsAttack = false;
+	m_BlackBoard->Set_Data().IsChase = false;
+	m_BlackBoard->Set_Data().IsIdle = true;
+
+	m_BlackBoard->Set_Data().iWeapon = 0;
+	m_BlackBoard->Set_Data().iStartMotion = 0;
+
+	m_BlackBoard->Set_Data().MonPos = m_pTransformCom->Get_WorldMatrixPtr();
+
+	m_pBehaviorTree = CBehaviorTree_Normon_1::Create(m_BlackBoard);
+
+	return S_OK;
+}
 HRESULT CMonster_Normal::Ready_StateObjects()
 {
-	Add_StateObject(TEXT("Stand"), CStand_NorMon_1::Create());
+	Add_StateObject(TEXT("Idle"), CIdle_NorMon_1::Create());
 	Add_StateObject(TEXT("Attack"), CAttack_NorMon_1::Create());
 	Add_StateObject(TEXT("Chase"), CChase_NorMon_1::Create());
 	Add_StateObject(TEXT("Scouting"), CScouting_NorMon_1::Create());
@@ -342,31 +380,28 @@ CMonState_Normal* CMonster_Normal::Find_StateObject(const _wstring& strStateObje
 
 	return iter->second;
 }
-
-void CMonster_Normal::State_Check()
-{
-	_vector vPlayerPos = CPlayer_Manager::GetInstance()->Get_PlayerPos();
-	_float fDis = {};
-	vPlayerPos = XMVector3Length(m_pTransformCom->Get_State(STATE::POSITION) - vPlayerPos);
-	XMStoreFloat(&fDis, vPlayerPos);
-
-	if(fDis <= 3.f)
-		m_NorMonState.isAttack = true;
-	if (fDis <= 6.f)
-		m_NorMonState.isChase = true;
-	if (m_bIsDamage)
-	{
-		m_bIsDamage = false;
-		m_NorMonState.isDamage = true;
-	}
-	m_NorMonState.iWeponType = m_iWeaponType;
-}
+//
+//void CMonster_Normal::State_Check()
+//{
+//	_vector vPlayerPos = CPlayer_Manager::GetInstance()->Get_PlayerPos();
+//	_float fDis = {};
+//	vPlayerPos = XMVector3Length(m_pTransformCom->Get_State(STATE::POSITION) - vPlayerPos);
+//	XMStoreFloat(&fDis, vPlayerPos);
+//
+//	if(fDis <= 3.f)
+//		m_NorMonState.isAttack = true;
+//	if (fDis <= 6.f)
+//		m_NorMonState.isChase = true;
+//	if (m_bIsDamage)
+//	{
+//		m_bIsDamage = false;
+//		m_NorMonState.isDamage = true;
+//	}
+//	m_NorMonState.iWeponType = m_iWeaponType;
+//}
 
 void CMonster_Normal::State_Change()
 {
-	if (m_iHp <= 0)
-		m_szCulStateTag = TEXT("Die");
-
 	if (m_szPreStateTag != m_szCulStateTag)
 	{
 		m_pCulStateObject->Exit(this);
@@ -476,4 +511,7 @@ void CMonster_Normal::Free()
 		Safe_Release(pCollider);
 
 	Safe_Release(m_pNavigationCom);
+
+	Safe_Release(m_BlackBoard);
+	Safe_Release(m_pBehaviorTree);
 }

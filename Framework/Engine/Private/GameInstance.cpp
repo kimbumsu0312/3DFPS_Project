@@ -134,6 +134,8 @@ HRESULT CGameInstance::Draw()
 		return E_FAIL;
 
 	m_pRenderer->Draw();
+	if(FAILED(m_pPicking->Ray_Render()))
+		return E_FAIL;
 
 	if (FAILED(m_pLevel_Manager->Render()))
 		return E_FAIL;
@@ -371,9 +373,9 @@ _vector CGameInstance::Get_LocalRayDir()
 	return m_pPicking->Get_LocalRayDir();
 }
 
-RAY_DESC CGameInstance::Create_FpsRayDesc(_int iOffSetX, _int iOffSetY)
+RAY_DESC CGameInstance::Create_FpsRayDesc(_float iOffSet)
 {
-	return m_pPicking->Create_FpsRayDesc(iOffSetX, iOffSetY);
+	return m_pPicking->Create_FpsRayDesc(iOffSet);
 }
 
 HRESULT CGameInstance::File_Save_TerrainLevel(DATA_TYPE eData, string szFilename, CVIBuffer* pVIBuffer)

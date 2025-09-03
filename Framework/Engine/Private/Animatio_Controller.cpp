@@ -44,6 +44,22 @@ void CAnimatio_Controller::Set_AnimStatus(ANIM_STATUS eStatus)
 	m_eAnim_Status = eStatus;
 }
 
+HRESULT CAnimatio_Controller::Set_Animation(CModel* pModel, _int iAnimIndex, string szAnimName, _bool IsLoop)
+{
+	if (m_szCulAnimName != szAnimName || m_iCulAnimIndex != iAnimIndex)
+	{
+		m_iCulAnimIndex = iAnimIndex;
+		m_szCulAnimName = szAnimName;
+		m_CulAnimFrame = Find_Anim(m_szCulAnimName);
+		pModel->Set_Animations(m_iCulAnimIndex, IsLoop);
+		pModel->Set_TransitionTime();
+		return S_OK;
+	}
+	else
+		return E_FAIL;
+
+}
+
 HRESULT CAnimatio_Controller::Load_AnimData(string pAnimFilePath)
 {
 	ifstream file(pAnimFilePath.c_str());

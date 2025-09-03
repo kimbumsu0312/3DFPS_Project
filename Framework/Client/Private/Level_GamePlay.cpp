@@ -6,6 +6,8 @@
 #include "Inven_Manager.h"
 #include "ItemSpawner.h"
 
+#include "MonState_Normal.h"
+
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CLevel{ pDevice, pContext }
 {
 }
@@ -240,37 +242,41 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	Desc.szPoolPath = TEXT("Pool_NormalMon_1");
 	Desc.vSpawnerPostion = { -53.29f, -8.68f, 28.24f };
 
-	MonDesc.vPostion = { -53.29f, -8.68f, 28.24f };
-	MonDesc.iCellIndex = 32;
-	MonDesc.iAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
-	MonDesc.szAnimTag = "Idle_Loop";
-	MonDesc.iWeponType = ENUM_CLASS(NORMAL_MON_WEAPON::SWORD);
-	MonDesc.szState = TEXT("Stand"); 
-	Desc.MonDesc.push_back(MonDesc);
+	//MonDesc.vPostion = { -53.29f, -8.68f, 28.24f };
+	//MonDesc.iCellIndex = 32;
+	//MonDesc.iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
+	//MonDesc.szAnimTag = "Idle_Loop";
+	//MonDesc.iWeponType = ENUM_CLASS(CMonster_Normal::NORMAL_MON_WEAPON::SWORD);
+	//MonDesc.szState = TEXT("Idle");
+	//MonDesc.iStartMotion = 0;
+	//Desc.MonDesc.push_back(MonDesc);
 
 	MonDesc.vPostion = { -50.29f, -8.68f, 28.24f };
 	MonDesc.iCellIndex = 32;
-	MonDesc.iAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
-	MonDesc.szAnimTag = "Idle_Loop";
-	MonDesc.iWeponType = ENUM_CLASS(NORMAL_MON_WEAPON::HALBERD);
-	MonDesc.szState = TEXT("Stand");
+	MonDesc.iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
+	MonDesc.szAnimTag = "Clime_Pop";
+	MonDesc.iWeponType = ENUM_CLASS(CMonster_Normal::NORMAL_MON_WEAPON::HALBERD);
+	MonDesc.szState = TEXT("Idle");
+	MonDesc.iStartMotion = 2;
 	Desc.MonDesc.push_back(MonDesc);
 
-	MonDesc.vPostion = { -50.29f, -8.68f, 32.24f };
-	MonDesc.iCellIndex = 32;
-	MonDesc.iAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
-	MonDesc.szAnimTag = "Idle_Loop";
-	MonDesc.iWeponType = ENUM_CLASS(NORMAL_MON_WEAPON::END);
-	MonDesc.szState = TEXT("Stand");
-	Desc.MonDesc.push_back(MonDesc);
+	//MonDesc.vPostion = { -50.29f, -8.68f, 32.24f };
+	//MonDesc.iCellIndex = 32;
+	//MonDesc.iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
+	//MonDesc.szAnimTag = "Idle_Loop";
+	//MonDesc.iWeponType = ENUM_CLASS(CMonster_Normal::NORMAL_MON_WEAPON::END);
+	//MonDesc.szState = TEXT("Idle");
+	//MonDesc.iStartMotion = 1;
+	//Desc.MonDesc.push_back(MonDesc);
 
-	MonDesc.vPostion = { -48.29f, -8.68f, 30.24f };
-	MonDesc.iCellIndex = 32;
-	MonDesc.iAnimState = ENUM_CLASS(NORMAL_MON_STATE::NORMAL);
-	MonDesc.szAnimTag = "Idle_Loop";
-	MonDesc.iWeponType = ENUM_CLASS(NORMAL_MON_WEAPON::SHOTEL);
-	MonDesc.szState = TEXT("Stand");
-	Desc.MonDesc.push_back(MonDesc);
+	//MonDesc.vPostion = { -48.29f, -8.68f, 30.24f };
+	//MonDesc.iCellIndex = 32;
+	//MonDesc.iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
+	//MonDesc.szAnimTag = "Idle_Loop";
+	//MonDesc.iWeponType = ENUM_CLASS(CMonster_Normal::NORMAL_MON_WEAPON::SHOTEL);
+	//MonDesc.szState = TEXT("Idle");
+	//MonDesc.iStartMotion = 0;
+	//Desc.MonDesc.push_back(MonDesc);
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_MonSpawneer"), &Desc)))
 		return E_FAIL;
