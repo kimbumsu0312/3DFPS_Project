@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "WorldItem.h"
+#include "Player_Manager.h"
+#include "Inven_Manager.h"
+#include "Get_UI.h"
 
 CWorldItem::CWorldItem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CGameObject(pDevice, pContext)
 {
@@ -24,20 +27,44 @@ HRESULT CWorldItem::Initialize(void* pArg)
 	if (FAILED(Ready_Components(Desc->szModel_Path)))
 		return E_FAIL;
 
+	if (FAILED(Ready_UI()))
+		return E_FAIL;
+	
+	for (auto Item : g_3DItemData)
+	{
+		if (Item.m_szModelPath == Desc->szModel_Path)
+		{
+			m_szPoolPath = TEXT("Pool_Item");
+			m_iItemIndex = Item.m_iItemID;
+			break;
+		}
+	}
+	m_pTransformCom->Scale(_float3(1.f, 1.f, 1.f));
+
 	return S_OK;
 }
 
 void CWorldItem::Priority_Update(_float fTimeDelta)
 {
+	m_pGuideUI->Priority_Update(fTimeDelta);
 }
 
 void CWorldItem::Update(_float fTimeDelta)
 {
-	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+	for (auto Collider : m_pColliderCom)
+	{
+		Collider->Update(m_pTransformCom->Get_WorldMatrix());
+	}
 }
 
 void CWorldItem::Late_Update(_float fTimeDelta)
 {
+	for (auto Collider : m_pColliderCom)
+	{
+		if (FAILED(m_pGameInstance->Add_ColliderCheck(this, Collider)))
+			return;
+	}
+
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
 		return;
 }
@@ -58,23 +85,65 @@ HRESULT CWorldItem::Render()
 	}
 
 #ifdef _DEBUG
-	m_pColliderCom->Render();
+	for (auto Collider : m_pColliderCom)
+	{
+		Collider->Render();
+	}
 
 #endif
 	return S_OK;
+}
+
+void CWorldItem::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
+{
+	if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::ITEM))
+	{
+		switch (TargetCollision.iObjType)
+		{
+		case ENUM_CLASS(OBJECT_TYPE::PLAYER_VIEW):
+			m_pGuideUI->IsOn();
+			if (m_pGameInstance->IsKeyDown(DIK_F))
+			{
+				if (CInven_Manager::GetInstance()->Add_ItemSlot(m_iItemIndex, m_szPoolPath))
+				{
+					SetDead();
+				}
+			}
+			break;
+		}
+	}
+	else if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::ITEM_DETACT))
+	{
+		switch (TargetCollision.iObjType)
+		{
+		case ENUM_CLASS(OBJECT_TYPE::PLAYER):
+			m_pGuideUI->Update_WorldPos(m_pTransformCom->Get_State(STATE::POSITION));
+			break;
+		}
+	}
 }
 
 HRESULT CWorldItem::Ready_Components(_wstring szModelPath)
 {
 	CBounding_OBB::BOUNDING_OBB_DESC  OBBDesc{};
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::ITEM);
-	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::ITEM);
+	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::ITEM_DETACT);
 	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
-	OBBDesc.vExtents = _float3(2.f, 2.f, 2.f);
+	OBBDesc.vExtents = _float3(2.5f, 2.5f, 2.5f);
 	OBBDesc.vCenter = _float3(0.f, 0.5f, 0.f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &OBBDesc)))
+		TEXT("Com_Collider_DETACT"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ITEM_COLLIDER::DETACT_REAGE)]), &OBBDesc)))
+		return E_FAIL;
+
+	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::ITEM);
+	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::ITEM);
+	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
+	OBBDesc.vExtents = _float3(0.2f, 0.2f, 0.2f);
+	OBBDesc.vCenter = _float3(0.f, 0.f, 0.f);
+
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
+		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ITEM_COLLIDER::ITEM)]), &OBBDesc)))
 		return E_FAIL;
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), szModelPath,
@@ -86,6 +155,13 @@ HRESULT CWorldItem::Ready_Components(_wstring szModelPath)
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
 		return E_FAIL;
 
+
+	return S_OK;
+}
+
+HRESULT CWorldItem::Ready_UI()
+{
+	m_pGuideUI = static_cast<CGet_UI*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_GetUI")));
 	return S_OK;
 }
 
@@ -147,7 +223,12 @@ CGameObject* CWorldItem::Clone(void* pArg)
 void CWorldItem::Free()
 {
 	__super::Free();
-	Safe_Release(m_pColliderCom);
+	for (auto Collider : m_pColliderCom)
+	{
+		Safe_Release(Collider);
+	}
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+
+	Safe_Release(m_pGuideUI);
 }

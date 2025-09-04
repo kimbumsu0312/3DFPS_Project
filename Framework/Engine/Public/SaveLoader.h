@@ -14,6 +14,8 @@ public:
 	HRESULT						File_Save_AnimData(string szFilename, const vector<vector<SAVE_ANIMDATA>>& AnimDatas);
 
 	HRESULT						Load_Terrain(string szFilePath, SAVE_TERRAIN& pOut);
+	HRESULT						Load_Terrain_Client(string szFilePath, SAVE_TERRAIN& pOut);
+
 	HRESULT						Load_Level(string szFilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex );
 	HRESULT						Load_Level(string szFilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex, _wstring szPrototypeTag);
 

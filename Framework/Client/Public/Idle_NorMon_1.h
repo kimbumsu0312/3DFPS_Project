@@ -5,7 +5,7 @@ NS_BEGIN(Client)
 class CIdle_NorMon_1 final : public CMonState_Normal
 {
 private:
-	enum class IDLE_TYPE {STAND, SIT, CLIME};
+	enum class IDLE_TYPE {STAND, SIT, CLIME, FALL};
 
 private:
 	CIdle_NorMon_1();

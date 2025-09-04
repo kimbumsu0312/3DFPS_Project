@@ -311,10 +311,11 @@ void CVIBuffer_Terrain::Terrain_Hight(bool raise, _float brushRadius, _float int
 		return;
 
 	_float3 fMousePos{};
-
+	m_pGameInstance->TransformToLocalSpace(pTransformCom);
 	if (!(IsPicked(pTransformCom, fMousePos)))
 		return;
 
+	XMStoreFloat3(&fMousePos, XMVector3TransformCoord(XMLoadFloat3(&fMousePos), pTransformCom.Get_WorldMatrix_Inverse()));
 	for (_int z = - brushRadius; z <= brushRadius; ++z) {
 		for (_int x = -brushRadius; x <= brushRadius; ++x) {
 			_float distance = sqrt(x * x + z * z);

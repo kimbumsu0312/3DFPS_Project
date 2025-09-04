@@ -101,7 +101,7 @@ ANIMEFRAME CAnimatio_Controller::Find_Anim(const string pAnimName)
 	auto    iter = m_AnimDatas[m_iCulAnimIndex].find(pAnimName);
 	if (iter == m_AnimDatas[m_iCulAnimIndex].end())
 	{
-		MSG_BOX(TEXT("해당 애니메이션이 없습니다."));
+ 		MSG_BOX(TEXT("해당 애니메이션이 없습니다."));
 		return m_CulAnimFrame;
 	}
 	return iter->second;

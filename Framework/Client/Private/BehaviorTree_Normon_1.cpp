@@ -79,10 +79,18 @@ CNode::TREE_STATE CBehaviorTree_Normon_1::Switch_Damage()
 
 CNode::TREE_STATE CBehaviorTree_Normon_1::Condition_Attack()
 {
-	if (m_pBlackBoard->Get_Data().IsAttack != true)
+	if (m_pBlackBoard->Get_Data().IsChase == false || m_pBlackBoard->Get_Data().IsIdle == true)
 		return CNode::TREE_STATE::FAILED;
 
-	return CNode::TREE_STATE::SUCCESS;
+	_vector vPlayerPos = CPlayer_Manager::GetInstance()->Get_PlayerPos();
+	_vector vMonPos = { m_pBlackBoard->Get_Data().MonPos->m[3][0], m_pBlackBoard->Get_Data().MonPos->m[3][1], m_pBlackBoard->Get_Data().MonPos->m[3][2] };
+	_float fDis = XMVectorGetX(XMVector3Length(vPlayerPos - vMonPos));
+
+	if (fDis <= 5.f)
+		return CNode::TREE_STATE::SUCCESS;
+	else
+		return CNode::TREE_STATE::FAILED;
+
 }
 
 CNode::TREE_STATE CBehaviorTree_Normon_1::Switch_Attack()
@@ -97,7 +105,7 @@ CNode::TREE_STATE CBehaviorTree_Normon_1::Switch_Attack()
 
 CNode::TREE_STATE CBehaviorTree_Normon_1::Condition_Chase()
 {
-	if (m_pBlackBoard->Get_Data().IsChase == true)
+	if (m_pBlackBoard->Get_Data().IsChase == true && m_pBlackBoard->Get_Data().IsIdle == false)
 		return CNode::TREE_STATE::SUCCESS;
 
 	return CNode::TREE_STATE::FAILED;

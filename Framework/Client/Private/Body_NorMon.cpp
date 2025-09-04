@@ -109,7 +109,7 @@ HRESULT CBody_NorMon::Ready_Components()
         return E_FAIL;
 
     CAnimatio_Controller::ANIMTION_DESC Desc;
-    Desc.szFile_Path = "../Bin/Resources/Models/Normal_Mon_1/Normal_Mon_1Anim.Json";
+    Desc.szFile_Path = "../Bin/Resources/Models/Mon/Mon_1/Mon_1Anim.Json";
     Desc.szCulAnimName = "Idle_Loop";
     Desc.iAnimIndex = 0;
     Desc.pModel = m_pModelCom;

@@ -56,7 +56,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pColliderBone[BODY] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
 	m_pColliderBone[PLAYER_VIEW] = m_pBodyObject->Get_BoneMatrix(TEXT("Cam"));
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-65.f, -8.5f, 13.5f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-30.95f, -8.97f, 63.67f, 1.f));
 	CPlayer_Manager::GetInstance()->Update_Cell(m_pNavigationCom->Get_CulIndex());
 	return S_OK;
 }
@@ -206,7 +206,7 @@ HRESULT CPlayer::Ready_Components()
 		return E_FAIL;
 
 	CNavigation::NAVIGATION_DESC        NaviDesc{};
-	NaviDesc.iCurrentCellIndex = 0;
+	NaviDesc.iCurrentCellIndex = 7557;
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
@@ -352,8 +352,7 @@ void CPlayer::InputKey_MoveState(_float fTimeDelta)
 	}
 	m_pTransformCom->Is_Sliding(m_pNavigationCom);
 	_int Index = m_pNavigationCom->Get_CulIndex();
-	if (Index == 7)
-		int a = 10;
+
 	CPlayer_Manager::GetInstance()->Update_Cell(Index);
 }
 

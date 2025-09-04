@@ -22,6 +22,8 @@ HRESULT CTerrain::Initialize(void* pArg)
     if (FAILED(Ready_Components()))
         return E_FAIL;
 
+    m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(_vector{ -105.f, -13.f, -20.f }, 1.f));
+
     return S_OK;
 }
 
@@ -55,12 +57,21 @@ HRESULT CTerrain::Render()
 
 HRESULT CTerrain::Ready_Components()
 {
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Shader_VtxNorTex"),
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxNorTex"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
         return E_FAIL;
+    SAVE_TERRAIN TerrainData{};
+
+    m_pGameInstance->Load_Terrain_Client("../Bin/Resources/Data/Terrain/Level_GamePlay.dat", TerrainData);
+
+    CVIBuffer_Terrain::VIBUFFER_TERRAIN_DESC Desc{};
+    Desc.iNumverticesX = 200;
+    Desc.iNumverticesZ = 200;
+
+    Desc.Terrain_Data = &TerrainData;
 
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Terrain"),
-        TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
+        TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &Desc)))
         return E_FAIL;
 
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Terrain"),

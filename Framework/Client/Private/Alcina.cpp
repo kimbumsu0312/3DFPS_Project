@@ -343,7 +343,10 @@ void CAlcina::Root_Move()
 	//vWorldRot = XMQuaternionNormalize(vWorldRot);
 	
 	//월드 기준으로 방향 보정
-	vMovePos = XMVector3Rotate(vMovePos, vWorldRot);
+	if(m_iAnimState == ENUM_CLASS(ANIM_STATE::DAMAGE))
+		vMovePos = XMVector3Rotate(vMovePos, XMQuaternionIdentity());
+	else
+		vMovePos = XMVector3Rotate(vMovePos, vWorldRot);
 	//이동량 누적
 	vWorldTrans += vMovePos;
 

@@ -21,16 +21,23 @@ void CIdle_NorMon_1::Enter(CMonster_Normal* pContainer)
     switch (m_iStartType)
     {
     case  ENUM_CLASS(IDLE_TYPE::STAND):
+        *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
         pContainer->Switch_Anim("Stand_Loop", true);
         break;
     case  ENUM_CLASS(IDLE_TYPE::SIT):
+        *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
         pContainer->Switch_Anim("Sit_Loop", true);
         break;
     case  ENUM_CLASS(IDLE_TYPE::CLIME):
+        *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
         pContainer->Switch_Anim("Clime_Pop", false);
         m_eAnimState = STATE_ANIM::LOOP;
         break;
-
+    case  ENUM_CLASS(IDLE_TYPE::FALL):
+        *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::FALL);
+        pContainer->Switch_Anim("Fall_Start", false);
+        m_eAnimState = STATE_ANIM::LOOP;
+        break;
     }
 
 }
@@ -39,7 +46,7 @@ void CIdle_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
 {
     if (m_eAnimState == STATE_ANIM::START)
     {
-        if (pContainer->Get_BlackBoard()->Get_Data().IsIdle == false)
+        if (pContainer->Get_BlackBoard()->Get_Data().IsChase == true)
         {
             m_eAnimState = STATE_ANIM::LOOP;
         }
@@ -58,23 +65,39 @@ void CIdle_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
             m_eAnimState = STATE_ANIM::END;
             break;
         case  ENUM_CLASS(IDLE_TYPE::CLIME):
+            pContainer->Target_LookAt(fDeltatime);
             if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
             {
-                pContainer->Get_BlackBoard()->Set_Data().IsChase = true;
+                *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
                 pContainer->Get_BlackBoard()->Set_Data().IsIdle = false;
+                pContainer->Get_BlackBoard()->Set_Data().IsChase = false;
+                pContainer->Switch_Anim("Idle_Loop", true);
             }
             break;
-
+        case  ENUM_CLASS(IDLE_TYPE::FALL):
+            if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+            {
+                *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
+                pContainer->Get_BlackBoard()->Set_Data().IsChase = false;
+                pContainer->Get_BlackBoard()->Set_Data().IsIdle = false;
+                pContainer->Switch_Anim("Idle_Loop", true);
+            }
+            break;
         }
     }
     else
     {
         if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {
-            pContainer->Get_BlackBoard()->Set_Data().IsChase = true;
+            *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
+            pContainer->Switch_Anim("Idle_Loop", true);
             pContainer->Get_BlackBoard()->Set_Data().IsIdle = false;
+
+            if(m_iStartType == ENUM_CLASS(IDLE_TYPE::CLIME))
+                pContainer->Get_BlackBoard()->Set_Data().IsChase = false;
         }
     }
+
 }
 
 void CIdle_NorMon_1::Exit(CMonster_Normal* pContainer)

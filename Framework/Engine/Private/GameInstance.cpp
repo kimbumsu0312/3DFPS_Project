@@ -408,6 +408,11 @@ HRESULT CGameInstance::Load_Terrain(string FilePath, SAVE_TERRAIN& pOut)
 	return m_pSaveLoader->Load_Terrain(FilePath, pOut);
 }
 
+HRESULT CGameInstance::Load_Terrain_Client(string szFilePath, SAVE_TERRAIN& pOut)
+{
+	return m_pSaveLoader->Load_Terrain_Client(szFilePath, pOut);;
+}
+
 HRESULT CGameInstance::Load_Level(string FilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex)
 {
 	return m_pSaveLoader->Load_Level(FilePath, iLevelIndex, szLayerTag, iPrototypeLevelIndex);

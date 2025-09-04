@@ -13,7 +13,7 @@ NS_BEGIN(Client)
 class CMonster_Normal final : public CPoolingContainer
 {
 public:
-	enum class NORMAL_MON_STATE { NORMAL, DAMAGE, ATTACK, END };
+	enum class NORMAL_MON_STATE { NORMAL, FALL, DAMAGE, ATTACK, END };
 	enum class NORMAL_MON_WEAPON { SWORD, HALBERD, SHOTEL, END };
 public:
 	typedef struct NormalMon_Data
@@ -38,7 +38,7 @@ public:
 		_int	iStartMotion;
 	}NORMALMON_DATA;
 private:
-	enum ColliderType_Mon { BODY = 0, Head, Hand, RESIST, END };
+	enum ColliderType_Mon { BODY = 0, Head, Hand, RESIST, CHASE, END };
 private:
 	CMonster_Normal(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMonster_Normal(const CMonster_Normal& Prototype);

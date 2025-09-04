@@ -64,7 +64,7 @@ void CMonster_Normal::Priority_Update(_float fTimeDelta)
 }
 
 void CMonster_Normal::Update(_float fTimeDelta)
-{
+{ 
 	m_pBehaviorTree->Update();
 
 	State_Change();
@@ -90,6 +90,9 @@ void CMonster_Normal::Late_Update(_float fTimeDelta)
 	for (_int i = 0; i < ColliderType_Mon::END; ++i)
 	{
 		if (i == ColliderType_Mon::Hand)
+			continue;
+
+		if (i == ColliderType_Mon::CHASE && m_BlackBoard->Get_Data().IsChase == true)
 			continue;
 
 		if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
@@ -167,7 +170,11 @@ void CMonster_Normal::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY Tar
 		if (TargetCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::RESIST))
 			m_pTransformCom->Is_Sliding(m_pNavigationCom, XMLoadFloat3(&TargetCollision.pCollider->Get_Intersect_Normal()));
 	}
-
+	else if ((MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::CHASE)))
+	{
+		if (TargetCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::PLAYER))
+			m_BlackBoard->Set_Data().IsChase = true;
+	}
 	switch (TargetCollision.iObjType)
 	{
 	case ENUM_CLASS(OBJECT_TYPE::RAY):
@@ -191,7 +198,7 @@ HRESULT CMonster_Normal::Initialize_Pool(void* pArg)
 	m_szAnimTag = pDesc->szAnimTag;
 	m_BlackBoard->Set_Data().iStartMotion = pDesc->iStartMotion;
 
-	if (pDesc->iStartMotion == 2)
+	if (pDesc->iStartMotion == 2 || pDesc->iStartMotion == 3)
 	{
 		m_pBodyObject->Set_Animation(m_iAnimState, m_szAnimTag, false);
 	}
@@ -219,12 +226,11 @@ HRESULT CMonster_Normal::Initialize_Pool(void* pArg)
 
 	}
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(pDesc->vPostion, 1.f));
+	m_pTransformCom->Rotation_All(_float3{0.f, XMConvertToRadians(pDesc->vAngleY), 0.f});
 	m_pNavigationCom->Set_CellIndex(pDesc->iCellIndex);
 
 	m_pCulStateObject = Find_StateObject(pDesc->szState);
 	Safe_AddRef(m_pCulStateObject);
-
-	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-53.29f, -8.68f, 28.24f, 1.f));
 
 	return S_OK;
 }
@@ -249,6 +255,16 @@ HRESULT CMonster_Normal::Ready_Components()
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
 		TEXT("Com_Collider_Resist"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::RESIST]), &OBBDesc)))
+		return E_FAIL;
+
+	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
+	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::CHASE);
+	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
+	OBBDesc.vExtents = _float3(2.5f, 2.5f, 2.5f);
+	OBBDesc.vCenter = _float3(0.f, 0.5f, 0.f);
+
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
+		TEXT("Com_Collider_Chase"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::CHASE]), &OBBDesc)))
 		return E_FAIL;
 
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
@@ -428,8 +444,8 @@ void CMonster_Normal::Root_Move()
 	//이동량 누적
 	vWorldTrans += vMovePos;
 	//회전량 누적
-	vWorldRot = XMQuaternionMultiply(vMoveRot, vWorldRot);
-	//vWorldRot = XMQuaternionNormalize(vWorldRot);
+	vWorldRot = XMQuaternionMultiply(XMVectorSetW(vMoveRot,1.f), vWorldRot); 
+	vWorldRot = XMQuaternionNormalize(vWorldRot);
 
 	_matrix ScaleMat = XMMatrixScalingFromVector(vScale);
 	_matrix Movemat = XMMatrixTranslationFromVector(vWorldTrans);
@@ -449,7 +465,7 @@ void CMonster_Normal::Collider_Update()
 
 	for (_int i = 0; i < ColliderType_Mon::END; ++i)
 	{
-		if (ColliderType_Mon::RESIST == i)
+		if (ColliderType_Mon::RESIST == i || ColliderType_Mon::CHASE)
 		{
 			m_pColliderCom[i]->Update(m_pTransformCom->Get_WorldMatrix());
 			continue;

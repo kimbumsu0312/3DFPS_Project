@@ -397,6 +397,28 @@ HRESULT CSaveLoader::Load_Terrain(string FilePath, SAVE_TERRAIN& pOut)
 	return S_OK;
 }
 
+HRESULT CSaveLoader::Load_Terrain_Client(string szFilePath, SAVE_TERRAIN& pOut)
+{
+	ifstream file(szFilePath, ios::binary);
+
+	file.read((_char*)&pOut.iNumverticesX, sizeof(_uint));
+	file.read((_char*)&pOut.iNumverticesZ, sizeof(_uint));
+
+	_uint iPosSize = 0;
+	file.read((_char*)&iPosSize, sizeof(_uint));
+	pOut.pVertexPositions.resize(iPosSize);
+	file.read((_char*)pOut.pVertexPositions.data(), sizeof(_float3) * iPosSize);
+
+	_uint iTexSize = 0;
+	file.read((_char*)&iTexSize, sizeof(_uint));
+	pOut.pVertexTex.resize(iTexSize);
+	file.read((_char*)pOut.pVertexTex.data(), sizeof(_float2) * iTexSize);
+
+	file.close();
+
+	return S_OK;
+}
+
 HRESULT CSaveLoader::Load_Level(string szFilePath, _uint LevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex)
 {
 	ifstream file(szFilePath, ios::binary);

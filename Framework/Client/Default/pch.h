@@ -39,6 +39,7 @@
 //아이템 관련
 #include "InvenItem.h"
 #include "PoolWorldItem.h"
+#include "WorldItem.h"
 
 //유틸 관련
 #include "Camera_Free.h"

@@ -524,16 +524,17 @@ _bool CNavigation::Erease_Cell(CTransform& pTransformCom)
 	_int iIndex = { -1 };
 	m_pGameInstance->TransformToLocalSpace(pTransformCom);
 	
-	for (auto it = m_Cells.begin(); it != m_Cells.end(); )
+	for (_int i = 0; i < m_Cells.size(); ++i)
 	{
-		if ((*it)->IsPick(fDis, iIndex)) {
-			it = m_Cells.erase(it);
+		if(m_Cells[i]->IsPick(fDis, iIndex))
+		{
+			m_Cells.erase(m_Cells.begin() + i);
+			m_pCellPos.erase(m_pCellPos.begin() + i);
 			return true;
 		}
-		else {
-			++it;
-		}
+
 	}
+
 	return false;
 
 }

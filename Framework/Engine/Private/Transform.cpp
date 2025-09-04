@@ -187,6 +187,8 @@ void CTransform::Rotation_All(_float3 fRadian)
 
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 {
+	if (XMVectorGetX(vAxis) == 0.f && XMVectorGetY(vAxis) == 0.f && XMVectorGetZ(vAxis) == 0.f)
+		return;
 	_vector		vRight = Get_State(STATE::RIGHT);
 	_vector		vUp = Get_State(STATE::UP);
 	_vector		vLook = Get_State(STATE::LOOK);
