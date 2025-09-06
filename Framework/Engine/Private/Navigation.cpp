@@ -64,6 +64,8 @@ HRESULT CNavigation::Initialize_Prototype(const string& pNavigationFilePath)
 
 	for (_uint i = 0; i < iSize; ++i)
 	{
+		//if (i == 1550)
+		//	continue;
 
 		_float3 CellData[3] = {};
 		CellData[0] = Cells[i].Point_A;
@@ -131,7 +133,9 @@ _bool CNavigation::isMove(_fvector vCulPosition)
 	
 	if (-1 != iNeighborIndex)
 	{
-		for (_int j = 0; j < 5000; j++)
+		
+		//for (_int j = 0; j < 5000; j++)
+		while (true)
 		{
 			if (-1 == iNeighborIndex)
 				return false;
@@ -167,18 +171,6 @@ _vector CNavigation::Compute_OnCell(_fvector vPosition)
 	//월드 값으로 변환해서 월드반환
 	return XMVector3TransformCoord(vLocalPos, XMLoadFloat4x4(&m_WorldMatrix));
 
-}
-
-_vector CNavigation::IsNaviNode(_vector vPos)
-{
-	_int LastIndex = m_NaviPos.size() - 1;
-	if (m_iNaviMoveIndex >= LastIndex)
-		return XMLoadFloat3(&m_NaviPos[LastIndex]);
-
-	if (XMVectorGetX(XMVector3Length(vPos - XMLoadFloat3(&m_NaviPos[m_iNaviMoveIndex]))) <= 1.f)
-		m_iNaviMoveIndex++;
-
-	return XMLoadFloat3(&m_NaviPos[m_iNaviMoveIndex]);
 }
 
 void CNavigation::SetUp_Node(_int TargetIndex, _float3 vLastPos)
@@ -282,6 +274,20 @@ void CNavigation::SetUp_Node(_int TargetIndex, _float3 vLastPos)
 	}
 	m_NaviPos.push_back(vLastPos);
 
+}
+
+_bool CNavigation::IsNaviNode(_vector vPos, _float3 vNextPos)
+{
+	_int LastIndex = m_NaviPos.size() - 1;
+	if (m_iNaviMoveIndex > LastIndex)
+		return true;
+
+	if (XMVectorGetX(XMVector3Length(vPos - XMLoadFloat3(&m_NaviPos[m_iNaviMoveIndex]))) <= 1.f)
+		m_iNaviMoveIndex++;
+	
+	vNextPos = m_NaviPos[m_iNaviMoveIndex];
+	
+	return false;
 }
 
 #ifdef _DEBUG
@@ -550,7 +556,6 @@ void CNavigation::Erase_LastCell()
 
 void CNavigation::SetUp_Neighbors()
 {
-	//현재 셀의 이웃을 셋팅해준다.
 	for (auto& pSourCell : m_Cells)
 	{
 		for (auto& pDestCell : m_Cells)

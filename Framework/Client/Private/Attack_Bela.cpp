@@ -16,48 +16,38 @@ void CAttack_Bela::Enter(CBela* pContainer)
     _int Rand = rand() % 3;
     m_eAnimState = STATE_ANIM::START;
 
-    pContainer->Switch_AnimState(ENUM_CLASS(BOSS_SISTER::ATTACK));
+    //pContainer->Switch_AnimState(ENUM_CLASS(CBela::BOSS_SISTER::ATTACK));
 
-    DIRECTION ePlayerDir = PlayerDIR(pContainer->Get_TransformState(STATE::POSITION), pContainer->Get_TransformState(STATE::LOOK));
+    //DIRECTION ePlayerDir = PlayerDIR(pContainer->Get_TransformState(STATE::POSITION), pContainer->Get_TransformState(STATE::LOOK));
 
-    if (ePlayerDir == DIRECTION::F || ePlayerDir == DIRECTION::FR || ePlayerDir == DIRECTION::FL)
-    {
-        switch (Rand)
-        {
-        case 0:
-            pContainer->Switch_Anim("Freeszes_Swing", false);
-            break;
-        case 1:
-            pContainer->Switch_Anim("Freeszes_Attack_CriticalHit", false);
-            break;
-        case 2:
-            pContainer->Switch_Anim("Freeszes_MadHold_CriticalHit", false);
-            break;
-        }
-    }
-    else if (ePlayerDir == DIRECTION::L || ePlayerDir == DIRECTION::BL)
-    {
-        pContainer->Switch_Anim("Freeszes_Attack_Turn_L", false);
-    }
-    else if (ePlayerDir == DIRECTION::R || ePlayerDir == DIRECTION::BR || ePlayerDir == DIRECTION::B)
-    {
-        pContainer->Switch_Anim("Freeszes_Attack_Turn_R", false);
-    }
+    //if (ePlayerDir == DIRECTION::F || ePlayerDir == DIRECTION::FR || ePlayerDir == DIRECTION::FL)
+    //{
+    //    switch (Rand)
+    //    {
+    //    case 0:
+    //        pContainer->Switch_Anim("Freeszes_Swing", false);
+    //        break;
+    //    case 1:
+    //        pContainer->Switch_Anim("Freeszes_Attack_CriticalHit", false);
+    //        break;
+    //    case 2:
+    //        pContainer->Switch_Anim("Freeszes_MadHold_CriticalHit", false);
+    //        break;
+    //    }
+    //}
+    //else if (ePlayerDir == DIRECTION::L || ePlayerDir == DIRECTION::BL)
+    //{
+    //    pContainer->Switch_Anim("Freeszes_Attack_Turn_L", false);
+    //}
+    //else if (ePlayerDir == DIRECTION::R || ePlayerDir == DIRECTION::BR || ePlayerDir == DIRECTION::B)
+    //{
+    //    pContainer->Switch_Anim("Freeszes_Attack_Turn_R", false);
+    //}
 }
 
 void CAttack_Bela::Update(CBela* pContainer, _float fDeltatime)
 {
-    pContainer->Attack_Collision();
-    if (pContainer->Get_State().isDamage)
-    {
-        pContainer->Switch_State(TEXT("Damage"));
-        return;
-    }
 
-    if (pContainer->IsAnimFinsh())
-    {
-        pContainer->Switch_State(TEXT("Chase"));
-    }
 }
 
 void CAttack_Bela::Exit(CBela* pContainer)

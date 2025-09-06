@@ -204,6 +204,7 @@ call Copy_Release.bat</Command>
     <ClInclude Include="..\public\PartObject.h" />
     <ClInclude Include="..\public\Picking.h" />
     <ClInclude Include="..\public\PoolingContainer.h" />
+    <ClInclude Include="..\public\RenderTarget.h" />
     <ClInclude Include="..\public\SaveLoader.h" />
     <ClInclude Include="..\public\PipeLine.h" />
     <ClInclude Include="..\public\PoolingObject.h" />
@@ -224,6 +225,7 @@ call Copy_Release.bat</Command>
     <ClInclude Include="..\public\Object_Manager.h" />
     <ClInclude Include="..\public\Prototype_Manager.h" />
     <ClInclude Include="..\public\Renderer.h" />
+    <ClInclude Include="..\public\Target_Manager.h" />
     <ClInclude Include="..\public\Texture.h" />
     <ClInclude Include="..\Public\Timer.h" />
     <ClInclude Include="..\Public\Timer_Manager.h" />
@@ -267,6 +269,7 @@ call Copy_Release.bat</Command>
     <ClCompile Include="..\private\PartObject.cpp" />
     <ClCompile Include="..\private\Picking.cpp" />
     <ClCompile Include="..\private\PoolingContainer.cpp" />
+    <ClCompile Include="..\private\RenderTarget.cpp" />
     <ClCompile Include="..\private\SaveLoader.cpp" />
     <ClCompile Include="..\private\PipeLine.cpp" />
     <ClCompile Include="..\private\PoolingObject.cpp" />
@@ -281,6 +284,7 @@ call Copy_Release.bat</Command>
     <ClCompile Include="..\private\Object_Manager.cpp" />
     <ClCompile Include="..\private\Prototype_Manager.cpp" />
     <ClCompile Include="..\private\Renderer.cpp" />
+    <ClCompile Include="..\private\Target_Manager.cpp" />
     <ClCompile Include="..\private\Texture.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />
     <ClCompile Include="..\Private\Timer_Manager.cpp" />
@@ -302,6 +306,7 @@ call Copy_Release.bat</Command>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Engine_Shader_Cell.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Engine_Shader_Deferred.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

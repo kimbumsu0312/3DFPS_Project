@@ -105,24 +105,36 @@ _bool CCell::Compare_Points(_fvector vSourPoint, _fvector vDestPoint)
 	if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[ENUM_CLASS(CELL_POINT::A)]), vSourPoint))
 	{
 		if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[ENUM_CLASS(CELL_POINT::B)]), vDestPoint))
+		{
 			return true;
+		}
 		if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[ENUM_CLASS(CELL_POINT::C)]), vDestPoint))
+		{
 			return true;
+		}
 	}
 	if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[ENUM_CLASS(CELL_POINT::B)]), vSourPoint))
 	{
 		if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[ENUM_CLASS(CELL_POINT::C)]), vDestPoint))
+		{
 			return true;
+		}
 		if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[ENUM_CLASS(CELL_POINT::A)]), vDestPoint))
+		{
 			return true;
+		}
 	}
 
 	if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[ENUM_CLASS(CELL_POINT::C)]), vSourPoint))
 	{
 		if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[ENUM_CLASS(CELL_POINT::A)]), vDestPoint))
+		{
 			return true;
+		}
 		if (true == XMVector3Equal(XMLoadFloat3(&m_vPoints[ENUM_CLASS(CELL_POINT::B)]), vDestPoint))
+		{
 			return true;
+		}
 	}
 
 	return false;

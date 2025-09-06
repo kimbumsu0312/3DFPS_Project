@@ -22,20 +22,38 @@ void CChase_NorMon_1::Enter(CMonster_Normal* pContainer)
     else
         pContainer->Switch_Anim("Sword_Walk_Start", false);
 
+    //_float3 vPlayerPos{};
+    //XMStoreFloat3(&vPlayerPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
+    //_vector vMonPos = { pContainer->Get_TransformState(STATE::POSITION)};
+    //_float fDis = XMVectorGetX(XMVector3Length(XMLoadFloat3(&vPlayerPos) - vMonPos));
+    //if (fDis >= 5.f)
+    //{
+    //    pContainer->SetUp_Node(CPlayer_Manager::GetInstance()->Get_CellIndex(), vPlayerPos);
+    //}
+
 }
 
 void CChase_NorMon_1::Update(CMonster_Normal* pContainer, _float fTimeDelta)
 {
+    //pContainer->Move_Node(fTimeDelta);
     pContainer->Target_LookAt(fTimeDelta);
-    if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true && m_eAnimState == STATE_ANIM::START)
-        m_eAnimState = STATE_ANIM::LOOP;
-
-    if (m_eAnimState == STATE_ANIM::LOOP)
+    if (m_eAnimState == STATE_ANIM::START)
     {
-        if (m_iWeapon == ENUM_CLASS(CMonster_Normal::NORMAL_MON_WEAPON::END))
-            pContainer->Switch_Anim("Grapple_Walk_Loop", true);
-        else
-            pContainer->Switch_Anim("Sword_Walk_Loop", true);
+        m_eAnimState = STATE_ANIM::LOOP;
+    }
+    else if (m_eAnimState == STATE_ANIM::LOOP)
+    {
+        if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+        {
+            if (m_iWeapon == ENUM_CLASS(CMonster_Normal::NORMAL_MON_WEAPON::END))
+                pContainer->Switch_Anim("Grapple_Walk_Loop", true);
+            else
+                pContainer->Switch_Anim("Sword_Walk_Loop", true);
+        }
+    }
+    else if (m_eAnimState == STATE_ANIM::END)
+    {
+
     }
 }
 

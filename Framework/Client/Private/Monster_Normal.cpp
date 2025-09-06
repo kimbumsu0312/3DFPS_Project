@@ -65,23 +65,26 @@ void CMonster_Normal::Priority_Update(_float fTimeDelta)
 
 void CMonster_Normal::Update(_float fTimeDelta)
 { 
+	if (m_BlackBoard->Get_Data().fAttackCool >= 0.f)
+	{
+		m_BlackBoard->Set_Data().fAttackCool -= fTimeDelta;
+	}
 	m_pBehaviorTree->Update();
-
+	
 	State_Change();
 	m_pCulStateObject->Update(this, fTimeDelta);
 	
 	m_pTransformCom->Set_State(Engine::STATE::POSITION,
 		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
 
-	//¸ðµ¨ ·£´õ
+	//¸ðµ¨ ÆÄÃ÷
 	Root_Move();
 	m_pBodyObject->Update(fTimeDelta);
 	
-	//¹«±â ·£´õ
+	//¹«±â ÆÄÃ÷
 	if (m_pWeaponObject != nullptr)
 		m_pWeaponObject->Update(fTimeDelta);
-	
-	//À§Ä¡ º¸Á¤
+
 	Collider_Update();
 }
 
@@ -175,17 +178,27 @@ void CMonster_Normal::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY Tar
 		if (TargetCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::PLAYER))
 			m_BlackBoard->Set_Data().IsChase = true;
 	}
-	switch (TargetCollision.iObjType)
+	else
 	{
-	case ENUM_CLASS(OBJECT_TYPE::RAY):
-		(MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD)) ? m_BlackBoard->Set_Data().bIsHeadShot = true 
-			: m_BlackBoard->Set_Data().bIsHeadShot = false;
+		switch (TargetCollision.iObjType)
+		{
+		case ENUM_CLASS(OBJECT_TYPE::RAY):
+			MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD) ?
+				m_BlackBoard->Set_Data().bIsHeadShot = true
+				: m_BlackBoard->Set_Data().bIsHeadShot = false;
 
-		if(true == m_BlackBoard->Get_Data().bIsHeadShot)
-			m_BlackBoard->Set_Data().iDamage += _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
-		else
-			m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
-		break;
+			if (true == m_BlackBoard->Get_Data().bIsHeadShot)
+			{
+				m_BlackBoard->Set_Data().iHp -= _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
+				m_BlackBoard->Set_Data().iDamage += _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
+			}
+			else
+			{
+				m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
+				m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
+			}
+			break;
+		}
 	}
 }
 
@@ -197,6 +210,7 @@ HRESULT CMonster_Normal::Initialize_Pool(void* pArg)
 	m_iAnimState = pDesc->iAnimState;
 	m_szAnimTag = pDesc->szAnimTag;
 	m_BlackBoard->Set_Data().iStartMotion = pDesc->iStartMotion;
+	m_BlackBoard->Set_Data().iDropItemIndex = pDesc->iDropImteIndex;
 
 	if (pDesc->iStartMotion == 2 || pDesc->iStartMotion == 3)
 	{
@@ -242,6 +256,34 @@ void CMonster_Normal::Return_Pool()
 	Safe_Release(m_pWeaponObject);
 	m_pWeaponObject = nullptr;
 	m_bIsDead = false;
+}
+
+void CMonster_Normal::SetUp_Node(_int iTargetCellIndex, _float3 vPos)
+{
+	m_pNavigationCom->SetUp_Node(iTargetCellIndex, vPos);
+}
+
+void CMonster_Normal::Move_Node(_float fTimeDelta)
+{
+	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
+	_float3 vNextPos{};
+	_vector vPlayerPos{};
+	if (m_pNavigationCom->IsNaviNode(vMonPos, vNextPos))
+	{
+		XMStoreFloat3(&vNextPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
+		vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
+		m_pNavigationCom->SetUp_Node(CPlayer_Manager::GetInstance()->Get_CellIndex(), vNextPos);
+	}
+	else
+	{
+		vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
+	}
+	_vector vDir = XMVector3Normalize(XMVectorSetY(vPlayerPos - vMonPos, 0.f));
+	_vector vLook = XMVector3Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+
+	_vector vAxis = XMVector3Normalize(XMVector3Cross(vLook, vDir));
+
+	m_pTransformCom->Turn(vAxis, fTimeDelta);
 }
 
 HRESULT CMonster_Normal::Ready_Components()
@@ -351,7 +393,7 @@ HRESULT CMonster_Normal::Ready_Utility()
 	m_BlackBoard->Set_Data().iDamage = 0;
 
 	m_BlackBoard->Set_Data().bIsHeadShot = false;
-	m_BlackBoard->Set_Data().IsAttack = false;
+	m_BlackBoard->Set_Data().fAttackCool = 0.f;
 	m_BlackBoard->Set_Data().IsChase = false;
 	m_BlackBoard->Set_Data().IsIdle = true;
 
@@ -465,7 +507,7 @@ void CMonster_Normal::Collider_Update()
 
 	for (_int i = 0; i < ColliderType_Mon::END; ++i)
 	{
-		if (ColliderType_Mon::RESIST == i || ColliderType_Mon::CHASE)
+		if (ColliderType_Mon::RESIST == i || ColliderType_Mon::CHASE == i)
 		{
 			m_pColliderCom[i]->Update(m_pTransformCom->Get_WorldMatrix());
 			continue;

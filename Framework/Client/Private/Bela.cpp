@@ -4,6 +4,7 @@
 
 #include "Body_Bela.h"
 #include "WeaponObject.h"
+#include "BehaviorTree_Bela.h"
 
 #include "Idle_Bela.h"
 #include "Die_Bela.h"
@@ -25,8 +26,7 @@ HRESULT CBela::Initialize_Prototype()
 
 HRESULT CBela::Initialize(void* pArg)
 {
-	m_iHp = 10000;
-	m_iAnimState = ENUM_CLASS(BOSS_SISTER::NORMAL);
+	m_iAnimState = ENUM_CLASS(ANIM_STATE::NORMAL);
 	m_szAnimTag = "Idle_Freezes";
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -41,47 +41,40 @@ HRESULT CBela::Initialize(void* pArg)
 	if (FAILED(Ready_StateObjects()))
 		return E_FAIL;
 
-	m_pColliderBone[ColliderType_Mon::Body] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
-	m_pColliderBone[ColliderType_Mon::Head] = m_pBodyObject->Get_BoneMatrix(TEXT("Head"));
-	m_pColliderBone[ColliderType_Mon::L_ARM] = m_pBodyObject->Get_BoneMatrix(TEXT("L_UpperArm"));
-	m_pColliderBone[ColliderType_Mon::R_ARM] = m_pBodyObject->Get_BoneMatrix(TEXT("R_UpperArm"));
+	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::Body)] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
+	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::Head)] = m_pBodyObject->Get_BoneMatrix(TEXT("Head"));
+	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::L_ARM)] = m_pBodyObject->Get_BoneMatrix(TEXT("L_UpperArm"));
+	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::R_ARM)] = m_pBodyObject->Get_BoneMatrix(TEXT("R_UpperArm"));
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-60.66f, -8.68f, 30.52f, 1.f));
-
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-61.79f, -11.11f, 46.83f, 1.f));
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(-90.f));
 
 	return S_OK;
 }
 
 void CBela::Priority_Update(_float fTimeDelta)
 {
-	m_State = {};
-
+	m_pTransformCom->PrePostion_Update();
 	m_pBodyObject->Priority_Update(fTimeDelta);
 	m_pWeaponObject->Priority_Update(fTimeDelta);
 }
 
 void CBela::Update(_float fTimeDelta)
 {
-	m_pTransformCom->Set_State(Engine::STATE::POSITION,
-		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
-
-
-	//스테이터스 업데이트
-	State_Check();
-	m_pCulStateObject->Update(this, fTimeDelta);
 	State_Change();
+	m_pCulStateObject->Update(this, fTimeDelta);
+
+	Root_Move();
 
 	m_pBodyObject->Update(fTimeDelta);
 	m_pWeaponObject->Update(fTimeDelta);
 
-	//위치 보정
-	Root_Move();
 	Collider_Update();
 }
 
 void CBela::Late_Update(_float fTimeDelta)
 {
-	for (_int i = 0; i < ColliderType_Mon::End; ++i)
+	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
 			return;
@@ -91,14 +84,13 @@ void CBela::Late_Update(_float fTimeDelta)
 		return;
 
 	m_pBodyObject->Late_Update(fTimeDelta);
-
 	m_pWeaponObject->Late_Update(fTimeDelta);
 }
 
 HRESULT CBela::Render()
 {
 #ifdef _DEBUG
-	for (_int i = 0; i < ColliderType_Mon::End; ++i)
+	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
 	{
 		m_pColliderCom[i]->Render();
 	}
@@ -137,31 +129,29 @@ void CBela::Attack_Collision()
 			return;
 }
 
-void CBela::IsDamage()
-{
-	if (m_IsHitPoint.IsHead)
-		m_iHp -= _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
-	else
-		m_iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
-}
 void CBela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
 {
-	switch (TargetCollision.iObjType)
+	if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::RESIST))
 	{
-	case ENUM_CLASS(OBJECT_TYPE::RAY):
+		if (TargetCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::RESIST))
+			m_pTransformCom->Is_Sliding(m_pNavigationCom, XMLoadFloat3(&TargetCollision.pCollider->Get_Intersect_Normal()));
+	}
+	else
+	{
+		switch (TargetCollision.iObjType)
+		{
+		case ENUM_CLASS(OBJECT_TYPE::RAY):
+			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
+				m_BlackBoard->Set_Data().IsHitPoint.IsHead = true;
+			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_BODY))
+				m_BlackBoard->Set_Data().IsHitPoint.IsBody = true;
+			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_R))
+				m_BlackBoard->Set_Data().IsHitPoint.isSholder_R = true;
+			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L))
+				m_BlackBoard->Set_Data().IsHitPoint.IsSholder_L = true;
 
-		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
-			m_IsHitPoint.IsHead = true;
-		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_BODY))
-			m_IsHitPoint.IsBody = true;
-		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_R))
-			m_IsHitPoint.isSholder_R = true;
-		if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L))
-			m_IsHitPoint.IsSholder_L = true;
-
-		m_bIsDamage = true;
-
-		break;
+			break;
+		}
 	}
 }
 
@@ -175,7 +165,7 @@ HRESULT CBela::Ready_Components()
 	OBBDesc.vCenter = _float3(0.f, -0.15f, 0.f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-		TEXT("Com_Collider_Body"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::Body]), &OBBDesc)))
+		TEXT("Com_Collider_Body"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::Body)]), &OBBDesc)))
 		return E_FAIL;
 
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::MON_HEAD);
@@ -183,14 +173,14 @@ HRESULT CBela::Ready_Components()
 	OBBDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-		TEXT("Com_Collider_Head"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::Head]), &OBBDesc)))
+		TEXT("Com_Collider_Head"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::Head)]), &OBBDesc)))
 		return E_FAIL;
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::MON_BODY);
 	OBBDesc.vExtents = _float3(0.2f, 0.07f, 0.07f);
 	OBBDesc.vCenter = _float3(0.1f, 0.f, 0.f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-		TEXT("Com_Collider_ARM_L"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::L_ARM]), &OBBDesc)))
+		TEXT("Com_Collider_ARM_L"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::L_ARM)]), &OBBDesc)))
 		return E_FAIL;
 
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::MON_BODY);
@@ -198,11 +188,11 @@ HRESULT CBela::Ready_Components()
 	OBBDesc.vCenter = _float3(-0.1f, 0.f, 0.f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-		TEXT("Com_Collider_ARM_R"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::R_ARM]), &OBBDesc)))
+		TEXT("Com_Collider_ARM_R"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::R_ARM)]), &OBBDesc)))
 		return E_FAIL;
 
 	CNavigation::NAVIGATION_DESC        NaviDesc{};
-	NaviDesc.iCurrentCellIndex = 126;
+	NaviDesc.iCurrentCellIndex = 2815;
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
@@ -248,6 +238,37 @@ HRESULT CBela::Ready_PartObjects()
 	return S_OK;
 }
 
+HRESULT CBela::Ready_Utility()
+{
+	m_BlackBoard = CBlackBoard<BELA_DATA>::Create();
+	m_BlackBoard->Set_Data().iAnimState = &m_iAnimState;
+	m_BlackBoard->Set_Data().szAnimTag = &m_szAnimTag;
+	m_BlackBoard->Set_Data().bIsAnimFinsh = &m_bIsAnimFinsh;
+	m_BlackBoard->Set_Data().bIsAnimLoop = &m_bIsAnimLoop;
+	m_BlackBoard->Set_Data().szCulStateTag = &m_szCulStateTag;
+
+	m_BlackBoard->Set_Data().iHp = 1000;
+	m_BlackBoard->Set_Data().iDamage = 0;
+
+	m_BlackBoard->Set_Data().IsHitPoint.IsBody = false;
+	m_BlackBoard->Set_Data().IsHitPoint.IsHead = false;
+	m_BlackBoard->Set_Data().IsHitPoint.IsSholder_L = false;
+	m_BlackBoard->Set_Data().IsHitPoint.isSholder_R = false;
+
+	m_BlackBoard->Set_Data().fAttackCool = 0.f;
+	m_BlackBoard->Set_Data().IsChase = false;
+	m_BlackBoard->Set_Data().IsIdle = true;
+
+	m_BlackBoard->Set_Data().iWeapon = 0;
+	m_BlackBoard->Set_Data().iStartMotion = 0;
+
+	m_BlackBoard->Set_Data().MonPos = m_pTransformCom->Get_WorldMatrixPtr();
+
+	m_pBehaviorTree = CBehaviorTree_Bela::Create(m_BlackBoard);
+
+	return S_OK;
+}
+
 HRESULT CBela::Ready_StateObjects()
 {
 	Add_StateObject(TEXT("Idle"), CIdle_Bela::Create());
@@ -283,29 +304,8 @@ CMonState_Bela* CBela::Find_StateObject(const _wstring& strStateObjectTag)
 	return iter->second;
 }
 
-void CBela::State_Check()
-{
-	_vector vPlayerPos = CPlayer_Manager::GetInstance()->Get_PlayerPos();
-	_float fDis = {};
-	vPlayerPos = XMVector3Length(m_pTransformCom->Get_State(STATE::POSITION) - vPlayerPos);
-	XMStoreFloat(&fDis, vPlayerPos);
-
-	if (fDis <= 3.f)
-		m_State.isAttack = true;
-	if (fDis <= 6.f)
-		m_State.isChase = true;
-	if (m_bIsDamage)
-	{
-		m_bIsDamage = false;
-		m_State.isDamage = true;
-	}
-}
-
 void CBela::State_Change()
 {
-	if (m_iHp <= 0)
-		m_szCulStateTag = TEXT("Die");
-
 	if (m_szPreStateTag != m_szCulStateTag)
 	{
 		m_pCulStateObject->Exit(this);
@@ -335,7 +335,7 @@ void CBela::Root_Move()
 	//이동량 누적
 	vWorldTrans += vMovePos;
 	//회전량 누적
-	vWorldRot = XMQuaternionMultiply(vMoveRot, vWorldRot);
+	vWorldRot = XMQuaternionMultiply(XMVectorSetW(vMoveRot, 1.f), vWorldRot);
 	vWorldRot = XMQuaternionNormalize(vWorldRot);
 
 	_matrix ScaleMat = XMMatrixScalingFromVector(vScale);
@@ -349,6 +349,10 @@ void CBela::Root_Move()
 
 	if (false == m_pNavigationCom->isMove(m_pTransformCom->Get_State(STATE::POSITION)))
 		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(vPos, 1.f));
+
+	m_pTransformCom->Set_State(Engine::STATE::POSITION,
+		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
+
 }
 
 void CBela::Collider_Update()
@@ -356,7 +360,7 @@ void CBela::Collider_Update()
 	_matrix Worldmat = m_pTransformCom->Get_WorldMatrix();
 	_vector vRotation = XMQuaternionRotationMatrix(Worldmat);
 
-	for (_int i = 0; i < ColliderType_Mon::End; ++i)
+	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
 	{
 		_matrix BoneMat = XMLoadFloat4x4(m_pColliderBone[i]);
 		_vector vScale, vRot, vTrans;
@@ -411,4 +415,6 @@ void CBela::Free()
 		Safe_Release(pCollider);
 
 	Safe_Release(m_pNavigationCom);
+	Safe_Release(m_BlackBoard);
+	Safe_Release(m_pBehaviorTree);
 }

@@ -40,24 +40,7 @@ namespace Client
 		bool isWeaponSwap;
 	}PLAYER_ATTACK_STATE;
 
-	typedef struct NorMonState
-	{
-		int  iWeponType;
-		bool isChase;
-		bool isAttack;
-		bool isDamage;
-		bool isDie;
-	}NORMON_STATE;
-
-	typedef struct Boss_SisterState
-	{
-		bool isChase;
-		bool isAttack;
-		bool isDamage;
-		bool isDie;
-	}BOSS_SISTER_STATE;
-
-	typedef struct Boss_SisterHitPoint
+	typedef struct BOSS_SISTERHitPoint
 	{
 		bool IsHead;
 		bool IsBody;
@@ -75,6 +58,7 @@ namespace Client
 		_float		vAngleY;
 		_wstring	szState;
 		_int		iStartMotion;
+		_int        iDropImteIndex;
 	}POOLMONDESC;
 
 }

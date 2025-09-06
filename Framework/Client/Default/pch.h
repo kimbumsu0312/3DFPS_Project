@@ -26,6 +26,8 @@
 #include "Monster_Header.h"
 #include "Alcina.h"
 #include "Body_Alcina.h"
+#include "Monster_WereWolf.h"
+#include "Body_WereWolf.h"
 
 //플레이어 관련
 #include "Player_Header.h"

@@ -14,7 +14,7 @@ HRESULT CChase_Bela::Initalize(void* pArg)
 void CChase_Bela::Enter(CBela* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
-    pContainer->Switch_AnimState(ENUM_CLASS(BOSS_SISTER::NORMAL));
+    //pContainer->Switch_AnimState(ENUM_CLASS(CBela::BOSS_SISTER::NORMAL));
     pContainer->Switch_Anim("Run_F", true);
 
 }
@@ -23,10 +23,6 @@ void CChase_Bela::Update(CBela* pContainer, _float fTimeDelta)
 {
     pContainer->Target_LookTurn(fTimeDelta);
 
-    if (pContainer->Get_State().isDamage)
-        pContainer->Switch_State(TEXT("Damage"));
-    else if (pContainer->Get_State().isAttack)
-        pContainer->Switch_State(TEXT("Attack"));
 }
 
 void CChase_Bela::Exit(CBela* pContainer)

@@ -19,23 +19,25 @@ public:
 	typedef struct NormalMon_Data
 	{
 		//애니메이션 관련
-		_uint* iAnimState = { nullptr };
-		string* szAnimTag = { nullptr };
-		_bool* bIsAnimLoop = { nullptr };
-		_bool* bIsAnimFinsh = { nullptr };
+		_uint*				iAnimState = { nullptr };
+		string*				szAnimTag = { nullptr };
+		_bool*				bIsAnimLoop = { nullptr };
+		_bool*				bIsAnimFinsh = { nullptr };
 
-		_wstring* szCulStateTag = { nullptr };
-		_int iHp = {};
-		_int iDamage = {};
+		_wstring*			szCulStateTag = { nullptr };
 
-		_bool bIsHeadShot = { false };
-		_bool IsAttack = { false };
-		_bool IsChase = {false};
-		_bool IsIdle = {false};
-		const _float4x4* MonPos = { nullptr };
+		_bool				bIsHeadShot = { false };
+		_bool				IsChase = {false};
+		_bool				IsIdle = {false};
+		_bool				IsAttack = { false };
+		const _float4x4*	MonPos = { nullptr };
 
-		_int	iWeapon;
-		_int	iStartMotion;
+		_int				iHp = {};
+		_int				iDamage = {};
+		_float				fAttackCool = {};
+		_int				iWeapon = {};
+		_int				iStartMotion = {};
+		_int				iDropItemIndex = {};
 	}NORMALMON_DATA;
 private:
 	enum ColliderType_Mon { BODY = 0, Head, Hand, RESIST, CHASE, END };
@@ -56,7 +58,7 @@ public:
 	void						Switch_Anim(string szAnimTag, _bool IsLoop);
 	void						Switch_State(_wstring szStateTag) { m_szCulStateTag = szStateTag; }
 	CBlackBoard<
-		NORMALMON_DATA>*		Get_BlackBoard() { return m_BlackBoard; }
+		NORMALMON_DATA>*		Get_BlackBoard() { return m_BlackBoard;	}
 
 
 	const _vector				Get_TransformState(STATE eState) { return m_pTransformCom->Get_State(eState); }
@@ -70,6 +72,8 @@ public:
 	virtual HRESULT				Initialize_Pool(void* pArg) override;
 	virtual void				Return_Pool() override;
 
+	void						SetUp_Node(_int iTargetCellIndex, _float3 vPos);
+	void						Move_Node(_float fTimeDelta);
 private:
 	CNavigation*				m_pNavigationCom = { nullptr };
 	//콜리전

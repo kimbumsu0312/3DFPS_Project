@@ -29,7 +29,7 @@ HRESULT CAlcina::Initialize_Prototype()
 HRESULT CAlcina::Initialize(void* pArg)
 {
 	m_iHp = 10000;
-	m_iAnimState = ENUM_CLASS(BOSS_SISTER::NORMAL);
+	m_iAnimState = ENUM_CLASS(ANIM_STATE::NORMAL);
 	m_szAnimTag = "Idle";
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -51,8 +51,8 @@ HRESULT CAlcina::Initialize(void* pArg)
 	m_pColliderBone[ColliderType_Mon::Body] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
 	m_pColliderBone[ColliderType_Mon::Head] = m_pBodyObject->Get_BoneMatrix(TEXT("Head"));
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-55.66f, -8.68f, 30.52f, 1.f));
-	//m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(180.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-10.87f, -8.68f, 55.79f, 1.f));
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(180.f));
 	return S_OK;
 }
 
@@ -172,8 +172,18 @@ void CAlcina::SetUp_Node(_int iTargetCellIndex, _float3 vPos)
 void CAlcina::Move_Node(_float fTimeDelta)
 {
 	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
-	_vector vPlayerPos = m_pNavigationCom->IsNaviNode(vMonPos);
-
+	_float3 vNextPos{};
+	_vector vPlayerPos{};
+	if (m_pNavigationCom->IsNaviNode(vMonPos, vNextPos))
+	{
+		XMStoreFloat3(&vNextPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
+		vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
+		m_pNavigationCom->SetUp_Node(CPlayer_Manager::GetInstance()->Get_CellIndex(), vNextPos);
+	}
+	else
+	{
+		vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
+	}
 	_vector vDir = XMVector3Normalize(XMVectorSetY(vPlayerPos - vMonPos, 0.f));
 	_vector vLook = XMVector3Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 
@@ -226,7 +236,7 @@ HRESULT CAlcina::Ready_Components()
 		return E_FAIL;
 
 	CNavigation::NAVIGATION_DESC        NaviDesc{};
-	NaviDesc.iCurrentCellIndex = 1265;
+	NaviDesc.iCurrentCellIndex = 6932;
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
@@ -339,8 +349,8 @@ void CAlcina::Root_Move()
 	_vector vMoveRot = XMLoadFloat4(m_pBodyObject->Get_MoveRot());
 
 	//회전량 누적
-	vWorldRot = XMQuaternionMultiply(vMoveRot, vWorldRot);
-	//vWorldRot = XMQuaternionNormalize(vWorldRot);
+	vWorldRot = XMQuaternionMultiply(XMVectorSetW(vMoveRot, 1.f), vWorldRot);
+	vWorldRot = XMQuaternionNormalize(vWorldRot);
 	
 	//월드 기준으로 방향 보정
 	if(m_iAnimState == ENUM_CLASS(ANIM_STATE::DAMAGE))

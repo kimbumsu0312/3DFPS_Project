@@ -14,19 +14,14 @@ HRESULT CChase_Daniela::Initalize(void* pArg)
 void CChase_Daniela::Enter(CDaniela* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
-    pContainer->Switch_AnimState(ENUM_CLASS(BOSS_SISTER::NORMAL));
+    pContainer->Switch_AnimState(ENUM_CLASS(CDaniela::ANIM_STATE::NORMAL));
     pContainer->Switch_Anim("Run_F", true);
 
 }
 
 void CChase_Daniela::Update(CDaniela* pContainer, _float fTimeDelta)
 {
-    //pContainer->Target_LookTurn(fTimeDelta);
 
-    if (pContainer->Get_State().isDamage)
-        pContainer->Switch_State(TEXT("Damage"));
-    else if (pContainer->Get_State().isAttack)
-        pContainer->Switch_State(TEXT("Attack"));
 }
 
 void CChase_Daniela::Exit(CDaniela* pContainer)

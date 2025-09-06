@@ -14,7 +14,7 @@ HRESULT CWalk_Alcina::Initalize(void* pArg)
 void CWalk_Alcina::Enter(CAlcina* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
-    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(BOSS_SISTER::NORMAL);
+    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CAlcina::ANIM_STATE::NORMAL);
     DIRECTION eDir = PlayerDIR(pContainer->Get_TransForm()->Get_State(STATE::POSITION), pContainer->Get_TransForm()->Get_State(STATE::LOOK));
     if(eDir == DIRECTION::F || eDir == DIRECTION::FL || eDir == DIRECTION::FR)
         pContainer->Switch_Anim("Walk_F", false);
@@ -35,7 +35,7 @@ void CWalk_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
         if (AnimFinsh)
         {
             m_eAnimState = STATE_ANIM::LOOP;
-            *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(BOSS_SISTER::NORMAL);
+            *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CAlcina::ANIM_STATE::NORMAL);
             pContainer->Switch_Anim("Walk_Loop", true);
         }
         pContainer->Target_LookTurn(fDeltatime);

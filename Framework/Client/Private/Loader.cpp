@@ -150,6 +150,9 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	/* Prototype_Model_Sword*/
 	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Weapon/Sword/Sword.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Sword"))))
 		return E_FAIL;
+	/* Prototype_Model_Normal_Mon_2*/
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Mon/Mon_2/Mon_2.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Normal_Mon_2"))))
+		return E_FAIL;
 #pragma endregion
 
 #pragma region Mon_Boss_Model
@@ -352,6 +355,14 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1_Shotel"),
 		CNormon_Shotel::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_2"),
+		CMonster_WereWolf::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Monster_Normal_2"),
+		CBody_WereWolf::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 #pragma endregion

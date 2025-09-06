@@ -14,20 +14,13 @@ HRESULT CIdle_Bela::Initalize(void* pArg)
 void CIdle_Bela::Enter(CBela* pContainer)
 {
     m_eAnimState = STATE_ANIM::LOOP;
-    pContainer->Switch_AnimState(ENUM_CLASS(BOSS_SISTER::NORMAL));
+    //pContainer->Switch_AnimState(ENUM_CLASS(CBela::BOSS_SISTER::NORMAL));
     pContainer->Switch_Anim("Idle_Freezes", true);
 }
 
 void CIdle_Bela::Update(CBela* pContainer, _float fDeltatime)
 {
-    if (pContainer->Get_State().isDamage)
-    {
-        pContainer->Switch_State(TEXT("Damage"));
-    }
-    else if (pContainer->Get_State().isChase)
-    {
-        pContainer->Switch_State(TEXT("Chase"));
-    }
+
 }
 
 void CIdle_Bela::Exit(CBela* pContainer)

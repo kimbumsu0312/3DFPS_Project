@@ -8,19 +8,19 @@ CAttack_NorMon_1::CAttack_NorMon_1()
 
 HRESULT CAttack_NorMon_1::Initalize(void* pArg)
 {
+    m_iAttackType = 0;
     return S_OK;
 }
 
 void CAttack_NorMon_1::Enter(CMonster_Normal* pContainer)
 {
-    _int Rand = rand() % 3;
     m_eAnimState = STATE_ANIM::START;
     
     *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::ATTACK);
     
     if (pContainer->Get_BlackBoard()->Get_Data().iWeapon == ENUM_CLASS(CMonster_Normal::NORMAL_MON_WEAPON::END))
     {
-        switch (Rand)
+        switch (m_iAttackType)
         {
         case 0:
             pContainer->Switch_Anim("Grapple_Attack_1", false);
@@ -35,7 +35,7 @@ void CAttack_NorMon_1::Enter(CMonster_Normal* pContainer)
     }
     else
     {
-        switch (Rand)
+        switch (m_iAttackType)
         {
         case 0:
             pContainer->Switch_Anim("Sword_Attack_1", false);
@@ -48,11 +48,29 @@ void CAttack_NorMon_1::Enter(CMonster_Normal* pContainer)
             break;
         }
     }
+    ++m_iAttackType;
+
+    if (m_iAttackType >= 3)
+        m_iAttackType = 0;
+
 }
 
 void CAttack_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
 {
-    pContainer->Attack_Collision();
+    if (m_eAnimState == STATE_ANIM::START)
+    {
+        m_eAnimState = STATE_ANIM::LOOP;
+    }
+    else if(m_eAnimState == STATE_ANIM::LOOP)
+    {
+        pContainer->Target_LookAt(fDeltatime);
+        pContainer->Attack_Collision();
+        if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+        {
+            pContainer->Get_BlackBoard()->Set_Data().fAttackCool = 5.f;
+            pContainer->Get_BlackBoard()->Set_Data().IsAttack = false;
+        }
+    }
 }
 
 void CAttack_NorMon_1::Exit(CMonster_Normal* pContainer)

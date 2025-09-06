@@ -134,6 +134,7 @@ _bool CPicking::isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 v
 	return isPicked;
 }
 
+#ifdef _DEBUG
 HRESULT CPicking::Ray_Render()
 {
 	m_pEffect->SetWorld(XMMatrixIdentity());
@@ -152,6 +153,7 @@ HRESULT CPicking::Ray_Render()
 
 	return S_OK;
 }
+#endif // _DEBUG
 
 CPicking* CPicking::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HWND hWnd)
 {

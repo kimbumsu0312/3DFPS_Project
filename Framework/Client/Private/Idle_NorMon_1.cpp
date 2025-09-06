@@ -65,20 +65,18 @@ void CIdle_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
             m_eAnimState = STATE_ANIM::END;
             break;
         case  ENUM_CLASS(IDLE_TYPE::CLIME):
-            pContainer->Target_LookAt(fDeltatime);
             if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
             {
                 *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
                 pContainer->Get_BlackBoard()->Set_Data().IsIdle = false;
-                pContainer->Get_BlackBoard()->Set_Data().IsChase = false;
-                pContainer->Switch_Anim("Idle_Loop", true);
+                pContainer->Get_BlackBoard()->Set_Data().IsChase = true;
             }
             break;
         case  ENUM_CLASS(IDLE_TYPE::FALL):
             if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
             {
                 *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
-                pContainer->Get_BlackBoard()->Set_Data().IsChase = false;
+                pContainer->Get_BlackBoard()->Set_Data().IsChase = true;
                 pContainer->Get_BlackBoard()->Set_Data().IsIdle = false;
                 pContainer->Switch_Anim("Idle_Loop", true);
             }
@@ -87,14 +85,26 @@ void CIdle_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
     }
     else
     {
+        switch (m_iStartType)
+        {
+        case  ENUM_CLASS(IDLE_TYPE::STAND):
+            break;
+        case  ENUM_CLASS(IDLE_TYPE::SIT):
+            pContainer->Target_LookAt(fDeltatime);
+            break;
+        case  ENUM_CLASS(IDLE_TYPE::CLIME):
+            break;
+        case  ENUM_CLASS(IDLE_TYPE::FALL):
+            break;
+        }
+
         if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {
             *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
             pContainer->Switch_Anim("Idle_Loop", true);
             pContainer->Get_BlackBoard()->Set_Data().IsIdle = false;
-
-            if(m_iStartType == ENUM_CLASS(IDLE_TYPE::CLIME))
-                pContainer->Get_BlackBoard()->Set_Data().IsChase = false;
+            pContainer->Get_BlackBoard()->Set_Data().IsChase = true;
+ 
         }
     }
 

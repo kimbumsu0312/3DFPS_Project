@@ -11,6 +11,7 @@ private:
 public:
 	const LIGHT_DESC*		Get_LightDesc(_uint iIndex);
 	HRESULT					Add_Light(LIGHT_DESC& LightDesc);
+	HRESULT					Render(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 
 private:
 	list<class CLight*>		m_Lights;

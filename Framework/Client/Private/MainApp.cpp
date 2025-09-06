@@ -64,6 +64,9 @@ HRESULT CMainApp::Initialize()
 
 void CMainApp::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->IsKeyDown(DIK_F1))
+		m_pGameInstance->IsDebugRender();
+	
 	m_pGameInstance->Update_Engine(fTimeDelta);
 }
 

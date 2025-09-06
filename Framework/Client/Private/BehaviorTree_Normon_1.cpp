@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "BehaviorTree_Normon_1.h"
-#include "Alcina.h"
+#include "Monster_Normal.h"
 #include "Player_Manager.h"
 
 CBehaviorTree_Normon_1::CBehaviorTree_Normon_1()
@@ -82,12 +82,18 @@ CNode::TREE_STATE CBehaviorTree_Normon_1::Condition_Attack()
 	if (m_pBlackBoard->Get_Data().IsChase == false || m_pBlackBoard->Get_Data().IsIdle == true)
 		return CNode::TREE_STATE::FAILED;
 
+	if(m_pBlackBoard->Get_Data().fAttackCool > 0.f)
+		return CNode::TREE_STATE::FAILED;
+
 	_vector vPlayerPos = CPlayer_Manager::GetInstance()->Get_PlayerPos();
 	_vector vMonPos = { m_pBlackBoard->Get_Data().MonPos->m[3][0], m_pBlackBoard->Get_Data().MonPos->m[3][1], m_pBlackBoard->Get_Data().MonPos->m[3][2] };
 	_float fDis = XMVectorGetX(XMVector3Length(vPlayerPos - vMonPos));
 
 	if (fDis <= 5.f)
+	{
+		m_pBlackBoard->Set_Data().IsAttack = true;
 		return CNode::TREE_STATE::SUCCESS;
+	}
 	else
 		return CNode::TREE_STATE::FAILED;
 
@@ -100,7 +106,7 @@ CNode::TREE_STATE CBehaviorTree_Normon_1::Switch_Attack()
 	if (m_pBlackBoard->Get_Data().IsAttack == true)
 		return CNode::TREE_STATE::RUN;
 
-	return CNode::TREE_STATE::SUCCESS;
+	return CNode::TREE_STATE::FAILED;
 }
 
 CNode::TREE_STATE CBehaviorTree_Normon_1::Condition_Chase()

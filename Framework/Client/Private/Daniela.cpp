@@ -4,6 +4,7 @@
 
 #include "Body_Daniela.h"
 #include "WeaponObject.h"
+#include "BehaviorTree_Daniela.h"
 
 #include "Idle_Daniela.h"
 #include "Die_Daniela.h"
@@ -26,8 +27,7 @@ HRESULT CDaniela::Initialize_Prototype()
 
 HRESULT CDaniela::Initialize(void* pArg)
 {
-	m_iHp = 10000;
-	m_iAnimState = ENUM_CLASS(BOSS_SISTER::NORMAL);
+	m_iAnimState = ENUM_CLASS(ANIM_STATE::NORMAL);
 	m_szAnimTag = "Idle";
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -36,66 +36,49 @@ HRESULT CDaniela::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Utility()))
+		return E_FAIL;
+
 	if (FAILED(Ready_PartObjects()))
 		return E_FAIL;
 
 	if (FAILED(Ready_StateObjects()))
 		return E_FAIL;
 
-	m_pColliderBone[ColliderType_Mon::Body] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
-	m_pColliderBone[ColliderType_Mon::Head] = m_pBodyObject->Get_BoneMatrix(TEXT("Head"));
-	m_pColliderBone[ColliderType_Mon::L_ARM] = m_pBodyObject->Get_BoneMatrix(TEXT("L_UpperArm"));
-	m_pColliderBone[ColliderType_Mon::R_ARM] = m_pBodyObject->Get_BoneMatrix(TEXT("R_UpperArm"));
+	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::Body)] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
+	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::Head)] = m_pBodyObject->Get_BoneMatrix(TEXT("Head"));
+	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::L_ARM)] = m_pBodyObject->Get_BoneMatrix(TEXT("L_UpperArm"));
+	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::R_ARM)] = m_pBodyObject->Get_BoneMatrix(TEXT("R_UpperArm"));
 
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-55.66f, -8.68f, 30.52f, 1.f));
-	//m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(180.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-35.49f, -3.44f, 46.34f, 1.f));
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(110.f));
 	return S_OK;
 }
 
 void CDaniela::Priority_Update(_float fTimeDelta)
 {
 	m_pTransformCom->PrePostion_Update();
-	m_State = {};
-
 	m_pBodyObject->Priority_Update(fTimeDelta);
 	m_pWeaponObject->Priority_Update(fTimeDelta);
 }
 
 void CDaniela::Update(_float fTimeDelta)
 {
-	_int iTargetCellIndex = CPlayer_Manager::GetInstance()->Get_CellIndex();
-
-	if (m_iPretargIndex != iTargetCellIndex)
-	{
-		_float3 vPlayerPos{};
-		XMStoreFloat3(&vPlayerPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
-		m_iPretargIndex = iTargetCellIndex;
-		m_pNavigationCom->SetUp_Node(iTargetCellIndex, vPlayerPos);
-	}
-
-	//스테이터스 업데이트
-	State_Check();
-	m_pCulStateObject->Update(this, fTimeDelta);
 	State_Change();
+	m_pCulStateObject->Update(this, fTimeDelta);
 
+	Root_Move();
+	
 	m_pBodyObject->Update(fTimeDelta);
 	m_pWeaponObject->Update(fTimeDelta);
 
-	//위치 보정
-	Target_LookTurn_Navi(fTimeDelta);
-	Root_Move();
-	
-	m_pTransformCom->Set_State(Engine::STATE::POSITION,
-		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
-
-		
 	Collider_Update();
 }
 
 void CDaniela::Late_Update(_float fTimeDelta)
 {
-	for (_int i = 0; i < ColliderType_Mon::End; ++i)
+	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
 			return;
@@ -105,18 +88,16 @@ void CDaniela::Late_Update(_float fTimeDelta)
 		return;
 
 	m_pBodyObject->Late_Update(fTimeDelta);
-
 	m_pWeaponObject->Late_Update(fTimeDelta);
 }
 
 HRESULT CDaniela::Render()
 {
 #ifdef _DEBUG
-	for (_int i = 0; i < ColliderType_Mon::End; ++i)
+	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
 	{
 		m_pColliderCom[i]->Render();
 	}
-
 #endif
 	return S_OK;
 }
@@ -143,33 +124,32 @@ void CDaniela::Target_LookTurn(_float fTimeDelta)
 void CDaniela::Target_LookTurn_Navi(_float fTimeDelta)
 {
 	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
-	_vector vPlayerPos = m_pNavigationCom->IsNaviNode(vMonPos);
-
+	_float3 vNextPos{};
+	_vector vPlayerPos{};
+	if (m_pNavigationCom->IsNaviNode(vMonPos, vNextPos))
+	{
+		XMStoreFloat3(&vNextPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
+		vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
+		m_pNavigationCom->SetUp_Node(CPlayer_Manager::GetInstance()->Get_CellIndex(), vNextPos);
+	}
+	else
+	{
+		vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
+	}
 	_vector vDir = XMVector3Normalize(XMVectorSetY(vPlayerPos - vMonPos, 0.f));
 	_vector vLook = XMVector3Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 
 	_vector vAxis = XMVector3Normalize(XMVector3Cross(vLook, vDir));
 
 	m_pTransformCom->Turn(vAxis, fTimeDelta);
-}
 
-void CDaniela::Target_LookAt()
-{
-	//m_pTransformCom->LookAt(CPlayer_Manager::GetInstance()->Get_PlayerPos());
+	m_pTransformCom->Go_Straight(fTimeDelta);
 }
 
 void CDaniela::Attack_Collision()
 {
 	if (FAILED(m_pWeaponObject->Add_Collider()))
 		return;
-}
-
-void CDaniela::IsDamage()
-{
-	if (m_IsHitPoint.IsHead)
-		m_iHp -= _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
-	else
-		m_iHp -= _int(CPlayer_Manager::GetInstance()->Get_Damage());
 }
 
 void CDaniela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
@@ -184,17 +164,14 @@ void CDaniela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColl
 		switch (TargetCollision.iObjType)
 		{
 		case ENUM_CLASS(OBJECT_TYPE::RAY):
-
 			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
-				m_IsHitPoint.IsHead = true;
+				m_BlackBoard->Set_Data().IsHitPoint.IsHead = true;
 			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_BODY))
-				m_IsHitPoint.IsBody = true;
+				m_BlackBoard->Set_Data().IsHitPoint.IsBody = true;
 			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_R))
-				m_IsHitPoint.isSholder_R = true;
+				m_BlackBoard->Set_Data().IsHitPoint.isSholder_R = true;
 			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L))
-				m_IsHitPoint.IsSholder_L = true;
-
-			m_bIsDamage = true;
+				m_BlackBoard->Set_Data().IsHitPoint.IsSholder_L = true;
 
 			break;
 		}
@@ -211,7 +188,7 @@ HRESULT CDaniela::Ready_Components()
 	OBBDesc.vCenter = _float3(0.f, 0.5f, 0.f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-		TEXT("Com_Collider_Resist"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::RESIST]), &OBBDesc)))
+		TEXT("Com_Collider_Resist"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::RESIST)]), &OBBDesc)))
 		return E_FAIL;
 
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
@@ -221,7 +198,7 @@ HRESULT CDaniela::Ready_Components()
 	OBBDesc.vCenter = _float3(0.f, -0.15f, 0.f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-		TEXT("Com_Collider_Body"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::Body]), &OBBDesc)))
+		TEXT("Com_Collider_Body"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::Body)]), &OBBDesc)))
 		return E_FAIL;
 
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::MON_HEAD);
@@ -229,28 +206,26 @@ HRESULT CDaniela::Ready_Components()
 	OBBDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-		TEXT("Com_Collider_Head"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::Head]), &OBBDesc)))
+		TEXT("Com_Collider_Head"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::Head)]), &OBBDesc)))
 		return E_FAIL;
 
 
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_R);
 	OBBDesc.vExtents = _float3(0.2f, 0.07f, 0.07f);
 	OBBDesc.vCenter = _float3(0.1f, 0.f, 0.f);
-
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-		TEXT("Com_Collider_ARM_L"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::L_ARM]), &OBBDesc )))
+		TEXT("Com_Collider_ARM_L"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::L_ARM)]), &OBBDesc)))
 		return E_FAIL;
 
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L);
 	OBBDesc.vExtents = _float3(0.2f, 0.07f, 0.07f);
 	OBBDesc.vCenter = _float3(-0.1f, 0.f, 0.f);
-
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-		TEXT("Com_Collider_ARM_R"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::R_ARM]), &OBBDesc)))
+		TEXT("Com_Collider_ARM_R"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::R_ARM)]), &OBBDesc)))
 		return E_FAIL;
 
 	CNavigation::NAVIGATION_DESC        NaviDesc{};
-	NaviDesc.iCurrentCellIndex =1265;
+	NaviDesc.iCurrentCellIndex = 6044;
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
@@ -299,6 +274,37 @@ HRESULT CDaniela::Ready_PartObjects()
 	return S_OK;
 }
 
+HRESULT CDaniela::Ready_Utility()
+{
+	m_BlackBoard = CBlackBoard<DANIELA_DATA>::Create();
+	m_BlackBoard->Set_Data().iAnimState = &m_iAnimState;
+	m_BlackBoard->Set_Data().szAnimTag = &m_szAnimTag;
+	m_BlackBoard->Set_Data().bIsAnimFinsh = &m_bIsAnimFinsh;
+	m_BlackBoard->Set_Data().bIsAnimLoop = &m_bIsAnimLoop;
+	m_BlackBoard->Set_Data().szCulStateTag = &m_szCulStateTag;
+
+	m_BlackBoard->Set_Data().iHp = 1000;
+	m_BlackBoard->Set_Data().iDamage = 0;
+
+	m_BlackBoard->Set_Data().IsHitPoint.IsBody = false;
+	m_BlackBoard->Set_Data().IsHitPoint.IsHead = false;
+	m_BlackBoard->Set_Data().IsHitPoint.IsSholder_L = false;
+	m_BlackBoard->Set_Data().IsHitPoint.isSholder_R = false;
+
+	m_BlackBoard->Set_Data().fAttackCool = 0.f;
+	m_BlackBoard->Set_Data().IsChase = false;
+	m_BlackBoard->Set_Data().IsIdle = true;
+
+	m_BlackBoard->Set_Data().iWeapon = 0;
+	m_BlackBoard->Set_Data().iStartMotion = 0;
+
+	m_BlackBoard->Set_Data().MonPos = m_pTransformCom->Get_WorldMatrixPtr();
+
+	m_pBehaviorTree = CBehaviorTree_Daniela::Create(m_BlackBoard);
+
+	return S_OK;
+}
+
 HRESULT CDaniela::Ready_StateObjects()
 {
 	Add_StateObject(TEXT("Idle"), CIdle_Daniela::Create());
@@ -334,29 +340,8 @@ CMonState_Daniela* CDaniela::Find_StateObject(const _wstring& strStateObjectTag)
 	return iter->second;
 }
 
-void CDaniela::State_Check()
-{
-	_vector vPlayerPos = CPlayer_Manager::GetInstance()->Get_PlayerPos();
-	_float fDis = {};
-	vPlayerPos = XMVector3Length(m_pTransformCom->Get_State(STATE::POSITION) - vPlayerPos);
-	XMStoreFloat(&fDis, vPlayerPos);
-
-	if (fDis <= 3.f)
-		m_State.isAttack = true;
-	if (fDis <= 6.f)
-		m_State.isChase = true;
-	if (m_bIsDamage)
-	{
-		m_bIsDamage = false;
-		m_State.isDamage = true;
-	}
-}
-
 void CDaniela::State_Change()
 {
-	if (m_iHp <= 0)
-		m_szCulStateTag = TEXT("Die");
-
 	if (m_szPreStateTag != m_szCulStateTag)
 	{
 		m_pCulStateObject->Exit(this);
@@ -384,7 +369,7 @@ void CDaniela::Root_Move()
 	//이동량 누적
 	vWorldTrans += vMovePos;
 	//회전량 누적
-	vWorldRot = XMQuaternionMultiply(vMoveRot, vWorldRot);
+	vWorldRot = XMQuaternionMultiply(XMVectorSetW(vMoveRot, 1.f), vWorldRot);
 	vWorldRot = XMQuaternionNormalize(vWorldRot);
 
 	_matrix ScaleMat = XMMatrixScalingFromVector(vScale);
@@ -396,6 +381,9 @@ void CDaniela::Root_Move()
 
 	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 	m_pTransformCom->Is_Sliding(m_pNavigationCom);
+
+	m_pTransformCom->Set_State(Engine::STATE::POSITION,
+		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
 }
 
 void CDaniela::Collider_Update()
@@ -403,9 +391,9 @@ void CDaniela::Collider_Update()
 	_matrix Worldmat = m_pTransformCom->Get_WorldMatrix();
 	_vector vRotation = XMQuaternionRotationMatrix(Worldmat);
 
-	for (_int i = 0; i < ColliderType_Mon::End; ++i)
+	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
 	{
-		if (ColliderType_Mon::RESIST == i)
+		if (ENUM_CLASS(ColliderType_Mon::RESIST) == i)
 		{
 			m_pColliderCom[i]->Update(m_pTransformCom->Get_WorldMatrix());
 			continue;
@@ -463,4 +451,6 @@ void CDaniela::Free()
 		Safe_Release(pCollider);
 
 	Safe_Release(m_pNavigationCom);
+	Safe_Release(m_BlackBoard);
+	Safe_Release(m_pBehaviorTree);
 }

@@ -59,7 +59,6 @@ public:
 	void						IsDamage();
 	virtual void				OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 	
-
 	void						SetUp_Node(_int iTargetCellIndex, _float3 vPos);
 	void						Move_Node(_float fTimeDelta);
 

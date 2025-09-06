@@ -475,11 +475,11 @@ void CPlayer::InputKey_WeaponChange(_float fTimeDelta)
 			break;
 		case ENUM_CLASS(PLAYER_WEAPON::HANDGUN):
 			m_pWeaponObject = Find_PartObject(TEXT("Part_HandGun"));
-			CPlayer_Manager::GetInstance()->Set_Damage(20);
+			CPlayer_Manager::GetInstance()->Set_Damage(10);
 			break;
 		case ENUM_CLASS(PLAYER_WEAPON::SHOTGUN):
 			m_pWeaponObject = Find_PartObject(TEXT("Part_ShotGun"));
-			CPlayer_Manager::GetInstance()->Set_Damage(50);
+			CPlayer_Manager::GetInstance()->Set_Damage(5);
 			break;
 		case ENUM_CLASS(PLAYER_WEAPON::SNIPER):
 			m_pWeaponObject = Find_PartObject(TEXT("Part_Sniper"));

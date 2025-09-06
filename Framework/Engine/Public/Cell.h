@@ -25,11 +25,12 @@ public:
 	const _int&				Get_NeighborIndeices(_int iLine) { return m_iNeighborIndices[iLine]; }
 	_float					Distance(_vector vCenterPos);
 	const _float3&			Get_Center() { return m_vCenter; }
+
 #ifdef _DEBUG
 public:
 	HRESULT					Render();
 	_bool					IsSnap(_float3& vPos, _float Radius);
-	_bool					IsPick(_float& fDist, _int& iIndex);
+	_bool					IsPick(_float& fDist, _int& iIndex);					
 #endif
 
 private:
@@ -44,6 +45,7 @@ private:
 	_uint					m_iCellType = {};
 
 	_float3					m_vCenter = {};
+
 #ifdef _DEBUG
 private:
 	class CVIBuffer_Cell*	m_pVIBuffer = { nullptr };

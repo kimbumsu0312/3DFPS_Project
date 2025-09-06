@@ -20,12 +20,17 @@ void CDie_Normon_1::Enter(CMonster_Normal* pContainer)
 
 void CDie_Normon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
 {
-    if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+    if (m_eAnimState == STATE_ANIM::START)
     {
-        pContainer->SetDead();
-        _int i = rand() % 4 + 5;
-        
-        CItemSpawner::GetInstance()->Spawn_Item(i, pContainer->Get_TransformState(STATE::POSITION), pContainer->Get_CulNaviIndex());
+        m_eAnimState = STATE_ANIM::LOOP;
+    }
+    else if (m_eAnimState == STATE_ANIM::LOOP)
+    {
+        if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+        {
+            pContainer->SetDead();
+            CItemSpawner::GetInstance()->Spawn_Item(pContainer->Get_BlackBoard()->Get_Data().iDropItemIndex, pContainer->Get_TransformState(STATE::POSITION), pContainer->Get_CulNaviIndex());
+        }
     }
 }
 

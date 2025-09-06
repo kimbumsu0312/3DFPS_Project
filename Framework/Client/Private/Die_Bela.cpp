@@ -14,7 +14,7 @@ HRESULT CDie_Bela::Initalize(void* pArg)
 void CDie_Bela::Enter(CBela* pContainer)
 {
     m_eAnimState = STATE_ANIM::LOOP;
-    pContainer->Switch_AnimState(ENUM_CLASS(BOSS_SISTER::DAMAGE));
+    //pContainer->Switch_AnimState(ENUM_CLASS(CBela::BOSS_SISTER::DAMAGE));
     pContainer->Switch_Anim("Freezes_Die", false);
 }
 

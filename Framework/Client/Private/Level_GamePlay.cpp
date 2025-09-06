@@ -17,7 +17,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera")))) 
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
@@ -98,7 +98,9 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 	LightDesc.eType = LIGHT_DESC::TYPE::DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(0.4f, 0.4f, 0.4f, 1.f);
+//	LightDesc.vDiffuse = _float4(0.2f, 0.2f, 0.2f, 1.f);
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+
 	LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
@@ -167,18 +169,21 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring& strLayerTag)
 	Desc.fSpeedPerSec = 1.f;
 	Desc.fRotationPerSec = 1.f;
 		
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-	//	ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Bela"), &Desc)))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Bela"), &Desc)))
+		return E_FAIL;
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-	//	ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Daniela"), &Desc)))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Daniela"), &Desc)))
+		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_2"), &Desc)))
+		return E_FAIL;
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-	//	ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Alcina"), &Desc)))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Alcina"), &Desc)))
+		return E_FAIL;
 
 	CPoolingObject::POOLOBJECT_DESC PoolDesc{};
 	PoolDesc.fRotationPerSec = 1.f;
@@ -247,7 +252,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	DataPoolMonDesc.szState = TEXT("Idle");
 	DataPoolMonDesc.vPostion = { -38.69f, -9.10f, 39.28f };
 	DataPoolMonDesc.vAngleY = 45.f;
-
+	DataPoolMonDesc.iDropImteIndex = 5;
 	m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_NormalMon_1"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Monster"), &DataPoolMonDesc);
 
 	CMonSpawner::MONSPAWNERDESC Desc1{};
@@ -258,13 +263,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	Desc1.szPoolPath = TEXT("Pool_NormalMon_1");
 	Desc1.vSpawnerPostion = { -37.45f, -8.64f, 27.06f };
 
-	MonDesc1.vPostion = { -33.45f, -8.69f, 27.f };
+	MonDesc1.vPostion = { -31.45f, -8.69f, 27.f };
 	MonDesc1.iCellIndex = 3740;
 	MonDesc1.iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::FALL);
 	MonDesc1.szAnimTag = "Fall_Start";
-	MonDesc1.iWeponType = ENUM_CLASS(CMonster_Normal::NORMAL_MON_WEAPON::END);
+	MonDesc1.iWeponType = ENUM_CLASS(CMonster_Normal::NORMAL_MON_WEAPON::SWORD);
 	MonDesc1.szState = TEXT("Idle");
 	MonDesc1.iStartMotion = 3;
+	MonDesc1.vAngleY = 0.f;
 	Desc1.MonDesc.push_back(MonDesc1);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,

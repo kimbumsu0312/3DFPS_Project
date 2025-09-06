@@ -14,20 +14,12 @@ HRESULT CIdle_Daniela::Initalize(void* pArg)
 void CIdle_Daniela::Enter(CDaniela* pContainer)
 {
     m_eAnimState = STATE_ANIM::LOOP;
-    pContainer->Switch_AnimState(ENUM_CLASS(BOSS_SISTER::NORMAL));
+    pContainer->Switch_AnimState(ENUM_CLASS(CDaniela::ANIM_STATE::NORMAL));
     pContainer->Switch_Anim("Idle", true);
 }
 
 void CIdle_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
 {
-    if (pContainer->Get_State().isDamage)
-    {
-        pContainer->Switch_State(TEXT("Damage"));
-    }
-    else if (pContainer->Get_State().isChase)
-    {
-        pContainer->Switch_State(TEXT("Chase"));
-    }
 }
 
 void CIdle_Daniela::Exit(CDaniela* pContainer)

@@ -14,7 +14,7 @@ HRESULT CDie_Daniela::Initalize(void* pArg)
 void CDie_Daniela::Enter(CDaniela* pContainer)
 {
     m_eAnimState = STATE_ANIM::LOOP;
-    pContainer->Switch_AnimState(ENUM_CLASS(BOSS_SISTER::DAMAGE));
+    pContainer->Switch_AnimState(ENUM_CLASS(CDaniela::ANIM_STATE::DAMAGE));
     pContainer->Switch_Anim("Freezes_Die", false);
 }
 

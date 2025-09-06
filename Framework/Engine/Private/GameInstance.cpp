@@ -17,6 +17,7 @@
 #include "SaveLoader.h"
 #include "Font_Manager.h"
 #include "Collision_Manager.h"
+#include "Target_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -49,6 +50,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 
 	m_pPrototype_Manager = CPrototype_Manager::Create(EngineDesc.iNumLevels);
 	if (nullptr == m_pPrototype_Manager)
+		return E_FAIL;
+
+	m_pTarget_Manager = CTarget_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pTarget_Manager)
 		return E_FAIL;
 
 	m_pRenderer = CRenderer::Create(*ppDevice, *ppContext);
@@ -134,8 +139,10 @@ HRESULT CGameInstance::Draw()
 		return E_FAIL;
 
 	m_pRenderer->Draw();
+#ifdef _DEBUG
 	if(FAILED(m_pPicking->Ray_Render()))
 		return E_FAIL;
+#endif // _DEBUG
 
 	if (FAILED(m_pLevel_Manager->Render()))
 		return E_FAIL;
@@ -278,6 +285,11 @@ HRESULT CGameInstance::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pR
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
+void CGameInstance::IsDebugRender()
+{
+	m_pRenderer->IsDebugRender();
+}
+
 _matrix CGameInstance::Get_Transform_Matrix(D3DTS eTransformState) const
 {
 	return m_pPipeLine->Get_Transform_Matrix(eTransformState);
@@ -321,6 +333,11 @@ const LIGHT_DESC* CGameInstance::Get_LightDesc(_uint iIndex)
 HRESULT CGameInstance::Add_Light(LIGHT_DESC& LightDesc)
 {
 	return m_pLight_Manager->Add_Light(LightDesc);
+}
+
+HRESULT CGameInstance::Render_Lights(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	return m_pLight_Manager->Render(pShader, pVIBuffer);
 }
 
 HRESULT CGameInstance::Add_Object_ToPool(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iValue, void* pArg)
@@ -463,9 +480,45 @@ HRESULT CGameInstance::Set_LayerFilter(_uint iLayerNum, _uint iLayerFilter)
 	return m_pCollision_Manager->Set_LayerFilter(iLayerNum, iLayerFilter);
 }
 
+HRESULT CGameInstance::Add_RenderTarget(const _wstring& strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor)
+{
+	return m_pTarget_Manager->Add_RenderTarget(strTargetTag, iSizeX, iSizeY, ePixelFormat, vClearColor);
+}
+
+HRESULT CGameInstance::Add_MRT(const _wstring& strMRTTag, const _wstring& strTargetTag)
+{
+	return m_pTarget_Manager->Add_MRT(strMRTTag, strTargetTag);
+}
+
+HRESULT CGameInstance::Begin_MRT(const _wstring& strMRTTag)
+{
+	return m_pTarget_Manager->Begin_MRT(strMRTTag);
+}
+
+HRESULT CGameInstance::End_MRT()
+{
+	return m_pTarget_Manager->End_MRT();
+}
+
+HRESULT CGameInstance::Bind_RT_ShaderResource(const _wstring& strTargetTag, CShader* pShader, const _char* pConstantName)
+{
+	return m_pTarget_Manager->Bind_ShaderResource(strTargetTag, pShader, pConstantName);
+}
+
+HRESULT CGameInstance::Ready_RT_Debug(const _wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
+{
+	return m_pTarget_Manager->Ready_Debug(strTargetTag, fX, fY, fSizeX, fSizeY);
+}
+
+HRESULT CGameInstance::Render_RT_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	return m_pTarget_Manager->Render(pShader, pVIBuffer);
+}
+
 void CGameInstance::Release_Engine()
 {
 	Release();
+	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pSaveLoader);
