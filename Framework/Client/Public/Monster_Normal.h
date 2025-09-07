@@ -72,8 +72,6 @@ public:
 	virtual HRESULT				Initialize_Pool(void* pArg) override;
 	virtual void				Return_Pool() override;
 
-	void						SetUp_Node(_int iTargetCellIndex, _float3 vPos);
-	void						Move_Node(_float fTimeDelta);
 private:
 	CNavigation*				m_pNavigationCom = { nullptr };
 	//ÄÝ¸®Àü

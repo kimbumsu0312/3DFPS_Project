@@ -6,18 +6,12 @@ class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
-
-class CGet_UI final : public CUIObject
+class CGuide_Paper final : public CUIObject
 {
-public:
-	enum class Font_Type {GET, READ, END};
-	typedef struct Get_UI_Desc {
-		Font_Type eFontType;
-	}GET_UI_DESC;
 private:
-	CGet_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CGet_UI(const CGet_UI& Prototype);
-	virtual ~CGet_UI() = default;
+	CGuide_Paper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CGuide_Paper(const CGuide_Paper& Prototype);
+	virtual ~CGuide_Paper() = default;
 
 public:
 	virtual HRESULT				Initialize_Prototype();
@@ -27,21 +21,20 @@ public:
 	virtual void				Late_Update(_float fTimeDelta);
 	virtual HRESULT				Render();
 
-	void						Update_WorldPos(_vector vPos);
-	void						IsOn() { m_bIsOn = true; }
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
+	_float4						m_vBackGroundColor = {};
 
-	_bool						m_bIsOn = { false };
-	Font_Type					m_eFontType = {};
+	_bool						m_bIsOpen = { false };
+
 private:
 	HRESULT						Ready_Components();
-	void						Render_Font();
+	HRESULT						Ready_Children_Prototype();
+	HRESULT						Ready_Children();
 
 public:
-	static CGet_UI*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CGuide_Paper*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;
 	virtual void				Free() override;
 };
-
 NS_END

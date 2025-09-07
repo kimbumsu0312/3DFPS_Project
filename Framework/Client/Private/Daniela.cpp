@@ -11,6 +11,7 @@
 #include "Damage_Daniela.h"
 #include "Chase_Daniela.h"
 #include "Attack_Daniela.h"
+#include "Critical_Attack_Daniela.h"
 
 CDaniela::CDaniela(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CContainerObject(pDevice, pContext)
 {
@@ -58,6 +59,11 @@ HRESULT CDaniela::Initialize(void* pArg)
 
 void CDaniela::Priority_Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->IsKeyDown(DIK_F2))
+	{
+		m_BlackBoard->Set_Data().IsIdle = false;
+		SetUp_Node();
+	}
 	m_pTransformCom->PrePostion_Update();
 	m_pBodyObject->Priority_Update(fTimeDelta);
 	m_pWeaponObject->Priority_Update(fTimeDelta);
@@ -65,6 +71,8 @@ void CDaniela::Priority_Update(_float fTimeDelta)
 
 void CDaniela::Update(_float fTimeDelta)
 {
+	m_pBehaviorTree->Update();
+
 	State_Change();
 	m_pCulStateObject->Update(this, fTimeDelta);
 
@@ -125,25 +133,29 @@ void CDaniela::Target_LookTurn_Navi(_float fTimeDelta)
 {
 	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
 	_float3 vNextPos{};
-	_vector vPlayerPos{};
-	if (m_pNavigationCom->IsNaviNode(vMonPos, vNextPos))
-	{
-		XMStoreFloat3(&vNextPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
-		vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
-		m_pNavigationCom->SetUp_Node(CPlayer_Manager::GetInstance()->Get_CellIndex(), vNextPos);
-	}
-	else
-	{
-		vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
-	}
-	_vector vDir = XMVector3Normalize(XMVectorSetY(vPlayerPos - vMonPos, 0.f));
+	XMStoreFloat3(&vNextPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
+	
+	m_pNavigationCom->SetUp_Node(CPlayer_Manager::GetInstance()->Get_CellIndex(), vNextPos);
+	m_pNavigationCom->IsNaviNode(vMonPos, vNextPos);
+
+	_vector vDir = XMVector3Normalize(XMVectorSetY(XMLoadFloat3(&vNextPos) - vMonPos, 0.f));
 	_vector vLook = XMVector3Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 
 	_vector vAxis = XMVector3Normalize(XMVector3Cross(vLook, vDir));
 
-	m_pTransformCom->Turn(vAxis, fTimeDelta);
+	m_pTransformCom->Turn(vAxis, fTimeDelta*3.f);
 
-	m_pTransformCom->Go_Straight(fTimeDelta);
+}
+
+void CDaniela::SetUp_Node()
+{
+	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
+	_float3 vNextPos{};
+	_vector vPlayerPos;
+
+	XMStoreFloat3(&vNextPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
+	vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
+	m_pNavigationCom->SetUp_Node(CPlayer_Manager::GetInstance()->Get_CellIndex(), vNextPos);
 }
 
 void CDaniela::Attack_Collision()
@@ -173,9 +185,17 @@ void CDaniela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColl
 			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L))
 				m_BlackBoard->Set_Data().IsHitPoint.IsSholder_L = true;
 
+			m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
+			m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
 			break;
 		}
 	}
+}
+
+void CDaniela::Daniela_Start()
+{
+	m_BlackBoard->Set_Data().IsIdle = false;
+	SetUp_Node();
 }
 
 HRESULT CDaniela::Ready_Components()
@@ -283,7 +303,7 @@ HRESULT CDaniela::Ready_Utility()
 	m_BlackBoard->Set_Data().bIsAnimLoop = &m_bIsAnimLoop;
 	m_BlackBoard->Set_Data().szCulStateTag = &m_szCulStateTag;
 
-	m_BlackBoard->Set_Data().iHp = 1000;
+	m_BlackBoard->Set_Data().iHp = 100;
 	m_BlackBoard->Set_Data().iDamage = 0;
 
 	m_BlackBoard->Set_Data().IsHitPoint.IsBody = false;
@@ -291,9 +311,14 @@ HRESULT CDaniela::Ready_Utility()
 	m_BlackBoard->Set_Data().IsHitPoint.IsSholder_L = false;
 	m_BlackBoard->Set_Data().IsHitPoint.isSholder_R = false;
 
-	m_BlackBoard->Set_Data().fAttackCool = 0.f;
-	m_BlackBoard->Set_Data().IsChase = false;
 	m_BlackBoard->Set_Data().IsIdle = true;
+
+	m_BlackBoard->Set_Data().fAttackCool = 0.f;
+	m_BlackBoard->Set_Data().IsAttack = false;
+	
+	m_BlackBoard->Set_Data().fCriAttackCool = 0.f;
+	m_BlackBoard->Set_Data().IsCriticalAttack = false;
+
 
 	m_BlackBoard->Set_Data().iWeapon = 0;
 	m_BlackBoard->Set_Data().iStartMotion = 0;
@@ -302,12 +327,24 @@ HRESULT CDaniela::Ready_Utility()
 
 	m_pBehaviorTree = CBehaviorTree_Daniela::Create(m_BlackBoard);
 
+
+	CTrigger::TRIGEER_DESC TriggerDesc;
+
+	TriggerDesc.eType = TRIGGER_TYPE::PLAYER;
+	TriggerDesc.eObjType = OBJECT_TYPE::PLAYER;
+	TriggerDesc.TriggerEvent = { [&]() {return Daniela_Start(); } };
+
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Trigger"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Trigger"), &TriggerDesc)))
+		return E_FAIL;
 	return S_OK;
 }
 
 HRESULT CDaniela::Ready_StateObjects()
 {
 	Add_StateObject(TEXT("Idle"), CIdle_Daniela::Create());
+	Add_StateObject(TEXT("Critical_Attack"), CCritical_Attack_Daniela::Create());
 	Add_StateObject(TEXT("Attack"), CAttack_Daniela::Create());
 	Add_StateObject(TEXT("Chase"), CChase_Daniela::Create());
 	Add_StateObject(TEXT("Damage"), CDamage_Daniela::Create());

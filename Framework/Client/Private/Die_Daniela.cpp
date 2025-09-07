@@ -13,13 +13,28 @@ HRESULT CDie_Daniela::Initalize(void* pArg)
 
 void CDie_Daniela::Enter(CDaniela* pContainer)
 {
-    m_eAnimState = STATE_ANIM::LOOP;
+    m_eAnimState = STATE_ANIM::START;
     pContainer->Switch_AnimState(ENUM_CLASS(CDaniela::ANIM_STATE::DAMAGE));
     pContainer->Switch_Anim("Freezes_Die", false);
 }
 
 void CDie_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
 {
+    if (m_eAnimState == STATE_ANIM::START)
+    {
+        m_eAnimState = STATE_ANIM::LOOP;
+    }
+    else if (m_eAnimState == STATE_ANIM::LOOP)
+    {
+        pContainer->Target_LookTurn(fDeltatime);
+        if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+        {
+            pContainer->SetDead();
+        }
+    }
+    else if (m_eAnimState == STATE_ANIM::END)
+    {
+    }
 }
 
 void CDie_Daniela::Exit(CDaniela* pContainer)

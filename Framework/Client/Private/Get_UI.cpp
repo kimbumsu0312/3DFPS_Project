@@ -16,6 +16,10 @@ HRESULT CGet_UI::Initialize_Prototype()
 
 HRESULT CGet_UI::Initialize(void* pArg)
 {
+    GET_UI_DESC* pDesc = static_cast<GET_UI_DESC*>(pArg);
+
+    m_eFontType = pDesc->eFontType;
+
     m_vLocalPos.x = 0.f;
     m_vLocalPos.y = 30.f;
     m_vLocalSize.x = 220.f;
@@ -95,7 +99,16 @@ HRESULT CGet_UI::Ready_Components()
 
 void CGet_UI::Render_Font()
 {
-    _wstring szText = TEXT("'F'키 아이템 줍기");
+    _wstring szText{};
+    switch (m_eFontType)
+    {
+    case Client::CGet_UI::Font_Type::GET:
+        szText = TEXT("'F'키 아이템 줍기");
+        break;
+    case Client::CGet_UI::Font_Type::READ:
+        szText = TEXT("'F'키 읽기");
+        break;
+    }
     _float2 vFontPos = {};
     vFontPos.x = m_vPos.x;
     vFontPos.y = m_vPos.y;

@@ -41,6 +41,12 @@ HRESULT CBehaviorTree_Daniela::Ready_Node()
 {
 	CSeletctorNode* pRoot = CSeletctorNode::Create();
 
+	CSequenceNode* pCriAttackSequence = CSequenceNode::Create();
+	CActionNode* pCirAttackCondition = CActionNode::Create([&]() {return Condition_Critical_Attack(); });
+	CActionNode* pCirAttackSwitch = CActionNode::Create([&]() {return Switch_Critical_Attack(); });
+	pCriAttackSequence->Add_Node(pCirAttackCondition);
+	pCriAttackSequence->Add_Node(pCirAttackSwitch);
+
 	CSequenceNode* pAttackSequence = CSequenceNode::Create();
 	CActionNode* pAttackCondition = CActionNode::Create([&]() {return Condition_Attack(); });
 	CActionNode* pAttackSwitch = CActionNode::Create([&]() {return Switch_Attack(); });
@@ -55,6 +61,7 @@ HRESULT CBehaviorTree_Daniela::Ready_Node()
 
 	CActionNode* pIdleSwitch = CActionNode::Create([&]() {return Switch_Idle(); });
 
+	pRoot->Add_Node(pCriAttackSequence);
 	pRoot->Add_Node(pAttackSequence);
 	pRoot->Add_Node(pWalkSequence);
 	pRoot->Add_Node(pIdleSwitch);
@@ -77,9 +84,40 @@ CNode::TREE_STATE CBehaviorTree_Daniela::Switch_Damage()
 	return CNode::TREE_STATE::SUCCESS;
 }
 
+CNode::TREE_STATE CBehaviorTree_Daniela::Condition_Critical_Attack()
+{
+	if (m_pBlackBoard->Get_Data().IsIdle == true)
+		return CNode::TREE_STATE::FAILED;
+
+	if (m_pBlackBoard->Get_Data().fCriAttackCool > 0.f)
+		return CNode::TREE_STATE::FAILED;
+
+	_vector vPlayerPos = CPlayer_Manager::GetInstance()->Get_PlayerPos();
+	_vector vMonPos = { m_pBlackBoard->Get_Data().MonPos->m[3][0], m_pBlackBoard->Get_Data().MonPos->m[3][1], m_pBlackBoard->Get_Data().MonPos->m[3][2] };
+	_float fDis = XMVectorGetX(XMVector3Length(vPlayerPos - vMonPos));
+
+	if (fDis <= 6.f)
+	{
+		m_pBlackBoard->Set_Data().IsCriticalAttack = true;
+		return CNode::TREE_STATE::SUCCESS;
+	}
+	else
+		return CNode::TREE_STATE::FAILED;
+}
+
+CNode::TREE_STATE CBehaviorTree_Daniela::Switch_Critical_Attack()
+{
+	*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Critical_Attack");
+
+	if (m_pBlackBoard->Get_Data().IsCriticalAttack == true)
+		return CNode::TREE_STATE::RUN;
+
+	return CNode::TREE_STATE::FAILED;
+}
+
 CNode::TREE_STATE CBehaviorTree_Daniela::Condition_Attack()
 {
-	if (m_pBlackBoard->Get_Data().IsChase == false || m_pBlackBoard->Get_Data().IsIdle == true)
+	if (m_pBlackBoard->Get_Data().IsIdle == true)
 		return CNode::TREE_STATE::FAILED;
 
 	if (m_pBlackBoard->Get_Data().fAttackCool > 0.f)
@@ -89,7 +127,7 @@ CNode::TREE_STATE CBehaviorTree_Daniela::Condition_Attack()
 	_vector vMonPos = { m_pBlackBoard->Get_Data().MonPos->m[3][0], m_pBlackBoard->Get_Data().MonPos->m[3][1], m_pBlackBoard->Get_Data().MonPos->m[3][2] };
 	_float fDis = XMVectorGetX(XMVector3Length(vPlayerPos - vMonPos));
 
-	if (fDis <= 5.f)
+	if (fDis <= 6.f)
 	{
 		m_pBlackBoard->Set_Data().IsAttack = true;
 		return CNode::TREE_STATE::SUCCESS;
@@ -111,7 +149,7 @@ CNode::TREE_STATE CBehaviorTree_Daniela::Switch_Attack()
 
 CNode::TREE_STATE CBehaviorTree_Daniela::Condition_Chase()
 {
-	if (m_pBlackBoard->Get_Data().IsChase == true && m_pBlackBoard->Get_Data().IsIdle == false)
+	if (m_pBlackBoard->Get_Data().IsIdle == false)
 		return CNode::TREE_STATE::SUCCESS;
 
 	return CNode::TREE_STATE::FAILED;

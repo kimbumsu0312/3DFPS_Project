@@ -1,34 +1,33 @@
 #include "pch.h"
-#include "PoolWorldItem.h"
-#include "Player_Manager.h"
-#include "Inven_Manager.h"
+#include "MsgItem.h"
 #include "Get_UI.h"
 
-CPoolWorld_Item::CPoolWorld_Item(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CPoolingObject(pDevice, pContext)
+CMsgItem::CMsgItem(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CGameObject(pDevice, pContext)
 {
 }
 
-CPoolWorld_Item::CPoolWorld_Item(const CPoolWorld_Item& Prototype) : CPoolingObject(Prototype)
+CMsgItem::CMsgItem(const CMsgItem& Prototype) : CGameObject(Prototype)
 {
 }
 
-HRESULT CPoolWorld_Item::Initialize_Prototype()
+HRESULT CMsgItem::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CPoolWorld_Item::Initialize(void* pArg)
+HRESULT CMsgItem::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC* Desc = static_cast<GAMEOBJECT_DESC*>(pArg);
 
-	for (auto ItemData : g_3DItemData)
-	{
-		if (ItemData.m_szModelPath == Desc->szModel_Path)
-		{
-			m_iItemIndex = ItemData.m_iItemID;
-			break;
-		}
-	}
+	m_iCount = 0;
+	if (Desc->szModel_Path == TEXT("Prototype_Component_Model_Paper_0"))
+		m_iMsgType = 0;
+	if (Desc->szModel_Path == TEXT("Prototype_Component_Model_Paper_1"))
+		m_iMsgType = 1;
+	if (Desc->szModel_Path == TEXT("Prototype_Component_Model_Paper_2"))
+		m_iMsgType = 2;
+	if (Desc->szModel_Path == TEXT("Prototype_Component_Model_Paper_3"))
+		m_iMsgType = 3;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -44,23 +43,23 @@ HRESULT CPoolWorld_Item::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CPoolWorld_Item::Priority_Update(_float fTimeDelta)
+void CMsgItem::Priority_Update(_float fTimeDelta)
 {
+	if (m_iCount >= 2)
+		SetDead();
+
 	m_pGuideUI->Priority_Update(fTimeDelta);
 }
 
-void CPoolWorld_Item::Update(_float fTimeDelta)
+void CMsgItem::Update(_float fTimeDelta)
 {
-	m_pTransformCom->Set_State(Engine::STATE::POSITION,
-		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
-
 	for (auto Collider : m_pColliderCom)
 	{
 		Collider->Update(m_pTransformCom->Get_WorldMatrix());
 	}
 }
 
-void CPoolWorld_Item::Late_Update(_float fTimeDelta)
+void CMsgItem::Late_Update(_float fTimeDelta)
 {
 	for (auto Collider : m_pColliderCom)
 	{
@@ -72,7 +71,7 @@ void CPoolWorld_Item::Late_Update(_float fTimeDelta)
 		return;
 }
 
-HRESULT CPoolWorld_Item::Render()
+HRESULT CMsgItem::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -86,7 +85,7 @@ HRESULT CPoolWorld_Item::Render()
 		m_pShaderCom->Begin(0);
 		m_pModelCom->Render(i);
 	}
-	
+
 #ifdef _DEBUG
 	for (auto Collider : m_pColliderCom)
 	{
@@ -97,20 +96,18 @@ HRESULT CPoolWorld_Item::Render()
 	return S_OK;
 }
 
-void CPoolWorld_Item::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
+void CMsgItem::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
 {
-	if(MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::ITEM))
-	{ 
+	if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::ITEM))
+	{
 		switch (TargetCollision.iObjType)
 		{
 		case ENUM_CLASS(OBJECT_TYPE::PLAYER_VIEW):
 			m_pGuideUI->IsOn();
 			if (m_pGameInstance->IsKeyDown(DIK_F))
 			{
-				if (CInven_Manager::GetInstance()->Add_ItemSlot(m_iItemIndex, m_szPoolPath))
-				{
-					SetDead();
-				}
+				++m_iCount;
+				m_pGameInstance->Publish(EVENT_GUIDE_PAPER{ m_iMsgType });
 			}
 			break;
 		}
@@ -124,25 +121,9 @@ void CPoolWorld_Item::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY Tar
 			break;
 		}
 	}
-	
-
 }
 
-HRESULT CPoolWorld_Item::Initialize_Pool(void* pArg)
-{
-	POOLITEM_DESC* pDesc = static_cast<POOLITEM_DESC*>(pArg);
-	m_szPoolPath = pDesc->szPoolPath;
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(pDesc->vPos, 1.f));
-	m_pNavigationCom->Set_CellIndex(pDesc->vNaviIndex);
-	return S_OK;
-}
-
-void CPoolWorld_Item::Return_Pool()
-{
-	m_bIsDead = false;
-}
-
-HRESULT CPoolWorld_Item::Ready_Components(_wstring szModelPath)
+HRESULT CMsgItem::Ready_Components(_wstring szModelPath)
 {
 	CBounding_OBB::BOUNDING_OBB_DESC  OBBDesc{};
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::ITEM);
@@ -165,13 +146,6 @@ HRESULT CPoolWorld_Item::Ready_Components(_wstring szModelPath)
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ITEM_COLLIDER::ITEM)]), &OBBDesc)))
 		return E_FAIL;
 
-	CNavigation::NAVIGATION_DESC        NaviDesc{};
-	NaviDesc.iCurrentCellIndex = -1;
-
-	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
-		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
-		return E_FAIL;
-
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), szModelPath,
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pModelCom), nullptr)))
 		return E_FAIL;
@@ -185,17 +159,16 @@ HRESULT CPoolWorld_Item::Ready_Components(_wstring szModelPath)
 	return S_OK;
 }
 
-HRESULT CPoolWorld_Item::Ready_UI()
+HRESULT CMsgItem::Ready_UI()
 {
 	CGet_UI::GET_UI_DESC Desc{};
 
-	Desc.eFontType = CGet_UI::Font_Type::GET;
-
+	Desc.eFontType = CGet_UI::Font_Type::READ;
 	m_pGuideUI = static_cast<CGet_UI*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_GetUI"), &Desc));
 	return S_OK;
 }
 
-HRESULT CPoolWorld_Item::Bind_ShaderResources()
+HRESULT CMsgItem::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -224,40 +197,39 @@ HRESULT CPoolWorld_Item::Bind_ShaderResources()
 	return S_OK;
 }
 
-CPoolWorld_Item* CPoolWorld_Item::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMsgItem* CMsgItem::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CPoolWorld_Item* pInstance = new CPoolWorld_Item(pDevice, pContext);
+	CMsgItem* pInstance = new CMsgItem(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX(TEXT("Failed to Crated : CPoolWorld_Item"));
+		MSG_BOX(TEXT("Failed to Crated : CMsgItem"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CPoolWorld_Item::Clone(void* pArg)
+CGameObject* CMsgItem::Clone(void* pArg)
 {
-	CPoolWorld_Item* pInstance = new CPoolWorld_Item(*this);
+	CMsgItem* pInstance = new CMsgItem(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX(TEXT("Failed to Clone : CPoolWorld_Item"));
+		MSG_BOX(TEXT("Failed to Clone : CMsgItem"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CPoolWorld_Item::Free()
+void CMsgItem::Free()
 {
 	__super::Free();
 	for (auto Collider : m_pColliderCom)
 	{
 		Safe_Release(Collider);
 	}
-	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 

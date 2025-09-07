@@ -273,6 +273,20 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 
 	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Item/Potion/Potion.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Potion"))))
 		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Item/Paper/MsgItem_0.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Paper_0"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Item/Paper/MsgItem_1.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Paper_1"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Item/Paper/MsgItem_2.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Paper_2"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Item/Paper/MsgItem_3.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Paper_3"))))
+		return E_FAIL;
+
 #pragma endregion
 	lstrcpy(m_szLoadingText, TEXT("네비게이션을 로딩중입니다."));
 	/* Prototype_Component_Navigation */
@@ -442,6 +456,9 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CGet_UI::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Guide_Paper"),
+		CGuide_Paper::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 #pragma endregion
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Map"),
 		CBaseMapObj::Create(m_pDevice, m_pContext))))
@@ -453,6 +470,14 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Item"),
 		CWorldItem::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_MsgItem"),
+		CMsgItem::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Trigger"),
+		CTrigger::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));

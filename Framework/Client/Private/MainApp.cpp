@@ -89,6 +89,9 @@ HRESULT CMainApp::Ready_Prototype_ForStatic()
 	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_Godic"), TEXT("../Bin/Resources/Fonts/Godic.spritefont"))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_GangBuJang"), TEXT("../Bin/Resources/Fonts/GangBuJang.spritefont"))))
+		return E_FAIL;
+
 	//¼ÎÀÌ´õ ¼ÂÆÃ
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements))))
@@ -240,7 +243,10 @@ HRESULT CMainApp::Ready_Collider()
 	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::WEAPON), (1 << ENUM_CLASS(COLLISION_LAYER::PLAYER)))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::TRIGGER), (1 << ENUM_CLASS(COLLISION_LAYER::PLAYER)))))
+	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::TRIGGER_PLAYER), (1 << ENUM_CLASS(COLLISION_LAYER::PLAYER)))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::TRIGGER_MON), (1 << ENUM_CLASS(COLLISION_LAYER::MONSTER)))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Set_LayerFilter(ENUM_CLASS(COLLISION_LAYER::RESIST), (1 << ENUM_CLASS(COLLISION_LAYER::RESIST)))))

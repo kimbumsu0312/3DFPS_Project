@@ -21,6 +21,7 @@
 #include "StateObject.h"
 #include "WeaponObject.h"
 #include "UI_Header.h"
+#include "Guide_Paper.h"
 
 //몬스터 관련
 #include "Monster_Header.h"
@@ -42,6 +43,7 @@
 #include "InvenItem.h"
 #include "PoolWorldItem.h"
 #include "WorldItem.h"
+#include "MsgItem.h"
 
 //유틸 관련
 #include "Camera_Free.h"
@@ -49,7 +51,7 @@
 #include "MonSpawner.h"
 #include "SpawnPoint.h"
 #include "ItemSpawner.h"
-
+#include "Trigger.h"
 
 
 #endif //PCH_H

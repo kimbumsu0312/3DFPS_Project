@@ -24,6 +24,8 @@ void CIdle_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
 
 void CIdle_Daniela::Exit(CDaniela* pContainer)
 {
+    pContainer->Get_BlackBoard()->Set_Data().fCriAttackCool = 15.f;
+  
 }
 
 CIdle_Daniela* CIdle_Daniela::Create(void* pArg)

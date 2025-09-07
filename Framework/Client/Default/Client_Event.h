@@ -79,4 +79,10 @@ namespace Client
 		_wstring	szText;
 		RENDERGROUP eRenderGroup;
 	}Event_Announce_UI_OPEN;
+
+	typedef struct Event_Guide_Paper
+	{
+		_int		iTexType;
+	}EVENT_GUIDE_PAPER;
+
 }

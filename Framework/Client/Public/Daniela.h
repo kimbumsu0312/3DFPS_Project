@@ -26,13 +26,14 @@ public:
 		_wstring*			szCulStateTag = { nullptr };
 
 		BOSS_SISTER_HIT		IsHitPoint = {};
-		_bool				IsChase = { false };
 		_bool				IsIdle = { false };
 		_bool				IsAttack = { false };
+		_bool				IsCriticalAttack = { false };
 		const _float4x4*	MonPos = { nullptr };
 
 		_int				iHp = {};
 		_int				iDamage = {};
+		_float				fCriAttackCool = {};
 		_float				fAttackCool = {};
 		_int				iWeapon = {};
 		_int				iStartMotion = {};
@@ -57,14 +58,16 @@ public:
 	void							Switch_Anim(string szAnimTag, _bool IsLoop);
 	void							Switch_State(_wstring szStateTag) { m_szCulStateTag = szStateTag; }
 
-	CTransform*						Get_Transform(STATE eState) { return m_pTransformCom; }
+	CTransform*						Get_Transform() { return m_pTransformCom; }
 	CBlackBoard<DANIELA_DATA>*		Get_BlackBoard() { return m_BlackBoard; }
 
 	void							Target_LookTurn(_float fTimeDelta);
 	void							Target_LookTurn_Navi(_float fTimeDelta);
+	void							SetUp_Node();
 	void							Attack_Collision();
 	virtual void					OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 
+	void							Daniela_Start();
 private:
 	//컴포넌트 관련
 	CNavigation*					m_pNavigationCom = { nullptr };

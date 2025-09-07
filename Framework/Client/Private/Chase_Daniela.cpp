@@ -21,7 +21,7 @@ void CChase_Daniela::Enter(CDaniela* pContainer)
 
 void CChase_Daniela::Update(CDaniela* pContainer, _float fTimeDelta)
 {
-
+    pContainer->Target_LookTurn_Navi(fTimeDelta);
 }
 
 void CChase_Daniela::Exit(CDaniela* pContainer)

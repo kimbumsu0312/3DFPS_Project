@@ -346,6 +346,15 @@
     <Filter Include="02.GameObject\Monster\Boss\Bela\BehaviorTree_Bela">
       <UniqueIdentifier>{3cc5587e-5039-4022-9b07-0d1ed98ffbfb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\UIObject\Guide_Paper">
+      <UniqueIdentifier>{84244887-209d-45c8-9034-2682c5f56251}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Guide_Paper\Texture">
+      <UniqueIdentifier>{f6737e45-0eb5-4597-934e-92e3e2e45958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Trigger">
+      <UniqueIdentifier>{f1e7f085-8dd0-45c3-a524-044507c8d4fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -765,6 +774,21 @@
     <ClInclude Include="..\public\BehaviorTree_Bela.h">
       <Filter>02.GameObject\Monster\Boss\Bela\BehaviorTree_Bela</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Guide_Paper.h">
+      <Filter>02.GameObject\UIObject\Guide_Paper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Guide_Paper_Tex.h">
+      <Filter>02.GameObject\UIObject\Guide_Paper\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MsgItem.h">
+      <Filter>02.GameObject\3DItem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Critical_Attack_Daniela.h">
+      <Filter>02.GameObject\Monster\Boss\Daniela\MonState_Daniela\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Trigger.h">
+      <Filter>02.GameObject\Trigger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -1163,6 +1187,21 @@
     </ClCompile>
     <ClCompile Include="..\private\BehaviorTree_Bela.cpp">
       <Filter>02.GameObject\Monster\Boss\Bela\BehaviorTree_Bela</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Guide_Paper.cpp">
+      <Filter>02.GameObject\UIObject\Guide_Paper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Guide_Paper_Tex.cpp">
+      <Filter>02.GameObject\UIObject\Guide_Paper\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MsgItem.cpp">
+      <Filter>02.GameObject\3DItem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Critical_Attack_Daniela.cpp">
+      <Filter>02.GameObject\Monster\Boss\Daniela\MonState_Daniela\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Trigger.cpp">
+      <Filter>02.GameObject\Trigger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

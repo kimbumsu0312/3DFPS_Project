@@ -22,6 +22,9 @@ private:
 	CNode::TREE_STATE						Switch_Die();
 	CNode::TREE_STATE						Switch_Damage();
 
+	CNode::TREE_STATE						Condition_Critical_Attack();
+	CNode::TREE_STATE						Switch_Critical_Attack();
+
 	CNode::TREE_STATE						Condition_Attack();
 	CNode::TREE_STATE						Switch_Attack();
 

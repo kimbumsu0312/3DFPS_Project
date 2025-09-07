@@ -7,17 +7,14 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CGet_UI final : public CUIObject
+class CGuide_Paper_Tex final : public CUIObject
 {
 public:
-	enum class Font_Type {GET, READ, END};
-	typedef struct Get_UI_Desc {
-		Font_Type eFontType;
-	}GET_UI_DESC;
+	enum class TEXT_TYPE { EVENT1, EVENT2, EVENT3, EVENT4, END };
 private:
-	CGet_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CGet_UI(const CGet_UI& Prototype);
-	virtual ~CGet_UI() = default;
+	CGuide_Paper_Tex(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CGuide_Paper_Tex(const CGuide_Paper_Tex& Prototype);
+	virtual ~CGuide_Paper_Tex() = default;
 
 public:
 	virtual HRESULT				Initialize_Prototype();
@@ -27,19 +24,19 @@ public:
 	virtual void				Late_Update(_float fTimeDelta);
 	virtual HRESULT				Render();
 
-	void						Update_WorldPos(_vector vPos);
-	void						IsOn() { m_bIsOn = true; }
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
+	_int						m_iTexType = {};
 
-	_bool						m_bIsOn = { false };
-	Font_Type					m_eFontType = {};
 private:
 	HRESULT						Ready_Components();
-	void						Render_Font();
+	void						Render_Font_EVENT_1();
+	void						Render_Font_EVENT_2();
+	void						Render_Font_EVENT_3();
+	void						Render_Font_EVENT_4();
 
 public:
-	static CGet_UI*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CGuide_Paper_Tex*	Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;
 	virtual void				Free() override;
 };

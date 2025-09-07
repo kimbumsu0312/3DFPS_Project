@@ -258,34 +258,6 @@ void CMonster_Normal::Return_Pool()
 	m_bIsDead = false;
 }
 
-void CMonster_Normal::SetUp_Node(_int iTargetCellIndex, _float3 vPos)
-{
-	m_pNavigationCom->SetUp_Node(iTargetCellIndex, vPos);
-}
-
-void CMonster_Normal::Move_Node(_float fTimeDelta)
-{
-	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
-	_float3 vNextPos{};
-	_vector vPlayerPos{};
-	if (m_pNavigationCom->IsNaviNode(vMonPos, vNextPos))
-	{
-		XMStoreFloat3(&vNextPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
-		vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
-		m_pNavigationCom->SetUp_Node(CPlayer_Manager::GetInstance()->Get_CellIndex(), vNextPos);
-	}
-	else
-	{
-		vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
-	}
-	_vector vDir = XMVector3Normalize(XMVectorSetY(vPlayerPos - vMonPos, 0.f));
-	_vector vLook = XMVector3Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
-
-	_vector vAxis = XMVector3Normalize(XMVector3Cross(vLook, vDir));
-
-	m_pTransformCom->Turn(vAxis, fTimeDelta);
-}
-
 HRESULT CMonster_Normal::Ready_Components()
 {
 	CBounding_OBB::BOUNDING_OBB_DESC  OBBDesc{};

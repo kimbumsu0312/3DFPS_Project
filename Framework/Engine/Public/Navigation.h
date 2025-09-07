@@ -29,7 +29,7 @@ public:
 	_int							Get_CulIndex() { return m_iCurrentCellIndex; }
 
 	void							SetUp_Node(_int TargetIndex, _float3 vLastPos);
-	_bool							IsNaviNode(_vector vPos, _float3 vNextPos);
+	_bool							IsNaviNode(_vector vPos, _float3& vNextPos);
 
 	//void							Search_MovePos(_int TargetIndex);
 #ifdef _DEBUG

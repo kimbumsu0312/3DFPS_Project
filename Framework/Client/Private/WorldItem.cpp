@@ -161,7 +161,11 @@ HRESULT CWorldItem::Ready_Components(_wstring szModelPath)
 
 HRESULT CWorldItem::Ready_UI()
 {
-	m_pGuideUI = static_cast<CGet_UI*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_GetUI")));
+	CGet_UI::GET_UI_DESC Desc{};
+
+	Desc.eFontType = CGet_UI::Font_Type::GET;
+
+	m_pGuideUI = static_cast<CGet_UI*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_GetUI"), &Desc));
 	return S_OK;
 }
 

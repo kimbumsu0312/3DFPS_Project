@@ -175,6 +175,7 @@ _vector CNavigation::Compute_OnCell(_fvector vPosition)
 
 void CNavigation::SetUp_Node(_int TargetIndex, _float3 vLastPos)
 {
+	m_iNaviMoveIndex = 0;
 	priority_queue<Node, vector<Node>, CompareNode> SearchList;
 	m_NodePath.clear();
 
@@ -276,17 +277,17 @@ void CNavigation::SetUp_Node(_int TargetIndex, _float3 vLastPos)
 
 }
 
-_bool CNavigation::IsNaviNode(_vector vPos, _float3 vNextPos)
+_bool CNavigation::IsNaviNode(_vector vPos, _float3& vNextPos)
 {
 	_int LastIndex = m_NaviPos.size() - 1;
-	if (m_iNaviMoveIndex > LastIndex)
+	if (m_iNaviMoveIndex >= LastIndex)
 		return true;
 
 	if (XMVectorGetX(XMVector3Length(vPos - XMLoadFloat3(&m_NaviPos[m_iNaviMoveIndex]))) <= 1.f)
+	{
 		m_iNaviMoveIndex++;
-	
+	}
 	vNextPos = m_NaviPos[m_iNaviMoveIndex];
-	
 	return false;
 }
 

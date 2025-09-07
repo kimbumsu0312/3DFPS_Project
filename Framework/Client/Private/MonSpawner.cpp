@@ -86,7 +86,7 @@ HRESULT CMonSpawner::Ready_Components(void* pArg)
 {
 	MONSPAWNERDESC* Desc = static_cast<MONSPAWNERDESC*>(pArg);
 	CBounding_AABB::BOUNDING_AABB_DESC  AABBDesc{};
-	AABBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::TRIGGER);
+	AABBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::TRIGGER_PLAYER);
 	AABBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::EVENT);
 	AABBDesc.vExtents = Desc->vExtents;
 	AABBDesc.vCenter = Desc->vCenter;
