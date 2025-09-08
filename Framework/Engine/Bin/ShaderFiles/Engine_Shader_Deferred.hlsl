@@ -8,14 +8,17 @@ texture2D       g_Texture;
 
 vector          g_vCamPosition;
 
-vector          g_vLightDiffuse;
 vector          g_vLightDir;
+vector          g_vLightPos;
+float           g_fRange;
+
+vector          g_vLightDiffuse;
 vector          g_vLightAmbient;
 vector          g_vLightSpecular;
 
 texture2D       g_DiffuseTexture;
 vector          g_vMtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
-vector          g_vMtrlSpecular = vector(0.f, 0.f, 0.f, 1.f);
+vector g_vMtrlSpecular = vector(0.f, 0.f, 0.f, 1.f);
 
 //각 랜더 타겟에서 생성한 텍스처를 저장
 texture2D       g_NormalTexture;
@@ -117,6 +120,39 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 {
     PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 0;
+    
+    vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vNormal = normalize(vector(vNormalDesc.xyz * 2.f - 1.f, 0.f));
+    
+    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    vector vWorldPos;
+    
+    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
+    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
+    vWorldPos.z = vDepthDesc.x;
+    vWorldPos.w = 1.f;
+    
+    vWorldPos = vWorldPos * vDepthDesc.y;
+    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+    
+    vector vLightDir = vWorldPos - g_vLightPos;
+    float fDistance = length(vLightDir);
+    
+    float fAtt = saturate((g_fRange - fDistance) / g_fRange);
+    float fShade = max(dot(vNormal * -1.f, normalize(vLightDir)), 0.f);
+    
+    vector vReflect = reflect(normalize(vLightDir), vNormal);
+    
+   
+    vector vLook = vWorldPos - g_vCamPosition;
+    
+    float fSpecular = pow(max(dot(normalize(vReflect) * -1.f, normalize(vLook)), 0.f), 50.f);
+    
+    Out.vShade = g_vLightDiffuse * saturate(fShade + (g_vLightAmbient * g_vMtrlAmbient)) * fAtt;
+    Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * fSpecular * fAtt;
+    
     return Out;
 }
 
@@ -126,15 +162,16 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     
-    if (vDiffuse.r == 1.f && vDiffuse.b == 0.f && vDiffuse.g == 1.f)
+    if (vDiffuse.r == 1.f && vDiffuse.g == 0.f && vDiffuse.b == 1.f && vDiffuse.a == 0.f)
+    {
         discard;
-    
+    }
     vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
     vector vSpecular = g_SpecularTexture.Sample(DefaultSampler, In.vTexcoord);
     
     //픽셀 별로 최종 연산 결과를 곱해서 내보냄
     Out.vColor = vDiffuse * vShade + vSpecular;
-    
+
     return Out;
 }
 
@@ -155,7 +192,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
@@ -166,7 +203,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;

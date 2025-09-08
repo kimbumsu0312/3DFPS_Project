@@ -280,8 +280,15 @@ void CNavigation::SetUp_Node(_int TargetIndex, _float3 vLastPos)
 _bool CNavigation::IsNaviNode(_vector vPos, _float3& vNextPos)
 {
 	_int LastIndex = m_NaviPos.size() - 1;
-	if (m_iNaviMoveIndex >= LastIndex)
+
+	if (LastIndex <= 0)
 		return true;
+
+	if (m_iNaviMoveIndex >= LastIndex)
+	{
+		vNextPos = m_NaviPos[LastIndex];
+		return true;
+	}
 
 	if (XMVectorGetX(XMVector3Length(vPos - XMLoadFloat3(&m_NaviPos[m_iNaviMoveIndex]))) <= 1.f)
 	{

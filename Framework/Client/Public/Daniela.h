@@ -95,12 +95,14 @@ private:
 	string							m_szAnimTag;
 	_bool							m_bIsAnimLoop = { true };
 	_bool							m_bIsAnimFinsh = { false };
-
+	
+	_bool							m_bIsStart = { false };
 private:
 	HRESULT							Ready_Components();
 	HRESULT							Ready_PartObjects();
 	HRESULT							Ready_Utility();
 	HRESULT							Ready_StateObjects();
+	HRESULT							Ready_TriggerEvent();
 
 	HRESULT							Add_StateObject(const _wstring& strStateObjectTag, class CMonState_Daniela* pStateObject);
 	class CMonState_Daniela*		Find_StateObject(const _wstring& strPartObjectTag);

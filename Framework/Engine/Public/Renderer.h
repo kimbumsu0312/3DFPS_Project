@@ -15,8 +15,8 @@ public:
 
 #ifdef _DEBUG
 public:
-	HRESULT						Add_DebugComponent(class CComponent* pComponent);;
-	void						IsDebugRender();
+	HRESULT						Add_DebugComponent(class CComponent* pComponent);
+	void						IsDebugRender(DEBUG_RENDER eTag);
 #endif
 private:
 	ID3D11Device*				m_pDevice = { nullptr };
@@ -33,7 +33,8 @@ private:
 #ifdef _DEBUG
 private:
 	list<class CComponent*>		m_DebugComponent;
-	_bool						m_bDebugRender = { false };
+	_bool						m_bRTRender = { false };
+	_bool						m_bComponetRender = { false };
 #endif // _DEBUG
 
 private:

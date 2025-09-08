@@ -3,6 +3,7 @@
 
 namespace Engine
 {
+	enum class DEBUG_RENDER { RT, COMPONET, END };
 	enum class COLLIDER { AABB, OBB, SPHERE, RAY, END};
 	enum class CELL_POINT { A, B, C, END};
 	enum class CELL_LINE { AB, BC, CA, END};

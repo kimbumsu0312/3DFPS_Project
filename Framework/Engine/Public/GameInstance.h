@@ -69,7 +69,12 @@ public:
 #pragma region RENDERER
 public:
 	HRESULT				Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
-	void				IsDebugRender();
+	
+#ifdef _DEBUG
+	void				IsDebugRender(DEBUG_RENDER eTag);
+	HRESULT				Add_DebugComponent(class CComponent* pComponent);
+#endif // DEBUG
+
 #pragma endregion
 
 #pragma region EVENT_MANAGER
@@ -105,10 +110,10 @@ public:
 
 #pragma region LIGHT_MANAGER
 public:
-	const LIGHT_DESC*			Get_LightDesc(_uint iIndex);
-	HRESULT						Add_Light(LIGHT_DESC& LightDesc);
+	const LIGHT_DESC*			Get_LightDesc(_wstring LightTag);
+	HRESULT						Add_Light(_wstring LightTag, LIGHT_DESC& LightDesc);
 	HRESULT						Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
-
+	_bool						Update_LightPotion(_wstring LightTag, _float4 LightPos);
 #pragma endregion
 
 #pragma region POOLING_MANAGER

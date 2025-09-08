@@ -47,6 +47,8 @@ HRESULT CBehaviorTree_Daniela::Ready_Node()
 	pCriAttackSequence->Add_Node(pCirAttackCondition);
 	pCriAttackSequence->Add_Node(pCirAttackSwitch);
 
+	CSeletctorNode* pAttackSeletctor = CSeletctorNode::Create();
+
 	CSequenceNode* pAttackSequence = CSequenceNode::Create();
 	CActionNode* pAttackCondition = CActionNode::Create([&]() {return Condition_Attack(); });
 	CActionNode* pAttackSwitch = CActionNode::Create([&]() {return Switch_Attack(); });
@@ -61,8 +63,11 @@ HRESULT CBehaviorTree_Daniela::Ready_Node()
 
 	CActionNode* pIdleSwitch = CActionNode::Create([&]() {return Switch_Idle(); });
 
-	pRoot->Add_Node(pCriAttackSequence);
-	pRoot->Add_Node(pAttackSequence);
+
+	pAttackSeletctor->Add_Node(pCriAttackSequence);
+	pAttackSeletctor->Add_Node(pAttackSequence);
+
+	pRoot->Add_Node(pAttackSeletctor);
 	pRoot->Add_Node(pWalkSequence);
 	pRoot->Add_Node(pIdleSwitch);
 

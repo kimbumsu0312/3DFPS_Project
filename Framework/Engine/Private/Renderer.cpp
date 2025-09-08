@@ -26,7 +26,7 @@ HRESULT CRenderer::Initialize()
     if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Depth"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 1.f))))
         return E_FAIL;
 
-    if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shade"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 1.f))))
+    if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shade"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
         return E_FAIL;
 
     if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Specular"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
@@ -134,9 +134,17 @@ HRESULT CRenderer::Add_DebugComponent(CComponent* pComponent)
     return S_OK;
 }
 
-void CRenderer::IsDebugRender()
+void CRenderer::IsDebugRender(DEBUG_RENDER eTag)
 {
-    m_bDebugRender ? m_bDebugRender = false : m_bDebugRender = true;
+    switch (eTag)
+    {
+    case DEBUG_RENDER::RT:
+        m_bRTRender ? m_bRTRender = false : m_bRTRender = true;
+        break;
+    case DEBUG_RENDER::COMPONET:
+        m_bComponetRender ? m_bComponetRender = false : m_bComponetRender = true;
+        break;
+    }
 }
 
 HRESULT CRenderer::Render_Priority()
@@ -337,26 +345,35 @@ HRESULT CRenderer::Render_Last()
 
 HRESULT CRenderer::Render_Debug()
 {
-    if (!m_bDebugRender)
-        return S_OK;
-
-    for (auto& pDebugCom : m_DebugComponent)
+    if (m_bComponetRender)
     {
-        if (nullptr == pDebugCom)
-            pDebugCom->Render();
+        for (auto& pDebugCom : m_DebugComponent)
+        {
+            if (nullptr != pDebugCom)
+                pDebugCom->Render();
 
-        Safe_Release(pDebugCom);
+            Safe_Release(pDebugCom);
+        }
+        m_DebugComponent.clear();
     }
-    m_DebugComponent.clear();
+    else
+    {
+        for (auto& pDebugCom : m_DebugComponent)
+        {
+            Safe_Release(pDebugCom);
+        }
+        m_DebugComponent.clear();
+    }
+    if (m_bRTRender)
+    {
+        if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+            return E_FAIL;
 
-    if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-        return E_FAIL;
+        if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+            return E_FAIL;
 
-    if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-        return E_FAIL;
-
-    m_pGameInstance->Render_RT_Debug(m_pShader, m_pVIBuffer);
-
+        m_pGameInstance->Render_RT_Debug(m_pShader, m_pVIBuffer);
+    }
     return S_OK;
 }
 

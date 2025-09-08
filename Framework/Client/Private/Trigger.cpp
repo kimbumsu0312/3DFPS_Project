@@ -20,7 +20,7 @@ HRESULT CTrigger::Initialize(void* pArg)
 	m_eObjType = pDesc->eObjType;
 	m_CTriggerEvent = pDesc->TriggerEvent;
 
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(__super::Initialize(nullptr)))
 		return E_FAIL;
 
 	Ready_Componet(pDesc);
@@ -57,7 +57,10 @@ HRESULT CTrigger::Render()
 void CTrigger::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
 {
 	if (ENUM_CLASS(m_eObjType) == TargetCollision.iObjType)
+	{
 		m_CTriggerEvent();
+		SetDead();
+	}
 }
 
 HRESULT CTrigger::Ready_Componet(TRIGEER_DESC* pDesc)
@@ -78,7 +81,7 @@ HRESULT CTrigger::Ready_Componet(TRIGEER_DESC* pDesc)
 	AABBDesc.vCenter = pDesc->vCenter;
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
+		TEXT("Com_Collider_AABB"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -111,4 +114,5 @@ CGameObject* CTrigger::Clone(void* pArg)
 void CTrigger::Free()
 {
 	__super::Free();
+	Safe_Release(m_pColliderCom);
 }

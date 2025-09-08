@@ -6,7 +6,7 @@ class CTrigger final : public CGameObject
 {
 public:
 
-	typedef struct CTrigger_Desc : public CGameObject::GAMEOBJECT_DESC{
+	typedef struct CTrigger_Desc{
 		TRIGGER_TYPE			eType;
 		OBJECT_TYPE				eObjType;
 		_float3					vPos;

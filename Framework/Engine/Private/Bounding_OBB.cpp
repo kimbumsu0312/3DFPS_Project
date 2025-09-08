@@ -41,7 +41,7 @@ _bool CBounding_OBB::Intersect(COLLIDER eType, CBounding* pTarget, _float3& pOut
     switch (eType)
     {
     case Engine::COLLIDER::AABB:
-        isColl = m_pDesc->Intersects(*static_cast<CBounding_OBB*>(pTarget)->Get_Desc());
+        isColl = m_pDesc->Intersects(*static_cast<CBounding_AABB*>(pTarget)->Get_Desc());
         break;
     case Engine::COLLIDER::OBB:
         isColl = Intersect_OBB(static_cast<CBounding_OBB*>(pTarget), pOutNroaml, pTargetNroaml);

@@ -22,7 +22,8 @@ void CCritical_Attack_Daniela::Enter(CDaniela* pContainer)
 
 void CCritical_Attack_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
 {
-    pContainer->Target_LookTurn_Navi(fDeltatime);
+    pContainer->Target_LookTurn(fDeltatime);
+
     if (m_eAnimState == STATE_ANIM::START)
     {
         m_eAnimState = STATE_ANIM::LOOP;
@@ -33,6 +34,7 @@ void CCritical_Attack_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
         if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {
             pContainer->Get_BlackBoard()->Set_Data().fCriAttackCool = 15.f;
+            pContainer->Get_BlackBoard()->Set_Data().fAttackCool = 3.f;
             pContainer->Get_BlackBoard()->Set_Data().IsCriticalAttack = false;
         }
     }

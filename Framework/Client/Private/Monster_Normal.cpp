@@ -65,10 +65,9 @@ void CMonster_Normal::Priority_Update(_float fTimeDelta)
 
 void CMonster_Normal::Update(_float fTimeDelta)
 { 
-	if (m_BlackBoard->Get_Data().fAttackCool >= 0.f)
-	{
+	if (m_BlackBoard->Get_Data().fAttackCool > 0.f)
 		m_BlackBoard->Set_Data().fAttackCool -= fTimeDelta;
-	}
+
 	m_pBehaviorTree->Update();
 	
 	State_Change();
@@ -111,20 +110,21 @@ void CMonster_Normal::Late_Update(_float fTimeDelta)
 	if (m_pWeaponObject != nullptr)
 		m_pWeaponObject->Late_Update(fTimeDelta);
 
-}
 
-HRESULT CMonster_Normal::Render()
-{
 #ifdef _DEBUG
 	for (_int i = 0; i < ColliderType_Mon::END; ++i)
 	{
 		if (m_pWeaponObject != nullptr && i == ColliderType_Mon::Hand)
 			continue;
 
-		m_pColliderCom[i]->Render();
+		m_pGameInstance->Add_DebugComponent(m_pColliderCom[i]);
 	}
-
 #endif
+}
+
+HRESULT CMonster_Normal::Render()
+{
+
 	return S_OK;
 }
 

@@ -17,6 +17,7 @@ void CChase_Daniela::Enter(CDaniela* pContainer)
     pContainer->Switch_AnimState(ENUM_CLASS(CDaniela::ANIM_STATE::NORMAL));
     pContainer->Switch_Anim("Run_F", true);
 
+    pContainer->SetUp_Node();
 }
 
 void CChase_Daniela::Update(CDaniela* pContainer, _float fTimeDelta)

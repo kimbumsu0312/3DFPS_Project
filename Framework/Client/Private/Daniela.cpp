@@ -46,6 +46,8 @@ HRESULT CDaniela::Initialize(void* pArg)
 	if (FAILED(Ready_StateObjects()))
 		return E_FAIL;
 
+	if (FAILED(Ready_TriggerEvent()))
+		return E_FAIL;
 	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::Body)] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
 	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::Head)] = m_pBodyObject->Get_BoneMatrix(TEXT("Head"));
 	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::L_ARM)] = m_pBodyObject->Get_BoneMatrix(TEXT("L_UpperArm"));
@@ -59,11 +61,10 @@ HRESULT CDaniela::Initialize(void* pArg)
 
 void CDaniela::Priority_Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->IsKeyDown(DIK_F2))
-	{
-		m_BlackBoard->Set_Data().IsIdle = false;
-		SetUp_Node();
-	}
+	if (!m_bIsStart)
+		return;
+
+
 	m_pTransformCom->PrePostion_Update();
 	m_pBodyObject->Priority_Update(fTimeDelta);
 	m_pWeaponObject->Priority_Update(fTimeDelta);
@@ -71,6 +72,12 @@ void CDaniela::Priority_Update(_float fTimeDelta)
 
 void CDaniela::Update(_float fTimeDelta)
 {
+	if (m_BlackBoard->Get_Data().fAttackCool > 0.f)
+		m_BlackBoard->Set_Data().fAttackCool -= fTimeDelta;
+
+	if (m_BlackBoard->Get_Data().fCriAttackCool > 0.f)
+		m_BlackBoard->Set_Data().fCriAttackCool -= fTimeDelta;
+
 	m_pBehaviorTree->Update();
 
 	State_Change();
@@ -81,22 +88,26 @@ void CDaniela::Update(_float fTimeDelta)
 	m_pBodyObject->Update(fTimeDelta);
 	m_pWeaponObject->Update(fTimeDelta);
 
-	Collider_Update();
+	if(m_bIsStart)
+		Collider_Update();
 }
 
 void CDaniela::Late_Update(_float fTimeDelta)
 {
-	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
+	if (m_bIsStart)
 	{
-		if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
-			return;
+		for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
+		{
+			if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
+				return;
+		}
 	}
-
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
 		return;
 
 	m_pBodyObject->Late_Update(fTimeDelta);
 	m_pWeaponObject->Late_Update(fTimeDelta);
+	
 }
 
 HRESULT CDaniela::Render()
@@ -104,7 +115,7 @@ HRESULT CDaniela::Render()
 #ifdef _DEBUG
 	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
 	{
-		m_pColliderCom[i]->Render();
+		m_pGameInstance->Add_DebugComponent(m_pColliderCom[i]);
 	}
 #endif
 	return S_OK;
@@ -135,8 +146,8 @@ void CDaniela::Target_LookTurn_Navi(_float fTimeDelta)
 	_float3 vNextPos{};
 	XMStoreFloat3(&vNextPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
 	
-	m_pNavigationCom->SetUp_Node(CPlayer_Manager::GetInstance()->Get_CellIndex(), vNextPos);
-	m_pNavigationCom->IsNaviNode(vMonPos, vNextPos);
+	if (m_pNavigationCom->IsNaviNode(vMonPos, vNextPos) == true)
+		SetUp_Node();
 
 	_vector vDir = XMVector3Normalize(XMVectorSetY(XMLoadFloat3(&vNextPos) - vMonPos, 0.f));
 	_vector vLook = XMVector3Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
@@ -151,7 +162,7 @@ void CDaniela::SetUp_Node()
 {
 	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
 	_float3 vNextPos{};
-	_vector vPlayerPos;
+	_vector vPlayerPos{};
 
 	XMStoreFloat3(&vNextPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
 	vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
@@ -195,7 +206,7 @@ void CDaniela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColl
 void CDaniela::Daniela_Start()
 {
 	m_BlackBoard->Set_Data().IsIdle = false;
-	SetUp_Node();
+	m_bIsStart = true;
 }
 
 HRESULT CDaniela::Ready_Components()
@@ -328,16 +339,6 @@ HRESULT CDaniela::Ready_Utility()
 	m_pBehaviorTree = CBehaviorTree_Daniela::Create(m_BlackBoard);
 
 
-	CTrigger::TRIGEER_DESC TriggerDesc;
-
-	TriggerDesc.eType = TRIGGER_TYPE::PLAYER;
-	TriggerDesc.eObjType = OBJECT_TYPE::PLAYER;
-	TriggerDesc.TriggerEvent = { [&]() {return Daniela_Start(); } };
-
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Trigger"),
-		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Trigger"), &TriggerDesc)))
-		return E_FAIL;
 	return S_OK;
 }
 
@@ -352,6 +353,24 @@ HRESULT CDaniela::Ready_StateObjects()
 
 	m_pCulStateObject = Find_StateObject(TEXT("Idle"));
 	Safe_AddRef(m_pCulStateObject);
+	return S_OK;
+}
+
+HRESULT CDaniela::Ready_TriggerEvent()
+{
+	CTrigger::TRIGEER_DESC TriggerDesc;
+	
+	TriggerDesc.eType = TRIGGER_TYPE::PLAYER;
+	TriggerDesc.eObjType = OBJECT_TYPE::PLAYER;
+	TriggerDesc.TriggerEvent = { [&]() {return Daniela_Start(); } };
+	  
+	TriggerDesc.vCenter = _float3{ 0.f, 0.f, 0.f };
+	TriggerDesc.vExtents = _float3{ 3.f, 3.f, 3.f };
+	TriggerDesc.vPos = _float3{ -28.32f, -0.69f, 41.31f };
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Trigger"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Trigger"), &TriggerDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 

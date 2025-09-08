@@ -285,9 +285,14 @@ HRESULT CGameInstance::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pR
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
-void CGameInstance::IsDebugRender()
+void CGameInstance::IsDebugRender(DEBUG_RENDER eTag)
 {
-	m_pRenderer->IsDebugRender();
+	m_pRenderer->IsDebugRender(eTag);
+}
+
+HRESULT CGameInstance::Add_DebugComponent(CComponent* pComponent)
+{
+	return m_pRenderer->Add_DebugComponent(pComponent);
 }
 
 _matrix CGameInstance::Get_Transform_Matrix(D3DTS eTransformState) const
@@ -325,19 +330,24 @@ void CGameInstance::Set_Transform(D3DTS eTransformState, const _float4x4& Matrix
 	m_pPipeLine->Set_Transform(eTransformState, Matrix);
 }
 
-const LIGHT_DESC* CGameInstance::Get_LightDesc(_uint iIndex)
+const LIGHT_DESC* CGameInstance::Get_LightDesc(_wstring LightTag)
 {
-	return m_pLight_Manager->Get_LightDesc(iIndex);
+	return m_pLight_Manager->Get_LightDesc(LightTag);
 }
 
-HRESULT CGameInstance::Add_Light(LIGHT_DESC& LightDesc)
+HRESULT CGameInstance::Add_Light(_wstring LightTag, LIGHT_DESC& LightDesc)
 {
-	return m_pLight_Manager->Add_Light(LightDesc);
+	return m_pLight_Manager->Add_Light(LightTag, LightDesc);
 }
 
 HRESULT CGameInstance::Render_Lights(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
 {
 	return m_pLight_Manager->Render(pShader, pVIBuffer);
+}
+
+_bool CGameInstance::Update_LightPotion(_wstring LightTag, _float4 LightPos)
+{
+	return m_pLight_Manager->Update_LightPotion(LightTag, LightPos);
 }
 
 HRESULT CGameInstance::Add_Object_ToPool(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iValue, void* pArg)

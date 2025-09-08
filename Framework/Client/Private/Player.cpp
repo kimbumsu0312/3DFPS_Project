@@ -127,21 +127,26 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
 		return;
 
+	_float4 vPlayerPos{};
+
+	XMStoreFloat4(&vPlayerPos, XMVectorSetW(m_pTransformCom->Get_State(STATE::POSITION), 1.f));
+	m_pGameInstance->Update_LightPotion(TEXT("Light_Player"), vPlayerPos);
 	m_pBodyObject->Late_Update(fTimeDelta);
 
 	m_pWeaponObject->Late_Update(fTimeDelta);
 	m_pCamera->Late_Update(fTimeDelta);
+
+#ifdef _DEBUG
+	for (_int i = 0; i < ColliderType_Player::END; ++i)
+	{
+		m_pGameInstance->Add_DebugComponent(m_pColliderCom[i]);
+	}
+
+#endif
 }
 
 HRESULT CPlayer::Render()
 {
-#ifdef _DEBUG
-	for (_int i = 0; i < ColliderType_Player::END; ++i)
-	{
-		m_pColliderCom[i]->Render();
-	}
-	
-#endif
 	return S_OK;
 }
 

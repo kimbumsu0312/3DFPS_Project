@@ -35,17 +35,12 @@ void CMapNevi::Update(_float fTimeDelta)
 void CMapNevi::Late_Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
-		return;
+	m_pGameInstance->Add_DebugComponent(m_pNavigationCom);
 #endif
 }
 
 HRESULT CMapNevi::Render()
 {
-#ifdef _DEBUG
-	m_pNavigationCom->Render();
-
-#endif
 	return S_OK;
 }
 

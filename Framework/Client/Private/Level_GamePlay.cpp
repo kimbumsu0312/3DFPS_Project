@@ -48,9 +48,8 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	_vector vPos = XMVector3Normalize({ 1.f, 1.f, 0.f });
-	
-	_float f = XMVectorGetX(vPos) + XMVectorGetY(vPos) + XMVectorGetZ(vPos);
+
+
 	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
 		CInven_Manager::GetInstance()->Add_ItemSlot(0, TEXT("Pool_Item"));
 	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_2))
@@ -98,15 +97,33 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 	LightDesc.eType = LIGHT_DESC::TYPE::DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-//	LightDesc.vDiffuse = _float4(0.2f, 0.2f, 0.2f, 1.f);
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-
-	LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	LightDesc.vDiffuse = _float4(0.2f, 0.2f, 0.2f, 1.f);
+	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_Default"), LightDesc)))
 		return E_FAIL;
 
+	//LightDesc.eType = LIGHT_DESC::TYPE::POINT;
+	//LightDesc.vPosition = _float4(-30.95f, -8.97f, 68.67f, 1.f);
+	//LightDesc.fRange = 10.f;
+
+	//LightDesc.vDiffuse = _float4(1.f, 0.f, 0.f, 1.f);
+	//LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
+	//LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	//if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_Map"), LightDesc)))
+	//	return E_FAIL;
+
+	LightDesc.eType = LIGHT_DESC::TYPE::POINT;
+	LightDesc.vPosition = _float4(-30.95f, -8.97f, 63.67f, 1.f);
+	LightDesc.fRange = 15.f;
+
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 0.f, 1.f);
+	LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_Player"), LightDesc)))
+		return E_FAIL;
 	return S_OK;
 }
 
