@@ -64,7 +64,6 @@ void CDaniela::Priority_Update(_float fTimeDelta)
 	if (!m_bIsStart)
 		return;
 
-
 	m_pTransformCom->PrePostion_Update();
 	m_pBodyObject->Priority_Update(fTimeDelta);
 	m_pWeaponObject->Priority_Update(fTimeDelta);

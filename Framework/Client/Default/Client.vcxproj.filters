@@ -789,6 +789,27 @@
     <ClInclude Include="..\public\Trigger.h">
       <Filter>02.GameObject\Trigger</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Walk_WereWolf.h">
+      <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Attack_WereWolf.h">
+      <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Event_1_WereWolf.h">
+      <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Event_3_WereWolf.h">
+      <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Event_2_WereWolf.h">
+      <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Die_WereWolf.h">
+      <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Damage_WereWolf.h">
+      <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -1202,6 +1223,27 @@
     </ClCompile>
     <ClCompile Include="..\private\Trigger.cpp">
       <Filter>02.GameObject\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Walk_WereWolf.cpp">
+      <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Attack_WereWolf.cpp">
+      <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Event_1_WereWolf.cpp">
+      <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Event_2_WereWolf.cpp">
+      <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Event_3_WereWolf.cpp">
+      <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Damage_WereWolf.cpp">
+      <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Die_WereWolf.cpp">
+      <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

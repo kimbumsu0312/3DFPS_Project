@@ -3,7 +3,15 @@
 #include "BehaviorTree_WereWolf.h"
 
 #include "Body_WereWolf.h"
+
 #include "Idle_WereWolf.h"
+#include "Walk_WereWolf.h"
+#include "Attack_WereWolf.h"
+#include "Event_1_WereWolf.h"
+#include "Event_2_WereWolf.h"
+#include "Event_3_WereWolf.h"
+#include "Damage_WereWolf.h"
+#include "Die_WereWolf.h"
 
 CMonster_WereWolf::CMonster_WereWolf(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CContainerObject(pDevice, pContext)
 {
@@ -46,12 +54,26 @@ HRESULT CMonster_WereWolf::Initialize(void* pArg)
 
 void CMonster_WereWolf::Priority_Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->IsKeyDown(DIK_J))
+		Event_1();
+
+	if (m_pGameInstance->IsKeyDown(DIK_K))
+		Event_2();
+
+	if (m_pGameInstance->IsKeyDown(DIK_L))
+		Event_3();
+
 	m_pTransformCom->PrePostion_Update();
 	m_pBodyObject->Priority_Update(fTimeDelta);
 }
 
 void CMonster_WereWolf::Update(_float fTimeDelta)
 {
+	if (m_BlackBoard->Get_Data().fAttackCool > 0.f)
+		m_BlackBoard->Set_Data().fAttackCool -= fTimeDelta;
+
+	m_pBehaviorTree->Update();
+
 	State_Change();
 	m_pCulStateObject->Update(this, fTimeDelta);
 
@@ -62,6 +84,7 @@ void CMonster_WereWolf::Update(_float fTimeDelta)
 
 void CMonster_WereWolf::Late_Update(_float fTimeDelta)
 {
+
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
 		return;
 
@@ -95,6 +118,56 @@ void CMonster_WereWolf::SetUp_Node(_int iTargetCellIndex, _float3 vPos)
 
 void CMonster_WereWolf::Move_Node(_float fTimeDelta)
 {
+}
+
+void CMonster_WereWolf::Target_LookTurn(_float fTimeDelta)
+{
+	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
+	_vector vPlayerPos = CPlayer_Manager::GetInstance()->Get_PlayerPos();
+
+	_vector vDir = XMVector3Normalize(XMVectorSetY(vPlayerPos - vMonPos, 0.f));
+	_vector vLook = XMVector3Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+
+	_vector vAxis = XMVector3Normalize(XMVector3Cross(vLook, vDir));
+
+	m_pTransformCom->Turn(vAxis, fTimeDelta);
+}
+
+void CMonster_WereWolf::Attack_Collision()
+{
+}
+
+void CMonster_WereWolf::Event_1()
+{
+	m_bIsStart = true;
+	m_BlackBoard->Set_Data().IsEvent_1 = true;
+	m_BlackBoard->Set_Data().IsEvent_2 = false;
+	m_BlackBoard->Set_Data().IsEvent_3 = false;
+}
+
+void CMonster_WereWolf::Event_2()
+{
+	m_bIsStart = true;
+	m_BlackBoard->Set_Data().IsEvent_1 = false;
+	m_BlackBoard->Set_Data().IsEvent_2 = true;
+	m_BlackBoard->Set_Data().IsEvent_3 = false;
+
+	m_pTransformCom->Set_State(STATE::POSITION, _vector{ -47.46f, -3.63f, 30.14f, 1.f });
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(90.f));
+	m_pNavigationCom->Set_CellIndex(5168);
+	m_pBodyObject->Reset_MovePos();
+}
+
+void CMonster_WereWolf::Event_3()
+{
+	m_bIsStart = true;
+	m_BlackBoard->Set_Data().IsEvent_1 = false;
+	m_BlackBoard->Set_Data().IsEvent_2 = false;
+	m_BlackBoard->Set_Data().IsEvent_3 = true;
+
+	m_pTransformCom->Set_State(STATE::POSITION, _vector{ -49.f, -3.63f, 37.14f, 1.f });
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(180.f));
+	m_pBodyObject->Reset_MovePos();
 }
 
 HRESULT CMonster_WereWolf::Ready_Components()
@@ -181,8 +254,13 @@ HRESULT CMonster_WereWolf::Ready_Utility()
 	m_BlackBoard->Set_Data().iDamage = 20;
 
 	m_BlackBoard->Set_Data().IsAttack = false;
+	m_BlackBoard->Set_Data().fAttackCool = 0.f;
 	m_BlackBoard->Set_Data().IsChase = false;
 	m_BlackBoard->Set_Data().MonPos = m_pTransformCom->Get_WorldMatrixPtr();
+
+	m_BlackBoard->Set_Data().IsEvent_1 = false;
+	m_BlackBoard->Set_Data().IsEvent_2 = false;
+	m_BlackBoard->Set_Data().IsEvent_3 = false;
 
 	m_pBehaviorTree = CBehaviorTree_WereWolf::Create(m_BlackBoard);
 
@@ -192,6 +270,13 @@ HRESULT CMonster_WereWolf::Ready_Utility()
 HRESULT CMonster_WereWolf::Ready_StateObjects()
 {
 	Add_StateObject(TEXT("Idle"), CIdle_WereWolf::Create());
+	Add_StateObject(TEXT("Attack"), CAttack_WereWolf::Create());
+	Add_StateObject(TEXT("Walk"), CWalk_WereWolf::Create());
+	Add_StateObject(TEXT("Event_1"), CEvent_1_WereWolf::Create());
+	Add_StateObject(TEXT("Event_2"), CEvent_2_WereWolf::Create());
+	Add_StateObject(TEXT("Event_3"), CEvent_3_WereWolf::Create());
+	Add_StateObject(TEXT("Die"), CDamage_WereWolf::Create());
+	Add_StateObject(TEXT("Damage"), CDie_WereWolf::Create());
 
 	m_pCulStateObject = Find_StateObject(TEXT("Idle"));
 	Safe_AddRef(m_pCulStateObject);

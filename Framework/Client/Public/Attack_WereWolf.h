@@ -2,11 +2,11 @@
 #include "MonState_Normal.h"
 #include "Monstate_WereWolf.h"
 NS_BEGIN(Client)
-class CIdle_WereWolf final : public CMonState_WereWolf
+class CAttack_WereWolf final : public CMonState_WereWolf
 {
 private:
-	CIdle_WereWolf();
-	virtual ~CIdle_WereWolf() = default;
+	CAttack_WereWolf();
+	virtual ~CAttack_WereWolf() = default;
 
 public:
 	virtual HRESULT				Initalize(void* pArg) override;
@@ -15,7 +15,7 @@ public:
 	virtual void				Exit(CMonster_WereWolf* pContainer) override;
 
 public:
-	static CIdle_WereWolf* Create(void* pArg = nullptr);
+	static CAttack_WereWolf* Create(void* pArg = nullptr);
 	virtual void				Free() override;
 };
 NS_END

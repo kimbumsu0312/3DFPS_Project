@@ -33,7 +33,7 @@ public:
 	_float4x4*								Get_BoneMatrix(const _wstring pBoneName);
 	_float3*								Get_MovePos();
 	_float4*								Get_MoveRot();
-
+	void									Reset_MovePos();
 private:
 	CShader*								m_pShaderCom = { nullptr };
 	CModel*									m_pModelCom = { nullptr };

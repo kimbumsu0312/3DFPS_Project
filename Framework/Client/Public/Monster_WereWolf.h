@@ -29,8 +29,14 @@ public:
 		_int iHp = {};
 		_int iDamage = {};
 
-		_bool IsAttack = {false};
-		_bool IsChase = {false};
+		_bool  IsAttack = {false};
+		_float fAttackCool = {};
+		_bool  IsChase = {false};
+
+		_bool IsEvent_1 = { false };
+		_bool IsEvent_2 = { false };
+		_bool IsEvent_3 = { false };
+
 		const _float4x4* MonPos = { nullptr };
 	}WEREWOLF_DATA;
 
@@ -50,14 +56,19 @@ public:
 public:
 	void							Switch_Anim(string szAnimTag, _bool IsLoop);
 	CBlackBoard<WEREWOLF_DATA>*		Get_BlackBoard() { return m_BlackBoard; }
-	CTransform*						Get_TransForm() {return m_pTransformCom; }
+	CTransform*						Get_Transform() {return m_pTransformCom; }
 
 	virtual void					OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 
 	void							SetUp_Node(_int iTargetCellIndex, _float3 vPos);
 	void							Move_Node(_float fTimeDelta);
+	void							Target_LookTurn(_float fTimeDelta);
+	void							Attack_Collision();
 
-	private:
+	void							Event_1();
+	void							Event_2();
+	void							Event_3();
+private:
 	//컴포넌트 관련
 	CNavigation*					m_pNavigationCom = { nullptr };
 	CCollider*						m_pColliderCom[ENUM_CLASS(ColliderType_Mon::End)] = { nullptr };
@@ -81,8 +92,9 @@ public:
 	
 	//유틸 관련
 	CBlackBoard<WEREWOLF_DATA>*		m_BlackBoard = { nullptr };
-	class CBehaviorTree_WereWolf*		m_pBehaviorTree = { nullptr };
+	class CBehaviorTree_WereWolf*	m_pBehaviorTree = { nullptr };
 
+	_bool							m_bIsStart = { false };
 private:
 	HRESULT							Ready_Components();
 	HRESULT							Ready_PartObjects();

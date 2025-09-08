@@ -169,6 +169,7 @@
     <ClInclude Include="..\public\Attack_Daniela.h" />
     <ClInclude Include="..\Public\Attack_NorMon_1.h" />
     <ClInclude Include="..\Public\Attack_Player.h" />
+    <ClInclude Include="..\public\Attack_WereWolf.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\public\BaseMapObj.h" />
     <ClInclude Include="..\public\BehaviorTree.h" />
@@ -180,7 +181,12 @@
     <ClInclude Include="..\public\Body_WereWolf.h" />
     <ClInclude Include="..\public\Critical_Attack_Daniela.h" />
     <ClInclude Include="..\public\Damage_Alcina.h" />
+    <ClInclude Include="..\public\Damage_WereWolf.h" />
     <ClInclude Include="..\public\Die_Alcina.h" />
+    <ClInclude Include="..\public\Die_WereWolf.h" />
+    <ClInclude Include="..\public\Event_1_WereWolf.h" />
+    <ClInclude Include="..\public\Event_2_WereWolf.h" />
+    <ClInclude Include="..\public\Event_3_WereWolf.h" />
     <ClInclude Include="..\public\Guide_Paper.h" />
     <ClInclude Include="..\public\Guide_Paper_Tex.h" />
     <ClInclude Include="..\public\Idle_Alcina.h" />
@@ -289,6 +295,7 @@
     <ClInclude Include="..\public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\public\Walk_Alcina.h" />
+    <ClInclude Include="..\public\Walk_WereWolf.h" />
     <ClInclude Include="..\public\WeaponObject.h" />
     <ClInclude Include="..\public\WeaponSwap_Player.h" />
     <ClInclude Include="..\public\WorldItem.h" />
@@ -315,6 +322,7 @@
     <ClCompile Include="..\private\Attack_Daniela.cpp" />
     <ClCompile Include="..\Private\Attack_NorMon_1.cpp" />
     <ClCompile Include="..\Private\Attack_Player.cpp" />
+    <ClCompile Include="..\private\Attack_WereWolf.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\private\BaseMapObj.cpp" />
     <ClCompile Include="..\private\BehaviorTree.cpp" />
@@ -326,7 +334,12 @@
     <ClCompile Include="..\private\Body_WereWolf.cpp" />
     <ClCompile Include="..\private\Critical_Attack_Daniela.cpp" />
     <ClCompile Include="..\private\Damage_Alcina.cpp" />
+    <ClCompile Include="..\private\Damage_WereWolf.cpp" />
     <ClCompile Include="..\private\Die_Alcina.cpp" />
+    <ClCompile Include="..\private\Die_WereWolf.cpp" />
+    <ClCompile Include="..\private\Event_1_WereWolf.cpp" />
+    <ClCompile Include="..\private\Event_2_WereWolf.cpp" />
+    <ClCompile Include="..\private\Event_3_WereWolf.cpp" />
     <ClCompile Include="..\private\Guide_Paper.cpp" />
     <ClCompile Include="..\private\Guide_Paper_Tex.cpp" />
     <ClCompile Include="..\private\Idle_Alcina.cpp" />
@@ -429,6 +442,7 @@
     <ClCompile Include="..\private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\private\Walk_Alcina.cpp" />
+    <ClCompile Include="..\private\Walk_WereWolf.cpp" />
     <ClCompile Include="..\private\WeaponObject.cpp" />
     <ClCompile Include="..\private\WeaponSwap_Player.cpp" />
     <ClCompile Include="..\private\WorldItem.cpp" />

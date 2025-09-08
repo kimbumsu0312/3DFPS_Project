@@ -2,11 +2,11 @@
 #include "MonState_Normal.h"
 #include "Monstate_WereWolf.h"
 NS_BEGIN(Client)
-class CIdle_WereWolf final : public CMonState_WereWolf
+class CWalk_WereWolf final : public CMonState_WereWolf
 {
 private:
-	CIdle_WereWolf();
-	virtual ~CIdle_WereWolf() = default;
+	CWalk_WereWolf();
+	virtual ~CWalk_WereWolf() = default;
 
 public:
 	virtual HRESULT				Initalize(void* pArg) override;
@@ -14,8 +14,11 @@ public:
 	virtual void				Update(CMonster_WereWolf* pContainer, _float fDeltatime) override;
 	virtual void				Exit(CMonster_WereWolf* pContainer) override;
 
+private:
+	_bool						m_bIsStart = { true };
+
 public:
-	static CIdle_WereWolf* Create(void* pArg = nullptr);
+	static CWalk_WereWolf* Create(void* pArg = nullptr);
 	virtual void				Free() override;
 };
 NS_END

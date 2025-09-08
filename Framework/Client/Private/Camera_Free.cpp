@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Camera_Free.h"
-
+#include "Player_Manager.h"
 CCamera_Free::CCamera_Free(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CCamera {pDevice, pContext}
 {
 }
@@ -23,13 +23,17 @@ HRESULT CCamera_Free::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+   
 	return S_OK;
 }
 
 void CCamera_Free::Priority_Update(_float fTimeDelta)
 {
     if (!m_pGameInstance->IsKeyHold(DIK_Y))
+    {
+        m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(CPlayer_Manager::GetInstance()->Get_PlayerPos(), 1.f));
         return;
+    }
     KeyInput(fTimeDelta);
     Zoom_In(fTimeDelta);
     Zoom_Out(fTimeDelta);

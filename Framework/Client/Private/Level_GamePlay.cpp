@@ -119,9 +119,9 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	LightDesc.vPosition = _float4(-30.95f, -8.97f, 63.67f, 1.f);
 	LightDesc.fRange = 15.f;
 
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 0.f, 1.f);
-	LightDesc.vAmbient = _float4(0.4f, 0.4f, 0.f, 1.f);
-	LightDesc.vSpecular = LightDesc.vDiffuse;
+	LightDesc.vDiffuse = _float4(0.90f, 0.85f, 0.75f, 1.0f);
+	LightDesc.vAmbient = _float4(0.03f, 0.03f, 0.025f, 1.0f); 
+	LightDesc.vSpecular = _float4(0.15f, 0.15f, 0.15f, 1.0f);
 	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_Player"), LightDesc)))
 		return E_FAIL;
 	return S_OK;

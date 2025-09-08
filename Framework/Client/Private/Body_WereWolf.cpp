@@ -20,7 +20,7 @@ HRESULT CBody_WereWolf::Initialize(void* pArg)
 	m_pBlackBoard = pDesc->pBalckBoard;
 	Safe_AddRef(m_pBlackBoard);
 
-	m_iRootLodeIndex = 40;
+	m_iRootLodeIndex = 7;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -86,6 +86,11 @@ _float3* CBody_WereWolf::Get_MovePos()
 _float4* CBody_WereWolf::Get_MoveRot()
 {
 	return m_pModelCom->Get_PtrMoveRot();;
+}
+
+void CBody_WereWolf::Reset_MovePos()
+{
+	m_pModelCom->Reset_MovePos();
 }
 
 HRESULT CBody_WereWolf::Ready_Components()

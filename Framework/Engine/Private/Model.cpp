@@ -189,6 +189,11 @@ _float4x4* CModel::Get_BoneMatrix(const _wstring pBoneName)
     return (*iter)->Get_PtrCombinedTransformationMatrix();
 }
 
+void CModel::Reset_MovePos()
+{
+    m_vMovePos = {};
+}
+
 void CModel::Set_TransitionTime()
 {
     m_fTransitionTime = 3.f;
