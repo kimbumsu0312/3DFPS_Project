@@ -54,26 +54,34 @@ void CPlayer_Manager::Add_QuickSlotItem(_int iSlotIndex, _int iItemIndex)
 
 void CPlayer_Manager::Selete_Slot(_int i)
 {
-	m_iSeleteItem = i - 1;
+	m_iSeleteItem = - 1;
+	_int iSlotIndex = i - 1;
 
-
-	if (m_iQuickSlot[m_iSeleteItem] != -1)
+	if (m_iQuickSlot[iSlotIndex] != -1)
 	{
-		if (g_ItemData[m_iQuickSlot[m_iSeleteItem]].m_eType == ITEM_TYPE::WEAPON)
-		{
-			//if (g_ItemData[m_iQuickSlot[m_iSeleteItem]].m_iItemID == 0)
-			//	m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::PISTOL });
-			//else if (g_ItemData[m_iQuickSlot[m_iSeleteItem]].m_iItemID == 1)
-			//	m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::SHOTGUN });
-			//else if (g_ItemData[m_iQuickSlot[m_iSeleteItem]].m_iItemID == 2)
-			//	m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::SNIPER });
-			//else
-			//	m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::END });
-		}
+		m_iSeleteItem = m_iQuickSlot[iSlotIndex];
 	}
 	else
 		m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::END });
 
+}
+
+_bool CPlayer_Manager::Gun_Shoting()
+{
+	if (CInven_Manager::GetInstance()->Bullet_Check(m_iSeleteItem) == true)
+		return true;
+
+	m_pGameInstance->Publish(Event_Announce_UI_OPEN{ 1, 0, TEXT("장정된 총알이 부족합니다."), RENDERGROUP::PRIORITY_UI });
+	return false;
+}
+
+_bool CPlayer_Manager::Reload()
+{
+	if (CInven_Manager::GetInstance()->Reload_Check(m_iSeleteItem) == true)
+		return true;
+	
+	m_pGameInstance->Publish(Event_Announce_UI_OPEN{ 1, 0, TEXT("인벤토리 내 총알이 부족합니다."), RENDERGROUP::PRIORITY_UI });
+	return false;
 }
 
 void CPlayer_Manager::Free()

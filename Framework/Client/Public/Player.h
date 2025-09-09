@@ -2,6 +2,8 @@
 #include "Engine_Defines.h"
 #include "ContainerObject.h"
 #include "Client_Struct.h"
+#include "BlackBoard.h"
+
 NS_BEGIN(Engine)
 class CNavigation;
 class CCollider;
@@ -10,8 +12,31 @@ NS_END
 NS_BEGIN(Client)
 class CPlayer final : public CContainerObject
 {
-private:
+public:
 	enum ColliderType_Player { BODY = 0, RESIST, PLAYER_VIEW, END };
+	typedef struct PlayerData
+	{
+		//애니메이션 관련
+		_uint*		iAnimState = { nullptr };
+		string*		szAnimTag = { nullptr };
+		_bool*		bIsAnimLoop = { nullptr };
+		_bool*		bIsAnimFinsh = { nullptr };
+
+		_wstring*	szCulStateTag = { nullptr };
+
+		_bool		bIsDamage = { false };
+		_float		fDamageCool = {};
+		
+		_bool		isJog;
+		
+		_bool		isMove;
+		_bool		isAttack;
+		_bool		isGuard;
+		_bool		isReload;
+		_bool		isAim;
+		_bool		isWeaponSwap;
+
+	}PLAYER_DATA;
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
@@ -26,25 +51,21 @@ public:
 	virtual HRESULT				Render();
 
 public:
-	void						Switch_WeaponState(_uint iWeaponState) { if (iWeaponState < ENUM_CLASS(PLAYER_WEAPON::END)) { m_iCulWeponState = iWeaponState; } }
 	void						Switch_Anim(string szAnimTag, _bool IsLoop);
-	void						Switch_State(_wstring szStateTag) { m_szCulStateTag = szStateTag; }
 	_bool						IsAnimFinsh() { return m_bIsAnimFinsh; }
-	void						WeaponSwap() { m_iCulWeponState = m_iNextWeponState; }
+	CBlackBoard<PLAYER_DATA>*	Get_BlackBoard() { return m_BlackBoard;}
 
-	const PLAYER_ATTACK_STATE&	Get_AttackState() { return m_AttackState; }
-	const PLAYER_MOVE_STATE&	Get_MoveState() { return m_MoveState; }
-	const _int					Get_WeaponType() { return m_iCulWeponState; }
+
 	virtual void				OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
-
+	void						WeaponSwap();
+	void						AttackCollider();
 private:
 	CNavigation*				m_pNavigationCom = { nullptr };
 	CCollider*					m_pColliderCom[ColliderType_Player::END] = {nullptr};
 	_float4x4*					m_pColliderBone[ColliderType_Player::END] = { nullptr };
 
-	_uint						m_iPreWeponState = {};
-	_uint						m_iCulWeponState = {};
-	_uint						m_iNextWeponState = {};
+	_uint						m_iAnimState = {};
+	_int						m_iNextAnim = {};
 
 	_wstring					m_szPreStateTag = {};
 	_wstring					m_szCulStateTag = {};
@@ -58,8 +79,7 @@ private:
 	unordered_map<_wstring,
 		class CPlayerState*>	m_StateObjects;
 
-	PLAYER_ATTACK_STATE			m_AttackState = {};
-	PLAYER_MOVE_STATE			m_MoveState = {};
+	CBlackBoard<PLAYER_DATA>*	m_BlackBoard = { nullptr };
 
 	class CPlayerState*			m_CulStateObject = { nullptr };
 	CPartObject*				m_pWeaponObject = { nullptr };
@@ -71,15 +91,13 @@ private:
 
 	_bool						m_bisCameraLock = { false };
 
-	_bool						m_bIsDamage = { false };
-	_float						m_fDamageCool = {};
-
 	_int						m_iRayCount = {};
 	_float						m_fRayRange = {};
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_PartObjects();
 	HRESULT						Ready_StateObjects();
+	HRESULT						Ready_Utility();
 
 	HRESULT						Add_StateObject(const _wstring& strStateObjectTag, class CPlayerState* pStateObject);
 	class CPlayerState*			Find_StateObject(const _wstring& strPartObjectTag);
@@ -91,8 +109,7 @@ private:
 
 	void						Rotaion_Upper(_float fTimeDelta);
 	void						Collider_Update();
-
-	void						IsDmage(_float fTimeDelta);
+	void						State_Check();
 public:
 	static CPlayer*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg);

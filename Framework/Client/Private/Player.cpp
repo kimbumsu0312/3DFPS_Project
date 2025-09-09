@@ -36,12 +36,15 @@ HRESULT CPlayer::Initialize_Prototype()
 HRESULT CPlayer::Initialize(void* pArg)
 {
 
-	m_iCulWeponState = ENUM_CLASS(PLAYER_WEAPON::NONE);
-	m_szAnimTag = "Idle_Loop";
+	m_iAnimState = ENUM_CLASS(PLAYER_ANIM::NONE);
+	m_szAnimTag = "Walk_Loop";
 	m_szCulStateTag = TEXT("Idle");
 	m_szPreStateTag = m_szCulStateTag;
 
 	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+	
+	if (FAILED(Ready_Utility()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components()))
@@ -65,11 +68,11 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 {
 	m_pTransformCom->PrePostion_Update();
 	m_pCamera->Priority_Update(fTimeDelta);
-	m_MoveState = {};
-	m_AttackState = {};
 
 	m_pBodyObject->Priority_Update(fTimeDelta);
-	m_pWeaponObject->Priority_Update(fTimeDelta);
+	if (m_pWeaponObject != nullptr)
+		m_pWeaponObject->Priority_Update(fTimeDelta);
+	
 	if (m_pGameInstance->IsKeyDown(DIK_5))
 		m_bisCameraLock ? m_bisCameraLock = false : m_bisCameraLock = true;
 
@@ -87,8 +90,8 @@ void CPlayer::Update(_float fTimeDelta)
 		Rotaion_Upper(fTimeDelta);
 		m_pTransformCom->Rotation_All(_float3{ 0.f, m_fYaw, 0.f });
 	}
-	
 	m_CulStateObject->Update(this, fTimeDelta);
+	State_Check();
 	if (m_szPreStateTag != m_szCulStateTag)
 	{
 		m_CulStateObject->Exit(this);
@@ -104,11 +107,10 @@ void CPlayer::Update(_float fTimeDelta)
 	m_bIsAnimFinsh = false;
 
 	m_pBodyObject->Update(fTimeDelta);
-	m_pWeaponObject->Update(fTimeDelta);
+	if(m_pWeaponObject != nullptr)
+		m_pWeaponObject->Update(fTimeDelta);
 	
 	m_pCamera->Update(fTimeDelta);
-
-	IsDmage(fTimeDelta);
 
 	m_pTransformCom->Set_State(Engine::STATE::POSITION,	m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
 	CPlayer_Manager::GetInstance()->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
@@ -132,8 +134,8 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	XMStoreFloat4(&vPlayerPos, XMVectorSetW(m_pTransformCom->Get_State(STATE::POSITION), 1.f));
 	m_pGameInstance->Update_LightPotion(TEXT("Light_Player"), vPlayerPos);
 	m_pBodyObject->Late_Update(fTimeDelta);
-
-	m_pWeaponObject->Late_Update(fTimeDelta);
+	if (m_pWeaponObject != nullptr)
+		m_pWeaponObject->Late_Update(fTimeDelta);
 	m_pCamera->Late_Update(fTimeDelta);
 
 #ifdef _DEBUG
@@ -167,13 +169,58 @@ void CPlayer::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColli
 	switch (TargetCollision.iObjType)
 	{
 	case ENUM_CLASS(OBJECT_TYPE::WEAPON):
-		if (!m_bIsDamage)
-		{
-			m_bIsDamage = true;
-			m_fDamageCool = 3.f;
-		}
 		break;
 	}
+}
+
+void CPlayer::WeaponSwap()
+{
+	m_iAnimState = m_iNextAnim;
+	m_BlackBoard->Set_Data().isWeaponSwap = false;
+	Safe_Release(m_pWeaponObject);
+	switch (m_iAnimState)
+	{
+	case ENUM_CLASS(PLAYER_ANIM::KNIFE):
+		m_iRayCount = 0;
+		m_pWeaponObject = Find_PartObject(TEXT("Part_Knife"));
+		Safe_AddRef(m_pWeaponObject);
+		m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::END });
+		CPlayer_Manager::GetInstance()->Set_Damage(20);
+		break;
+	case ENUM_CLASS(PLAYER_ANIM::HANDGUN):
+		m_iRayCount = 1;
+		m_pWeaponObject = Find_PartObject(TEXT("Part_HandGun"));
+		Safe_AddRef(m_pWeaponObject);
+		m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::PISTOL });
+		CPlayer_Manager::GetInstance()->Set_Damage(10);
+		break;
+	case ENUM_CLASS(PLAYER_ANIM::SHOTGUN):
+		m_iRayCount = 8;
+		m_pWeaponObject = Find_PartObject(TEXT("Part_ShotGun"));
+		Safe_AddRef(m_pWeaponObject);
+		m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::SHOTGUN });
+		CPlayer_Manager::GetInstance()->Set_Damage(5);
+		break;
+	case ENUM_CLASS(PLAYER_ANIM::SNIPER):
+		m_iRayCount = 1;
+		m_pWeaponObject = Find_PartObject(TEXT("Part_Sniper"));
+		Safe_AddRef(m_pWeaponObject);
+		m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::SNIPER });
+		CPlayer_Manager::GetInstance()->Set_Damage(100);
+		break;
+	case ENUM_CLASS(PLAYER_ANIM::END):
+		m_iRayCount = 0;
+		m_pGameInstance->Publish(Event_Weapon_Selete{ WEAPON_TYPE::END });
+		CPlayer_Manager::GetInstance()->Set_Damage(0);
+		break;
+	}
+
+}
+
+void CPlayer::AttackCollider()
+{
+	if (m_iAnimState == ENUM_CLASS(PLAYER_ANIM::KNIFE))
+		static_cast<CWeaponObject*>(m_pWeaponObject)->Add_Collider();
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -192,7 +239,7 @@ HRESULT CPlayer::Ready_Components()
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::PLAYER_VIEW);
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::PLAYER_VIEW);
 	OBBDesc.vAngles = _float3(0.f, 0.1f, 0.f);
-	OBBDesc.vExtents = _float3(0.1f, 0.1f, 1.f);
+	OBBDesc.vExtents = _float3(0.05f, 0.05f, 1.f);
 	OBBDesc.vCenter = _float3(-0.092f, 0.0f, -1.f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
@@ -223,11 +270,8 @@ HRESULT CPlayer::Ready_Components()
 HRESULT CPlayer::Ready_PartObjects()
 {
 	CBody_Player::BODY_DESC BodyDesc{};
-	BodyDesc.pWeaponState = &m_iCulWeponState;
+	BodyDesc.m_BlackBoard = m_BlackBoard;
 	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	BodyDesc.pAnimTag = &m_szAnimTag;
-	BodyDesc.pIsAnimLoop = &m_bIsAnimLoop;
-	BodyDesc.pIsAnimFinsh = &m_bIsAnimFinsh;
 
 	if(FAILED(__super::Add_PartObject(TEXT("Part_Body"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Player"), &BodyDesc)))
 		return E_FAIL;
@@ -257,8 +301,6 @@ HRESULT CPlayer::Ready_PartObjects()
 	WeaponDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_Wep"));
 	if (FAILED(__super::Add_PartObject(TEXT("Part_Sniper"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sniper_Player"), &WeaponDesc)))
 		return E_FAIL;
-
-	m_pWeaponObject = Find_PartObject(TEXT("Part_Knife"));
 
 	CCamera_Player::CAMERA_PLAYER_DESC CameraDesc{};
 	CameraDesc.vEye = _float4(0.f, 0.f, 0.1f, 1.f);
@@ -293,6 +335,28 @@ HRESULT CPlayer::Ready_StateObjects()
 	return S_OK;
 }
 
+HRESULT CPlayer::Ready_Utility()
+{
+	m_BlackBoard = CBlackBoard<PLAYER_DATA>::Create();
+	m_BlackBoard->Set_Data().bIsAnimFinsh = &m_bIsAnimFinsh;
+	m_BlackBoard->Set_Data().bIsAnimLoop = &m_bIsAnimLoop;
+	m_BlackBoard->Set_Data().iAnimState = &m_iAnimState;
+	m_BlackBoard->Set_Data().szAnimTag = &m_szAnimTag;
+	m_BlackBoard->Set_Data().szCulStateTag = &m_szCulStateTag;
+
+	m_BlackBoard->Set_Data().bIsDamage = false;
+	m_BlackBoard->Set_Data().fDamageCool = 0.f;
+	m_BlackBoard->Set_Data().isJog = false;
+	m_BlackBoard->Set_Data().isMove = false;
+	m_BlackBoard->Set_Data().isAttack = false;
+	m_BlackBoard->Set_Data().isGuard = false;
+	m_BlackBoard->Set_Data().isReload = false;
+	m_BlackBoard->Set_Data().isAim = false;
+	m_BlackBoard->Set_Data().isWeaponSwap = false;
+
+	return S_OK;
+}
+
 HRESULT CPlayer::Add_StateObject(const _wstring& strStateObjectTag, CPlayerState* pStateObject)
 {
 	if (nullptr != Find_PartObject(strStateObjectTag))
@@ -317,44 +381,39 @@ CPlayerState* CPlayer::Find_StateObject(const _wstring& strStateObjectTag)
 
 void CPlayer::InputKey_MoveState(_float fTimeDelta)
 {
-	_bool IsMove = true;
+	_bool IsMove = false;
+	_bool IsJog = false;
 
 	//이동 상태 값
 	_vector vPos =	m_pTransformCom->Get_State(STATE::POSITION);
 	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT))
 	{
-		m_MoveState.isJog = true;
-		IsMove = true;
+		IsJog = true;
 	}
 	if (m_pGameInstance->IsKeyHold(DIK_W))
 	{
-		m_MoveState.isMoveF = true;
-		m_pTransformCom->Go_Straight(fTimeDelta);
+		IsJog ? m_pTransformCom->Go_Straight(fTimeDelta * 1.5f) : m_pTransformCom->Go_Straight(fTimeDelta);
 		IsMove = true;
 	}
 	if (m_pGameInstance->IsKeyHold(DIK_S))
 	{
-		m_MoveState.isMoveB = true;
-		m_pTransformCom->Go_Backward(fTimeDelta);
+		IsJog ? m_pTransformCom->Go_Backward(fTimeDelta * 1.5f) : m_pTransformCom->Go_Backward(fTimeDelta);
 		IsMove = true;
 	}
 	if (m_pGameInstance->IsKeyHold(DIK_A))
 	{
-		m_MoveState.isMoveL = true;
-		m_pTransformCom->Go_Left(fTimeDelta);
+		IsJog ? m_pTransformCom->Go_Left(fTimeDelta * 1.5f) : m_pTransformCom->Go_Left(fTimeDelta);
 		IsMove = true;
 	}
 	if (m_pGameInstance->IsKeyHold(DIK_D))
 	{
-		m_MoveState.isMoveR = true;
-		m_pTransformCom->Go_Right(fTimeDelta);
+		IsJog ? m_pTransformCom->Go_Right(fTimeDelta * 1.5f) : m_pTransformCom->Go_Right(fTimeDelta);
 		IsMove = true;
 	}
 
-	if (IsMove)
-	{
-		m_AttackState.isMove = true;
-	}
+	m_BlackBoard->Set_Data().isMove = IsMove;
+	m_BlackBoard->Set_Data().isJog = IsJog;
+
 	m_pTransformCom->Is_Sliding(m_pNavigationCom);
 	_int Index = m_pNavigationCom->Get_CulIndex();
 
@@ -363,60 +422,57 @@ void CPlayer::InputKey_MoveState(_float fTimeDelta)
 
 void CPlayer::InputKey_AttackState(_float fTimeDelta)
 {
+	if (*m_BlackBoard->Get_Data().iAnimState == ENUM_CLASS(PLAYER_ANIM::NONE))
+		return;
+
+	m_BlackBoard->Set_Data().isGuard = false;
 	if (m_pGameInstance->IsKeyHold(DIK_Q))
+		m_BlackBoard->Set_Data().isGuard = true;
+	
+	m_BlackBoard->Set_Data().isAim = false;
+	if (m_pGameInstance->IsMouseHold(MOUSEKEYSTATE::RB) && *m_BlackBoard->Get_Data().iAnimState != ENUM_CLASS(PLAYER_ANIM::KNIFE))
+		m_BlackBoard->Set_Data().isAim = true;
+
+	if (m_pGameInstance->IsKeyDown(DIK_R) && m_iAnimState != ENUM_CLASS(PLAYER_ANIM::KNIFE) && m_BlackBoard->Get_Data().isWeaponSwap == false)
 	{
-		m_AttackState.isGuard = true;
-	}
-	else if (m_iCulWeponState != ENUM_CLASS(PLAYER_WEAPON::KNIFE) && m_pGameInstance->IsMouseHold(MOUSEKEYSTATE::RB))
-	{
-		m_AttackState.isAim = true;
-	}
-
-	switch (m_iCulWeponState)
-	{
-	case ENUM_CLASS(PLAYER_WEAPON::SHOTGUN):
-		m_iRayCount = 8;
-		m_AttackState.isAim ? m_fRayRange = 50 : m_fRayRange = 120;
-		break;
-
-	case ENUM_CLASS(PLAYER_WEAPON::KNIFE):
-		m_iRayCount = 0;
-		m_fRayRange = 0;
-		break;
-
-	case ENUM_CLASS(PLAYER_WEAPON::HANDGUN):
-		m_iRayCount = 1;
-		m_AttackState.isAim ? m_fRayRange = 0 : m_fRayRange = 100;
-		break;
-
-	case ENUM_CLASS(PLAYER_WEAPON::SNIPER):
-		m_iRayCount = 1;
-		m_AttackState.isAim ? m_fRayRange = 0 : m_fRayRange = 50;
-		break;
-
-	case ENUM_CLASS(PLAYER_WEAPON::END):
-		m_iRayCount = 0;
-		m_fRayRange = 0;
-		break;
-	}
-
-	if (m_pGameInstance->IsMouseDown(MOUSEKEYSTATE::LB))
-	{
-		m_AttackState.isAttack = true;
-		
-		for (_int i = 0; i < m_iRayCount; ++i)
+		if (m_BlackBoard->Get_Data().isReload == false)
 		{
-
-			RAY_DESC RayDesc = m_pGameInstance->Create_FpsRayDesc(m_fRayRange);
-			m_pGameInstance->Add_ColliderRay(ENUM_CLASS(COLLISION_LAYER::RAY), ENUM_CLASS(OBJECT_TYPE::RAY), RayDesc);
+			if (CPlayer_Manager::GetInstance()->Reload())
+				m_BlackBoard->Set_Data().isReload = true;
 		}
 	}
-
-	if (m_pGameInstance->IsKeyDown(DIK_R))
+	if (m_pGameInstance->IsMouseDown(MOUSEKEYSTATE::LB))
 	{
-		m_AttackState.isReload = true;
+		
+		if (m_iAnimState != ENUM_CLASS(PLAYER_ANIM::KNIFE))
+		{
+			if (CPlayer_Manager::GetInstance()->Gun_Shoting())
+			{
+				m_BlackBoard->Set_Data().isAttack = true;
+
+				for (_int i = 0; i < m_iRayCount; ++i)
+				{
+					RAY_DESC RayDesc = m_pGameInstance->Create_FpsRayDesc(m_fRayRange);
+					m_pGameInstance->Add_ColliderRay(ENUM_CLASS(COLLISION_LAYER::RAY), ENUM_CLASS(OBJECT_TYPE::RAY), RayDesc);
+				}
+			}
+		}
+		else
+			m_BlackBoard->Set_Data().isAttack = true;
 	}
 
+	switch (m_iAnimState)
+	{
+	case ENUM_CLASS(PLAYER_ANIM::SHOTGUN):
+		m_BlackBoard->Get_Data().isAim ? m_fRayRange = 50 : m_fRayRange = 120;
+		break;
+	case ENUM_CLASS(PLAYER_ANIM::HANDGUN):
+		m_BlackBoard->Get_Data().isAim ? m_fRayRange = 0 : m_fRayRange = 100;
+		break;
+	case ENUM_CLASS(PLAYER_ANIM::SNIPER):
+		m_BlackBoard->Get_Data().isAim ? m_fRayRange = 0 : m_fRayRange = 50;
+		break;
+	}
 }
 
 void CPlayer::InputKey_WeaponChange(_float fTimeDelta)
@@ -443,55 +499,31 @@ void CPlayer::InputKey_WeaponChange(_float fTimeDelta)
 		CPlayer_Manager::GetInstance()->Selete_Slot(iSlotIndex);
 		iSlotItem =	CPlayer_Manager::GetInstance()->Get_QuickSlotItem(iSlotIndex);
 
-		if (iSlotItem == 0 && m_iCulWeponState != ENUM_CLASS(PLAYER_WEAPON::HANDGUN))
+		if (iSlotItem == 0 && m_iAnimState != ENUM_CLASS(PLAYER_ANIM::HANDGUN))
 		{
-			m_iNextWeponState = ENUM_CLASS(PLAYER_WEAPON::HANDGUN);
-			m_AttackState.isWeaponSwap = true;
+			m_iNextAnim = ENUM_CLASS(PLAYER_ANIM::HANDGUN);
+			m_BlackBoard->Set_Data().isWeaponSwap = true;
 		}
-		else if (iSlotItem == 1 && m_iCulWeponState != ENUM_CLASS(PLAYER_WEAPON::SHOTGUN))
+		else if (iSlotItem == 1 && m_iAnimState != ENUM_CLASS(PLAYER_ANIM::SHOTGUN))
 		{
-			m_iNextWeponState = ENUM_CLASS(PLAYER_WEAPON::SHOTGUN);
-			m_AttackState.isWeaponSwap = true;
+			m_iNextAnim = ENUM_CLASS(PLAYER_ANIM::SHOTGUN);
+			m_BlackBoard->Set_Data().isWeaponSwap = true;
 		}
-		else if (iSlotItem == 2 && m_iCulWeponState != ENUM_CLASS(PLAYER_WEAPON::SNIPER))
+		else if (iSlotItem == 2 && m_iAnimState != ENUM_CLASS(PLAYER_ANIM::SNIPER))
 		{
-			m_iNextWeponState = ENUM_CLASS(PLAYER_WEAPON::SNIPER);
-			m_AttackState.isWeaponSwap = true;
+			m_iNextAnim = ENUM_CLASS(PLAYER_ANIM::SNIPER);
+			m_BlackBoard->Set_Data().isWeaponSwap = true;
 		}
-		else if (iSlotItem == 3 && m_iCulWeponState != ENUM_CLASS(PLAYER_WEAPON::KNIFE))
+		else if (iSlotItem == 3 && m_iAnimState != ENUM_CLASS(PLAYER_ANIM::KNIFE))
 		{
-			m_iNextWeponState = ENUM_CLASS(PLAYER_WEAPON::KNIFE);
-			m_AttackState.isWeaponSwap = true;
+			m_iNextAnim = ENUM_CLASS(PLAYER_ANIM::KNIFE);
+			m_BlackBoard->Set_Data().isWeaponSwap = true;
 		}
-		else if(m_iCulWeponState != ENUM_CLASS(PLAYER_WEAPON::NONE))
+		else if (m_iAnimState != ENUM_CLASS(PLAYER_ANIM::NONE))
 		{
-			m_iNextWeponState = ENUM_CLASS(PLAYER_WEAPON::NONE);
-			m_AttackState.isWeaponSwap = true;
+			m_iNextAnim = ENUM_CLASS(PLAYER_ANIM::NONE);
+			m_BlackBoard->Set_Data().isWeaponSwap = false;
 		}
-	}
-
-	if (m_iPreWeponState != m_iCulWeponState)
-	{
-		switch (m_iCulWeponState)
-		{
-		case ENUM_CLASS(PLAYER_WEAPON::KNIFE):
-			m_pWeaponObject = Find_PartObject(TEXT("Part_Knife"));
-			CPlayer_Manager::GetInstance()->Set_Damage(10);
-			break;
-		case ENUM_CLASS(PLAYER_WEAPON::HANDGUN):
-			m_pWeaponObject = Find_PartObject(TEXT("Part_HandGun"));
-			CPlayer_Manager::GetInstance()->Set_Damage(10);
-			break;
-		case ENUM_CLASS(PLAYER_WEAPON::SHOTGUN):
-			m_pWeaponObject = Find_PartObject(TEXT("Part_ShotGun"));
-			CPlayer_Manager::GetInstance()->Set_Damage(5);
-			break;
-		case ENUM_CLASS(PLAYER_WEAPON::SNIPER):
-			m_pWeaponObject = Find_PartObject(TEXT("Part_Sniper"));
-			CPlayer_Manager::GetInstance()->Set_Damage(100);
-			break;
-		}
-		m_iPreWeponState = m_iCulWeponState;
 	}
 
 }
@@ -563,20 +595,24 @@ void CPlayer::Collider_Update()
 		m_pColliderCom[ColliderType_Player::PLAYER_VIEW]->Update(WorldMatrix);
 	}
 	m_pColliderCom[ColliderType_Player::RESIST]->Update(m_pTransformCom->Get_WorldMatrix());
-}
+}	
 
-void CPlayer::IsDmage(_float fTimeDelta)
+void CPlayer::State_Check()
 {
-	if (m_bIsDamage)
-	{
-		m_fDamageCool -= fTimeDelta;
-
-		if (m_fDamageCool <= 0.f)
-		{
-			m_bIsDamage = false;
-			CPlayer_Manager::GetInstance()->Damage_On();
-		}
-	}
+	if (m_BlackBoard->Get_Data().isReload == true)
+		m_szCulStateTag = TEXT("Reload");
+	else if (m_BlackBoard->Get_Data().isWeaponSwap == true)
+		m_szCulStateTag = TEXT("WeaponSwap");
+	else if (m_BlackBoard->Get_Data().isGuard == true)
+		m_szCulStateTag = TEXT("Guard");
+	else if (m_BlackBoard->Get_Data().isAttack == true)
+		m_szCulStateTag = TEXT("Attack");
+	else if (m_BlackBoard->Get_Data().isAim == true)
+		m_szCulStateTag = TEXT("Aim");
+	else if (m_BlackBoard->Get_Data().isMove == true)
+		m_szCulStateTag = TEXT("Move");
+	else
+		m_szCulStateTag = TEXT("Idle");
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -618,6 +654,8 @@ void CPlayer::Free()
 	Safe_Release(m_CulStateObject);
 	Safe_Release(m_pNavigationCom);
 
+	Safe_Release(m_pWeaponObject);
+	Safe_Release(m_BlackBoard);
 	for (auto& pCollider : m_pColliderCom)
 		Safe_Release(pCollider);
 

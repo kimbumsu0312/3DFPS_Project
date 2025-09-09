@@ -39,7 +39,7 @@ void CChannel::Update_TransformationMatrix(const vector<class CBone*>& Bones, _f
     KEYFRAME        StartKeyFrame = m_KeyFrames[iStartIndex];
     KEYFRAME        LastKeyFrame = m_KeyFrames[iEndIndex];
 
-    if (fCurrentTrackPosition == pAnimFrameData.iStartFrame)
+    if (static_cast<_int>(fCurrentTrackPosition) == pAnimFrameData.iStartFrame)
         *pCurrentKeyFrameIndex = iStartIndex;
 
     if (fCurrentTrackPosition >= LastKeyFrame.fTrackPosition || *pCurrentKeyFrameIndex == iEndIndex)
@@ -84,18 +84,10 @@ void CChannel::Update_TransformationMatirx_Transition(const vector<class CBone*>
         vRotation = XMQuaternionIdentity();
         vTranslation = XMVectorZero();
     }
-    _vector vRotStart = vRotation;
-    _vector vRotEnd = XMLoadFloat4(&m_KeyFrames[iStartIndex].vRotation);
-
+       
     vScale = XMVectorLerp(vScale, XMLoadFloat3(&m_KeyFrames[iStartIndex].vScale), fRatio);
     vRotation = XMQuaternionSlerp(vRotation, XMLoadFloat4(&m_KeyFrames[iStartIndex].vRotation), fRatio);
     vTranslation = XMVectorSetW(XMVectorLerp(vTranslation, XMLoadFloat3(&m_KeyFrames[iStartIndex].vTranslation), fRatio), 1.f);
-
-    //if (XMVectorGetX(XMVector4Dot(vRotStart, vRotEnd)) < 0.0f)
-    //    vRotEnd = XMVectorNegate(vRotEnd);
-    //
-    //vRotation = XMQuaternionSlerp(vRotStart, vRotEnd, fRatio);
-    //vRotation = XMQuaternionNormalize(vRotation);
 
     _matrix TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.0f, 0.0f, 0.0f, 1.f), vRotation, vTranslation);
     

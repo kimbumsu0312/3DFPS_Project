@@ -258,6 +258,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Guide_Paper"))))
 		return E_FAIL;
+	m_pGameInstance->Publish(EVENT_MOUSE_MODE{ {true} });
 
 	return S_OK;
 }
@@ -291,7 +292,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	MonDesc1.iWeponType = ENUM_CLASS(CMonster_Normal::NORMAL_MON_WEAPON::SWORD);
 	MonDesc1.szState = TEXT("Idle");
 	MonDesc1.iStartMotion = 3;
-	MonDesc1.vAngleY = 0.f;
+	MonDesc1.vAngleY = -90.f;
+	MonDesc1.iDropImteIndex = 5;
 	Desc1.MonDesc.push_back(MonDesc1);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,

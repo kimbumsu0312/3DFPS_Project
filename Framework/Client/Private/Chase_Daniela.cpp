@@ -15,7 +15,7 @@ void CChase_Daniela::Enter(CDaniela* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
     pContainer->Switch_AnimState(ENUM_CLASS(CDaniela::ANIM_STATE::NORMAL));
-    pContainer->Switch_Anim("Run_F", true);
+    pContainer->Switch_Anim("Walk_Loop", true);
 
     pContainer->SetUp_Node();
 }

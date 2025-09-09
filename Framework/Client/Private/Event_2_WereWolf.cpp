@@ -59,6 +59,7 @@ void CEvent_2_WereWolf::Update(CMonster_WereWolf* pContainer, _float fDeltatime)
 
 void CEvent_2_WereWolf::Exit(CMonster_WereWolf* pContainer)
 {
+    pContainer->Event3_Create();
 }
 
 CEvent_2_WereWolf* CEvent_2_WereWolf::Create(void* pArg)

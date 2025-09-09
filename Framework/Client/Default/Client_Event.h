@@ -85,4 +85,8 @@ namespace Client
 		_int		iTexType;
 	}EVENT_GUIDE_PAPER;
 
+	typedef struct Event_Mouse_Mode
+	{
+		_bool		isFps;
+	}EVENT_MOUSE_MODE;
 }

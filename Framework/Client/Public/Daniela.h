@@ -33,6 +33,7 @@ public:
 
 		_int				iHp = {};
 		_int				iDamage = {};
+		_float				fDamage_Cool = {};
 		_float				fCriAttackCool = {};
 		_float				fAttackCool = {};
 		_int				iWeapon = {};

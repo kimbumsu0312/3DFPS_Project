@@ -29,6 +29,9 @@ public:
 
 	void						InvenOpen(_bool IsOpen);
 	const INVENTORY_DESC&		Get_InvenData();
+	_bool						Reload_Check(_int i);
+	_bool						Bullet_Check(_int i);
+	_bool						IsItemCheck(_int i, class CInvenItem* pItem);
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
 
@@ -47,6 +50,8 @@ private:
 	_uint						m_iSlotSize = {};
 
 	_bool						m_IsInvenOpen = { false };
+
+	_int						m_iBullet[3] = {};
 
 private:
 	_bool						AddItem_Check(const _int& SizeX, const _int& SizeY, _int& iItemGridX, _int& iItemGridY);

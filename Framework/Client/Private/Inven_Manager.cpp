@@ -12,6 +12,10 @@ CInven_Manager::CInven_Manager()
 
 HRESULT CInven_Manager::Initialize(const INVENTORY_DESC& pDesc)
 {
+	for (_int i = 0; i < 3; ++i)
+	{
+		m_iBullet[i] = 0;
+	}
 	m_vInvenCenter = pDesc.vInvenCenter;
 	m_iSlotNumX = pDesc.iSlotNumX;
 	m_iSlotNumY = pDesc.iSlotNumY;
@@ -51,6 +55,18 @@ _bool CInven_Manager::Add_ItemSlot(_int iItemIndex, _wstring szPoolPath)
 {
 	if (g_ItemData[iItemIndex].m_eType == ITEM_TYPE::ITEM)
 	{
+		switch (g_ItemData[iItemIndex].m_iItemID)
+		{
+		case 5:
+			m_iBullet[0] += g_ItemData[iItemIndex].m_iItemValue;
+			break;
+		case 6:
+			m_iBullet[1] += g_ItemData[iItemIndex].m_iItemValue;
+			break;
+		case 7:
+			m_iBullet[2] += g_ItemData[iItemIndex].m_iItemValue;
+			break;
+		}
 		for (auto Item : m_InvenItems)
 		{
 
@@ -215,6 +231,127 @@ const CInven_Manager::INVENTORY_DESC& CInven_Manager::Get_InvenData()
 
 	return Data;
 
+}
+
+_bool CInven_Manager::Reload_Check(_int i)
+{
+	for (auto Item : m_InvenItems)
+	{
+		if (Item->Get_ItemData().iItemIndex == i)
+		{
+			if (Item->Get_ItemData().iItemCount < g_ItemData[i].m_iMaxItem)
+			{
+				switch (g_ItemData[i].m_iItemID)
+				{
+				case 0:
+					if (IsItemCheck(0, Item) == true)
+						return true;
+					else
+						return false;
+				case 1:
+					if(IsItemCheck(1, Item) == true)
+						return true;
+					else
+						return false;
+				case 2:
+					if(IsItemCheck(2, Item) == true)
+						return true;
+					else
+						return false;
+				}
+			}
+			else
+				return false;
+		}
+	}
+
+	return false;
+}
+
+_bool CInven_Manager::Bullet_Check(_int i)
+{
+	for (auto Item : m_InvenItems)
+	{
+		if (Item->Get_ItemData().iItemIndex == i)
+		{
+			if (Item->Get_ItemData().iItemCount > 0)
+			{
+				Item->Add_ItemValue(-1);
+				return true;
+			}
+			else
+				return false;
+		}
+	}
+	return false;
+}
+
+_bool CInven_Manager::IsItemCheck(_int i, CInvenItem* pItem)
+{
+	_int iCount = 0;
+	_int iMaxCount = g_ItemData[i].m_iMaxItem;
+	_int iIndex = -1;
+	_int iItemIndex = -1;
+	switch (i)
+	{
+	case 0:
+		iCount = m_iBullet[0];
+		iIndex = 0;
+		iItemIndex = 5;
+		break;
+	case 1:
+		iCount = m_iBullet[1];
+		iIndex = 1;
+		iItemIndex = 6;
+		break;
+	case 2:
+		iCount = m_iBullet[2];
+		iIndex = 2;
+		iItemIndex = 7;
+		break;
+	}
+	if (iIndex < 0 || iCount <= 0)
+		return false;
+
+	iMaxCount = iMaxCount - pItem->Get_ItemData().iItemCount;
+	
+	if (iMaxCount <= iCount)
+	{
+		pItem->Add_ItemValue(iMaxCount);
+		m_iBullet[i] -= iMaxCount;
+		iCount = iMaxCount;
+	}
+	else
+	{
+		pItem->Add_ItemValue(iCount);
+		m_iBullet[i] = 0;
+	}
+
+
+	for (auto item : m_InvenItems)
+	{
+		if (item->Get_ItemData().iItemIndex == iItemIndex)
+		{
+			_int iValue = 0;
+
+			iValue = item->Get_ItemData().iItemCount - iCount;
+
+			if (iValue <= 0)
+			{
+				iCount = iCount - item->Get_ItemData().iItemCount;
+				Erase_ItemSlot(item);
+			}
+			else
+			{
+				item->Add_ItemValue(-iCount);
+				return true;
+			}
+
+			if (iCount <= 0)
+				return true;
+		}
+	}
+	return true;
 }
 
 _bool CInven_Manager::AddItem_Check(const _int& pSizeX, const _int& pSizeY, _int& iItemGridX, _int& iItemGridY)

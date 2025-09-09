@@ -47,6 +47,13 @@ HRESULT CMonster_WereWolf::Initialize(void* pArg)
 	if (FAILED(Ready_StateObjects()))
 		return E_FAIL;
 
+	if (FAILED(Ready_TriggerEvent()))
+		return E_FAIL;
+
+	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::Body)] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
+	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::ATTACK_L)] = m_pBodyObject->Get_BoneMatrix(TEXT("L_UpperArm"));
+	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::ATTACK_R)] = m_pBodyObject->Get_BoneMatrix(TEXT("R_UpperArm"));
+
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-64.51f, -1.11f, 38.16f, 1.f));
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(90.f));
 	return S_OK;
@@ -80,6 +87,7 @@ void CMonster_WereWolf::Update(_float fTimeDelta)
 	Root_Move();
 
 	m_pBodyObject->Update(fTimeDelta);
+//	Collider_Update();
 }
 
 void CMonster_WereWolf::Late_Update(_float fTimeDelta)
@@ -94,12 +102,29 @@ void CMonster_WereWolf::Late_Update(_float fTimeDelta)
 HRESULT CMonster_WereWolf::Render()
 {
 #ifdef _DEBUG
-	//for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
-	//{
-	//	m_pColliderCom[i]->Render();
-	//}
+	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
+	{
+		m_pColliderCom[i]->Render();
+	}
 #endif
 	return S_OK;
+}
+
+void CMonster_WereWolf::Event3_Create()
+{
+	CTrigger::TRIGEER_DESC TriggerDesc;
+
+	TriggerDesc.eType = TRIGGER_TYPE::PLAYER;
+	TriggerDesc.eObjType = OBJECT_TYPE::PLAYER;
+	TriggerDesc.TriggerEvent = { [&]() {return Event_3(); } };
+
+	TriggerDesc.vCenter = _float3{ 0.f, 0.f, 0.f };
+	TriggerDesc.vExtents = _float3{ 1.f, 1.f, 1.f };
+	TriggerDesc.vPos = _float3{ -46.91f, -3.63f, 29.99f };
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Trigger"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Trigger"), &TriggerDesc)))
+		return;
+
 }
 
 void CMonster_WereWolf::Switch_Anim(string szAnimTag, _bool IsLoop)
@@ -110,14 +135,22 @@ void CMonster_WereWolf::Switch_Anim(string szAnimTag, _bool IsLoop)
 
 void CMonster_WereWolf::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
 {
-}
+	if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::RESIST))
+	{
+		if (TargetCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::RESIST))
+			m_pTransformCom->Is_Sliding(m_pNavigationCom, XMLoadFloat3(&TargetCollision.pCollider->Get_Intersect_Normal()));
+	}
+	else
+	{
+		switch (TargetCollision.iObjType)
+		{
+		case ENUM_CLASS(OBJECT_TYPE::RAY):
 
-void CMonster_WereWolf::SetUp_Node(_int iTargetCellIndex, _float3 vPos)
-{
-}
-
-void CMonster_WereWolf::Move_Node(_float fTimeDelta)
-{
+			m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
+			m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
+			break;
+		}
+	}
 }
 
 void CMonster_WereWolf::Target_LookTurn(_float fTimeDelta)
@@ -156,6 +189,7 @@ void CMonster_WereWolf::Event_2()
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(90.f));
 	m_pNavigationCom->Set_CellIndex(5168);
 	m_pBodyObject->Reset_MovePos();
+
 }
 
 void CMonster_WereWolf::Event_3()
@@ -172,44 +206,46 @@ void CMonster_WereWolf::Event_3()
 
 HRESULT CMonster_WereWolf::Ready_Components()
 {
-	//CBounding_OBB::BOUNDING_OBB_DESC  OBBDesc{};
-	//OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::RESIST);
-	//OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::RESIST);
-	//OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
-	//OBBDesc.vExtents = _float3(0.4f, 1.f, 0.4f);
-	//OBBDesc.vCenter = _float3(0.f, 0.5f, 0.f);
+	CBounding_OBB::BOUNDING_OBB_DESC  OBBDesc{};
+	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::RESIST);
+	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::RESIST);
+	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
+	OBBDesc.vExtents = _float3(0.4f, 1.f, 0.4f);
+	OBBDesc.vCenter = _float3(0.f, 0.5f, 0.f);
 
-	//if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-	//	TEXT("Com_Collider_Resist"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::RESIST)]), &OBBDesc)))
-	//	return E_FAIL;
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
+		TEXT("Com_Collider_Resist"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::RESIST)]), &OBBDesc)))
+		return E_FAIL;
 
-	//OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
-	//OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::MON_BODY);
-	//OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
-	//OBBDesc.vExtents = _float3(0.3f, 1.1f, 0.3f);
-	//OBBDesc.vCenter = _float3(0.f, -0.25f, 0.f);
+	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
+	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::MON_BODY);
+	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
+	OBBDesc.vExtents = _float3(0.3f, 1.1f, 0.3f);
+	OBBDesc.vCenter = _float3(0.f, -0.25f, 0.f);
 
-	//if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-	//	TEXT("Com_Collider_Body"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::Body)]), &OBBDesc)))
-	//	return E_FAIL;
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
+		TEXT("Com_Collider_Body"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::Body)]), &OBBDesc)))
+		return E_FAIL;
 
-	//OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::MON_HEAD);
-	//OBBDesc.vExtents = _float3(0.12f, 0.15f, 0.12f);
-	//OBBDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
+	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::ATTACK);
+	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
+	OBBDesc.vExtents = _float3(1.f, 2.f, 5.f);
+	OBBDesc.vCenter = _float3(0.f, 1.f, 1.f);
 
-	//if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-	//	TEXT("Com_Collider_Head"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::Head)]), &OBBDesc)))
-	//	return E_FAIL;
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
+		TEXT("Com_Collider_Attack_L"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::ATTACK_L)]), &OBBDesc)))
+		return E_FAIL;
 
-	//OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
-	//OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::ATTACK);
-	//OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
-	//OBBDesc.vExtents = _float3(1.f, 2.f, 5.f);
-	//OBBDesc.vCenter = _float3(0.f, 1.f, 1.f);
+	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
+	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::ATTACK);
+	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
+	OBBDesc.vExtents = _float3(1.f, 2.f, 5.f);
+	OBBDesc.vCenter = _float3(0.f, 1.f, 1.f);
 
-	//if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-	//	TEXT("Com_Collider_Attack"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::ATTACK)]), &OBBDesc)))
-	//	return E_FAIL;
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
+		TEXT("Com_Collider_Attack_R"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::ATTACK_R)]), &OBBDesc)))
+		return E_FAIL;
 
 	CNavigation::NAVIGATION_DESC        NaviDesc{};
 	NaviDesc.iCurrentCellIndex = 4995;
@@ -283,6 +319,35 @@ HRESULT CMonster_WereWolf::Ready_StateObjects()
 	return S_OK;
 }
 
+HRESULT CMonster_WereWolf::Ready_TriggerEvent()
+{
+	CTrigger::TRIGEER_DESC TriggerDesc;
+
+	TriggerDesc.eType = TRIGGER_TYPE::PLAYER;
+	TriggerDesc.eObjType = OBJECT_TYPE::PLAYER;
+	TriggerDesc.TriggerEvent = { [&]() {return Event_1(); } };
+
+	TriggerDesc.vCenter = _float3{ 0.f, 0.f, 0.f };
+	TriggerDesc.vExtents = _float3{ 4.f, 4.f, 4.f };
+	TriggerDesc.vPos = _float3{ -55.06f, -3.63f, 39.44f };
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Trigger"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Trigger"), &TriggerDesc)))
+		return E_FAIL;
+
+	TriggerDesc.eType = TRIGGER_TYPE::PLAYER;
+	TriggerDesc.eObjType = OBJECT_TYPE::PLAYER;
+	TriggerDesc.TriggerEvent = { [&]() {return Event_2(); } };
+
+	TriggerDesc.vCenter = _float3{ 0.f, 0.f, 0.f };
+	TriggerDesc.vExtents = _float3{ 1.f, 1.f, 1.f };
+	TriggerDesc.vPos = _float3{ -45.24f, -3.63f, 29.99f };
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Trigger"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Trigger"), &TriggerDesc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CMonster_WereWolf::Add_StateObject(const _wstring& strStateObjectTag, CMonState_WereWolf* pStateObject)
 {
 	if (nullptr != Find_PartObject(strStateObjectTag))
@@ -349,6 +414,30 @@ void CMonster_WereWolf::Root_Move()
 
 	m_pTransformCom->Set_State(Engine::STATE::POSITION,
 		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
+}
+
+void CMonster_WereWolf::Collider_Update()
+{
+	_matrix Worldmat = m_pTransformCom->Get_WorldMatrix();
+	_vector vRotation = XMQuaternionRotationMatrix(Worldmat);
+
+	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
+	{
+		if (ENUM_CLASS(ColliderType_Mon::RESIST) == i)
+		{
+			m_pColliderCom[i]->Update(m_pTransformCom->Get_WorldMatrix());
+			continue;
+		}
+		_matrix BoneMat = XMLoadFloat4x4(m_pColliderBone[i]);
+		_vector vScale, vRot, vTrans;
+		XMMatrixDecompose(&vScale, &vRot, &vTrans, BoneMat);
+
+		_matrix WorldRotMat = XMMatrixRotationQuaternion(vRot);
+		_matrix WorldTransMat = XMMatrixTranslationFromVector(vTrans);
+		_matrix WorldMatrix = WorldRotMat * WorldTransMat * Worldmat;
+
+		m_pColliderCom[i]->Update(WorldMatrix);
+	}
 }
 
 CMonster_WereWolf* CMonster_WereWolf::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

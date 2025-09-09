@@ -77,6 +77,9 @@ void CDaniela::Update(_float fTimeDelta)
 	if (m_BlackBoard->Get_Data().fCriAttackCool > 0.f)
 		m_BlackBoard->Set_Data().fCriAttackCool -= fTimeDelta;
 
+	if(m_BlackBoard->Get_Data().fDamage_Cool > 0.f)
+		m_BlackBoard->Set_Data().fDamage_Cool -= fTimeDelta;
+
 	m_pBehaviorTree->Update();
 
 	State_Change();
@@ -186,6 +189,7 @@ void CDaniela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColl
 		switch (TargetCollision.iObjType)
 		{
 		case ENUM_CLASS(OBJECT_TYPE::RAY):
+
 			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
 				m_BlackBoard->Set_Data().IsHitPoint.IsHead = true;
 			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_BODY))
@@ -196,7 +200,8 @@ void CDaniela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColl
 				m_BlackBoard->Set_Data().IsHitPoint.IsSholder_L = true;
 
 			m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
-			m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
+			if (m_BlackBoard->Get_Data().fDamage_Cool <= 0.f)
+				m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
 			break;
 		}
 	}
@@ -315,6 +320,7 @@ HRESULT CDaniela::Ready_Utility()
 
 	m_BlackBoard->Set_Data().iHp = 100;
 	m_BlackBoard->Set_Data().iDamage = 0;
+	m_BlackBoard->Set_Data().fDamage_Cool = 0.f;
 
 	m_BlackBoard->Set_Data().IsHitPoint.IsBody = false;
 	m_BlackBoard->Set_Data().IsHitPoint.IsHead = false;

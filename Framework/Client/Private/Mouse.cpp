@@ -35,6 +35,11 @@ HRESULT CMouse::Initialize(void* pArg)
 	m_vSeleteMinUV = { 37.f / fMaxSizeX, 32.f / fMaxSizeY };
 	m_vSeleteMaxUV = { 83.f / fMaxSizeX, 104.f / fMaxSizeY };
 
+	m_pGameInstance->Subscribe<Event_Inventory_Open>([&](const Event_Inventory_Open& e)
+		{ true == e.bIsOpen ? m_bIsFPS = false : m_bIsFPS = true;	});
+
+	m_pGameInstance->Subscribe<EVENT_MOUSE_MODE>([&](const EVENT_MOUSE_MODE& e)
+		{ true == e.isFps ? m_bIsFPS = true : m_bIsFPS = false;	});
 	return S_OK;
 }
 

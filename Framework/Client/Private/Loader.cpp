@@ -74,7 +74,7 @@ HRESULT CLoader::Loading_For_Logo_Level()
 
 	lstrcpy(m_szLoadingText, TEXT("모델을 로딩중입니다."));
 
-	lstrcpy(m_szLoadingText, TEXT(" 이더를 로딩중입니다."));
+	lstrcpy(m_szLoadingText, TEXT("셰이더를 로딩중입니다."));
 
 	lstrcpy(m_szLoadingText, TEXT("게임오브젝트원형를 로딩중입니다."));
 
@@ -124,16 +124,27 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
     if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Player/Player.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Player"))))
 		return E_FAIL;
 	/* Prototype_Model_Knife*/
-	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Knife/Knife.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Knife"))))
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Knife/Knife.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Knife_Weapon"))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Knife/Knife_Item.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Knife"))))
+		return E_FAIL;
+
 	/* Prototype_Model_HandGun*/
-	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/HandGun/HandGun.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_HandGun"))))
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/HandGun/HandGun.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_HandGun_Weapon"))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/HandGun/HandGun_Item.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_HandGun"))))
+		return E_FAIL;
+
 	/* Prototype_Model_ShotGun*/
-	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/ShotGun/ShotGun.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_ShotGun"))))
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/ShotGun/ShotGun.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_ShotGun_Weapon"))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/ShotGun/ShotGun_Item.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_ShotGun"))))
+		return E_FAIL;
+
 	/* Prototype_Model_Sniper*/
-	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Sniper/Sniper.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Sniper"))))
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Sniper/Sniper.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Sniper_Weapon"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Sniper/Sniper_Item.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Sniper"))))
 		return E_FAIL;
 #pragma endregion
 

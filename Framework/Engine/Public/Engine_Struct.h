@@ -40,7 +40,7 @@ namespace Engine
 	{
 		XMVECTOR	RayPos;
 		XMVECTOR	RayDIr;
-
+		float		Time;
 	}RAY_DESC;
 
 	typedef struct tagCollisionDesc

@@ -99,6 +99,8 @@ RAY_DESC CPicking::Create_FpsRayDesc(_float fOffSet)
 	Desc.RayPos = XMVector3TransformCoord(vWolrdPos, m_pGameInstance->Get_Transform_Matrix_Inverse(D3DTS::VIEW));
 	Desc.RayDIr = XMVector3Normalize(vRayNDC);
 
+	Desc.Time = 2.f;
+
 	m_RayDescs.push_back(Desc);
 	return Desc;
 }
@@ -146,9 +148,23 @@ HRESULT CPicking::Ray_Render()
 
 	m_pBatch->Begin();
 	
-	for (auto Ray : m_RayDescs)
-		DX::DrawRay(m_pBatch, Ray.RayPos, Ray.RayDIr * 1000.f,false);
-	
+	if (m_RayDescs.size() > 0)
+	{
+		for (auto iter = m_RayDescs.begin(); iter == m_RayDescs.end(); )
+		{
+			DX::DrawRay(m_pBatch, (*iter).RayPos, (*iter).RayDIr * 1000.f, false);
+			(*iter).Time -= 0.016f;
+
+			if ((*iter).Time <= 0.f)
+			{
+				iter = m_RayDescs.erase(iter);
+			}
+			else
+			{
+				++iter;
+			}
+		}
+	}
 	m_pBatch->End();
 
 	return S_OK;
@@ -178,6 +194,7 @@ void CPicking::Free()
 	Safe_Release(m_pInputLayout);
 	Safe_Delete(m_pBatch);
 	Safe_Delete(m_pEffect);
-
+	m_RayDescs.clear();
 #endif
+
 }

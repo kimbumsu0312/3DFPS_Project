@@ -34,7 +34,10 @@ void CCamera_Free::Priority_Update(_float fTimeDelta)
         m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(CPlayer_Manager::GetInstance()->Get_PlayerPos(), 1.f));
         return;
     }
-    KeyInput(fTimeDelta);
+    if (m_pGameInstance->IsKeyDown(DIK_P))
+        m_bIsMove ? m_bIsMove = false : m_bIsMove = true;
+    if(m_bIsMove)
+        KeyInput(fTimeDelta);
     Zoom_In(fTimeDelta);
     Zoom_Out(fTimeDelta);
 

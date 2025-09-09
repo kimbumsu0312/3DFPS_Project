@@ -198,6 +198,14 @@ void CMonster_Normal::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY Tar
 				m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
 			}
 			break;
+
+		case ENUM_CLASS(OBJECT_TYPE::WEAPON):
+			if (m_BlackBoard->Get_Data().IsWeaponDamage == true)
+				break;
+			m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
+			m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
+			m_BlackBoard->Set_Data().IsWeaponDamage = true;
+			break;
 		}
 	}
 }
@@ -373,6 +381,7 @@ HRESULT CMonster_Normal::Ready_Utility()
 	m_BlackBoard->Set_Data().iStartMotion = 0;
 
 	m_BlackBoard->Set_Data().MonPos = m_pTransformCom->Get_WorldMatrixPtr();
+	m_BlackBoard->Set_Data().IsWeaponDamage = false;
 
 	m_pBehaviorTree = CBehaviorTree_Normon_1::Create(m_BlackBoard);
 

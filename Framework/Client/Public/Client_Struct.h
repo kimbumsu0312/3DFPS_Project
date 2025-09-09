@@ -20,26 +20,6 @@ namespace Client
 		_int iItemCount;
 	}INVEN_ITEM;
 
-	//스테이터스 관련 구조체
-	typedef struct PlayerMoveState
-	{
-		bool isMoveF;
-		bool isMoveB;
-		bool isMoveR;
-		bool isMoveL;
-		bool isJog;
-	}PLAYER_MOVE_STATE;
-
-	typedef struct PlayerAttackState
-	{
-		bool isMove;
-		bool isAttack;
-		bool isGuard;
-		bool isReload;
-		bool isAim;
-		bool isWeaponSwap;
-	}PLAYER_ATTACK_STATE;
-
 	typedef struct BOSS_SISTERHitPoint
 	{
 		bool IsHead;

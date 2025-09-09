@@ -14,7 +14,7 @@ class CMonster_WereWolf final : public CContainerObject
 {
 public:
 	enum class ANIM_STATE { DAMAGE, NORMAL, ATTACK, END };
-	enum class ColliderType_Mon { Body = 0, Head, RESIST, ATTACK, End };
+	enum class ColliderType_Mon { Body = 0, RESIST, ATTACK_L, ATTACK_R, End };
 
 public:
 	typedef struct WereWolfData
@@ -53,6 +53,7 @@ public:
 	virtual void					Late_Update(_float fTimeDelta);
 	virtual HRESULT					Render();
 
+	void							Event3_Create();
 public:
 	void							Switch_Anim(string szAnimTag, _bool IsLoop);
 	CBlackBoard<WEREWOLF_DATA>*		Get_BlackBoard() { return m_BlackBoard; }
@@ -60,8 +61,6 @@ public:
 
 	virtual void					OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 
-	void							SetUp_Node(_int iTargetCellIndex, _float3 vPos);
-	void							Move_Node(_float fTimeDelta);
 	void							Target_LookTurn(_float fTimeDelta);
 	void							Attack_Collision();
 
@@ -100,12 +99,15 @@ private:
 	HRESULT							Ready_PartObjects();
 	HRESULT							Ready_Utility();
 	HRESULT							Ready_StateObjects();
+	HRESULT							Ready_TriggerEvent();
 
 	HRESULT							Add_StateObject(const _wstring& strStateObjectTag, CMonState_WereWolf* pStateObject);
 	class CMonState_WereWolf*		Find_StateObject(const _wstring& strStateObjectTag);
 
 	void							State_Change();
 	void							Root_Move();
+	void							Collider_Update();
+
 public:
 	static CMonster_WereWolf*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*			Clone(void* pArg);

@@ -45,12 +45,20 @@ void CKnife::Update(_float fTimeDelta)
         BoneMatrix.r[i] = XMVector3Normalize(BoneMatrix.r[i]);
     }
      XMStoreFloat4x4(&m_CombinedWorldMatrix, WorldMatrix * BoneMatrix * ParentMatrix);
+
+     m_pColliderCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
+
+
 }
 
 void CKnife::Late_Update(_float fTimeDelta)
 {
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
         return;
+
+#ifdef _DEBUG
+    m_pGameInstance->Add_DebugComponent(m_pColliderCom);
+#endif // _DEBUG
 }
 
 HRESULT CKnife::Render()
@@ -78,14 +86,38 @@ HRESULT CKnife::Render()
     return S_OK;
 }
 
+void CKnife::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
+{
+
+}
+
+HRESULT CKnife::Add_Collider()
+{
+    if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom)))
+        return E_FAIL;
+
+    return S_OK;
+}
+
 HRESULT CKnife::Ready_Components()
 {
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
         return E_FAIL;
 
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Knife"),
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Knife_Weapon"),
         TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom), nullptr)))
+        return E_FAIL;
+
+    CBounding_OBB::BOUNDING_OBB_DESC  OBBDesc{};
+    OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::KNIFE);
+    OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::WEAPON);
+    OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
+    OBBDesc.vExtents = _float3(0.15f, 0.15f, 0.25f);
+    OBBDesc.vCenter = _float3(0.f, 0.f, -0.25f);
+
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
+        TEXT("Com_Collider_Resist"), reinterpret_cast<CComponent**>(&m_pColliderCom), &OBBDesc)))
         return E_FAIL;
 
     return S_OK;
@@ -137,4 +169,5 @@ void CKnife::Free()
 
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
+    Safe_Release(m_pColliderCom);
 }

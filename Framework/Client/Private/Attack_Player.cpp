@@ -13,8 +13,7 @@ HRESULT CAttack_Player::Initalize(void* pArg)
 
 void CAttack_Player::Enter(CPlayer* pContainer)
 {
-    m_eAnimState = STATE_ANIM::START;
-    if (pContainer->Get_WeaponType() == ENUM_CLASS(PLAYER_WEAPON::KNIFE))
+    if (*pContainer->Get_BlackBoard()->Get_Data().iAnimState == ENUM_CLASS(PLAYER_ANIM::KNIFE))
     {
         m_bMotionSwap ? pContainer->Switch_Anim("Attack_1", false) : pContainer->Switch_Anim("Attack_2", false);
         m_bMotionSwap ? m_bMotionSwap = false : m_bMotionSwap = true;
@@ -28,13 +27,13 @@ void CAttack_Player::Enter(CPlayer* pContainer)
 
 void CAttack_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 {
-    if (pContainer->IsAnimFinsh() && m_eAnimState == STATE_ANIM::START)
-    {
-        if (pContainer->Get_AttackState().isAim)
-            pContainer->Switch_State(TEXT("Aim"));
-        else
-            pContainer->Switch_State(TEXT("Idle"));
-    }
+    if (*pContainer->Get_BlackBoard()->Get_Data().iAnimState == ENUM_CLASS(PLAYER_ANIM::KNIFE))
+        pContainer->AttackCollider();
+
+   if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+   {
+       pContainer->Get_BlackBoard()->Set_Data().isAttack = false;
+   }
 }
 
 void CAttack_Player::Exit(CPlayer* pContainer)

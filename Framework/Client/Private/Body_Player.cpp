@@ -17,13 +17,10 @@ HRESULT CBody_Player::Initialize_Prototype()
 
 HRESULT CBody_Player::Initialize(void* pArg)
 {
-
     BODY_DESC* pDesc = static_cast<BODY_DESC*>(pArg);
-    
-    m_pWeaponState = pDesc->pWeaponState;
-    m_pAnimTag = pDesc->pAnimTag;
-    m_pIsAnimFinsh = pDesc->pIsAnimFinsh;
-    m_pIsAnimLoop = pDesc->pIsAnimLoop;
+    m_pBlackBoard = pDesc->m_BlackBoard;
+
+    Safe_AddRef(m_pBlackBoard);
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
@@ -41,7 +38,8 @@ void CBody_Player::Priority_Update(_float fTimeDelta)
 
 void CBody_Player::Update(_float fTimeDelta)
 {
-    *m_pIsAnimFinsh = m_pAnimCom->Player_Animation(*m_pWeaponState, *m_pAnimTag, *m_pIsAnimLoop, m_pModelCom, fTimeDelta, m_iRootLodeIndex);
+    CPlayer::PLAYER_DATA pData = m_pBlackBoard->Get_Data();
+    *pData.bIsAnimFinsh = m_pAnimCom->Player_Animation(*pData.iAnimState, *pData.szAnimTag, *pData.bIsAnimLoop, m_pModelCom, fTimeDelta, m_iRootLodeIndex);
 
     Update_CombinedMatrix();
 }
@@ -103,8 +101,8 @@ HRESULT CBody_Player::Ready_Components()
 
     CAnimatio_Controller::ANIMTION_DESC Desc;
     Desc.szFile_Path = "../Bin/Resources/Models/Player/PlayerAnim.Json";
-    Desc.szCulAnimName = *m_pAnimTag;
-    Desc.iAnimIndex = *m_pWeaponState;
+    Desc.szCulAnimName = *m_pBlackBoard->Get_Data().szAnimTag; 
+    Desc.iAnimIndex = *m_pBlackBoard->Get_Data().iAnimState;
     Desc.pModel = m_pModelCom;
  
     Desc.IsLoop = true;
@@ -128,11 +126,6 @@ HRESULT CBody_Player::Bind_ShaderResources()
         return E_FAIL;
 
     return S_OK;
-}
-
-void CBody_Player::Anim_State(_float fTimeDelta)
-{
-    m_pAnimCom->Player_Animation(*m_pWeaponState, *m_pAnimTag, true, m_pModelCom, fTimeDelta, m_iRootLodeIndex);
 }
 
 CBody_Player* CBody_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -167,4 +160,6 @@ void CBody_Player::Free()
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
     Safe_Release(m_pAnimCom);
+
+    Safe_Release(m_pBlackBoard);
 }

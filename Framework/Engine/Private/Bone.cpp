@@ -42,8 +42,14 @@ void CBone::Set_RotBonePitch(_float fPitch, _bool IsTrans)
 
 }
 
+_fvector CBone::Get_XQut()
+{
+    return XMQuaternionRotationRollPitchYaw(m_fPitch, 0.f, 0.f);
+}
+
 void CBone::Update_CombinedTransformationMatrix(const _float4x4& PreTransformMatrix, const vector<CBone*>& Bones)
 {
+
     _matrix matPitch = XMMatrixRotationX(m_fPitch);
     if (-1 == m_iParentBoneIndex)
     {

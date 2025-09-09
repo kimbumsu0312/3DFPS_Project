@@ -42,10 +42,7 @@ void CDamage_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
 
 void CDamage_Daniela::Exit(CDaniela* pContainer)
 {
-   // DIRECTION eHitPoint = PlayerDIR(pContainer->Get_TransformState(STATE::POSITION), pContainer->Get_TransformState(STATE::LOOK));
-   // if (eHitPoint == DIRECTION::B)
-   //     pContainer->Target_LookAt();
-
+    pContainer->Get_BlackBoard()->Set_Data().fDamage_Cool = 3.f;
     m_eAnimState = STATE_ANIM::END;
 }
 

@@ -15,7 +15,7 @@ void CReload_Player::Enter(CPlayer* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
 
-    if (pContainer->Get_WeaponType() == ENUM_CLASS(PLAYER_WEAPON::SHOTGUN))
+    if (*pContainer->Get_BlackBoard()->Get_Data().iAnimState == ENUM_CLASS(PLAYER_ANIM::SHOTGUN))
     {
         m_eReload_Type = RELOAD_TYPE::BULLET;
         pContainer->Switch_Anim("Reload_Start", false);
@@ -33,10 +33,7 @@ void CReload_Player::Update(CPlayer* pContainer, _float fTimeDelta)
     {
         if (pContainer->IsAnimFinsh())
         {
-            if (pContainer->Get_AttackState().isAim)
-                pContainer->Switch_State(TEXT("Aim"));
-            else
-                pContainer->Switch_State(TEXT("Idle"));
+            pContainer->Get_BlackBoard()->Set_Data().isReload = false;
         }
         return;
     }
@@ -54,10 +51,7 @@ void CReload_Player::Update(CPlayer* pContainer, _float fTimeDelta)
         }
         else if (m_eAnimState == STATE_ANIM::END && pContainer->IsAnimFinsh())
         {
-            if (pContainer->Get_AttackState().isAim)
-                pContainer->Switch_State(TEXT("Aim"));
-            else
-                pContainer->Switch_State(TEXT("Idle"));
+            pContainer->Get_BlackBoard()->Set_Data().isReload = false;
         }
     }
 }

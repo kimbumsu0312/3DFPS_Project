@@ -1,5 +1,6 @@
 #pragma once
 #include "PartObject.h"
+#include "Player.h"
 
 NS_BEGIN(Engine)
 class CShader;
@@ -12,11 +13,8 @@ class CBody_Player final : public CPartObject
 {
 public:
 	typedef struct tagBodyPlayerDesc : public CPartObject::PARTOBJECT_DESC {
-		_uint*	pState = { nullptr };
-		_uint*	pWeaponState = { nullptr };
-		string* pAnimTag = { nullptr };
-		_bool*	pIsAnimLoop = { nullptr };
-		_bool*	pIsAnimFinsh = { nullptr };
+		
+		CBlackBoard<CPlayer::PLAYER_DATA>* m_BlackBoard = { nullptr };
 	}BODY_DESC;
 
 private:
@@ -42,11 +40,9 @@ private:
 	CModel*					m_pModelCom = { nullptr };
 	CAnimatio_Controller*	m_pAnimCom = { nullptr };
 
-	_uint*					m_pWeaponState = { nullptr };
-	string*					m_pAnimTag = { nullptr };
-	_bool*					m_pIsAnimLoop = { nullptr };
-	_bool*					m_pIsAnimFinsh = { nullptr };
 	_uint					m_iRootLodeIndex = {};
+	CBlackBoard<CPlayer::PLAYER_DATA>* m_pBlackBoard = { nullptr };
+
 private:
 	HRESULT					Ready_Components();
 	HRESULT					Bind_ShaderResources();

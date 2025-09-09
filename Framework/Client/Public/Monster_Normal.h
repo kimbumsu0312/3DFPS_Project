@@ -30,6 +30,7 @@ public:
 		_bool				IsChase = {false};
 		_bool				IsIdle = {false};
 		_bool				IsAttack = { false };
+		_bool				IsWeaponDamage = { false };
 		const _float4x4*	MonPos = { nullptr };
 
 		_int				iHp = {};

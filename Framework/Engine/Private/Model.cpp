@@ -99,7 +99,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const A
     if (m_fTransitionTime < m_fTransitionDuration)
     {
         m_bPreRootSet = true;
-        m_fTransitionTime += 0.016;
+        m_fTransitionTime += fTimeDelta;
         _float fRatio = min(m_fTransitionTime / m_fTransitionDuration, 1.0f);
        
         m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices_Transition(m_Bones, pAnimFrameData, fRatio);
@@ -124,7 +124,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const A
     }
     else
     {
-        m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, fTimeDelta, m_bisLoop, eAnimStatus, &m_bIsAnimFished, pAnimFrameData);
+        m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, 0.016f, m_bisLoop, eAnimStatus, &m_bIsAnimFished, pAnimFrameData);
 
         for (_int i = 0; i < m_Bones.size(); ++i)
         {
@@ -169,11 +169,6 @@ _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const A
     
     return m_bIsAnimFished;
     
-}
-
-_bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex, _int UperBone)
-{
-    return _bool();
 }
 
 _float4x4* CModel::Get_BoneMatrix(const _wstring pBoneName)

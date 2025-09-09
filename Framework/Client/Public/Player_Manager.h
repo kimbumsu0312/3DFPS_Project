@@ -29,6 +29,9 @@ public:
 
 	void			Update_Cell(_int iIndex) { m_iCellIndex = iIndex; }
 	const _int&		Get_CellIndex() {return m_iCellIndex; }
+
+	_bool			Gun_Shoting();
+	_bool			Reload();
 private:
 	CGameInstance*	m_pGameInstance = { nullptr };
 	_float			m_fMaxHp = {};

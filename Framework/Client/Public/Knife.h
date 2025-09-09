@@ -22,9 +22,15 @@ public:
 	virtual void			Late_Update(_float fTimeDelta);
 	virtual HRESULT			Render();
 
+	virtual void			OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
+
+	virtual HRESULT			Add_Collider();
 private:
 	CShader*				m_pShaderCom = { nullptr };
 	CModel*					m_pModelCom = { nullptr };
+	CCollider*				m_pColliderCom = { nullptr };
+	_float4x4*				m_pColliderBone = { nullptr };
+	
 
 private:
 	HRESULT					Ready_Components();

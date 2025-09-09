@@ -21,6 +21,8 @@ public:
 
 	void				Set_TransformationToCombind() { m_CombinedTransformationMatrix = m_TransformationMatrix; }
 	void				Set_RotBonePitch(_float fPitch, _bool IsTrans);
+
+	_fvector			Get_XQut();
 public:
 	HRESULT				Initialize(const SAVE_BONE& pBone);
 	void				Update_CombinedTransformationMatrix(const _float4x4& PreTransformMatrix, const vector<CBone*>& Bones);

@@ -13,29 +13,19 @@ HRESULT CGuard_Player::Initalize(void* pArg)
 
 void CGuard_Player::Enter(CPlayer* pContainer)
 {
-    m_eAnimState = STATE_ANIM::LOOP;
     pContainer->Switch_Anim("Guard_Loop", true);
 }
 
 void CGuard_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 {
-    if (pContainer->Get_AttackState().isGuard && pContainer->Get_AttackState().isAim)
-        pContainer->Switch_State(TEXT("Aim"));
-    else if (!pContainer->Get_AttackState().isGuard)
-        pContainer->Switch_State(TEXT("Idle"));
-    else
-    {
-        if (pContainer->Get_MoveState().isMoveB || pContainer->Get_MoveState().isMoveF || 
-            pContainer->Get_MoveState().isMoveL || pContainer->Get_MoveState().isMoveR)
-            pContainer->Switch_Anim("Guard_Walk", true);
-        else
-            pContainer->Switch_Anim("Guard_Loop", true);
-    }
+  if (pContainer->Get_BlackBoard()->Get_Data().isMove == true)
+      pContainer->Switch_Anim("Guard_Walk", true);
+  else
+      pContainer->Switch_Anim("Guard_Loop", true);
 }
 
 void CGuard_Player::Exit(CPlayer* pContainer)
 {
-    m_eAnimState = STATE_ANIM::END;
 }
 
 CGuard_Player* CGuard_Player::Create(void* pArg)
