@@ -22,6 +22,18 @@ HRESULT CBehaviorTree_WereWolf::Initalize(CBlackBoard<CMonster_WereWolf::WereWol
 
 void CBehaviorTree_WereWolf::Update()
 {
+	if (m_pBlackBoard->Get_Data().iHp <= 0)
+	{
+		Switch_Die();
+		return;
+	}
+
+	if (m_pBlackBoard->Get_Data().iDamage > 0)
+	{
+		Switch_Damage();
+		return;
+	}
+
 	__super::Update();
 }
 
@@ -82,6 +94,20 @@ HRESULT CBehaviorTree_WereWolf::Ready_Node()
 
 	m_pRootNode = pRoot;
 	return S_OK;
+}
+
+CNode::TREE_STATE CBehaviorTree_WereWolf::Switch_Die()
+{
+	*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Die");
+	m_pRootNode->Reset();
+	return CNode::TREE_STATE::SUCCESS;
+}
+
+CNode::TREE_STATE CBehaviorTree_WereWolf::Switch_Damage()
+{
+	*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Damage");
+	m_pRootNode->Reset();
+	return CNode::TREE_STATE::SUCCESS;
 }
 
 CNode::TREE_STATE CBehaviorTree_WereWolf::Condition_Event_Check()

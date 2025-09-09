@@ -195,12 +195,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring& strLayerTag)
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_2"), &Desc)))
 		return E_FAIL;
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-	//	ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Bela"), &Desc)))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-	//	ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Alcina"), &Desc)))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Bela"), &Desc)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Alcina"), &Desc)))
+		return E_FAIL;
 
 	CPoolingObject::POOLOBJECT_DESC PoolDesc{};
 	PoolDesc.fRotationPerSec = 1.f;
@@ -285,7 +285,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	Desc1.szPoolPath = TEXT("Pool_NormalMon_1");
 	Desc1.vSpawnerPostion = { -37.45f, -8.64f, 27.06f };
 
-	MonDesc1.vPostion = { -31.45f, -8.69f, 27.f };
+	MonDesc1.vPostion = { -34.45f, -8.69f, 27.f };
 	MonDesc1.iCellIndex = 3740;
 	MonDesc1.iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::FALL);
 	MonDesc1.szAnimTag = "Fall_Start";

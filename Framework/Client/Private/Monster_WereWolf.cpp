@@ -51,8 +51,8 @@ HRESULT CMonster_WereWolf::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::Body)] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
-	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::ATTACK_L)] = m_pBodyObject->Get_BoneMatrix(TEXT("L_UpperArm"));
-	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::ATTACK_R)] = m_pBodyObject->Get_BoneMatrix(TEXT("R_UpperArm"));
+	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::ATTACK_L)] = m_pBodyObject->Get_BoneMatrix(TEXT("L_FrontLeg2"));
+	m_pColliderBone[ENUM_CLASS(ColliderType_Mon::ATTACK_R)] = m_pBodyObject->Get_BoneMatrix(TEXT("R_FrontLeg2"));
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-64.51f, -1.11f, 38.16f, 1.f));
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(90.f));
@@ -87,7 +87,7 @@ void CMonster_WereWolf::Update(_float fTimeDelta)
 	Root_Move();
 
 	m_pBodyObject->Update(fTimeDelta);
-//	Collider_Update();
+	Collider_Update();
 }
 
 void CMonster_WereWolf::Late_Update(_float fTimeDelta)
@@ -97,16 +97,19 @@ void CMonster_WereWolf::Late_Update(_float fTimeDelta)
 		return;
 
 	m_pBodyObject->Late_Update(fTimeDelta);
+	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
+	{
+		m_pGameInstance->Add_DebugComponent(m_pColliderCom[i]);
+		if (i == ENUM_CLASS(ColliderType_Mon::ATTACK_L) || i == ENUM_CLASS(ColliderType_Mon::ATTACK_R))
+			continue;
+
+		if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
+			return;
+	}
 }
 
 HRESULT CMonster_WereWolf::Render()
 {
-#ifdef _DEBUG
-	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
-	{
-		m_pColliderCom[i]->Render();
-	}
-#endif
 	return S_OK;
 }
 
@@ -168,6 +171,11 @@ void CMonster_WereWolf::Target_LookTurn(_float fTimeDelta)
 
 void CMonster_WereWolf::Attack_Collision()
 {
+	if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[ENUM_CLASS(ColliderType_Mon::ATTACK_L)])))
+		return;
+
+	if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[ENUM_CLASS(ColliderType_Mon::ATTACK_R)])))
+		return;
 }
 
 void CMonster_WereWolf::Event_1()
@@ -210,8 +218,8 @@ HRESULT CMonster_WereWolf::Ready_Components()
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::RESIST);
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::RESIST);
 	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
-	OBBDesc.vExtents = _float3(0.4f, 1.f, 0.4f);
-	OBBDesc.vCenter = _float3(0.f, 0.5f, 0.f);
+	OBBDesc.vExtents = _float3(1.f, 1.f, 1.f);
+	OBBDesc.vCenter = _float3(0.f, 0.5f, 1.f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
 		TEXT("Com_Collider_Resist"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::RESIST)]), &OBBDesc)))
@@ -220,8 +228,8 @@ HRESULT CMonster_WereWolf::Ready_Components()
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::MON_BODY);
 	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
-	OBBDesc.vExtents = _float3(0.3f, 1.1f, 0.3f);
-	OBBDesc.vCenter = _float3(0.f, -0.25f, 0.f);
+	OBBDesc.vExtents = _float3(0.7f, 0.4f, 1.f);
+	OBBDesc.vCenter = _float3(0.f, 0.f, -0.7f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
 		TEXT("Com_Collider_Body"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::Body)]), &OBBDesc)))
@@ -230,8 +238,8 @@ HRESULT CMonster_WereWolf::Ready_Components()
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::ATTACK);
 	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
-	OBBDesc.vExtents = _float3(1.f, 2.f, 5.f);
-	OBBDesc.vCenter = _float3(0.f, 1.f, 1.f);
+	OBBDesc.vExtents = _float3(0.2f, 0.2f, 0.7f);
+	OBBDesc.vCenter = _float3(0.f, 0.f, -0.3f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
 		TEXT("Com_Collider_Attack_L"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::ATTACK_L)]), &OBBDesc)))
@@ -240,8 +248,8 @@ HRESULT CMonster_WereWolf::Ready_Components()
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::ATTACK);
 	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
-	OBBDesc.vExtents = _float3(1.f, 2.f, 5.f);
-	OBBDesc.vCenter = _float3(0.f, 1.f, 1.f);
+	OBBDesc.vExtents = _float3(0.2f, 0.2f, 0.7f);
+	OBBDesc.vCenter = _float3(0.f, 0.f, -0.3f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
 		TEXT("Com_Collider_Attack_R"), reinterpret_cast<CComponent**>(&m_pColliderCom[ENUM_CLASS(ColliderType_Mon::ATTACK_R)]), &OBBDesc)))
@@ -287,7 +295,7 @@ HRESULT CMonster_WereWolf::Ready_Utility()
 	m_BlackBoard->Set_Data().szAnimTag = &m_szAnimTag;
 	m_BlackBoard->Set_Data().szCulStateTag = &m_szCulStateTag;
 	m_BlackBoard->Set_Data().iHp = 100;
-	m_BlackBoard->Set_Data().iDamage = 20;
+	m_BlackBoard->Set_Data().iDamage = 0;
 
 	m_BlackBoard->Set_Data().IsAttack = false;
 	m_BlackBoard->Set_Data().fAttackCool = 0.f;
@@ -311,9 +319,9 @@ HRESULT CMonster_WereWolf::Ready_StateObjects()
 	Add_StateObject(TEXT("Event_1"), CEvent_1_WereWolf::Create());
 	Add_StateObject(TEXT("Event_2"), CEvent_2_WereWolf::Create());
 	Add_StateObject(TEXT("Event_3"), CEvent_3_WereWolf::Create());
-	Add_StateObject(TEXT("Die"), CDamage_WereWolf::Create());
-	Add_StateObject(TEXT("Damage"), CDie_WereWolf::Create());
-
+	Add_StateObject(TEXT("Damage"), CDamage_WereWolf::Create());
+	Add_StateObject(TEXT("Die"), CDie_WereWolf::Create());
+	
 	m_pCulStateObject = Find_StateObject(TEXT("Idle"));
 	Safe_AddRef(m_pCulStateObject);
 	return S_OK;
@@ -480,7 +488,6 @@ void CMonster_WereWolf::Free()
 		Safe_Release(pCollider);
 
 	Safe_Release(m_pNavigationCom);
-
 	Safe_Release(m_BlackBoard);
 	Safe_Release(m_pBehaviorTree);
 }

@@ -22,15 +22,17 @@ HRESULT CBehaviorTree_Alcina::Initalize(CBlackBoard<CAlcina::ALCHINA_DATA>* pDat
 
 void CBehaviorTree_Alcina::Update()
 {
-	if (*m_pBlackBoard->Get_Data().iHp <= 0)
+	if (m_pBlackBoard->Get_Data().iHp <= 0)
 	{
 		Switch_Die();
+		m_pRootNode->Reset();
 		return;
 	}
 
-	if (*m_pBlackBoard->Get_Data().iDamage > 0)
+	if (m_pBlackBoard->Get_Data().iDamage > 0)
 	{
 		Switch_Damage();
+		m_pRootNode->Reset();
 		return;
 	}
 
@@ -79,28 +81,39 @@ CNode::TREE_STATE CBehaviorTree_Alcina::Switch_Damage()
 
 CNode::TREE_STATE CBehaviorTree_Alcina::Condition_Attack()
 {
-	if (*m_pBlackBoard->Get_Data().IsAttack != true)
+	if (m_pBlackBoard->Get_Data().IsChase == false)
 		return CNode::TREE_STATE::FAILED;
 
 	_vector vPlayerPos = CPlayer_Manager::GetInstance()->Get_PlayerPos();
 	_vector vMonPos = { m_pBlackBoard->Get_Data().MonPos->m[3][0], m_pBlackBoard->Get_Data().MonPos->m[3][1], m_pBlackBoard->Get_Data().MonPos->m[3][2] };
 	_float fDis = XMVectorGetX(XMVector3Length(vPlayerPos - vMonPos));
 
-	if (fDis >= 6.f)
+	if (fDis >= 6.f && m_pBlackBoard->Get_Data().fAttack1Cool <= 0.f)
+	{
+		m_pBlackBoard->Set_Data().IsAttack = true;
 		m_pBlackBoard->Set_Data().eAttackType = CAlcina::Attack_Type::LONG;
-	else if (fDis >= 4.f)
+		return CNode::TREE_STATE::SUCCESS;
+	}
+	else if (fDis >= 4.f && m_pBlackBoard->Get_Data().fAttack2Cool <= 0.f)
+	{
+		m_pBlackBoard->Set_Data().IsAttack = true;
 		m_pBlackBoard->Set_Data().eAttackType = CAlcina::Attack_Type::SHORT;
-	else if (fDis >= 2.f)
+		return CNode::TREE_STATE::SUCCESS;
+	}
+	else if (fDis >= 2.f && m_pBlackBoard->Get_Data().fAttack3Cool <= 0.f)
+	{
+		m_pBlackBoard->Set_Data().IsAttack = true;
 		m_pBlackBoard->Set_Data().eAttackType = CAlcina::Attack_Type::ZERO;
-
-	return CNode::TREE_STATE::SUCCESS;
+		return CNode::TREE_STATE::SUCCESS;
+	}
+	return CNode::TREE_STATE::FAILED;
 }
 
 CNode::TREE_STATE CBehaviorTree_Alcina::Switch_Attack()
 {
 	*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Attack");
 	
-	if(*m_pBlackBoard->Get_Data().IsAttack == true)
+	if(m_pBlackBoard->Get_Data().IsAttack == true)
 		return CNode::TREE_STATE::RUN;
 
 	return CNode::TREE_STATE::SUCCESS;
@@ -108,18 +121,9 @@ CNode::TREE_STATE CBehaviorTree_Alcina::Switch_Attack()
 
 CNode::TREE_STATE CBehaviorTree_Alcina::Condition_Walk()
 {
-	if (*m_pBlackBoard->Get_Data().IsChase == true)
+	if (m_pBlackBoard->Get_Data().IsChase == true)
 		return CNode::TREE_STATE::SUCCESS;
 
-	_vector vPlayerPos = CPlayer_Manager::GetInstance()->Get_PlayerPos();
-	_vector vMonPos = { m_pBlackBoard->Get_Data().MonPos->m[3][0], m_pBlackBoard->Get_Data().MonPos->m[3][1], m_pBlackBoard->Get_Data().MonPos->m[3][2] };
-	_float fDis = XMVectorGetX(XMVector3Length(vPlayerPos - vMonPos));
-
-	if (fDis <= 6.f)
-	{
-		*m_pBlackBoard->Set_Data().IsChase = true;
-		return CNode::TREE_STATE::SUCCESS;
-	}
 	return CNode::TREE_STATE::FAILED;
 }
 

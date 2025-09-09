@@ -50,9 +50,9 @@ void CWalk_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
         if (m_iPreTargetIndex != iTargetCellIndex)
         {
             m_iPreTargetIndex = iTargetCellIndex;
-            pContainer->SetUp_Node(iTargetCellIndex, vPlayerPos);
+ 
         }
-        pContainer->Move_Node(fDeltatime);
+     
     }
 }
 

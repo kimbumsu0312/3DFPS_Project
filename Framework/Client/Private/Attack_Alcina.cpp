@@ -32,7 +32,7 @@ void CAttack_Alcina::Enter(CAlcina* pContainer)
 void CAttack_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
 {
     CAlcina::Attack_Type eAttack = pContainer->Get_BlackBoard()->Get_Data().eAttackType;
-    
+    pContainer->Target_LookTurn(fDeltatime);
     if (eAttack == CAlcina::Attack_Type::LONG)
     {
         if (m_eAnimState == STATE_ANIM::START)
@@ -55,13 +55,13 @@ void CAttack_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
         else if (m_eAnimState == STATE_ANIM::END)
         {
             if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
-                *pContainer->Get_BlackBoard()->Set_Data().IsAttack = false;
+                pContainer->Get_BlackBoard()->Set_Data().IsAttack = false;
         }
     }
     else
     {
         if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
-            *pContainer->Get_BlackBoard()->Set_Data().IsAttack = false;
+            pContainer->Get_BlackBoard()->Set_Data().IsAttack = false;
     }
 }
 

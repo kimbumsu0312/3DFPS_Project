@@ -14,7 +14,7 @@ class CAlcina final : public CContainerObject
 {
 public:
 	enum class Attack_Type {ZERO, SHORT, LONG, BEHIND, END};
-	enum class ANIM_STATE { NORMAL, DAMAGE, ATTACK, END };
+	enum class ANIM_STATE { NORMAL, ATTACK, DAMAGE, END };
 	enum ColliderType_Mon { Body = 0, Head, RESIST, ATTACK, End };
 public:
 	typedef struct Alchina_Data
@@ -26,11 +26,16 @@ public:
 		_bool*						bIsAnimFinsh = { nullptr };
 
 		_wstring*					szCulStateTag = { nullptr };
-		_int*						iHp = { nullptr };
-		_int*						iDamage = { nullptr };
+		
+		_int						iHp = {};
+		_int						iDamage = {};
 
-		_bool*						IsAttack = { nullptr };
-		_bool*						IsChase = { nullptr };
+		_bool						IsChase = { false };
+		_bool						IsAttack = { false };
+		_float						fAttack1Cool = 0.f;
+		_float						fAttack2Cool = 0.f;
+		_float						fAttack3Cool = 0.f;
+
 		const _float4x4*			MonPos = { nullptr };
 		Attack_Type					eAttackType = { Attack_Type::END };
 	}ALCHINA_DATA;
@@ -56,12 +61,8 @@ public:
 	_bool						Get_HeadShot() { return m_bIsHeadShot; }
 	void						Target_LookTurn(_float fTimeDelta);
 	void						Target_LookAt();
-	void						IsDamage();
 	virtual void				OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 	
-	void						SetUp_Node(_int iTargetCellIndex, _float3 vPos);
-	void						Move_Node(_float fTimeDelta);
-
 private:
 	//컴포넌트 관련
 	CNavigation*				m_pNavigationCom = { nullptr };
@@ -87,12 +88,6 @@ private:
 	//유틸 관련
 	CBlackBoard<ALCHINA_DATA>*	m_BlackBoard = { nullptr };
 	class CBehaviorTree_Alcina* m_pBehaviorTree = { nullptr };
-
-	//상태 관련
-	_int						m_iHp = {};
-	_int						m_iDamage = {};
-	_bool						m_bIsAttack = { false };
-	_bool						m_bIsChase = { false };
 
 private:
 	HRESULT						Ready_Components();

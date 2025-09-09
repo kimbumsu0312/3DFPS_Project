@@ -48,6 +48,7 @@ void CBody_WereWolf::Late_Update(_float fTimeDelta)
 {
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
 		return;
+
 }
 
 HRESULT CBody_WereWolf::Render()

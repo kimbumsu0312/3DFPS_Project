@@ -61,6 +61,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-30.95f, -8.97f, 63.67f, 1.f));
 	CPlayer_Manager::GetInstance()->Update_Cell(m_pNavigationCom->Get_CulIndex());
+	m_pTransformCom->Rotation(_vector{ 0.f, 1.f, 0.f, 0.f }, XMConvertToRadians(180.f));
+
 	return S_OK;
 }
 
@@ -136,6 +138,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	m_pBodyObject->Late_Update(fTimeDelta);
 	if (m_pWeaponObject != nullptr)
 		m_pWeaponObject->Late_Update(fTimeDelta);
+	
 	m_pCamera->Late_Update(fTimeDelta);
 
 #ifdef _DEBUG
@@ -240,7 +243,7 @@ HRESULT CPlayer::Ready_Components()
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::PLAYER_VIEW);
 	OBBDesc.vAngles = _float3(0.f, 0.1f, 0.f);
 	OBBDesc.vExtents = _float3(0.05f, 0.05f, 1.f);
-	OBBDesc.vCenter = _float3(-0.092f, 0.0f, -1.f);
+	OBBDesc.vCenter = _float3(-0.1f, 0.0f, -1.f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
 		TEXT("Com_Collider_View"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Player::PLAYER_VIEW]), &OBBDesc)))

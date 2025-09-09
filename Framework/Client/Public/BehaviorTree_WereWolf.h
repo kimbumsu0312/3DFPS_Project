@@ -20,6 +20,9 @@ private:
 private:
 	HRESULT									Ready_Node();
 
+	CNode::TREE_STATE						Switch_Die();
+	CNode::TREE_STATE						Switch_Damage();
+
 	CNode::TREE_STATE						Condition_Event_Check();
 	CNode::TREE_STATE						Condition_Event_3();
 	CNode::TREE_STATE						Switch_Event_3();

@@ -139,8 +139,7 @@ HRESULT CQuick_Slot_Icon::Ready_Components()
 
 HRESULT CQuick_Slot_Icon::Ready_ItemSlot()
 {
-    CQuick_Slot_Item* pGameObject = nullptr;
-
+    
     UIOBJECT_DESC Desc;
     Desc.iIndex = m_iIndex;
     Desc.vPos = m_vPos;
@@ -149,15 +148,13 @@ HRESULT CQuick_Slot_Icon::Ready_ItemSlot()
 
     Desc.vMinUV = { 0.f, 0.f};
     Desc.vMaxUV = { 1.f, 1.f };
-    pGameObject = dynamic_cast<CQuick_Slot_Item*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Quick_Slot_Item"), &Desc));
-    if (pGameObject == nullptr)
+    m_pItemSlot = dynamic_cast<CQuick_Slot_Item*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Quick_Slot_Item"), &Desc));
+    if (m_pItemSlot == nullptr)
         return E_FAIL;
 
-    Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
-
-    m_pItemSlot = pGameObject;
-
+    Add_Child(this, m_pItemSlot, m_pShaderCom, m_pTextureCom);
     Safe_AddRef(m_pItemSlot);
+
     return S_OK;
 }
 

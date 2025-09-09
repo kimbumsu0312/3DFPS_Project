@@ -14,11 +14,10 @@ HRESULT CDamage_WereWolf::Initalize(void* pArg)
 void CDamage_WereWolf::Enter(CMonster_WereWolf* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
-    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::DAMAGE);
+    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_WereWolf::ANIM_STATE::DAMAGE);
 
     DIRECTION eHitPoint = PlayerDIR(pContainer->Get_Transform()->Get_State(STATE::POSITION), pContainer->Get_Transform()->Get_State(STATE::LOOK));
 
-    
     if (eHitPoint == DIRECTION::F || eHitPoint == DIRECTION::FR || eHitPoint == DIRECTION::FL)
         pContainer->Switch_Anim("Damage_Large_F", false);
     else if (eHitPoint == DIRECTION::B)

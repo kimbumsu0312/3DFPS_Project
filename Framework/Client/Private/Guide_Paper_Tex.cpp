@@ -114,15 +114,15 @@ void CGuide_Paper_Tex::Render_Font_EVENT_2()
 
     _float2 vFontPos = {};
 
-    szFont = TEXT("나가시려면 딸들이랑 놀아주셔야 해요");
+    szFont = TEXT("나가시려면");
     vFontPos.x = m_vPos.x;
-    vFontPos.y = m_vPos.y + 75.f;;
+    vFontPos.y = m_vPos.y - 75.f;;
 
     m_pGameInstance->DrawText(TEXT("Font_GangBuJang"), szFont.c_str(), _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, 1.f }, 0.f, _float2{ 0.5f, 0.5f }, { 1.f, 1.f });
     m_pGameInstance->DrawText(TEXT("Font_GangBuJang"), szFont.c_str(), vFontPos, _fvector{ 1.f, 1.f, 1.f, 1.f }, 0.f, _float2{ 0.5f, 0.5f }, { 1.f, 1.f });
 
 
-    szFont = TEXT("나가시려면 딸들이랑 놀아주셔야 해요");
+    szFont = TEXT("딸들이랑 놀아주셔야 해요");
     vFontPos.x = m_vPos.x;
     vFontPos.y = m_vPos.y - 25.f;;
 

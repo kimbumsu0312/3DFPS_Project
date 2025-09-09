@@ -28,7 +28,6 @@ HRESULT CAlcina::Initialize_Prototype()
 
 HRESULT CAlcina::Initialize(void* pArg)
 {
-	m_iHp = 10000;
 	m_iAnimState = ENUM_CLASS(ANIM_STATE::NORMAL);
 	m_szAnimTag = "Idle";
 
@@ -52,7 +51,7 @@ HRESULT CAlcina::Initialize(void* pArg)
 	m_pColliderBone[ColliderType_Mon::Head] = m_pBodyObject->Get_BoneMatrix(TEXT("Head"));
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-10.87f, -8.68f, 55.79f, 1.f));
-	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(180.f));
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f));
 	return S_OK;
 }
 
@@ -73,8 +72,6 @@ void CAlcina::Update(_float fTimeDelta)
 
 	//위치 보정
 	Root_Move();
-	m_pTransformCom->Set_State(Engine::STATE::POSITION,
-		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
 
 	Collider_Update();
 }
@@ -91,17 +88,18 @@ void CAlcina::Late_Update(_float fTimeDelta)
 		return;
 
 	m_pBodyObject->Late_Update(fTimeDelta);
+#ifdef _DEBUG
+	for (_int i = 0; i < ColliderType_Mon::End; ++i)
+	{
+		m_pGameInstance->Add_DebugComponent(m_pColliderCom[i]);
+	}
+
+#endif
+
 }
 
 HRESULT CAlcina::Render()
 {
-#ifdef _DEBUG
-	for (_int i = 0; i < ColliderType_Mon::End; ++i)
-	{
-		m_pColliderCom[i]->Render();
-	}
-
-#endif
 	return S_OK;
 }
 
@@ -134,10 +132,6 @@ void CAlcina::Target_LookAt()
 	m_pTransformCom->LookAt(CPlayer_Manager::GetInstance()->Get_PlayerPos());
 }
 
-void CAlcina::IsDamage()
-{
-}
-
 void CAlcina::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision)
 {
 	if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::RESIST))
@@ -145,11 +139,7 @@ void CAlcina::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColli
 		if (TargetCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::RESIST))
 			m_pTransformCom->Is_Sliding(m_pNavigationCom, XMLoadFloat3(&TargetCollision.pCollider->Get_Intersect_Normal()));
 	}
-	else if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::ATTACK))
-	{
-		if (TargetCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::PLAYER))
-			m_bIsAttack = true;
-	}
+
 	else
 	{
 		switch (TargetCollision.iObjType)
@@ -157,41 +147,11 @@ void CAlcina::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColli
 		case ENUM_CLASS(OBJECT_TYPE::RAY):
 			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
 				m_bIsHeadShot = true;
-			m_iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
+			m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
 			break;
 		}
 	}
 
-}
-
-void CAlcina::SetUp_Node(_int iTargetCellIndex, _float3 vPos)
-{
-	m_pNavigationCom->SetUp_Node(iTargetCellIndex, vPos);
-}
-
-void CAlcina::Move_Node(_float fTimeDelta)
-{
-	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
-	_float3 vNextPos{};
-	_vector vPlayerPos{};
-	if (m_pNavigationCom->IsNaviNode(vMonPos, vNextPos))
-	{
-		XMStoreFloat3(&vNextPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
-		vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
-		m_pNavigationCom->SetUp_Node(CPlayer_Manager::GetInstance()->Get_CellIndex(), vNextPos);
-	}
-	else
-	{
-		vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
-	}
-	_vector vDir = XMVector3Normalize(XMVectorSetY(vPlayerPos - vMonPos, 0.f));
-	_vector vLook = XMVector3Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
-
-	_vector vAxis = XMVector3Normalize(XMVector3Cross(vLook, vDir));
-
-	m_pTransformCom->Turn(vAxis, fTimeDelta);
-
-	m_pTransformCom->Go_Straight(fTimeDelta);
 }
 
 HRESULT CAlcina::Ready_Components()
@@ -228,7 +188,7 @@ HRESULT CAlcina::Ready_Components()
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::ATTACK);
 	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
-	OBBDesc.vExtents = _float3(1.f, 2.f, 5.f);
+	OBBDesc.vExtents = _float3(1.f, 1.f, 1.f);
 	OBBDesc.vCenter = _float3(0.f, 1.f, 1.f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
@@ -275,11 +235,11 @@ HRESULT CAlcina::Ready_Utility()
 	m_BlackBoard->Set_Data().iAnimState = &m_iAnimState;
 	m_BlackBoard->Set_Data().szAnimTag = &m_szAnimTag;
 	m_BlackBoard->Set_Data().szCulStateTag = &m_szCulStateTag; 
-	m_BlackBoard->Set_Data().iHp = &m_iHp;
-	m_BlackBoard->Set_Data().iDamage = &m_iDamage;
-	m_BlackBoard->Set_Data().IsAttack = &m_bIsAttack;
+	m_BlackBoard->Set_Data().iHp = 200;
+	m_BlackBoard->Set_Data().iDamage = 0;
+	m_BlackBoard->Set_Data().IsAttack = false;
 
-	m_BlackBoard->Set_Data().IsChase = &m_bIsChase;
+	m_BlackBoard->Set_Data().IsChase = false;
 	m_BlackBoard->Set_Data().MonPos = m_pTransformCom->Get_WorldMatrixPtr();
 
 	m_BlackBoard->Set_Data().eAttackType = Attack_Type::END;
@@ -349,14 +309,14 @@ void CAlcina::Root_Move()
 	_vector vMoveRot = XMLoadFloat4(m_pBodyObject->Get_MoveRot());
 
 	//회전량 누적
+	//vWorldRot = XMQuaternionMultiply(XMVectorSetW(vMoveRot, 1.f), vWorldRot);
+	//vWorldRot = XMQuaternionNormalize(vWorldRot);
+
+	//vMovePos = XMVector3Rotate(vMovePos, XMQuaternionInverse(vMoveRot));
+	//월드 기준으로 방향 보정
+	vMovePos = XMVector3Rotate(vMovePos, vWorldRot);
 	vWorldRot = XMQuaternionMultiply(XMVectorSetW(vMoveRot, 1.f), vWorldRot);
 	vWorldRot = XMQuaternionNormalize(vWorldRot);
-	
-	//월드 기준으로 방향 보정
-	if(m_iAnimState == ENUM_CLASS(ANIM_STATE::DAMAGE))
-		vMovePos = XMVector3Rotate(vMovePos, XMQuaternionIdentity());
-	else
-		vMovePos = XMVector3Rotate(vMovePos, vWorldRot);
 	//이동량 누적
 	vWorldTrans += vMovePos;
 
@@ -369,6 +329,9 @@ void CAlcina::Root_Move()
 
 	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 	m_pTransformCom->Is_Sliding(m_pNavigationCom);
+
+	m_pTransformCom->Set_State(Engine::STATE::POSITION,
+		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
 }
 
 void CAlcina::Collider_Update()

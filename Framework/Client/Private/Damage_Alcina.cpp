@@ -14,7 +14,6 @@ void CDamage_Alcina::Enter(CAlcina* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
     *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CAlcina::ANIM_STATE::DAMAGE);
-    pContainer->IsDamage();
 
     DIRECTION eDir = PlayerDIR(pContainer->Get_TransForm()->Get_State(STATE::POSITION), pContainer->Get_TransForm()->Get_State(STATE::LOOK));
 
@@ -31,7 +30,7 @@ void CDamage_Alcina::Enter(CAlcina* pContainer)
 void CDamage_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
 {
     if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
-        *pContainer->Get_BlackBoard()->Set_Data().iDamage = 0;
+        pContainer->Get_BlackBoard()->Set_Data().iDamage = 0;
 }
 
 void CDamage_Alcina::Exit(CAlcina* pContainer)
@@ -42,7 +41,7 @@ void CDamage_Alcina::Damage_F(CAlcina* pContainer)
 {
     Damage_Type eDamageType;
 
-    _int iDamage = *pContainer->Get_BlackBoard()->Get_Data().iDamage;
+    _int iDamage = pContainer->Get_BlackBoard()->Get_Data().iDamage;
     if (iDamage < 100)
         eDamageType = Damage_Type::LOW;
     else if (iDamage < 150)
