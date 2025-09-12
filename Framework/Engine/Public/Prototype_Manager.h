@@ -7,6 +7,7 @@
 #include "Model.h"
 #include "Animatio_Controller.h"
 #include "VIBuffer_Cube.h"
+#include "VIBuffer_Point_Instance.h"
 #include "Model.h"
 #include "Navigation.h"
 #include "Collider.h"

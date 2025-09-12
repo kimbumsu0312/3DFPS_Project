@@ -27,6 +27,7 @@ private:
 
 private:
 	class CShader*				m_pShader = { nullptr };
+	class CShader*				m_pFogShader = { nullptr };
 	class CVIBuffer_Rect*		m_pVIBuffer = { nullptr };
 	_float4x4					m_WorldMatrix{}, m_ViewMatrix{}, m_ProjMatrix{};
 
@@ -44,6 +45,8 @@ private:
 	HRESULT						Render_Combined();
 	HRESULT						Render_NonLight();
 	HRESULT						Render_Blend();
+	HRESULT						Render_Fog();
+	HRESULT						Render_Effect();
 	HRESULT						Render_UI();
 	HRESULT						Render_UI_Effect();
 	HRESULT						Render_Last();

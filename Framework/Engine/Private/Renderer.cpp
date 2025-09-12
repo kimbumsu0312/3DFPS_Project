@@ -32,6 +32,9 @@ HRESULT CRenderer::Initialize()
     if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Specular"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
         return E_FAIL;
 
+    if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Combined"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(1.f, 0.f, 1.f, 0.f))))
+        return E_FAIL;
+
     //게임 오브젝트들의 정보를 저장 받음
     //각 랜더 타겟 뷰에 필요한 정보들을 담아두고 이후 필요한 연산에서 꺼내서 쓸수 있게한다.
     if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse"))))
@@ -48,6 +51,10 @@ HRESULT CRenderer::Initialize()
     if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Specular"))))
         return E_FAIL;
 
+    if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Combined"), TEXT("Target_Combined"))))
+        return E_FAIL;
+
+
     m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
     if (nullptr == m_pVIBuffer)
         return E_FAIL;
@@ -57,20 +64,25 @@ HRESULT CRenderer::Initialize()
     if (nullptr == m_pShader)
         return E_FAIL;
 
+    m_pFogShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Engine_Shader_Fog.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
+    if (nullptr == m_pFogShader)
+        return E_FAIL;
+
     XMStoreFloat4x4(&m_WorldMatrix, XMMatrixScaling(ViewportDesc.Width, ViewportDesc.Height, 1.f));
     XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
     XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(ViewportDesc.Width, ViewportDesc.Height, 0.f, 1.f));
 
 #ifdef _DEBUG
-    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Diffuse"), 150.0f, 150.0f, 300.f, 300.f)))
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Diffuse"), 100.0f, 100.0f, 200.f, 200.f)))
         return E_FAIL;
-    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Normal"), 150.0f, 450.0f, 300.f, 300.f)))
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Normal"), 100.0f, 300.0f, 200.f, 200.f)))
         return E_FAIL;
-    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Shade"), 450.0f, 150.0f, 300.f, 300.f)))
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Shade"), 300.0f, 100.0f, 200.f, 200.f)))
         return E_FAIL;
-    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Specular"), 450.0f, 450.0f, 300.f, 300.f)))
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Specular"), 300.0f, 300.0f, 200.f, 200.f)))
         return E_FAIL;
-
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Combined"), 500.0f, 100.0f, 200.f, 200.f)))
+        return E_FAIL;
 #endif // _DEBUG
 
     return S_OK;
@@ -107,7 +119,13 @@ HRESULT CRenderer::Draw()
 
     if (FAILED(Render_Blend()))
         return E_FAIL;
-    
+
+    if (FAILED(Render_Fog()))
+        return E_FAIL;
+
+    if (FAILED(Render_Effect()))
+        return E_FAIL;
+
     if (FAILED(Render_UI()))
         return E_FAIL;
     
@@ -158,7 +176,6 @@ HRESULT CRenderer::Render_Priority()
     }
 
     m_RenderObjects[ENUM_CLASS(RENDERGROUP::PRIORITY)].clear();
-
     return S_OK;
 }
 
@@ -223,6 +240,9 @@ HRESULT CRenderer::Render_Lights()
 
 HRESULT CRenderer::Render_Combined()
 {
+    if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Combined"))))
+        return E_FAIL;
+
     if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
         return E_FAIL;
     if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
@@ -243,10 +263,7 @@ HRESULT CRenderer::Render_Combined()
     m_pShader->Begin(3);
 
     m_pVIBuffer->Bind_Resources();
-
-    //실제 랜더
     m_pVIBuffer->Render();
-
     return S_OK;
 }
 
@@ -276,6 +293,47 @@ HRESULT CRenderer::Render_Blend()
     }
 
     m_RenderObjects[ENUM_CLASS(RENDERGROUP::BLEND)].clear();
+    
+    return S_OK;
+}
+
+HRESULT CRenderer::Render_Fog()
+{
+    //실제 랜더
+    if (FAILED(m_pGameInstance->End_MRT()))
+        return E_FAIL;
+
+    if (FAILED(m_pFogShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+        return E_FAIL;
+    if (FAILED(m_pFogShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+        return E_FAIL;
+    if (FAILED(m_pFogShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_Combined"), m_pFogShader, "g_DiffuseTexture")))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_Depth"), m_pFogShader, "g_DepthTexture")))
+        return E_FAIL;
+
+    m_pFogShader->Begin(0);
+    m_pVIBuffer->Bind_Resources();
+    m_pVIBuffer->Render();
+
+    return S_OK;
+}
+
+HRESULT CRenderer::Render_Effect()
+{
+    for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDERGROUP::EFFECT)])
+    {
+        if (nullptr != pRenderObject)
+            pRenderObject->Render();
+
+        Safe_Release(pRenderObject);
+    }
+
+    m_RenderObjects[ENUM_CLASS(RENDERGROUP::EFFECT)].clear();
 
     return S_OK;
 }
@@ -411,5 +469,6 @@ void CRenderer::Free()
     Safe_Release(m_pContext);
     
     Safe_Release(m_pShader);
+    Safe_Release(m_pFogShader);
     Safe_Release(m_pVIBuffer);
 }

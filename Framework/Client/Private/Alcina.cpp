@@ -64,6 +64,8 @@ void CAlcina::Priority_Update(_float fTimeDelta)
 
 void CAlcina::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->IsKeyDown(DIK_H))
+		m_BlackBoard->Set_Data().IsChase = true;
 	m_pBehaviorTree->Update();
 	State_Change();
 	m_pCulStateObject->Update(this, fTimeDelta);

@@ -31,7 +31,7 @@ void CCamera_Free::Priority_Update(_float fTimeDelta)
 {
     if (!m_pGameInstance->IsKeyHold(DIK_Y))
     {
-        m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(CPlayer_Manager::GetInstance()->Get_PlayerPos(), 1.f));
+        //m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(CPlayer_Manager::GetInstance()->Get_PlayerPos(), 1.f));
         return;
     }
     if (m_pGameInstance->IsKeyDown(DIK_P))

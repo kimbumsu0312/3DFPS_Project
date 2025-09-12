@@ -53,5 +53,6 @@
 #include "ItemSpawner.h"
 #include "Trigger.h"
 
-
+//이펙트 관련
+#include "Snow.h"
 #endif //PCH_H

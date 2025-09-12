@@ -60,7 +60,7 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(vPosition, g_WorldMatrix);
-    Out.vProjPos = Out.vPosition;
+    Out.vProjPos = vPosition;
     
     return Out;
 }

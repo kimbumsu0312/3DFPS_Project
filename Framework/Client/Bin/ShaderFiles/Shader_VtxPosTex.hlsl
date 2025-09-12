@@ -67,7 +67,8 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     //Out.vColor.rgb = In.vTexcoord.y;
-    
+    ((g_WorldMatrix._42 - 150) + 300);
+    ((g_WorldMatrix._42 - 150) + In.vPosition.y);
     //텍스처 셋팅 - 텍스처 타입, 텍스처 픽셀 색상 값
     //Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord * 2.f);
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);

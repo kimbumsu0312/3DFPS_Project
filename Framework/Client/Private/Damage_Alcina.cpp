@@ -42,9 +42,9 @@ void CDamage_Alcina::Damage_F(CAlcina* pContainer)
     Damage_Type eDamageType;
 
     _int iDamage = pContainer->Get_BlackBoard()->Get_Data().iDamage;
-    if (iDamage < 100)
+    if (iDamage < 15)
         eDamageType = Damage_Type::LOW;
-    else if (iDamage < 150)
+    else if (iDamage < 50)
         eDamageType = Damage_Type::MIDDIE;
     else
         eDamageType = Damage_Type::HIGHT;

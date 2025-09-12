@@ -14,8 +14,8 @@ public:
 	virtual HRESULT			Initialize(void* pArg);
 
 public:
-	HRESULT					Bind_Resources();
-	HRESULT					Render();
+	virtual HRESULT			Bind_Resources();
+	virtual HRESULT			Render();
 	virtual _bool			IsPicked(class CTransform& pTransform, _float3& pOut);
 
 protected:

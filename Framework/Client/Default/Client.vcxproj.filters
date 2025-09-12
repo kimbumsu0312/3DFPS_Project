@@ -355,6 +355,9 @@
     <Filter Include="02.GameObject\Trigger">
       <UniqueIdentifier>{f1e7f085-8dd0-45c3-a524-044507c8d4fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Effect">
+      <UniqueIdentifier>{784b207d-5d96-45b7-8d50-76310b030ccb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -810,6 +813,9 @@
     <ClInclude Include="..\public\Damage_WereWolf.h">
       <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Snow.h">
+      <Filter>03.Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -1245,6 +1251,9 @@
     <ClCompile Include="..\private\Die_WereWolf.cpp">
       <Filter>02.GameObject\Monster\Normal_Mon2\Monstate_WereWolf\State</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Snow.cpp">
+      <Filter>03.Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
@@ -1263,6 +1272,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCube.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance_PointParticle.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

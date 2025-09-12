@@ -214,6 +214,22 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring& strLayerTag)
 {
+	CSnow::SNOW_DESC Desc{};
+	Desc.vSnowPos = { -12.26f, -10.46f, 18.5f };
+	Desc.vMinPos = { -38.53f, 0.f, 0.f };
+	Desc.vMaxPos = { 0.f, 0.f, 37.39f };
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"), &Desc)))
+		return E_FAIL;
+
+	Desc.vSnowPos = { -14.26f, -10.46f, 38.5f };
+	Desc.vMinPos = { -28.38f, 0.f, 37.49f };
+	Desc.vMaxPos = { 0.f, 0.f, 39.5f };
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"), &Desc)))
+		return E_FAIL;
 	return S_OK;
 }
 
