@@ -650,7 +650,11 @@ void CNavigation::Free()
 
 #ifdef _DEBUG	
 	Safe_Release(m_pShader);
+	m_pCellPos.clear();
 #endif
+	m_CompleteList.clear();
+	m_NodePath.clear();
+	m_NaviPos.clear();
 }
 
 

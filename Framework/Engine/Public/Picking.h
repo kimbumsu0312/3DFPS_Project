@@ -18,6 +18,7 @@ public:
 	_bool					isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float3& pOut);
 	_bool					isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 vPointC, _float& pDist);
 
+	_bool					isPicking(_float3* pOut);
 	_vector					Get_LocalRayPos() { return m_vLocalRayPos; }
 	_vector					Get_LocalRayDir() { return m_vLocalRayDir; }
 #ifdef _DEBUG
@@ -35,6 +36,10 @@ private:
 
 	_vector					m_vWorldRayDir{}, m_vWorldRayPos{};
 	_vector					m_vLocalRayPos{}, m_vLocalRayDir{};
+
+	ID3D11Texture2D*		m_pTexture2D = { nullptr };
+	_float4*				m_pPixels = { nullptr };
+	POINT					m_ptMouse = {};
 
 #ifdef _DEBUG
 	PrimitiveBatch<

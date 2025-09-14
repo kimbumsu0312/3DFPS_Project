@@ -58,17 +58,21 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 	D3D11_RASTERIZER_DESC Desc = {};
-
+	 
 	return S_OK;
 }
 
 void CMainApp::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+
 	if (m_pGameInstance->IsKeyDown(DIK_F1))
 		m_pGameInstance->IsDebugRender(DEBUG_RENDER::RT);
 	if (m_pGameInstance->IsKeyDown(DIK_F2))
 		m_pGameInstance->IsDebugRender(DEBUG_RENDER::COMPONET);
-	     
+	// 다음에 또 열어놓으면 인덱스 다 바꿔버리겠습니다
+#endif // DEBUG
+
 	m_pGameInstance->Update_Engine(fTimeDelta);
 }
 
@@ -121,6 +125,14 @@ HRESULT CMainApp::Ready_Prototype_ForStatic()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxInstance_PointParticle"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxInstance_PointParticle.hlsl"), VTXPOINTPARTICLE::Elements, VTXPOINTPARTICLE::iNumElements))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxInstance_Particle"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxInstance_Particle.hlsl"), VTXPARTICLE::Elements, VTXPARTICLE::iNumElements))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxInstance_MeshParticle"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxInstance_MeshParticle.hlsl"), VTXMESHPARTICLE::Elements, VTXMESHPARTICLE::iNumElements))))
 		return E_FAIL;
 
 	//유틸 셋팅

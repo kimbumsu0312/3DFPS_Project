@@ -109,7 +109,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Snow"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Snow/Snow.png"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Snow/Snow.png"), 1))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("모델을 로딩중입니다."));
@@ -133,10 +133,90 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	SnowDesc.vPivot = _float3(0.f, 0.f, 0.f);
 	SnowDesc.vSpeed = _float2(7.5f, 10.5f);
 	SnowDesc.IsLoop = true;
+	SnowDesc.vSplat = _float2(0.f, 0.f);
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Snow"),
 		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &SnowDesc))))
 		return E_FAIL;
+
+	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		MuzzleDesc{};
+	MuzzleDesc.iNumInstance = 20;
+	MuzzleDesc.vCenter = _float3(0.f, 0.f, -0.5f);
+	MuzzleDesc.vRange = _float3(3.f, 2.f, 0.5f);
+	MuzzleDesc.vSize = _float2(2.f, 3.f);
+	MuzzleDesc.vLifeTime = _float2(1.f, 1.f);
+	MuzzleDesc.vPivot = _float3(0.f, 0.f, 1.f);
+	MuzzleDesc.vSpeed = _float2(10.f, 10.0f);
+	MuzzleDesc.IsLoop = false;
+	MuzzleDesc.vSplat = _float2(0.f, 0.f);
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Muzzle_Smoke"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &MuzzleDesc))))
+		return E_FAIL;
+
+	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		BlodeDesc{};
+	BlodeDesc.iNumInstance = 12;
+	BlodeDesc.vCenter = _float3(0.f, 0.f, -0.5f);
+	BlodeDesc.vRange = _float3(0.25f, 0.25f, 0.f);
+	BlodeDesc.vSize = _float2(1.f, 1.f);
+	BlodeDesc.vLifeTime = _float2(1.f, 1.f);
+	BlodeDesc.vPivot = _float3(0.f, 0.f, 1.f);
+	BlodeDesc.vSpeed = _float2(0.5f, 1.0f);
+	BlodeDesc.IsLoop = false;
+	BlodeDesc.vSplat = _float2(0.f, 0.f);
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Blode_Smoke"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &BlodeDesc))))
+		return E_FAIL;
+
+	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		BlodeSplatterDesc{};
+	BlodeSplatterDesc.iNumInstance = 20;
+	BlodeSplatterDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	BlodeSplatterDesc.vRange = _float3(0.1f, 0.1f, 0.f);
+	BlodeSplatterDesc.vSize = _float2(0.1f, 0.2f);
+	BlodeSplatterDesc.vLifeTime = _float2(0.3f, 0.5f);
+	BlodeSplatterDesc.vPivot = _float3(0.f, 0.f, 0.f);
+	BlodeSplatterDesc.vSpeed = _float2(0.5f, 1.2f);
+	BlodeSplatterDesc.IsLoop = false;
+	BlodeSplatterDesc.vSplat = _float2(0.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Blode_Splatter"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &BlodeSplatterDesc))))
+		return E_FAIL;
+
+	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		SparkDesc{};
+	SparkDesc.iNumInstance = 20;
+	SparkDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	SparkDesc.vRange = _float3(0.1f, 0.1f, 0.f);
+	SparkDesc.vSize = _float2(0.1f, 0.2f);
+	SparkDesc.vLifeTime = _float2(0.3f, 0.5f);
+	SparkDesc.vPivot = _float3(0.f, 0.f, 0.f);
+	SparkDesc.vSpeed = _float2(0.5f, 1.2f);
+	SparkDesc.IsLoop = false;
+	SparkDesc.vSplat = _float2(0.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Spark"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &SparkDesc))))
+		return E_FAIL;
+
+	CVIBuffer_Mesh_Instance::MESH_INSTANCE_DESC FlyDesc{};
+	FlyDesc.iNumInstance = 100;
+	FlyDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	FlyDesc.vRange = _float3(1.f, 1.f, 1.f);
+	FlyDesc.vSize = _float2(1.f, 1.f);
+	FlyDesc.vLifeTime = _float2(7.f, 10.f);
+	FlyDesc.vPivot = _float3(0.f, 0.f, 0.f);
+	FlyDesc.vSpeed = _float2(1.f, 1.2f);
+	FlyDesc.isLoop = true;
+	FlyDesc.vSplat = _float2(0.f, 1.f);
+
+	SAVE_MODEL FlyModelData{};
+	m_pGameInstance->Load_ModelData("../Bin/Resources/Models/Effect/Fly/Fly.json", FlyModelData);
+		
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Fly"),
+		CModel_Instance::Create(m_pDevice, m_pContext, FlyModelData, &FlyDesc))))
+		return E_FAIL;
+
 #pragma region Player_Model
 	/* Prototype_Model_Player*/
     if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Player/Player.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Player"))))
@@ -183,7 +263,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Mon/Mon_2/Mon_2.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Normal_Mon_2"))))
 		return E_FAIL;
 #pragma endregion
-
+	 
 #pragma region Mon_Boss_Model
 	/* Prototype_Model_Alcina*/
 	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Boss/Alcina/Alcina.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Alcina"))))
@@ -509,10 +589,28 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CTrigger::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+#pragma region Effect
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
 		CSnow::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Muzzle_Effect"),
+		CMuzzle_Effect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Blode_Effect"),
+		CBlood_Effect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Fly_Effect"),
+		CFly_Effect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Spark_Effect"),
+		CSpark_Effect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+#pragma endregion
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
 	m_isFinished = true;

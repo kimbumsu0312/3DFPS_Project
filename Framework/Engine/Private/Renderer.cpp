@@ -120,10 +120,10 @@ HRESULT CRenderer::Draw()
     if (FAILED(Render_Blend()))
         return E_FAIL;
 
-    if (FAILED(Render_Fog()))
+    if (FAILED(Render_Effect()))
         return E_FAIL;
 
-    if (FAILED(Render_Effect()))
+    if (FAILED(Render_Fog()))
         return E_FAIL;
 
     if (FAILED(Render_UI()))
@@ -143,6 +143,7 @@ HRESULT CRenderer::Draw()
     return S_OK;
 }
 
+#ifdef _DEBUG
 HRESULT CRenderer::Add_DebugComponent(CComponent* pComponent)
 {
     m_DebugComponent.push_back(pComponent);
@@ -164,7 +165,7 @@ void CRenderer::IsDebugRender(DEBUG_RENDER eTag)
         break;
     }
 }
-
+#endif 
 HRESULT CRenderer::Render_Priority()
 {
     for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDERGROUP::PRIORITY)])
@@ -400,7 +401,7 @@ HRESULT CRenderer::Render_Last()
 
     return S_OK;
 }
-
+#ifdef _DEBUG
 HRESULT CRenderer::Render_Debug()
 {
     if (m_bComponetRender)
@@ -434,7 +435,7 @@ HRESULT CRenderer::Render_Debug()
     }
     return S_OK;
 }
-
+#endif
 CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
     CRenderer* pInstance = new CRenderer(pDevice, pContext);
@@ -451,10 +452,12 @@ CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 void CRenderer::Free()
 {
     __super::Free();
+#ifdef _DEBUG
 
     for (auto& pDebugComponent : m_DebugComponent)
         Safe_Release(pDebugComponent);
     m_DebugComponent.clear();
+#endif // 
 
     for (size_t i = 0; i < ENUM_CLASS(RENDERGROUP::END); i++)
     {

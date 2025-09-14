@@ -185,6 +185,8 @@ namespace Engine
 		XMFLOAT4 vUp;
 		XMFLOAT4 vLook;
 		XMFLOAT4 vTranslation;
+
+		XMFLOAT2 vLifeTime;
 	}VTXINSTANCE_MESH;
 
 	typedef struct tagVertexInstanceParticle
@@ -195,6 +197,8 @@ namespace Engine
 		XMFLOAT4 vTranslation;
 
 		XMFLOAT2 vLifeTime;
+		float    vSplat;
+		float	 fDis;
 	}VTXINSTANCE_PARTICLE;
 
 	typedef struct tagVertexParticle
@@ -214,7 +218,7 @@ namespace Engine
 
 	typedef struct tagVertexPointParticle
 	{
-		static const unsigned int	iNumElements = { 6 };
+		static const unsigned int	iNumElements = { 7 };
 		static constexpr D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 
@@ -224,8 +228,27 @@ namespace Engine
 			{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+			{ "TEXCOORD", 1, DXGI_FORMAT_R32_FLOAT, 1, 72, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 		};
 	}VTXPOINTPARTICLE;
+
+	typedef struct tagVertexMeshParticle
+	{
+		static const unsigned int	iNumElements = { 10 };
+		static constexpr D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements] = {
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+
+			{ "TEXCOORD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+			{ "TEXCOORD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+			{ "TEXCOORD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+			{ "TEXCOORD", 4, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+			{ "TEXCOORD", 5, DXGI_FORMAT_R32G32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
+		};
+	}VTXMESHPARTICLE;
 
 	//저장, 불러오기 관련 구조체
 	//터레인 저장

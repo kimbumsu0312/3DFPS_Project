@@ -17,7 +17,7 @@ public:
 	virtual HRESULT			Bind_Resources();
 	virtual HRESULT			Render();
 	virtual _bool			IsPicked(class CTransform& pTransform, _float3& pOut);
-
+	virtual const _uint&	Get_NumIndices() { return m_iNumIndices; }
 protected:
 	ID3D11Buffer*			m_pVB = { nullptr };
 	ID3D11Buffer*			m_pIB = { nullptr };

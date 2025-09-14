@@ -5,6 +5,13 @@ sampler DefaultSampler = sampler_state
     AddressV = wrap;
 };
 
+sampler DefaultSampler_CLAMP = sampler_state
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = CLAMP; 
+    AddressV = CLAMP;
+};
+
 sampler PointSampler = sampler_state
 {
     filter = min_mag_mip_point;
@@ -48,6 +55,13 @@ DepthStencilState DSS_None
     DepthWriteMask = zero;
 };
 
+DepthStencilState DSS_Effect
+{
+    DepthEnable = true;
+    DepthWriteMask = zero;
+    DepthFunc = LESS_EQUAL;
+
+};
 BlendState BS_Default
 {
     BlendEnable[0] = false;

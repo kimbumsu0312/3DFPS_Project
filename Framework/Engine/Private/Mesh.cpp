@@ -62,6 +62,53 @@ HRESULT CMesh::Initialize_Prototype(MODELTYPE eType, const SAVE_MESH& pMesh, con
 	return S_OK;
 }
 
+HRESULT CMesh::Initialize_Prototype(MODELTYPE eType, const SAVE_MESH& pMesh)
+{
+	m_szName = pMesh.szName;
+
+	m_iMaterialIndex = pMesh.iMaterialIndex;
+	m_iNumVertices = pMesh.iNumVertices;
+	m_iNumIndices = pMesh.iNumIndices;
+	m_iIndexStride = 4;
+	m_iNumVertexBuffers = 1;
+	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
+	m_ePrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+	if (FAILED(Ready_Vertices_For_NonAnim(pMesh)))
+		return E_FAIL;
+
+	D3D11_BUFFER_DESC		IBDesc{};
+	IBDesc.ByteWidth = m_iNumIndices * m_iIndexStride;
+	IBDesc.Usage = D3D11_USAGE_DEFAULT;
+	IBDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	IBDesc.CPUAccessFlags = 0;
+	IBDesc.MiscFlags = 0;
+	IBDesc.StructureByteStride = m_iIndexStride;
+
+	_uint* pIndices = new _uint[m_iNumIndices];
+
+	_uint	iNumIndices = {};
+
+	for (size_t i = 0; i < pMesh.iNumFaces; i++)
+	{
+		Face Face = pMesh.iFaces[i];
+
+		pIndices[iNumIndices++] = Face.iIndices[0];
+		pIndices[iNumIndices++] = Face.iIndices[1];
+		pIndices[iNumIndices++] = Face.iIndices[2];
+	}
+
+	D3D11_SUBRESOURCE_DATA	IBInitialData{};
+	IBInitialData.pSysMem = pIndices;
+
+	if (FAILED(m_pDevice->CreateBuffer(&IBDesc, &IBInitialData, &m_pIB)))
+		return E_FAIL;
+
+	Safe_Delete_Array(pIndices);
+
+	return S_OK;
+}
+
 HRESULT CMesh::Initialize(void* pArg)
 {
     return S_OK;
@@ -187,6 +234,19 @@ CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL
 	CMesh* pInstance = new CMesh(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(eType, pMesh, Bones, BonesData)))
+	{
+		MSG_BOX(TEXT("Failed to Created : CMesh"));
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODELTYPE eType, const SAVE_MESH& pMesh)
+{
+	CMesh* pInstance = new CMesh(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype(eType, pMesh)))
 	{
 		MSG_BOX(TEXT("Failed to Created : CMesh"));
 		Safe_Release(pInstance);

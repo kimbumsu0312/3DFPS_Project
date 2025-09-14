@@ -99,7 +99,9 @@ void CMonster_WereWolf::Late_Update(_float fTimeDelta)
 	m_pBodyObject->Late_Update(fTimeDelta);
 	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
 	{
+#ifdef _DEBUG
 		m_pGameInstance->Add_DebugComponent(m_pColliderCom[i]);
+#endif // DEBUG
 		if (i == ENUM_CLASS(ColliderType_Mon::ATTACK_L) || i == ENUM_CLASS(ColliderType_Mon::ATTACK_R))
 			continue;
 

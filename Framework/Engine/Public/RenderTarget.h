@@ -14,6 +14,7 @@ public:
 	void							Clear();
 
 	ID3D11RenderTargetView*			Get_RTV() const { return m_pRTV; }
+	HRESULT							Copy_Resource(ID3D11Texture2D* pSourTexture);
 #ifdef _DEBUG
 public:
 	HRESULT							Ready_Debug(_float fX, _float fY, _float fSizeX, _float fSizeY);

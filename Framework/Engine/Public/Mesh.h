@@ -11,6 +11,7 @@ private:
 
 public:
 	virtual HRESULT				Initialize_Prototype(MODELTYPE eType, const SAVE_MESH& pMesh, const vector<class CBone*>& Bones, const vector<SAVE_BONE>& BonesData);
+	virtual HRESULT				Initialize_Prototype(MODELTYPE eType, const SAVE_MESH& pMesh);
 	virtual HRESULT				Initialize(void* pArg) override;
 
 public:
@@ -32,6 +33,7 @@ private:
 
 public:
 	static CMesh*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODELTYPE eType, const SAVE_MESH& pMesh, const vector<class CBone*>& Bones, const vector<SAVE_BONE>& BonesData);
+	static CMesh*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODELTYPE eType, const SAVE_MESH& pMesh);
 	virtual CComponent*			Clone(void* pArg) override;
 	virtual void				Free() override;
 };

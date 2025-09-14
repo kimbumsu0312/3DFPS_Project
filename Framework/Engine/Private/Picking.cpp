@@ -21,6 +21,29 @@ HRESULT CPicking::Initialize(HWND hWnd)
 	m_iWinSizeX = Viewport.Width;
 	m_iWinSizeY = Viewport.Height;
 
+	D3D11_TEXTURE2D_DESC TextureDesc;
+	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+	TextureDesc.Width = m_iWinSizeX;
+	TextureDesc.Height = m_iWinSizeY;
+	TextureDesc.MipLevels = 1;
+	TextureDesc.ArraySize = 1;
+	TextureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+
+	TextureDesc.SampleDesc.Quality = 0;
+	TextureDesc.SampleDesc.Count = 1;
+
+	TextureDesc.Usage = D3D11_USAGE_STAGING;
+
+	TextureDesc.BindFlags = 0;
+	TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D10_CPU_ACCESS_READ;
+	TextureDesc.MiscFlags = 0;
+
+	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pTexture2D)))
+		return E_FAIL;
+
+	m_pPixels = new _float4[m_iWinSizeX * m_iWinSizeY];
+
 #ifdef _DEBUG
 	m_pBatch = new PrimitiveBatch<VertexPositionColor>(m_pContext);
 	m_pEffect = new BasicEffect(m_pDevice);
@@ -35,9 +58,6 @@ HRESULT CPicking::Initialize(HWND hWnd)
 	if (FAILED(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements, VertexPositionColor::InputElementCount,
 		pShaderByteCode, iShaderByteCodeLength, &m_pInputLayout)))
 		return E_FAIL;
-
-
-
 #endif
 
 	return S_OK;
@@ -45,14 +65,13 @@ HRESULT CPicking::Initialize(HWND hWnd)
 
 void CPicking::Update()
 {
-	POINT	ptMouse{};
-	GetCursorPos(&ptMouse);
-	ScreenToClient(m_hWnd, &ptMouse);
+	GetCursorPos(&m_ptMouse);
+	ScreenToClient(m_hWnd, &m_ptMouse);
 
 	_float3	vMousePos{};
 
-	vMousePos.x = ptMouse.x / (m_iWinSizeX * 0.5f) - 1.f;
-	vMousePos.y = 1.f - ptMouse.y / (m_iWinSizeY * 0.5f);
+	vMousePos.x = m_ptMouse.x / (m_iWinSizeX * 0.5f) - 1.f;
+	vMousePos.y = 1.f - m_ptMouse.y / (m_iWinSizeY * 0.5f);
 	vMousePos.z = 0.f;
 	_vector vMouseNDC = XMLoadFloat3(&vMousePos);
 
@@ -63,6 +82,18 @@ void CPicking::Update()
 	vMouseNDC = XMVector3TransformNormal(vMouseNDC, m_pGameInstance->Get_Transform_Matrix_Inverse(D3DTS::VIEW));
 	m_vWorldRayPos = XMVector3TransformCoord(vWolrdPos, m_pGameInstance->Get_Transform_Matrix_Inverse(D3DTS::VIEW));
 	m_vWorldRayDir = XMVector3Normalize(vMouseNDC);
+
+	if (FAILED(m_pGameInstance->Copy_Resource(TEXT("Target_Depth"), m_pTexture2D)))
+		return;
+
+	D3D11_MAPPED_SUBRESOURCE SubResource{};
+
+	if (FAILED(m_pContext->Map(m_pTexture2D, 0, D3D11_MAP_READ, 0, &SubResource)))
+		return;
+
+	memcpy(m_pPixels, SubResource.pData, sizeof(_float4) * m_iWinSizeX * m_iWinSizeY);
+
+	m_pContext->Unmap(m_pTexture2D, 0);
 
 }
 
@@ -100,8 +131,9 @@ RAY_DESC CPicking::Create_FpsRayDesc(_float fOffSet)
 	Desc.RayDIr = XMVector3Normalize(vRayNDC);
 
 	Desc.Time = 2.f;
-
+#ifdef _DEBUG
 	m_RayDescs.push_back(Desc);
+#endif // DEBUG
 	return Desc;
 }
 
@@ -134,6 +166,28 @@ _bool CPicking::isPickedInLocalSpace(_float3 vPointA, _float3 vPointB, _float3 v
 		pDist = fDist;
 
 	return isPicked;
+}
+
+_bool CPicking::isPicking(_float3* pOut)
+{
+	_uint iIndex = m_ptMouse.y * m_iWinSizeX + m_ptMouse.x;
+
+	if (0.f == m_pPixels[iIndex].w)
+		return false;
+
+	_vector vPosition = {};
+
+	vPosition = XMVectorSetX(vPosition, m_ptMouse.x / (m_iWinSizeX * 0.5f) - 1.f);
+	vPosition = XMVectorSetY(vPosition, m_ptMouse.y / (m_iWinSizeX * -0.5f) + 1.f);
+	vPosition = XMVectorSetZ(vPosition, m_pPixels[iIndex].x);
+	vPosition = XMVectorSetW(vPosition, 1.f);
+
+	vPosition = XMVector3TransformCoord(vPosition, m_pGameInstance->Get_Transform_Matrix_Inverse(D3DTS::PROJ));
+	vPosition = XMVector3TransformCoord(vPosition, m_pGameInstance->Get_Transform_Matrix_Inverse(D3DTS::VIEW));
+
+	XMStoreFloat3(pOut, vPosition);
+
+	return true;
 }
 
 #ifdef _DEBUG
@@ -186,6 +240,10 @@ CPicking* CPicking::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 void CPicking::Free()
 {
 	__super::Free();
+	Safe_Delete_Array(m_pPixels);
+
+	Safe_Release(m_pTexture2D);
+
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);

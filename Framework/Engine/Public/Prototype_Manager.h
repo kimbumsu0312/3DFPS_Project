@@ -6,11 +6,16 @@
 #include "Texture.h"
 #include "Model.h"
 #include "Animatio_Controller.h"
+
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Point_Instance.h"
+#include "VIBuffer_Rect_Instance.h"
+#include "VIBuffer_Mesh_Instance.h"
+
 #include "Model.h"
 #include "Navigation.h"
 #include "Collider.h"
+#include "Model_Instance.h"
 
 #include "Bounding_OBB.h"
 #include "Bounding_AABB.h"

@@ -18,7 +18,7 @@ vector          g_vLightSpecular;
 
 texture2D       g_DiffuseTexture;
 vector          g_vMtrlAmbient = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vMtrlSpecular = vector(0.f, 0.f, 0.f, 1.f);
+vector          g_vMtrlSpecular = vector(0.f, 0.f, 0.f, 1.f);
 
 //각 랜더 타겟에서 생성한 텍스처를 저장
 texture2D       g_NormalTexture;

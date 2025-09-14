@@ -138,6 +138,8 @@ public:
 	_vector						Get_LocalRayDir();
 
 	RAY_DESC					Create_FpsRayDesc(_float iOffSet);
+
+	_bool						isPicking(_float3* pOut);
 #pragma endregion
 
 #pragma region SaveLoader
@@ -156,9 +158,11 @@ public:
 	HRESULT						Load_Level(string szFilePath, _uint iLevelIndex, _wstring szLayerTag, _uint iPrototypeLevelIndex, _wstring szPrototypeTag);
 
 	HRESULT						Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _wstring szPrototypeTag);
-
+	HRESULT						Load_ModelData(string szFilePath, SAVE_MODEL& pModelData);
 	void						Clear_Object();
 	vector<class CGameObject*>* Get_Objects();
+
+	
 #pragma endregion
 
 #pragma region Font_Manager
@@ -179,7 +183,7 @@ public:
 	HRESULT						Begin_MRT(const _wstring& strMRTTag);
 	HRESULT						End_MRT();
 	HRESULT						Bind_RT_ShaderResource(const _wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
-
+	HRESULT						Copy_Resource(const _wstring& strTargetTag, ID3D11Texture2D* pSourTexture);
 #ifdef _DEBUG
 	HRESULT						Ready_RT_Debug(const _wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
 	HRESULT						Render_RT_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);

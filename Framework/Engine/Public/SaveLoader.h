@@ -26,6 +26,10 @@ public:
 	void						Clear_Object();
 
 	vector<class CGameObject*>* Get_Objects() { return &m_Objects; }
+
+
+	HRESULT						Load_ModelData(string szFilePath, SAVE_MODEL& pModelData);
+
 private:
 	ID3D11Device*				m_pDevice;
 	ID3D11DeviceContext*		m_pContext;

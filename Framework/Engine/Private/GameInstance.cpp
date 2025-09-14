@@ -284,6 +284,7 @@ HRESULT CGameInstance::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pR
 {
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
+#ifdef _DEBUG
 
 void CGameInstance::IsDebugRender(DEBUG_RENDER eTag)
 {
@@ -294,6 +295,7 @@ HRESULT CGameInstance::Add_DebugComponent(CComponent* pComponent)
 {
 	return m_pRenderer->Add_DebugComponent(pComponent);
 }
+#endif // DEBUG
 
 _matrix CGameInstance::Get_Transform_Matrix(D3DTS eTransformState) const
 {
@@ -405,6 +407,11 @@ RAY_DESC CGameInstance::Create_FpsRayDesc(_float iOffSet)
 	return m_pPicking->Create_FpsRayDesc(iOffSet);
 }
 
+_bool CGameInstance::isPicking(_float3* pOut)
+{
+	return m_pPicking->isPicking(pOut);
+}
+
 HRESULT CGameInstance::File_Save_TerrainLevel(DATA_TYPE eData, string szFilename, CVIBuffer* pVIBuffer)
 {
 	return m_pSaveLoader->File_Save_TerrainLevel(eData, szFilename, pVIBuffer);
@@ -453,6 +460,11 @@ HRESULT CGameInstance::Load_Level(string szFilePath, _uint iLevelIndex, _wstring
 HRESULT CGameInstance::Load_Objcet(string FilePath, _uint iPrototypeLevelIndex, _wstring szPrototypeTag)
 {
 	return m_pSaveLoader->Load_Objcet(FilePath, iPrototypeLevelIndex, szPrototypeTag);
+}
+
+HRESULT CGameInstance::Load_ModelData(string szFilePath, SAVE_MODEL& pModelData)
+{
+	return m_pSaveLoader->Load_ModelData(szFilePath, pModelData);
 }
 
 void CGameInstance::Clear_Object()
@@ -515,6 +527,12 @@ HRESULT CGameInstance::Bind_RT_ShaderResource(const _wstring& strTargetTag, CSha
 	return m_pTarget_Manager->Bind_ShaderResource(strTargetTag, pShader, pConstantName);
 }
 
+HRESULT CGameInstance::Copy_Resource(const _wstring& strTargetTag, ID3D11Texture2D* pSourTexture)
+{
+	return m_pTarget_Manager->Copy_Resource(strTargetTag, pSourTexture);;
+}
+#ifdef _DEBUG
+
 HRESULT CGameInstance::Ready_RT_Debug(const _wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
 {
 	return m_pTarget_Manager->Ready_Debug(strTargetTag, fX, fY, fSizeX, fSizeY);
@@ -524,6 +542,7 @@ HRESULT CGameInstance::Render_RT_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuff
 {
 	return m_pTarget_Manager->Render(pShader, pVIBuffer);
 }
+#endif // _DEBUG
 
 void CGameInstance::Release_Engine()
 {

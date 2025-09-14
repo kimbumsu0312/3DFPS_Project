@@ -190,6 +190,12 @@
     <Filter Include="01.Utility\03.Component\VIBuffer\Instance\Rect">
       <UniqueIdentifier>{cee4086f-04c0-43bd-9f77-bb965feb28aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Component\VIBuffer\Instance\Model">
+      <UniqueIdentifier>{70d1fa37-635b-459b-a9b9-4ad0ffb8b734}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.Component\VIBuffer\Instance\Model\Mesh">
+      <UniqueIdentifier>{db76808c-ad3d-4f75-8c59-bacd97582f09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -390,6 +396,12 @@
     <ClInclude Include="..\public\VIBuffer_Rect_Instance.h">
       <Filter>01.Utility\03.Component\VIBuffer\Instance\Rect</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Mesh_Instance.h">
+      <Filter>01.Utility\03.Component\VIBuffer\Instance\Model\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Model_Instance.h">
+      <Filter>01.Utility\03.Component\VIBuffer\Instance\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -571,6 +583,12 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Rect_Instance.cpp">
       <Filter>01.Utility\03.Component\VIBuffer\Instance\Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Mesh_Instance.cpp">
+      <Filter>01.Utility\03.Component\VIBuffer\Instance\Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Model_Instance.cpp">
+      <Filter>01.Utility\03.Component\VIBuffer\Instance\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

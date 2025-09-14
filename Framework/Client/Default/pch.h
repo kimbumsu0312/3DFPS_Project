@@ -55,4 +55,8 @@
 
 //이펙트 관련
 #include "Snow.h"
+#include "Muzzle_Effect.h"
+#include "Blood_Effect.h"
+#include "Fly_Effect.h"
+#include "Spark_Effect.h"
 #endif //PCH_H

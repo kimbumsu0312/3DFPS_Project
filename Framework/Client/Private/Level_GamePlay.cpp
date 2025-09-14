@@ -48,8 +48,17 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->IsMouseDown(MOUSEKEYSTATE::LB))
+	{
+		CFly_Effect::FLY_EFFECT_INIT FlyDesc;
+		FlyDesc.vPos = XMVectorSet(-30.95f, -7.47f, 61.67f, 1.f);
+		m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Fly"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &FlyDesc);
 
+		CBlood_Effect::BLODE_EFFECT_INIT BlodeDesc;
+		BlodeDesc.vPos = XMVectorSet(-32.95f, -7.47f, 55.67f, 1.f);
+		m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blode"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &BlodeDesc);
 
+	}
 	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
 		CInven_Manager::GetInstance()->Add_ItemSlot(0, TEXT("Pool_Item"));
 	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_2))
@@ -230,6 +239,36 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"), &Desc)))
 		return E_FAIL;
+
+	CPoolingObject::POOLOBJECT_DESC MuzzleDesc{};
+
+	MuzzleDesc.szPoolingPath = TEXT("Pool_Muzzle");
+
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Muzzle_Effect"), 10, &MuzzleDesc)))
+		return E_FAIL;
+
+	CPoolingObject::POOLOBJECT_DESC BlodeDesc{};
+
+	BlodeDesc.szPoolingPath = TEXT("Pool_Blode");
+
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Blode_Effect"), 10, &BlodeDesc)))
+		return E_FAIL;
+
+	CPoolingObject::POOLOBJECT_DESC FlyDesc{};
+
+	FlyDesc.szPoolingPath = TEXT("Pool_Fly");
+
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Fly_Effect"), 10, &FlyDesc)))
+		return E_FAIL;
+
+	FlyDesc.szPoolingPath = TEXT("Pool_Spark");
+
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Spark_Effect"), 10, &FlyDesc)))
+		return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+	//	ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Muzzle_Effect"), &MuzzleDesc)))
+	//	return E_FAIL;
 	return S_OK;
 }
 

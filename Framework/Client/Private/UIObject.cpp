@@ -148,6 +148,8 @@ void CUIObject::Add_Child(CUIObject* pParent, CUIObject* pChild, CShader* pShade
 
 void CUIObject::Update_Shader(CShader* pShader)
 {
+	Safe_Release(m_pShaderCom);
+
 	m_pShaderCom = pShader;
 	Safe_AddRef(m_pShaderCom);
 
@@ -157,6 +159,8 @@ void CUIObject::Update_Shader(CShader* pShader)
 
 void CUIObject::Update_Texture(CTexture* pTexture)
 {
+	Safe_Release(m_pTextureCom);
+
 	m_pTextureCom = pTexture;
 	Safe_AddRef(m_pTextureCom);
 

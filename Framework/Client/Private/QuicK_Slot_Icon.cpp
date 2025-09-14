@@ -196,8 +196,8 @@ CGameObject* CQuick_Slot_Icon::Clone(void* pArg)
 
 void CQuick_Slot_Icon::Free()
 {
+    Safe_Release(m_pItemSlot);
     __super::Free();
 
     Safe_Release(m_pVIBufferCom);
-    Safe_Release(m_pItemSlot);
 }

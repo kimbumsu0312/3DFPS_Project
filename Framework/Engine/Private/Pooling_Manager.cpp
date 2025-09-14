@@ -59,7 +59,7 @@ HRESULT CPooling_Manager::Return_Object(CPoolingObject* pObject, const _wstring&
 {
 	pObject->Return_Pool();
 	m_ObjectPool.at(szPoolingPath).push(pObject);
-
+	
 	return S_OK;
 }
 
@@ -74,7 +74,6 @@ void CPooling_Manager::Free()
 
 	for (auto& pQueue : m_ObjectPool)
 	{
-
 		while (!pQueue.second.empty())
 		{
 			Safe_Release(pQueue.second.front());

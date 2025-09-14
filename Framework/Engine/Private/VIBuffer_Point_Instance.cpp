@@ -73,6 +73,7 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(const INSTANCE_DESC* pDes
 			1.f	);
 
 		pInstanceVertices[i].vLifeTime = _float2(0.f, fLifeTime);
+		pInstanceVertices[i].vSplat = m_pGameInstance->Rand(pPointDesc->vSplat.x, pPointDesc->vSplat.y);
 	}
 
 	return S_OK;
@@ -123,7 +124,7 @@ void CVIBuffer_Point_Instance::Spread(_float fTimeDelta)
 
 		XMStoreFloat4(&pVertices[i].vTranslation, XMLoadFloat4(&pVertices[i].vTranslation) + vMoveDir * m_pSpeeds[i] * fTimeDelta);
 		pVertices[i].vLifeTime.x += fTimeDelta;
-
+		pVertices[i].vSplat = pInstanceVertices[i].vSplat;
 		if (true == m_isLoop)
 		{
 			if (pVertices[i].vLifeTime.x >= pVertices[i].vLifeTime.y)
@@ -197,6 +198,63 @@ void CVIBuffer_Point_Instance::Drop_Diagonal(_float fTimeDelta, _float3 vCutMinP
 				pVertices[i].vTranslation = pInstanceVertices[i].vTranslation;
 			}
 		}
+	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_Point_Instance::Sprite_Sort(_float fSpriteSpeed, _matrix WolrdMat)
+{
+	D3D11_MAPPED_SUBRESOURCE	SubResource{};
+
+	VTXINSTANCE_PARTICLE* pInstanceVertices = static_cast<VTXINSTANCE_PARTICLE*>(m_pInstanceVertices);
+
+	/*m_pVB->Lock(0, 0, (void**)&pVertex, 0);*/
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTXINSTANCE_PARTICLE* pVertices = static_cast<VTXINSTANCE_PARTICLE*>(SubResource.pData);
+
+
+	for (size_t i = 0; i < m_iNumInstance; i++)
+	{
+		_vector	vMoveDir = XMVector3Normalize(XMVectorSetW(XMLoadFloat4(&pVertices[i].vTranslation) - XMLoadFloat3(&m_vPivot), 0.f));
+
+		XMStoreFloat4(&pVertices[i].vTranslation, XMLoadFloat4(&pVertices[i].vTranslation) + vMoveDir * m_pSpeeds[i] * fSpriteSpeed);
+		pVertices[i].fDis = XMVectorGetX(XMVector3Length(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - XMVector3TransformCoord(XMLoadFloat4(&pVertices[i].vTranslation), WolrdMat)));
+		pVertices[i].vLifeTime.x += fSpriteSpeed;
+
+		if (true == m_isLoop)
+		{
+			if (pVertices[i].vLifeTime.x >= pVertices[i].vLifeTime.y)
+			{
+				pVertices[i].vLifeTime.x = 0.f;
+				pVertices[i].vTranslation = pInstanceVertices[i].vTranslation;
+			}
+		}
+	}
+
+	sort(pVertices, pVertices + m_iNumInstance,[](const VTXINSTANCE_PARTICLE& a, const VTXINSTANCE_PARTICLE& b){
+			return a.fDis > b.fDis;});
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_Point_Instance::Reseet()
+{
+	D3D11_MAPPED_SUBRESOURCE	SubResource{};
+
+	VTXINSTANCE_PARTICLE* pInstanceVertices = static_cast<VTXINSTANCE_PARTICLE*>(m_pInstanceVertices);
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTXINSTANCE_PARTICLE* pVertices = static_cast<VTXINSTANCE_PARTICLE*>(SubResource.pData);
+
+	for (size_t i = 0; i < m_iNumInstance; i++)
+	{
+		pVertices[i].vLifeTime.x = 0.f;
+		pVertices[i].vTranslation = pInstanceVertices[i].vTranslation;
+		
 	}
 
 	m_pContext->Unmap(m_pVBInstance, 0);

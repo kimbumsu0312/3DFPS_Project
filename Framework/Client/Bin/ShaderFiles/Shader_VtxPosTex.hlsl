@@ -2,7 +2,8 @@
 
 //사용할 데이터를 전역 변수로 선언
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-float4 g_Vector;
+float2 g_UVMin = { 0.f, 0.f };
+float2 g_UVMax = { 1.f, 1.f };
 Texture2D g_Texture;
 
 struct VS_IN
@@ -67,8 +68,6 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     //Out.vColor.rgb = In.vTexcoord.y;
-    ((g_WorldMatrix._42 - 150) + 300);
-    ((g_WorldMatrix._42 - 150) + In.vPosition.y);
     //텍스처 셋팅 - 텍스처 타입, 텍스처 픽셀 색상 값
     //Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord * 2.f);
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
@@ -84,6 +83,17 @@ PS_OUT PS_MAIN_COLOR(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_MAIN_SPRITE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    In.vTexcoord = g_UVMin + (g_UVMax - g_UVMin) * In.vTexcoord;
+     
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass DefaultPass
@@ -93,6 +103,7 @@ technique11 DefaultTechnique
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
@@ -103,7 +114,19 @@ technique11 DefaultTechnique
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_COLOR();
+    }
+
+    pass MuzzlePass
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SPRITE();
     }
 
 }

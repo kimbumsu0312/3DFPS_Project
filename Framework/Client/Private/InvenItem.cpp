@@ -20,8 +20,6 @@ HRESULT CInvenItem::Initialize_Prototype()
 
 HRESULT CInvenItem::Initialize(void* pArg)
 {
-
-
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 

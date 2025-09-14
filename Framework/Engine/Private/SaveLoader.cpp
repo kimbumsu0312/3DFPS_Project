@@ -49,6 +49,120 @@ void CSaveLoader::Clear_Object()
 	m_Objects.clear();
 }
 
+HRESULT CSaveLoader::Load_ModelData(string szFilePath, SAVE_MODEL& pModelData)
+{
+	string DataFilePath = {};
+
+	ifstream file(szFilePath);
+	if (!file.is_open())
+	{
+		MSG_BOX(TEXT("불러오기 실패"));
+		return E_FAIL;
+	}
+
+	json jData;
+	file >> jData;
+	file.close();
+
+	pModelData.szName = jData["Model_name"];
+	pModelData.eModel = jData["Model_type"];
+	pModelData.iNumMaterials = jData["iNumMaterials"];
+	DataFilePath = jData["Data_Path"];
+
+
+	size_t szSlash = szFilePath.find_last_of("/\\");
+	string directory = (szSlash == string::npos) ? "" : szFilePath.substr(0, szSlash);
+
+	szSlash = DataFilePath.find_last_of("/\\");
+	string filename = (szSlash == string::npos) ? DataFilePath : DataFilePath.substr(szSlash + 1);
+
+	if (directory.back() == '/' || directory.back() == '\\')
+		DataFilePath = directory + filename;
+	else
+		DataFilePath = directory + "/" + filename;
+
+	for (int i = 0; i < pModelData.iNumMaterials; ++i)
+	{
+		SAVE_MESHMATERIAL MeshMaterial;
+		const auto& jMeshMaterial = jData["MeshMaterial"][i];
+
+		for (const auto& jMaterial : jMeshMaterial["Materials"])
+		{
+			SAVE_MATERIAL material;
+			material.iTexCount = jMaterial["iTexCount"];
+
+			for (int k = 0; k < material.iTexCount; ++k)
+			{
+				string path = jMaterial["szFullPath"][k]["Path"];
+				material.szFullPath.push_back(path);
+			}
+
+			MeshMaterial.Materials.push_back(material);
+		}
+
+		pModelData.MeshMaterials.push_back(MeshMaterial);
+	}
+
+
+	ifstream DatFile(DataFilePath, ios::binary);
+	if (!DatFile)
+	{
+		MSG_BOX(TEXT("데이터 파일 불러오기 실패"));
+		return E_FAIL;
+	}
+
+	DatFile.read(reinterpret_cast<_char*>(&pModelData.PreTransformMatrix), sizeof(_float4x4));
+
+	size_t iMeshCount = 0;
+	DatFile.read(reinterpret_cast<_char*>(&iMeshCount), sizeof(size_t));
+	pModelData.iNumMeshes = static_cast<_int>(iMeshCount);
+	pModelData.Meshs.resize(iMeshCount);
+	//매쉬 로드
+	for (auto& mesh : pModelData.Meshs)
+	{
+		size_t nameSize = 0;
+		DatFile.read(reinterpret_cast<_char*>(&nameSize), sizeof(size_t));
+
+		_wstring name(nameSize, L'\0');
+		DatFile.read(reinterpret_cast<_char*>(&name[0]), nameSize * sizeof(_tchar));
+		mesh.szName = name;
+
+		DatFile.read(reinterpret_cast<_char*>(&mesh.iMaterialIndex), sizeof(_uint));
+		DatFile.read(reinterpret_cast<_char*>(&mesh.iNumVertices), sizeof(_uint));
+		DatFile.read(reinterpret_cast<_char*>(&mesh.iVertexStride), sizeof(_uint));
+		DatFile.read(reinterpret_cast<_char*>(&mesh.iNumIndices), sizeof(_uint));
+		DatFile.read(reinterpret_cast<_char*>(&mesh.iNumFaces), sizeof(_uint));
+
+		size_t faceCount = 0;
+		DatFile.read(reinterpret_cast<_char*>(&faceCount), sizeof(size_t));
+		mesh.iFaces.resize(faceCount);
+		DatFile.read(reinterpret_cast<_char*>(mesh.iFaces.data()), faceCount * sizeof(Face));
+
+		if (MODELTYPE::ANIM == pModelData.eModel)
+		{
+			size_t vertexCount = 0;
+			DatFile.read(reinterpret_cast<_char*>(&vertexCount), sizeof(size_t));
+			mesh.AnimVertex.resize(vertexCount);
+			DatFile.read(reinterpret_cast<_char*>(mesh.AnimVertex.data()), vertexCount * sizeof(VTXANIMMESH));
+
+			DatFile.read(reinterpret_cast<_char*>(&mesh.iNumBones), sizeof(_uint));
+
+			size_t boneIndexCount = 0;
+			DatFile.read(reinterpret_cast<_char*>(&boneIndexCount), sizeof(size_t));
+			mesh.BoneIndices.resize(boneIndexCount);
+			DatFile.read(reinterpret_cast<_char*>(mesh.BoneIndices.data()), boneIndexCount * sizeof(_int));
+		}
+		else
+		{
+			size_t vertexCount = 0;
+			DatFile.read(reinterpret_cast<_char*>(&vertexCount), sizeof(size_t));
+			mesh.NonAnimVertex.resize(vertexCount);
+			DatFile.read(reinterpret_cast<_char*>(mesh.NonAnimVertex.data()), vertexCount * sizeof(VTXMESH));
+		}
+	}
+	return S_OK;
+}
+
 HRESULT CSaveLoader::TerrainSave(string FileName, CVIBuffer* pVIBuffer)
 {
 	SAVE_TERRAIN SaveData = static_cast<CVIBuffer_Terrain*>(pVIBuffer)->Save_Terrain();
