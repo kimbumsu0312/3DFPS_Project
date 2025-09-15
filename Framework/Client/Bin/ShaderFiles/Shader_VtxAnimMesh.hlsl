@@ -16,6 +16,9 @@ vector      g_vMtrlSpecular = 1.f;
 
 matrix      g_BoneMatrices[950];
 
+texture2D g_NoiesTexture;
+float g_fNoiesValue = 0.f;
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -96,6 +99,23 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_NOIES(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    vector vMaskelNoies = g_NoiesTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    if (g_fNoiesValue > vMaskelNoies.r)
+        discard;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    Out.vDiffuse = vMtrlDiffuse * 1.2f;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vPosition.z / In.vProjPos.w, In.vProjPos.w, 0.f, 0.f);
+    
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass DefaultPass
@@ -109,5 +129,15 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
+    pass NoiesPass
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_NOIES();
+    }
 }
 

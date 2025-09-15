@@ -117,10 +117,10 @@ HRESULT CRenderer::Draw()
     if (FAILED(Render_NonLight()))
         return E_FAIL;
 
-    if (FAILED(Render_Blend()))
+    if (FAILED(Render_Effect()))
         return E_FAIL;
 
-    if (FAILED(Render_Effect()))
+    if (FAILED(Render_Blend()))
         return E_FAIL;
 
     if (FAILED(Render_Fog()))

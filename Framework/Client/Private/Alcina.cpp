@@ -144,12 +144,16 @@ void CAlcina::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColli
 
 	else
 	{
+		CBlood_Effect::BLODE_EFFECT_INIT Desc;
+
 		switch (TargetCollision.iObjType)
 		{
 		case ENUM_CLASS(OBJECT_TYPE::RAY):
 			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
 				m_bIsHeadShot = true;
 			m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
+			Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
+			m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
 			break;
 		}
 	}

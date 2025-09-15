@@ -16,8 +16,8 @@ HRESULT CSpark_Effect::Initialize_Prototype()
         CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Spark/Spark_%d.png"), 1))))
         return E_FAIL;
 
-    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Spark"),
-        CSpark_Effect::Create(m_pDevice, m_pContext))))
+    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Spark_Particle"),
+        CSpark_Particle::Create(m_pDevice, m_pContext))))
         return E_FAIL;
 
     return S_OK;
@@ -87,7 +87,7 @@ HRESULT CSpark_Effect::Ready_PartObjects()
     SplatterDesc.fRotationPerSec = 1.f;
     SplatterDesc.fSpeedPerSec = 1.f;
 
-    if (FAILED(__super::Add_PartObject(TEXT("Part_Spake_Particle"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Spark"), &SplatterDesc)))
+    if (FAILED(__super::Add_PartObject(TEXT("Part_Paricle"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Spark_Particle"), &SplatterDesc)))
         return E_FAIL;
 
     return S_OK;

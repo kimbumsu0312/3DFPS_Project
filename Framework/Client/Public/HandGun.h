@@ -29,6 +29,9 @@ private:
 	CAnimatio_Controller*	m_pAnimCom = { nullptr };
 	string					m_AnimTag = {};
 
+	_bool					m_bEffect = {};
+	_float					m_fRange = { -0.16f };
+	
 private:
 	HRESULT					Ready_Components();
 	HRESULT					Bind_ShaderResources();

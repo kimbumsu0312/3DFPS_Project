@@ -39,6 +39,8 @@ public:
 		_int				iWeapon = {};
 		_int				iStartMotion = {};
 		_int				iDropItemIndex = {};
+
+		_float				fNoies = {};
 	}DANIELA_DATA;
 
 private:
@@ -76,7 +78,7 @@ private:
 	_float4x4*						m_pColliderBone[ENUM_CLASS(ColliderType_Mon::End)] = {nullptr};
 
 	//파츠 오브젝트 관련
-	class CWeaponObject*			m_pWeaponObject = { nullptr };
+	class CBoss_Shotel*				m_pWeaponObject = { nullptr };
 	class CBody_Daniela*			m_pBodyObject = { nullptr };
 		
 	//상태 관련

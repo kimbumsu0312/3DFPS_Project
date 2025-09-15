@@ -17,7 +17,7 @@ HRESULT CSpark_Particle::Initialize_Prototype()
 
 HRESULT CSpark_Particle::Initialize(void* pArg)
 {
-    m_iTexSizeX = 4;
+    m_iTexSizeX = 8;
     m_iTexSizeY = 4;
     m_fCount = 0.f;
     SPARK_PARTICLE_DATA* pDesc = static_cast<SPARK_PARTICLE_DATA*>(pArg);
@@ -48,12 +48,8 @@ void CSpark_Particle::Late_Update(_float fTimeDelta)
 {
     m_fCount += fTimeDelta;
 
-    //   m_pTransformCom->Go(fTimeDelta * 0.5f);
-
-      // m_pTransformCom->Turn(_vector{ 0.f, 0.f, 1.f, 0.f }, fTimeDelta * XMConvertToRadians(15.f));
-       //m_pTransformCom->Scale(_float3{ 1.f * m_fCount, 1.f * m_fCount, 1.f });
     XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
-    m_pVIBufferCom->Spread(fTimeDelta);
+    m_pVIBufferCom->Sprite_Sort(fTimeDelta * 1.f, XMLoadFloat4x4(&m_CombinedWorldMatrix));
 
 
     if (m_fCount >= 1.f)
@@ -66,7 +62,7 @@ void CSpark_Particle::Late_Update(_float fTimeDelta)
     }
     else
     {
-        if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONLIGHT, this)))
+        if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::EFFECT, this)))
             return;
     }
 }
@@ -78,7 +74,7 @@ HRESULT CSpark_Particle::Render()
     if (FAILED(Bind_ShaderResources()))
         return E_FAIL;
 
-    m_pShaderCom->Begin(4);
+    m_pShaderCom->Begin(5);
 
     m_pVIBufferCom->Bind_Resources();
 

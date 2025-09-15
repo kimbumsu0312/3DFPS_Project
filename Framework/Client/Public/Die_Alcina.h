@@ -14,8 +14,10 @@ public:
 	virtual void				Update(CAlcina* pContainer, _float fDeltatime) override;
 	virtual void				Exit(CAlcina* pContainer) override;
 
+private:
+	_bool						m_isNoies = { false };
 public:
-	static CDie_Alcina* Create(void* pArg = nullptr);
+	static CDie_Alcina*			Create(void* pArg = nullptr);
 	virtual void				Free() override;
 };
 

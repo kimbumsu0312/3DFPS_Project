@@ -14,6 +14,8 @@ public:
 	virtual void				Update(CMonster_WereWolf* pContainer, _float fDeltatime) override;
 	virtual void				Exit(CMonster_WereWolf* pContainer) override;
 
+private:
+	_bool						m_isNoies = { false };
 public:
 	static CDie_WereWolf* Create(void* pArg = nullptr);
 	virtual void				Free() override;

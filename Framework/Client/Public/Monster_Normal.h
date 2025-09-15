@@ -39,6 +39,9 @@ public:
 		_int				iWeapon = {};
 		_int				iStartMotion = {};
 		_int				iDropItemIndex = {};
+
+		_float				fNoies = {};
+
 	}NORMALMON_DATA;
 private:
 	enum ColliderType_Mon { BODY = 0, Head, Hand, RESIST, CHASE, END };

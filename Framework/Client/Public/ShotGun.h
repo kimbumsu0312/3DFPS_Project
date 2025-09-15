@@ -30,6 +30,9 @@ private:
 	string					m_AnimTag = {};
 	_bool					m_isReload = { false };
 	_int					m_iReloadStack = {};
+
+	_bool					m_bEffect = {};
+	_float					m_fRange = { -0.79f };
 private:
 	HRESULT					Ready_Components();
 	HRESULT					Bind_ShaderResources();

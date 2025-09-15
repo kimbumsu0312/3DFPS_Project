@@ -27,9 +27,16 @@ void CDie_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
     else if (m_eAnimState == STATE_ANIM::LOOP)
     {
         pContainer->Target_LookTurn(fDeltatime);
-        if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+        if (m_isNoies)
         {
-            pContainer->SetDead();
+            pContainer->Get_BlackBoard()->Set_Data().fNoies += fDeltatime * 0.5f;
+            if(pContainer->Get_BlackBoard()->Get_Data().fNoies > 1.f)
+                pContainer->SetDead();
+        }
+        else if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+        {
+            m_isNoies = true;
+           
         }
     }
     else if (m_eAnimState == STATE_ANIM::END)

@@ -32,6 +32,9 @@ HRESULT CBela::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	if (FAILED(Ready_Utility()))
+		return E_FAIL;
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
@@ -84,7 +87,7 @@ void CBela::Late_Update(_float fTimeDelta)
 		return;
 
 	m_pBodyObject->Late_Update(fTimeDelta);
-	m_pWeaponObject->Late_Update(fTimeDelta);
+	m_pWeaponObject->Late_Update(fTimeDelta, m_BlackBoard->Get_Data().fNoies );
 }
 
 HRESULT CBela::Render()
@@ -138,6 +141,8 @@ void CBela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollisi
 	}
 	else
 	{
+		CBlood_Effect::BLODE_EFFECT_INIT Desc;
+
 		switch (TargetCollision.iObjType)
 		{
 		case ENUM_CLASS(OBJECT_TYPE::RAY):
@@ -150,6 +155,8 @@ void CBela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollisi
 			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L))
 				m_BlackBoard->Set_Data().IsHitPoint.IsSholder_L = true;
 
+		Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
+		m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
 			break;
 		}
 	}
@@ -203,11 +210,9 @@ HRESULT CBela::Ready_Components()
 HRESULT CBela::Ready_PartObjects()
 {
 	CBody_Bela::BODY_DESC BodyDesc{};
-	BodyDesc.pAnimState = &m_iAnimState;
+	BodyDesc.pBlackBoard = m_BlackBoard;
 	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	BodyDesc.pAnimTag = &m_szAnimTag;
-	BodyDesc.pIsAnimLoop = &m_bIsAnimLoop;
-	BodyDesc.pIsAnimFinsh = &m_bIsAnimFinsh;
+
 
 	if (FAILED(__super::Add_PartObject(TEXT("Part_Body"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Bela"), &BodyDesc)))
 		return E_FAIL;
@@ -227,7 +232,7 @@ HRESULT CBela::Ready_PartObjects()
 	if (FAILED(__super::Add_PartObject(TEXT("Part_Shotel"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Boss_Shotel"), &WeaponDesc)))
 		return E_FAIL;
 
-	CWeaponObject* pWeaponObject = static_cast<CWeaponObject*>(Find_PartObject(TEXT("Part_Shotel")));
+	CBoss_Shotel* pWeaponObject = static_cast<CBoss_Shotel*>(Find_PartObject(TEXT("Part_Shotel")));
 
 	if (pWeaponObject == nullptr)
 		return E_FAIL;
@@ -263,6 +268,7 @@ HRESULT CBela::Ready_Utility()
 	m_BlackBoard->Set_Data().iStartMotion = 0;
 
 	m_BlackBoard->Set_Data().MonPos = m_pTransformCom->Get_WorldMatrixPtr();
+	m_BlackBoard->Set_Data().fNoies = 0.f;
 
 	m_pBehaviorTree = CBehaviorTree_Bela::Create(m_BlackBoard);
 

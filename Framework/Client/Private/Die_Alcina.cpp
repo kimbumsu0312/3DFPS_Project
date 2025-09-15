@@ -19,6 +19,10 @@ void CDie_Alcina::Enter(CAlcina* pContainer)
 
 void CDie_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
 {
+    pContainer->Get_BlackBoard()->Set_Data().fNoies += fDeltatime * 0.5f;
+
+    if (pContainer->Get_BlackBoard()->Get_Data().fNoies > 1.f)
+        pContainer->SetDead();
 }
 
 void CDie_Alcina::Exit(CAlcina* pContainer)

@@ -47,12 +47,16 @@ _bool CBounding_AABB::Intersect(COLLIDER eType, CBounding* pTarget, _float3& pOu
     return isColl;
 }
 
-_bool CBounding_AABB::Intersect(_vector RayPos, _vector RayDir)
+_bool CBounding_AABB::Intersect(RAY_DESC& RayDesc)
 {
     _bool isColl = { false };
-    _float fDis = {};
 
-    isColl = m_pDesc->Intersects(RayPos, RayDir, fDis);
+    isColl = m_pDesc->Intersects(RayDesc.RayPos, RayDesc.RayDIr, RayDesc.OnColiderDis);
+
+    if (isColl)
+    {
+        RayDesc.OnCloiderPos = RayDesc.RayPos + (RayDesc.RayDIr * RayDesc.OnColiderDis);
+    }
 
     return isColl;
 }

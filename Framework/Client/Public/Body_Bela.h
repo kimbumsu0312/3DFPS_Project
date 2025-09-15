@@ -1,10 +1,13 @@
 #pragma once
 #include "PartObject.h"
+#include "Bela.h"
+#include "BlackBoard.h"
 
 NS_BEGIN(Engine)
 class CShader;
 class CModel;
 class CAnimatio_Controller;
+class CTexture;
 NS_END
 
 NS_BEGIN(Client)
@@ -12,11 +15,7 @@ class CBody_Bela final : public CPartObject
 {
 public:
 	typedef struct tagBodyNormalDesc : public CPartObject::PARTOBJECT_DESC {
-		_uint* pState = { nullptr };
-		_uint* pAnimState = { nullptr };
-		string* pAnimTag = { nullptr };
-		_bool* pIsAnimLoop = { nullptr };
-		_bool* pIsAnimFinsh = { nullptr };
+		CBlackBoard<CBela::BELA_DATA>* pBlackBoard = { nullptr };
 	}BODY_DESC;
 
 private:
@@ -37,14 +36,13 @@ public:
 	_float3*				Get_MovePos();
 	_float4*				Get_MoveRot();
 private:
+	CTexture*				m_pNoiesTexCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
 	CModel*					m_pModelCom = { nullptr };
 	CAnimatio_Controller*	m_pAnimCom = { nullptr };
 
-	_uint*					m_pAnimState = { nullptr };
-	string*					m_pAnimTag = { nullptr };
-	_bool*					m_pIsAnimLoop = { nullptr };
-	_bool*					m_pIsAnimFinsh = { nullptr };
+	CBlackBoard<CBela
+		::BELA_DATA>*		m_BlackBoard = { nullptr };
 	_uint					m_iRootLodeIndex = {};
 private:
 	HRESULT					Ready_Components();
@@ -54,8 +52,6 @@ public:
 	static CBody_Bela*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*	Clone(void* pArg) override;
 	virtual void			Free() override;
-
-
 };
 
 NS_END

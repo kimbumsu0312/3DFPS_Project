@@ -83,13 +83,15 @@ PS_OUT PS_MAIN_COLOR(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_MAIN_SPRITE(PS_IN In)
+PS_OUT PS_MAIN_MUZZLE(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
     In.vTexcoord = g_UVMin + (g_UVMax - g_UVMin) * In.vTexcoord;
-     
+    
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    if (Out.vColor.r > 0.8f && Out.vColor.g > 0.8f && Out.vColor.b > 0.8f)
+        Out.vColor.rgb = Out.vColor.rgb * 2.f;
     
     return Out;
 }
@@ -126,7 +128,7 @@ technique11 DefaultTechnique
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_SPRITE();
+        PixelShader = compile ps_5_0 PS_MAIN_MUZZLE();
     }
 
 }

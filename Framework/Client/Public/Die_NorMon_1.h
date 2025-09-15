@@ -14,6 +14,9 @@ public:
 	virtual void				Update(CMonster_Normal* pContainer, _float fDeltatime) override;
 	virtual void				Exit(CMonster_Normal* pContainer) override;
 
+private:
+	_bool						m_isNoies = { false };
+
 public:
 	static CDie_Normon_1* Create(void* pArg = nullptr);
 	virtual void				Free() override;

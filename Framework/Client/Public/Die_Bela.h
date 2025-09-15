@@ -14,8 +14,10 @@ public:
 	virtual void				Update(CBela* pContainer, _float fDeltatime) override;
 	virtual void				Exit(CBela* pContainer) override;
 
+private:
+	_bool						m_isNoies = { false };
 public:
-	static CDie_Bela* Create(void* pArg = nullptr);
+	static CDie_Bela*			Create(void* pArg = nullptr);
 	virtual void				Free() override;
 };
 

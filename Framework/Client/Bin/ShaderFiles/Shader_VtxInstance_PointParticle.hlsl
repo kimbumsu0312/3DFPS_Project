@@ -206,7 +206,7 @@ PS_OUT PS_BLODE(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_SPLATTER(PS_IN In)
+PS_OUT PS_Blood_Splatter(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
@@ -230,12 +230,54 @@ PS_OUT PS_SPLATTER(PS_IN In)
     Out.vColor = g_DiffuseTexture.Sample(DefaultSampler_CLAMP, In.vTexcoord);
     if (Out.vColor.a < 0.01f)
         discard;
-    Out.vColor.r = Out.vColor.r * 0.545f;
-    Out.vColor.g = Out.vColor.r * 0.01f;
-    Out.vColor.b = Out.vColor.g * 0.01f;
     
-   float fColor = saturate(In.vLifeTime.y - In.vLifeTime.x);
+    if (Out.vColor.r < 0.6f)
+    {
+        Out.vColor.r = Out.vColor.r * 1.0f;
+        Out.vColor.g = Out.vColor.r * 0.1f;
+        Out.vColor.b = Out.vColor.r * 0.1f;
+    }
+    else
+    {
+        Out.vColor.r = Out.vColor.r * 0.6f;
+        Out.vColor.g = Out.vColor.r * 0.05f;
+        Out.vColor.b = Out.vColor.r * 0.05f;
+    }
+    float fColor = saturate(In.vLifeTime.y - In.vLifeTime.x);
     Out.vColor.a = Out.vColor.a * (fColor * 1.5f);
+    
+    return Out;
+}
+
+PS_OUT PS_Spark(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    int iTotalFrame = g_iTexValueX * g_iTexValueY;
+    int iTexIndex = In.vLifeTime.x * iTotalFrame;
+    
+    //0.5 
+    int iX = (iTexIndex % g_iTexValueX);
+    int iY = (iTexIndex / g_iTexValueX);
+    
+    float2 vUVMin = { 0.f, 0.f };
+    float2 vUVMax = { 0.f, 0.f };
+    
+    vUVMin.x = (float) iX / g_iTexValueX;
+    vUVMin.y = (float) iY / g_iTexValueY;
+    vUVMax.x = (float) (iX + 1) / g_iTexValueX;
+    vUVMax.y = (float) (iY + 1) / g_iTexValueY;
+    
+
+    In.vTexcoord = vUVMin + (vUVMax - vUVMin) * In.vTexcoord;
+    
+    Out.vColor = g_DiffuseTexture.Sample(DefaultSampler_CLAMP, In.vTexcoord);
+    if (Out.vColor.a < 0.01f)
+        discard;
+    if (Out.vColor.r > 0.65f && Out.vColor.g > 0.65f)
+        Out.vColor.rgb = Out.vColor.rgb * 3.f;
+    float fColor = saturate(In.vLifeTime.y - In.vLifeTime.x);
+    Out.vColor.a = Out.vColor.a * fColor * 0.5f;
     
     return Out;
 }
@@ -293,7 +335,17 @@ technique11 DefaultTechnique
        
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = compile gs_5_0 GS_MAIN();
-        PixelShader = compile ps_5_0 PS_SPLATTER();
+        PixelShader = compile ps_5_0 PS_Blood_Splatter();
+    }
+    pass SparkPass
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+       
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_Spark();
     }
 
 }

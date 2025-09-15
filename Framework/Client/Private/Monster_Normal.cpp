@@ -178,36 +178,41 @@ void CMonster_Normal::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY Tar
 		if (TargetCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::PLAYER))
 			m_BlackBoard->Set_Data().IsChase = true;
 	}
-	else
+
+
+	CBlood_Effect::BLODE_EFFECT_INIT Desc;
+
+	switch (TargetCollision.iObjType)
 	{
-		switch (TargetCollision.iObjType)
+	case ENUM_CLASS(OBJECT_TYPE::RAY):
+		MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD) ?
+			m_BlackBoard->Set_Data().bIsHeadShot = true
+			: m_BlackBoard->Set_Data().bIsHeadShot = false;
+
+		if (true == m_BlackBoard->Get_Data().bIsHeadShot)
 		{
-		case ENUM_CLASS(OBJECT_TYPE::RAY):
-			MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD) ?
-				m_BlackBoard->Set_Data().bIsHeadShot = true
-				: m_BlackBoard->Set_Data().bIsHeadShot = false;
-
-			if (true == m_BlackBoard->Get_Data().bIsHeadShot)
-			{
-				m_BlackBoard->Set_Data().iHp -= _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
-				m_BlackBoard->Set_Data().iDamage += _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
-			}
-			else
-			{
-				m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
-				m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
-			}
-			break;
-
-		case ENUM_CLASS(OBJECT_TYPE::WEAPON):
-			if (m_BlackBoard->Get_Data().IsWeaponDamage == true)
-				break;
+			m_BlackBoard->Set_Data().iHp -= _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
+			m_BlackBoard->Set_Data().iDamage += _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
+		}
+		else
+		{
 			m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
 			m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
-			m_BlackBoard->Set_Data().IsWeaponDamage = true;
-			break;
 		}
+		Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
+		m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
+
+		break;
+
+	case ENUM_CLASS(OBJECT_TYPE::WEAPON):
+		if (m_BlackBoard->Get_Data().IsWeaponDamage == true)
+			break;
+		m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
+		m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
+		m_BlackBoard->Set_Data().IsWeaponDamage = true;
+		break;
 	}
+
 }
 
 HRESULT CMonster_Normal::Initialize_Pool(void* pArg)
@@ -327,12 +332,8 @@ HRESULT CMonster_Normal::Ready_Components()
 HRESULT CMonster_Normal::Ready_PartObjects()
 {
 	CBody_NorMon::BODY_DESC BodyDesc{};
-	BodyDesc.pAnimState = &m_iAnimState;
+	BodyDesc.BlackBoard = m_BlackBoard;
 	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	BodyDesc.pAnimTag = &m_szAnimTag;
-	BodyDesc.pIsAnimLoop = &m_bIsAnimLoop;
-	BodyDesc.pIsAnimFinsh = &m_bIsAnimFinsh;
-
 	if (FAILED(__super::Add_PartObject(TEXT("Part_Body"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Monster_Normal_1"), &BodyDesc)))
 		return E_FAIL;
 
@@ -344,17 +345,31 @@ HRESULT CMonster_Normal::Ready_PartObjects()
 	m_pBodyObject = pBody;
 	Safe_AddRef(m_pBodyObject);
 
-	CWeaponObject::WEAPON_DESC WeaponDesc{};
-	WeaponDesc.pCulStateTag = &m_szCulStateTag;
-	WeaponDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	WeaponDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_Wep"));
-	if (FAILED(__super::Add_PartObject(TEXT("Part_Sword"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1_Sword"), &WeaponDesc)))
+	CNormon_Sword::MONWEAPON_DESC SwordDesc{};
+	SwordDesc.pCulStateTag = &m_szCulStateTag;
+	SwordDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+	SwordDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_Wep"));
+	SwordDesc.BlackBoard = m_BlackBoard;
+
+	CNormon_Shotel::MONWEAPON_DESC ShotelDesc{};
+	ShotelDesc.pCulStateTag = &m_szCulStateTag;
+	ShotelDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+	ShotelDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_Wep"));
+	ShotelDesc.BlackBoard = m_BlackBoard;
+
+	CNormon_Halberd::MONWEAPON_DESC HalberdDesc{};
+	HalberdDesc.pCulStateTag = &m_szCulStateTag;
+	HalberdDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
+	HalberdDesc.pSocketMatrix = pBody->Get_BoneMatrix(TEXT("R_Wep"));
+	HalberdDesc.BlackBoard = m_BlackBoard;
+
+	if (FAILED(__super::Add_PartObject(TEXT("Part_Sword"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1_Sword"), &SwordDesc)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_PartObject(TEXT("Part_Halberd"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1_Halberd"), &WeaponDesc)))
+	if (FAILED(__super::Add_PartObject(TEXT("Part_Halberd"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1_Halberd"), &HalberdDesc)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_PartObject(TEXT("Part_Shotel"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1_Shotel"), &WeaponDesc)))
+	if (FAILED(__super::Add_PartObject(TEXT("Part_Shotel"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster_Normal_1_Shotel"), &ShotelDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -382,6 +397,9 @@ HRESULT CMonster_Normal::Ready_Utility()
 
 	m_BlackBoard->Set_Data().MonPos = m_pTransformCom->Get_WorldMatrixPtr();
 	m_BlackBoard->Set_Data().IsWeaponDamage = false;
+
+	m_BlackBoard->Set_Data().fNoies = 0.f;
+
 
 	m_pBehaviorTree = CBehaviorTree_Normon_1::Create(m_BlackBoard);
 

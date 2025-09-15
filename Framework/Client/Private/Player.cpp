@@ -444,7 +444,7 @@ void CPlayer::InputKey_AttackState(_float fTimeDelta)
 				m_BlackBoard->Set_Data().isReload = true;
 		}
 	}
-	if (m_pGameInstance->IsMouseDown(MOUSEKEYSTATE::LB))
+	if (m_pGameInstance->IsMouseDown(MOUSEKEYSTATE::LB) && m_BlackBoard->Set_Data().isAttack == false)
 	{
 		
 		if (m_iAnimState != ENUM_CLASS(PLAYER_ANIM::KNIFE))
@@ -452,11 +452,6 @@ void CPlayer::InputKey_AttackState(_float fTimeDelta)
 			if (CPlayer_Manager::GetInstance()->Gun_Shoting())
 			{
 				m_BlackBoard->Set_Data().isAttack = true;
-				CMuzzle_Effect::MUZZLE_EFFECT_INIT Desc;
-				Desc.vPos = m_pTransformCom->Get_State(STATE::POSITION);
-				Desc.vPos = XMVectorSetY(Desc.vPos, XMVectorGetY(Desc.vPos) + 2.f);
-
-				m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Muzzle"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
 				for (_int i = 0; i < m_iRayCount; ++i)
 				{
 					RAY_DESC RayDesc = m_pGameInstance->Create_FpsRayDesc(m_fRayRange);

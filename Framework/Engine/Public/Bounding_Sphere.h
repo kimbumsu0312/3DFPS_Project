@@ -20,7 +20,7 @@ public:
 	HRESULT						Initialize(const CBounding::BOUNDING_DESC* pDesc);
 	virtual void				Update(_fmatrix WorldMatrix) override;
 	virtual _bool				Intersect(COLLIDER eType, CBounding* pTarget, _float3& pOutNroaml, _float3& pTargetNroaml) override;
-	virtual _bool				Intersect(_vector RayPos, _vector RayDir) override;
+	virtual _bool				Intersect(RAY_DESC& RayDesc) override;
 
 #ifdef _DEBUG
 public:

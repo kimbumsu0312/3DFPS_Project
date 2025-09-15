@@ -108,7 +108,7 @@ void CDaniela::Late_Update(_float fTimeDelta)
 		return;
 
 	m_pBodyObject->Late_Update(fTimeDelta);
-	m_pWeaponObject->Late_Update(fTimeDelta);
+	m_pWeaponObject->Late_Update(fTimeDelta, m_BlackBoard->Get_Data().fNoies);
 	
 }
 
@@ -186,6 +186,8 @@ void CDaniela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColl
 	}
 	else
 	{
+		CBlood_Effect::BLODE_EFFECT_INIT Desc;
+
 		switch (TargetCollision.iObjType)
 		{
 		case ENUM_CLASS(OBJECT_TYPE::RAY):
@@ -199,6 +201,8 @@ void CDaniela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColl
 			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L))
 				m_BlackBoard->Set_Data().IsHitPoint.IsSholder_L = true;
 
+			Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
+			m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
 			m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
 			if (m_BlackBoard->Get_Data().fDamage_Cool <= 0.f)
 				m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
@@ -273,15 +277,12 @@ HRESULT CDaniela::Ready_Components()
 HRESULT CDaniela::Ready_PartObjects()
 {
 	CBody_Daniela::BODY_DESC BodyDesc{};
-	BodyDesc.pAnimState = &m_iAnimState;
+	BodyDesc.BlackBoard = m_BlackBoard;
 	BodyDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
-	BodyDesc.pAnimTag = &m_szAnimTag;
-	BodyDesc.pIsAnimLoop = &m_bIsAnimLoop;
-	BodyDesc.pIsAnimFinsh = &m_bIsAnimFinsh;
+
 
 	if (FAILED(__super::Add_PartObject(TEXT("Part_Body"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Body_Daniela"), &BodyDesc)))
 		return E_FAIL;
-
 
 	CBody_Daniela* pBody = static_cast<CBody_Daniela*>(Find_PartObject(TEXT("Part_Body")));
 
@@ -298,7 +299,7 @@ HRESULT CDaniela::Ready_PartObjects()
 	if (FAILED(__super::Add_PartObject(TEXT("Part_Shotel"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Boss_Shotel"), &WeaponDesc)))
 		return E_FAIL;
 
-	CWeaponObject* pWeaponObject = static_cast<CWeaponObject*>(Find_PartObject(TEXT("Part_Shotel")));
+	CBoss_Shotel* pWeaponObject = static_cast<CBoss_Shotel*>(Find_PartObject(TEXT("Part_Shotel")));
 
 	if (pWeaponObject == nullptr)
 		return E_FAIL;

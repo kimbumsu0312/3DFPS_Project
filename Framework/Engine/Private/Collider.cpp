@@ -78,7 +78,7 @@ _bool CCollider::Intersect(CCollider* pTarget)
 
 _bool CCollider::Intersect(RAY_DESC& RayDesc)
 {
-    return m_isColl = m_pBounding->Intersect(RayDesc.RayPos, RayDesc.RayDIr);
+    return m_isColl = m_pBounding->Intersect(RayDesc);
 }
 
 #ifdef _DEBUG

@@ -38,6 +38,8 @@ public:
 
 		const _float4x4*			MonPos = { nullptr };
 		Attack_Type					eAttackType = { Attack_Type::END };
+
+		_float						fNoies;
 	}ALCHINA_DATA;
 
 private:

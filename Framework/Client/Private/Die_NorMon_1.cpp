@@ -26,9 +26,18 @@ void CDie_Normon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
     }
     else if (m_eAnimState == STATE_ANIM::LOOP)
     {
-        if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+        if (m_isNoies)
         {
-            pContainer->SetDead();
+            pContainer->Get_BlackBoard()->Set_Data().fNoies += fDeltatime * 0.5f;
+
+            if (pContainer->Get_BlackBoard()->Get_Data().fNoies > 1.f)
+            {
+                pContainer->SetDead();
+            }
+        }
+        else if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+        {
+            m_isNoies = true;
             CItemSpawner::GetInstance()->Spawn_Item(pContainer->Get_BlackBoard()->Get_Data().iDropItemIndex, pContainer->Get_TransformState(STATE::POSITION), pContainer->Get_CulNaviIndex());
         }
     }

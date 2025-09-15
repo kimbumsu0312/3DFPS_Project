@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Quick_Slot_Icon.h"
-#include "QuicK_Slot_Item.h"
+#include "Quick_Slot_Item.h"
 
 CQuick_Slot_Icon::CQuick_Slot_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CUIObject{ pDevice, pContext }
 {

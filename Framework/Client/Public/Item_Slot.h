@@ -31,7 +31,7 @@ public:
 	HRESULT						Item_Init(const ITEM_SLOT_DESC& pDesc);
 	void						Update_Pos(_float2 vPos);
 	void						IsRotation(_float fAngle);
-	void						Equip_QuickSlot();
+
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 

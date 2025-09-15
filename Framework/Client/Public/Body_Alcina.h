@@ -5,6 +5,7 @@ NS_BEGIN(Engine)
 class CShader;
 class CModel;
 class CAnimatio_Controller;
+class CTexture;
 NS_END
 
 NS_BEGIN(Client)
@@ -34,6 +35,7 @@ public:
 	_float4*							Get_MoveRot();
 
 private:
+	CTexture*							m_pNoiesTexCom = { nullptr };
 	CShader*							m_pShaderCom = { nullptr };
 	CModel*								m_pModelCom = { nullptr };
 	CAnimatio_Controller*				m_pAnimCom = { nullptr };

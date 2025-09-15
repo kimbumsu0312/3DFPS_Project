@@ -20,17 +20,19 @@ public:
 	virtual HRESULT			Initialize(void* pArg);
 	virtual void			Priority_Update(_float fTimeDelta);
 	virtual void			Update(_float fTimeDelta);
-	virtual void			Late_Update(_float fTimeDelta);
+	virtual void			Late_Update(_float fTimeDelta, _float fNoies);
 	virtual HRESULT			Render();
 
 	virtual HRESULT			Add_Collider() override;
 	virtual void			OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 
 private:
+	CTexture*				m_pNoiesTexCom = { nullptr };
 	CCollider*				m_pColliderCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
 	CModel*					m_pModelCom = { nullptr };
 
+	_float					m_fNoies = {};
 private:
 	HRESULT					Ready_Components();
 	HRESULT					Bind_ShaderResources();

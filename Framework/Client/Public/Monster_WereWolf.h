@@ -38,6 +38,8 @@ public:
 		_bool IsEvent_3 = { false };
 
 		const _float4x4* MonPos = { nullptr };
+
+		_float fNoies = {};
 	}WEREWOLF_DATA;
 
 private:

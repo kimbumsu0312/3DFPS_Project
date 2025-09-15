@@ -28,6 +28,9 @@ private:
 	CModel*					m_pModelCom = { nullptr };
 	CAnimatio_Controller*	m_pAnimCom = { nullptr };
 	string					m_AnimTag = {};
+	
+	_bool					m_bEffect = {};
+	_float					m_fRange = { -0.86f };
 
 private:
 	HRESULT					Ready_Components();

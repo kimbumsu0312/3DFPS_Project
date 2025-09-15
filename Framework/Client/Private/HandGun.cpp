@@ -43,12 +43,18 @@ void CHandGun::Update(_float fTimeDelta)
     }
     else if (*m_pCulStateTag == TEXT("Reload"))
     { 
+        m_bEffect = false;
         m_pAnimCom->Player_Animation(0, "Reload", false, m_pModelCom, fTimeDelta, 0);
     }
     else
     {
+        m_bEffect = false;
         m_pAnimCom->Player_Animation(0, "Idle", true, m_pModelCom, fTimeDelta, 0);
     }
+}
+
+void CHandGun::Late_Update(_float fTimeDelta)
+{
     _matrix     BoneMatrix = XMLoadFloat4x4(m_pSocketMatrix);
     _matrix     ParentMatrix = XMLoadFloat4x4(m_pParentMatrix);
     _matrix     WorldMatrix = m_pTransformCom->Get_WorldMatrix();
@@ -58,10 +64,26 @@ void CHandGun::Update(_float fTimeDelta)
         BoneMatrix.r[i] = XMVector3Normalize(BoneMatrix.r[i]);
     }
     XMStoreFloat4x4(&m_CombinedWorldMatrix, WorldMatrix * BoneMatrix * ParentMatrix);
-}
 
-void CHandGun::Late_Update(_float fTimeDelta)
-{
+    if (*m_pCulStateTag == TEXT("Attack"))
+    {
+        if (!m_bEffect)
+        {
+            m_bEffect = true;
+            CMuzzle_Effect::MUZZLE_EFFECT_INIT Desc;
+
+            _vector vScale, vWorldRot, vWorldTrans;
+            XMMatrixDecompose(&vScale, &vWorldRot, &vWorldTrans, XMLoadFloat4x4(&m_CombinedWorldMatrix));
+
+            _vector vLook = { m_CombinedWorldMatrix._31,m_CombinedWorldMatrix._32, m_CombinedWorldMatrix._33, 0.f };
+
+            _vector vOffset = { 0.f, 0.f , m_fRange, 1.f };
+            vOffset = XMVector3Rotate(vOffset, vWorldRot);
+            Desc.vPos = vWorldTrans + vOffset;
+
+            m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Muzzle"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
+        }
+    }
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
         return;
 }

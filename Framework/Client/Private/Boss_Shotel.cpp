@@ -47,8 +47,10 @@ void CBoss_Shotel::Update(_float fTimeDelta)
     m_pColliderCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix));
 }
 
-void CBoss_Shotel::Late_Update(_float fTimeDelta)
+void CBoss_Shotel::Late_Update(_float fTimeDelta, _float fNoies)
 {
+    m_fNoies = fNoies;
+
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
         return;
 }
@@ -59,6 +61,8 @@ HRESULT CBoss_Shotel::Render()
         return E_FAIL;
 
     _uint           iNumMeshes = m_pModelCom->Get_NumMeshes();
+    m_pShaderCom->Bind_RawValue("g_fNoiesValue", &m_fNoies, sizeof(m_fNoies));
+    m_pNoiesTexCom->Bind_Shader_Resource(m_pShaderCom, "g_NoiesTexture", 0);
 
     for (_uint i = 0; i < iNumMeshes; i++)
     {
@@ -97,6 +101,10 @@ void CBoss_Shotel::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY Target
 
 HRESULT CBoss_Shotel::Ready_Components()
 {
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Noies"),
+        TEXT("Com_NoiesTex"), reinterpret_cast<CComponent**>(&m_pNoiesTexCom), nullptr)))
+        return E_FAIL;
+
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxMesh"),
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
         return E_FAIL;
@@ -164,6 +172,7 @@ void CBoss_Shotel::Free()
 {
     __super::Free();
 
+    Safe_Release(m_pNoiesTexCom);
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
     Safe_Release(m_pColliderCom);

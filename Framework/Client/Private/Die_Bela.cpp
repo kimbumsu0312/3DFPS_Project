@@ -20,6 +20,9 @@ void CDie_Bela::Enter(CBela* pContainer)
 
 void CDie_Bela::Update(CBela* pContainer, _float fDeltatime)
 {
+    pContainer->Get_BlackBoard()->Set_Data().fNoies += fDeltatime * 0.5f;
+    if (pContainer->Get_BlackBoard()->Get_Data().fNoies > 1.f)
+        pContainer->SetDead();
 }
 
 void CDie_Bela::Exit(CBela* pContainer)

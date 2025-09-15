@@ -173,7 +173,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	BlodeSplatterDesc.iNumInstance = 20;
 	BlodeSplatterDesc.vCenter = _float3(0.f, 0.f, 0.f);
 	BlodeSplatterDesc.vRange = _float3(0.1f, 0.1f, 0.f);
-	BlodeSplatterDesc.vSize = _float2(0.1f, 0.2f);
+	BlodeSplatterDesc.vSize = _float2(0.3f, 0.6f);
 	BlodeSplatterDesc.vLifeTime = _float2(0.3f, 0.5f);
 	BlodeSplatterDesc.vPivot = _float3(0.f, 0.f, 0.f);
 	BlodeSplatterDesc.vSpeed = _float2(0.5f, 1.2f);
@@ -185,15 +185,15 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		return E_FAIL;
 
 	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		SparkDesc{};
-	SparkDesc.iNumInstance = 20;
+	SparkDesc.iNumInstance = 1;
 	SparkDesc.vCenter = _float3(0.f, 0.f, 0.f);
-	SparkDesc.vRange = _float3(0.1f, 0.1f, 0.f);
-	SparkDesc.vSize = _float2(0.1f, 0.2f);
-	SparkDesc.vLifeTime = _float2(0.3f, 0.5f);
-	SparkDesc.vPivot = _float3(0.f, 0.f, 0.f);
-	SparkDesc.vSpeed = _float2(0.5f, 1.2f);
+	SparkDesc.vRange = _float3(0.0f, 0.0f, 0.f);
+	SparkDesc.vSize = _float2(1.f, 1.f);
+	SparkDesc.vLifeTime = _float2(1.f, 1.f);
+	SparkDesc.vPivot = _float3(0.1f, 0.f, 0.f);
+	SparkDesc.vSpeed = _float2(0.f, 0.f);
 	SparkDesc.IsLoop = false;
-	SparkDesc.vSplat = _float2(0.f, 1.f);
+	SparkDesc.vSplat = _float2(0.f, 0.f);
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Spark"),
 		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &SparkDesc))))

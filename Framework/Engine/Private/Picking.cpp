@@ -204,7 +204,7 @@ HRESULT CPicking::Ray_Render()
 	
 	if (m_RayDescs.size() > 0)
 	{
-		for (auto iter = m_RayDescs.begin(); iter == m_RayDescs.end(); )
+		for (auto iter = m_RayDescs.begin(); iter != m_RayDescs.end(); )
 		{
 			DX::DrawRay(m_pBatch, (*iter).RayPos, (*iter).RayDIr * 1000.f, false);
 			(*iter).Time -= 0.016f;

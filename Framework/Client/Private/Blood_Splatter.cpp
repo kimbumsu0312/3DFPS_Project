@@ -66,7 +66,7 @@ void CBlood_Splatter::Late_Update(_float fTimeDelta)
     }
     else
     {
-        if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONLIGHT, this)))
+        if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::EFFECT, this)))
             return;
     }
 }

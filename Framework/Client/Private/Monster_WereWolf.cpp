@@ -147,12 +147,16 @@ void CMonster_WereWolf::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY T
 	}
 	else
 	{
+		CBlood_Effect::BLODE_EFFECT_INIT Desc;
+
 		switch (TargetCollision.iObjType)
 		{
 		case ENUM_CLASS(OBJECT_TYPE::RAY):
 
 			m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
 			m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
+			Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
+			m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
 			break;
 		}
 	}
@@ -307,6 +311,7 @@ HRESULT CMonster_WereWolf::Ready_Utility()
 	m_BlackBoard->Set_Data().IsEvent_1 = false;
 	m_BlackBoard->Set_Data().IsEvent_2 = false;
 	m_BlackBoard->Set_Data().IsEvent_3 = false;
+	m_BlackBoard->Set_Data().fNoies = 0.f;
 
 	m_pBehaviorTree = CBehaviorTree_WereWolf::Create(m_BlackBoard);
 

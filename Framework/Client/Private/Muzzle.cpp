@@ -65,7 +65,7 @@ void CMuzzle::Late_Update(_float fTimeDelta)
         break;
     }
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONLIGHT, this)))
+	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::EFFECT, this)))
 		return;
 }
 

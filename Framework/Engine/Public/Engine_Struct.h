@@ -40,6 +40,8 @@ namespace Engine
 	{
 		XMVECTOR	RayPos;
 		XMVECTOR	RayDIr;
+		float    OnColiderDis;
+		XMVECTOR    OnCloiderPos;
 		float		Time;
 	}RAY_DESC;
 

@@ -1,10 +1,13 @@
 #pragma once
 #include "PartObject.h"
+#include "Daniela.h"
+#include "BlackBoard.h"
 
 NS_BEGIN(Engine)
 class CShader;
 class CModel;
 class CAnimatio_Controller;
+class CTexture;
 NS_END
 
 NS_BEGIN(Client)
@@ -12,11 +15,8 @@ class CBody_Daniela final : public CPartObject
 {
 public:
 	typedef struct tagBodyNormalDesc : public CPartObject::PARTOBJECT_DESC {
-		_uint* pState = { nullptr };
-		_uint* pAnimState = { nullptr };
-		string* pAnimTag = { nullptr };
-		_bool* pIsAnimLoop = { nullptr };
-		_bool* pIsAnimFinsh = { nullptr };
+		CBlackBoard<
+			CDaniela::DANIELA_DATA>* BlackBoard = { nullptr };
 	}BODY_DESC;
 
 private:
@@ -38,14 +38,14 @@ public:
 	_float4*				Get_MoveRot();
 
 private:
+	CTexture*				m_pNoiesTexCom = { nullptr };
 	CShader*				m_pShaderCom = { nullptr };
 	CModel*					m_pModelCom = { nullptr };
 	CAnimatio_Controller*	m_pAnimCom = { nullptr };
 
-	_uint*					m_pAnimState = { nullptr };
-	string*					m_pAnimTag = { nullptr };
-	_bool*					m_pIsAnimLoop = { nullptr };
-	_bool*					m_pIsAnimFinsh = { nullptr };
+	CBlackBoard<
+		CDaniela::DANIELA_DATA>* m_BlackBoard = { nullptr };
+
 	_uint					m_iRootLodeIndex = {};
 private:
 	HRESULT					Ready_Components();

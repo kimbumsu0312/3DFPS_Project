@@ -1,10 +1,13 @@
 #pragma once
 #include "PartObject.h"
+#include "BlackBoard.h"
+#include "Monster_Normal.h"
 
 NS_BEGIN(Engine)
 class CShader;
 class CModel;
 class CAnimatio_Controller;
+class CTexture;
 NS_END
 
 NS_BEGIN(Client)
@@ -12,11 +15,7 @@ class CBody_NorMon final : public CPartObject
 {
 public:
 	typedef struct tagBodyNormalDesc : public CPartObject::PARTOBJECT_DESC {
-		_uint* pState = { nullptr };
-		_uint* pAnimState = { nullptr };
-		string* pAnimTag = { nullptr };
-		_bool* pIsAnimLoop = { nullptr };
-		_bool* pIsAnimFinsh = { nullptr };
+		CBlackBoard<CMonster_Normal::NORMALMON_DATA>* BlackBoard = { nullptr };
 	}BODY_DESC;
 
 private:
@@ -40,15 +39,15 @@ public:
 
 	HRESULT					Set_Animation(_int iAnimIndex, string szAnimName, _bool IsLoop);
 private:
+	CTexture*				m_pNoiesTexCom = {nullptr};
 	CShader*				m_pShaderCom = { nullptr };
 	CModel*					m_pModelCom = { nullptr };
 	CAnimatio_Controller*	m_pAnimCom = { nullptr };
 
-	_uint*					m_pAnimState = { nullptr };
-	string*					m_pAnimTag = { nullptr };
-	_bool*					m_pIsAnimLoop = { nullptr };
-	_bool*					m_pIsAnimFinsh = { nullptr };
 	_uint					m_iRootLodeIndex = {};
+
+	CBlackBoard<CMonster_Normal
+		::NORMALMON_DATA>*	m_BlackBoard = { nullptr };
 private:
 	HRESULT					Ready_Components();
 	HRESULT					Bind_ShaderResources();

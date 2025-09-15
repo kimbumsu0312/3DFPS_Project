@@ -56,7 +56,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 
 		CBlood_Effect::BLODE_EFFECT_INIT BlodeDesc;
 		BlodeDesc.vPos = XMVectorSet(-32.95f, -7.47f, 55.67f, 1.f);
-		m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blode"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &BlodeDesc);
+		m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &BlodeDesc);
 
 	}
 	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
@@ -244,14 +244,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring& strLayerTag)
 
 	MuzzleDesc.szPoolingPath = TEXT("Pool_Muzzle");
 
-	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Muzzle_Effect"), 10, &MuzzleDesc)))
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Muzzle_Effect"), 30, &MuzzleDesc)))
 		return E_FAIL;
 
 	CPoolingObject::POOLOBJECT_DESC BlodeDesc{};
 
-	BlodeDesc.szPoolingPath = TEXT("Pool_Blode");
+	BlodeDesc.szPoolingPath = TEXT("Pool_Blood");
 
-	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Blode_Effect"), 10, &BlodeDesc)))
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Blode_Effect"), 100, &BlodeDesc)))
 		return E_FAIL;
 
 	CPoolingObject::POOLOBJECT_DESC FlyDesc{};
