@@ -69,7 +69,6 @@ namespace Engine
 		XMFLOAT4	vDirection;
 		XMFLOAT4	vPosition;
 		float		fRange;
-
 	}LIGHT_DESC;
 
 	typedef struct tagKeyFrame
@@ -81,6 +80,11 @@ namespace Engine
 		float		fTrackPosition;
 	}KEYFRAME;
 
+	typedef struct tagShadowLightDesc
+	{
+		XMFLOAT4	vEye, vAt;
+		float		fFovy, fNear, fFar;
+	}SHADOW_LIGHT_DESC;
 	typedef struct tagAnimFrame
 	{
 		unsigned int	iStartFrame;

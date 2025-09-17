@@ -66,7 +66,10 @@ HRESULT CBody_Player::Render()
         if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
             continue;
 
-        m_pShaderCom->Begin(0);
+        if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_NormalTexture", i, 1, 0)))
+            m_pShaderCom->Begin(0);
+        else
+            m_pShaderCom->Begin(2);
 
         m_pModelCom->Render(i);
     }

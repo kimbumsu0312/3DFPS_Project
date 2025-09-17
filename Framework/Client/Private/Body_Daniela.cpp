@@ -71,8 +71,10 @@ HRESULT CBody_Daniela::Render()
 
         if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
             continue;
-
-        m_pShaderCom->Begin(1);
+        if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_NormalTexture", i, 1, 0)))
+            m_pShaderCom->Begin(1);
+        else
+            m_pShaderCom->Begin(3);
 
         m_pModelCom->Render(i);
     }

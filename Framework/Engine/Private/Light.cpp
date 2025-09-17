@@ -8,7 +8,7 @@ CLight::CLight()
 HRESULT CLight::Initialize(const LIGHT_DESC& LightDesc)
 {
 	m_LightDesc = LightDesc;
-
+	m_isLight = true;
 	return S_OK;
 }
 

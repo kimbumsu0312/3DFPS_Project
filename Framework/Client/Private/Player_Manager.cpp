@@ -71,7 +71,7 @@ _bool CPlayer_Manager::Gun_Shoting()
 	if (CInven_Manager::GetInstance()->Bullet_Check(m_iSeleteItem) == true)
 		return true;
 
-	m_pGameInstance->Publish(Event_Announce_UI_OPEN{ 1, 0, TEXT("장정된 총알이 부족합니다."), RENDERGROUP::PRIORITY_UI });
+	m_pGameInstance->Publish(Event_Announce_UI_OPEN{ 1, 0, TEXT("장전된 총알이 부족합니다."), RENDERGROUP::PRIORITY_UI });
 	return false;
 }
 

@@ -42,12 +42,23 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 
 	CInven_Manager::GetInstance()->Level_Init(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Event"));
-
+	m_pGameInstance->On_Static_Shadow(true);
 	return S_OK;
 }
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
+	//if (m_bPreMapShadow != m_bIsMapShadow)
+	//{
+	//	m_pGameInstance->On_Static_Shadow(m_bIsMapShadow);
+	//	m_bPreMapShadow = m_bIsMapShadow;
+	//}
+	//if (m_bIsMapShadow)
+	//{
+	//	m_pGameInstance->On_Static_Shadow(m_bIsMapShadow);
+	//	m_bIsMapShadow = false;
+	//}
+	
 	if (m_pGameInstance->IsMouseDown(MOUSEKEYSTATE::LB))
 	{
 		CFly_Effect::FLY_EFFECT_INIT FlyDesc;
@@ -106,9 +117,9 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 	LightDesc.eType = LIGHT_DESC::TYPE::DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(0.2f, 0.2f, 0.2f, 1.f);
-	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
-	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vDiffuse = _float4(0.25f, 0.3f, 0.45f, 1.0f);
+	LightDesc.vAmbient = _float4(0.1f, 0.15f, 0.2f, 1.0f);
+	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.35f, 1.0f);
 
 	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_Default"), LightDesc)))
 		return E_FAIL;
@@ -126,13 +137,35 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 	LightDesc.eType = LIGHT_DESC::TYPE::POINT;
 	LightDesc.vPosition = _float4(-30.95f, -8.97f, 63.67f, 1.f);
-	LightDesc.fRange = 15.f;
+	LightDesc.fRange = 10.f;
 
-	LightDesc.vDiffuse = _float4(0.90f, 0.85f, 0.75f, 1.0f);
-	LightDesc.vAmbient = _float4(0.03f, 0.03f, 0.025f, 1.0f); 
-	LightDesc.vSpecular = _float4(0.15f, 0.15f, 0.15f, 1.0f);
+	LightDesc.vDiffuse = _float4(0.75f, 0.8f, 0.95f, 1.0f);
+	LightDesc.vAmbient = _float4(0.2f, 0.25f, 0.3f, 1.0f);
+	LightDesc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 1.0f);
 	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_Player"), LightDesc)))
 		return E_FAIL;
+
+	LightDesc.eType = LIGHT_DESC::TYPE::POINT;
+	LightDesc.vPosition = _float4(-30.95f, -8.97f, 63.67f, 1.f);
+	LightDesc.fRange = 20.f;
+
+	LightDesc.vDiffuse = _float4(1.f, 0.6f, 0.2f, 1.0f);
+	LightDesc.vAmbient = _float4(0.5f, 0.15f, 0.05f, 1.0f);
+	LightDesc.vSpecular = _float4(0.8f, 0.7f, 0.4f, 1.0f);
+	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_Muzzle"), LightDesc)))
+		return E_FAIL;
+	m_pGameInstance->OnOff_Light(TEXT("Light_Muzzle"), false);
+
+	SHADOW_LIGHT_DESC ShadowLightDesc{};
+	ShadowLightDesc.vEye = _float4(10.f, 40.f, -10.f, 1.f);
+	ShadowLightDesc.vAt = _float4(-38.69f, -9.10f, 39.28f, 1.f);
+	ShadowLightDesc.fFovy = XMConvertToRadians(60.f);
+	ShadowLightDesc.fNear = 0.1f;
+	ShadowLightDesc.fFar = 100.f;
+
+	if (FAILED(m_pGameInstance->Ready_ShadowLight(ShadowLightDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -223,23 +256,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring& strLayerTag)
 {
-	CSnow::SNOW_DESC Desc{};
-	Desc.vSnowPos = { -12.26f, -10.46f, 18.5f };
-	Desc.vMinPos = { -38.53f, 0.f, 0.f };
-	Desc.vMaxPos = { 0.f, 0.f, 37.39f };
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"), &Desc)))
-		return E_FAIL;
-
-	Desc.vSnowPos = { -14.26f, -10.46f, 38.5f };
-	Desc.vMinPos = { -28.38f, 0.f, 37.49f };
-	Desc.vMaxPos = { 0.f, 0.f, 39.5f };
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
-		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"), &Desc)))
-		return E_FAIL;
-
 	CPoolingObject::POOLOBJECT_DESC MuzzleDesc{};
 
 	MuzzleDesc.szPoolingPath = TEXT("Pool_Muzzle");
@@ -266,6 +282,22 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Spark_Effect"), 10, &FlyDesc)))
 		return E_FAIL;
 
+	CSnow::SNOW_DESC Desc{};
+	Desc.vSnowPos = { -12.26f, -10.46f, 18.5f };
+	Desc.vMinPos = { -38.53f, 0.f, 0.f };
+	Desc.vMaxPos = { 0.f, 0.f, 37.39f };
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"), &Desc)))
+		return E_FAIL;
+
+	Desc.vSnowPos = { -14.26f, -10.46f, 38.5f };
+	Desc.vMinPos = { -28.38f, 0.f, 37.49f };
+	Desc.vMaxPos = { 0.f, 0.f, 39.5f };
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"), &Desc)))
+		return E_FAIL;
 	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 	//	ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Muzzle_Effect"), &MuzzleDesc)))
 	//	return E_FAIL;
@@ -328,6 +360,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	DataPoolMonDesc.szAnimTag = "Sit_Loop";
 	DataPoolMonDesc.szState = TEXT("Idle");
 	DataPoolMonDesc.vPostion = { -38.69f, -9.10f, 39.28f };
+	
 	DataPoolMonDesc.vAngleY = 45.f;
 	DataPoolMonDesc.iDropImteIndex = 5;
 	m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_NormalMon_1"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Monster"), &DataPoolMonDesc);

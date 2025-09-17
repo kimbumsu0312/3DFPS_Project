@@ -12,6 +12,8 @@ public:
 	HRESULT						Initialize();
 	HRESULT						Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
 	HRESULT						Draw();
+	void						On_Static_Shadow(_bool IsOn);
+	_bool						Get_MapShadowOn();
 
 #ifdef _DEBUG
 public:
@@ -30,7 +32,12 @@ private:
 	class CShader*				m_pFogShader = { nullptr };
 	class CVIBuffer_Rect*		m_pVIBuffer = { nullptr };
 	_float4x4					m_WorldMatrix{}, m_ViewMatrix{}, m_ProjMatrix{};
+	
+	ID3D11DepthStencilView*		m_pShadowDSV = { nullptr };
+	_float						m_fViewportWidth{}, m_fViewportHeight{};
 
+	_bool						m_bIsMapShadow = false;
+	
 #ifdef _DEBUG
 private:
 	list<class CComponent*>		m_DebugComponent;
@@ -40,6 +47,7 @@ private:
 
 private:
 	HRESULT						Render_Priority();
+	HRESULT						Render_Shadow();
 	HRESULT						Render_NonBlend();
 	HRESULT						Render_Lights();
 	HRESULT						Render_Combined();
@@ -50,6 +58,9 @@ private:
 	HRESULT						Render_UI();
 	HRESULT						Render_UI_Effect();
 	HRESULT						Render_Last();
+private:
+	HRESULT						Ready_Shadow_Depth_Stencil_View();
+	HRESULT						SetUp_Viewport(_float fWidth, _float fHeight);
 
 #ifdef _DEBUG
 	HRESULT						Render_Debug();

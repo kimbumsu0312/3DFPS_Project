@@ -108,16 +108,19 @@ void CPlayer::Update(_float fTimeDelta)
 
 	m_bIsAnimFinsh = false;
 
-	m_pBodyObject->Update(fTimeDelta);
 	if(m_pWeaponObject != nullptr)
 		m_pWeaponObject->Update(fTimeDelta);
 	
-	m_pCamera->Update(fTimeDelta);
 
 	m_pTransformCom->Set_State(Engine::STATE::POSITION,	m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
 	CPlayer_Manager::GetInstance()->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
 	Collider_Update();
+	m_pBodyObject->Update(fTimeDelta);
+	m_pCamera->Update(fTimeDelta);
+	_float4 vPlayerPos{};
 
+	XMStoreFloat4(&vPlayerPos, XMVectorSetW(m_pTransformCom->Get_State(STATE::POSITION), 1.f));
+	m_pGameInstance->Update_LightPotion(TEXT("Light_Player"), vPlayerPos);
 }
 	
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -131,10 +134,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
 		return;
 
-	_float4 vPlayerPos{};
 
-	XMStoreFloat4(&vPlayerPos, XMVectorSetW(m_pTransformCom->Get_State(STATE::POSITION), 1.f));
-	m_pGameInstance->Update_LightPotion(TEXT("Light_Player"), vPlayerPos);
 	m_pBodyObject->Late_Update(fTimeDelta);
 	if (m_pWeaponObject != nullptr)
 		m_pWeaponObject->Late_Update(fTimeDelta);

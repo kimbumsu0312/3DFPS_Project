@@ -41,8 +41,14 @@ struct PS_IN
 struct PS_OUT
 {
     float4 vColor : SV_TARGET0;
+
 };
 
+struct PS_OUT_DEPTH
+{
+    float4 vDiffuse : SV_TARGET0;
+    float4 vDepth : SV_TARGET2;
+};
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -61,12 +67,12 @@ PS_OUT PS_POINT(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_SKY_COLOR(PS_IN In)
+PS_OUT_DEPTH PS_SKY_COLOR(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT) 0;
+    PS_OUT_DEPTH Out = (PS_OUT_DEPTH) 0;
     
-    Out.vColor = float4(0.4f, 0.4f, 0.4f, 1.f);
-        
+    Out.vDiffuse = float4(0.4f, 0.4f, 0.4f, 1.f);
+    Out.vDepth = float4(1.f, 1.f, 0.f, 0.f);
     return Out;
 }
 

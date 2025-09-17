@@ -69,7 +69,9 @@ public:
 #pragma region RENDERER
 public:
 	HRESULT				Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
-	
+	void				On_Static_Shadow(_bool IsOn);
+	_bool				Get_MapShadow();
+
 #ifdef _DEBUG
 	void				IsDebugRender(DEBUG_RENDER eTag);
 	HRESULT				Add_DebugComponent(class CComponent* pComponent);
@@ -114,6 +116,7 @@ public:
 	HRESULT						Add_Light(_wstring LightTag, LIGHT_DESC& LightDesc);
 	HRESULT						Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 	_bool						Update_LightPotion(_wstring LightTag, _float4 LightPos);
+	_bool						OnOff_Light(_wstring LightTag, _bool isOnoff);
 #pragma endregion
 
 #pragma region POOLING_MANAGER
@@ -180,7 +183,7 @@ public:
 #pragma region TARGET_MANAGER
 	HRESULT						Add_RenderTarget(const _wstring& strTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 	HRESULT						Add_MRT(const _wstring& strMRTTag, const _wstring& strTargetTag);
-	HRESULT						Begin_MRT(const _wstring& strMRTTag);
+	HRESULT						Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr, _bool isClear = true);
 	HRESULT						End_MRT();
 	HRESULT						Bind_RT_ShaderResource(const _wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
 	HRESULT						Copy_Resource(const _wstring& strTargetTag, ID3D11Texture2D* pSourTexture);
@@ -190,6 +193,11 @@ public:
 #endif
 #pragma endregion
 
+#pragma region SHADOW
+public:
+	const _float4x4*			Get_ShadowLight_Transform_Float4x4(D3DTS eTransformState) const;
+	HRESULT						Ready_ShadowLight(SHADOW_LIGHT_DESC LightDesc);
+#pragma
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CInput_Device*		m_pInput_Device = { nullptr };
@@ -207,6 +215,7 @@ private:
 	class CFont_Manager*		m_pFont_Manager = { nullptr };
 	class CCollision_Manager*	m_pCollision_Manager = { nullptr };
 	class CTarget_Manager*		m_pTarget_Manager = { nullptr };
+	class CShadow*				m_pShadow = { nullptr };
 
 public:
 	void						Release_Engine();

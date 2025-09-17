@@ -50,6 +50,9 @@ void CMuzzle::Late_Update(_float fTimeDelta)
     switch (m_iCount)
     {
     case 1:
+        m_pGameInstance->Update_LightPotion(TEXT("Light_Muzzle"), _float4{ m_CombinedWorldMatrix.m[3][0],m_CombinedWorldMatrix.m[3][1] + 4.f
+                    ,m_CombinedWorldMatrix.m[3][2],m_CombinedWorldMatrix.m[3][3]});
+        m_pGameInstance->OnOff_Light(TEXT("Light_Muzzle"), true);
         m_pTransformCom->Scale(_float3(0.5f, 0.5f, 1.f));
         m_vUVMin = { 0.f, 0.f };
         m_vUVMax = { 0.5f, 1.f };
@@ -62,6 +65,7 @@ void CMuzzle::Late_Update(_float fTimeDelta)
     case 3:
         m_iCount = 0;
         m_BlackBoard->Set_Data().isEndEffect1 = true;
+        m_pGameInstance->OnOff_Light(TEXT("Light_Muzzle"), false);
         break;
     }
 

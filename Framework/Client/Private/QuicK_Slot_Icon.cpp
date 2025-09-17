@@ -61,7 +61,8 @@ HRESULT CQuick_Slot_Icon::Initialize(void* pArg)
 
 void CQuick_Slot_Icon::Priority_Update(_float fTimeDelta)
 {
-    m_pItemSlot->Priority_Update(fTimeDelta);
+    __super::Priority_Update(fTimeDelta);
+
 }
 
 void CQuick_Slot_Icon::Update(_float fTimeDelta)
@@ -78,7 +79,7 @@ void CQuick_Slot_Icon::Update(_float fTimeDelta)
 
     }
 
-    m_pItemSlot->Update(fTimeDelta);
+    __super::Update(fTimeDelta);
 }
 
 void CQuick_Slot_Icon::Late_Update(_float fTimeDelta)
@@ -86,7 +87,7 @@ void CQuick_Slot_Icon::Late_Update(_float fTimeDelta)
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
         return;
     if(m_iItemIndex >= 0)
-        m_pItemSlot->Late_Update(fTimeDelta);
+        __super::Late_Update(fTimeDelta);
 }
 
 HRESULT CQuick_Slot_Icon::Render()
@@ -139,7 +140,7 @@ HRESULT CQuick_Slot_Icon::Ready_Components()
 
 HRESULT CQuick_Slot_Icon::Ready_ItemSlot()
 {
-    
+    CUIObject* pUi = nullptr;
     UIOBJECT_DESC Desc;
     Desc.iIndex = m_iIndex;
     Desc.vPos = m_vPos;
@@ -148,12 +149,12 @@ HRESULT CQuick_Slot_Icon::Ready_ItemSlot()
 
     Desc.vMinUV = { 0.f, 0.f};
     Desc.vMaxUV = { 1.f, 1.f };
-    m_pItemSlot = dynamic_cast<CQuick_Slot_Item*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Quick_Slot_Item"), &Desc));
-    if (m_pItemSlot == nullptr)
+    pUi = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Quick_Slot_Item"), &Desc));
+    if (pUi == nullptr)
         return E_FAIL;
+    Add_Child(this, pUi, m_pShaderCom, m_pTextureCom);
 
-    Add_Child(this, m_pItemSlot, m_pShaderCom, m_pTextureCom);
-    Safe_AddRef(m_pItemSlot);
+    //m_vecChildren[0]
 
     return S_OK;
 }
@@ -162,8 +163,8 @@ void CQuick_Slot_Icon::Set_Item(_int iItemIndex)
 {
     m_iItemIndex = iItemIndex;
     m_iITemType = g_ItemData[m_iItemIndex].m_iQuickSlotType;
-    m_pItemSlot->Set_Item(iItemIndex);
-
+    //m_pItemSlot->Set_Item(iItemIndex);
+    dynamic_cast<CQuick_Slot_Item*>(m_vecChildren[0])->Set_Item(iItemIndex);
     _wstring szText = TEXT("'") + g_ItemData[m_iItemIndex].m_szName + TEXT("' À» Äü½½·Ô¿¡ ÀåÂøÇÏ¿´½À´Ï´Ù.");
     m_pGameInstance->Publish(Event_Announce_UI_OPEN{ 1, (_uint)iItemIndex,szText, RENDERGROUP::LATE_UI});
 }
@@ -196,7 +197,7 @@ CGameObject* CQuick_Slot_Icon::Clone(void* pArg)
 
 void CQuick_Slot_Icon::Free()
 {
-    Safe_Release(m_pItemSlot);
+    //Safe_Release(m_pItemSlot);
     __super::Free();
 
     Safe_Release(m_pVIBufferCom);

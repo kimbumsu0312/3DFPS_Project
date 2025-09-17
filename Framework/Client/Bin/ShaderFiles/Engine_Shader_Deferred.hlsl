@@ -3,7 +3,8 @@
 matrix          g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 //랜더 타겟 텍스처에 그려진 객체의 월드 위치를 계산하기 위해 필요
-matrix          g_ViewMatrixInv, g_ProjMatrixInv;       
+matrix          g_ViewMatrixInv, g_ProjMatrixInv;     
+matrix          g_LightViewMatrix, g_LightProjMatrix;
 texture2D       g_Texture;
 
 vector          g_vCamPosition;
@@ -25,6 +26,9 @@ texture2D       g_NormalTexture;
 texture2D       g_DepthTexture;
 texture2D       g_ShadeTexture;
 texture2D       g_SpecularTexture;
+texture2D       g_LightDepthTexture;
+texture2D       g_StillLightDepthTexture;
+texture2D       g_BackBufferTexture;
 
 struct VS_IN
 {
@@ -162,16 +166,45 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     
-    if (vDiffuse.r == 1.f && vDiffuse.g == 0.f && vDiffuse.b == 1.f && vDiffuse.a == 0.f)
-    {
+    if (vDiffuse.r == 1.f && vDiffuse.g == 0.f && vDiffuse.b == 1.f)
         discard;
-    }
+    
     vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
     vector vSpecular = g_SpecularTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vWorldPos;
     
-    //픽셀 별로 최종 연산 결과를 곱해서 내보냄
-    Out.vColor = vDiffuse * vShade + vSpecular;
+    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
+    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
+    vWorldPos.z = vDepthDesc.x;
+    vWorldPos.w = 1.f;
+    
+    vWorldPos = vWorldPos * vDepthDesc.y;
+    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+    
+    vector vPosition = mul(vWorldPos, g_LightViewMatrix);
+    vPosition = mul(vPosition, g_LightProjMatrix);
+    
+    float2 vTexcoord;
+    vTexcoord.x = (vPosition.x / vPosition.w) * 0.5f + 0.5f;
+    vTexcoord.y = (vPosition.y / vPosition.w) * -0.5f + 0.5f;
+    
+    vector vLightDepth = g_LightDepthTexture.Sample(DefaultSampler, vTexcoord);
+    vector vStillLightDepth = g_StillLightDepthTexture.Sample(DefaultSampler, vTexcoord);
+    
+    float fViewZ = vLightDepth.x * 1000.f;
+    float fViewStillZ = vStillLightDepth.x * 1000.f;
+    
+    float ShadowFactor = 1.0f;
+    if (vPosition.w - 0.1f > fViewStillZ)
+        ShadowFactor = 0.4f;
 
+    if (vPosition.w - 0.1f > fViewZ)
+        ShadowFactor *= 0.7f;
+
+    Out.vColor = (vDiffuse * vShade + vSpecular) * ShadowFactor;
+    
     return Out;
 }
 

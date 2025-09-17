@@ -74,7 +74,7 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     // 원본 색상 샘플링
     float4 vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    if (vDiffuse.r == 1.f && vDiffuse.g == 0.f && vDiffuse.b == 1.f && vDiffuse.a == 0.f)
+    if (vDiffuse.r == 1.f && vDiffuse.g == 0.f && vDiffuse.b == 1.f)
     {
         discard;
     }

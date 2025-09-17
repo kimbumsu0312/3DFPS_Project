@@ -64,13 +64,14 @@ HRESULT CMainApp::Initialize()
 
 void CMainApp::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->IsKeyDown(DIK_ESCAPE))
+		DestroyWindow(g_hWnd);
 #ifdef _DEBUG
 
 	if (m_pGameInstance->IsKeyDown(DIK_F1))
 		m_pGameInstance->IsDebugRender(DEBUG_RENDER::RT);
 	if (m_pGameInstance->IsKeyDown(DIK_F2))
 		m_pGameInstance->IsDebugRender(DEBUG_RENDER::COMPONET);
-	// 다음에 또 열어놓으면 인덱스 다 바꿔버리겠습니다
 #endif // DEBUG
 
 	m_pGameInstance->Update_Engine(fTimeDelta);

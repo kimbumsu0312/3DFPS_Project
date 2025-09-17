@@ -50,8 +50,6 @@ HRESULT CCamera_Player::Initialize(void* pArg)
 
 void CCamera_Player::Priority_Update(_float fTimeDelta)
 {
-
-
     Zoom_In(fTimeDelta);
     Zoom_Out(fTimeDelta);
     //Update_CameraPos();
@@ -61,15 +59,15 @@ void CCamera_Player::Priority_Update(_float fTimeDelta)
 void CCamera_Player::Update(_float fTimeDelta)
 {
 
-}
-
-void CCamera_Player::Late_Update(_float fTimeDelta)
-{
     if (m_pGameInstance->IsKeyHold(DIK_Y))
         return;
 
     Update_CameraPos();
     __super::Update_PipeLines();
+}
+
+void CCamera_Player::Late_Update(_float fTimeDelta)
+{
 }
 
 HRESULT CCamera_Player::Render()

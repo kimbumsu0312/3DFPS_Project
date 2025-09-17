@@ -31,7 +31,13 @@
 #include "Body_WereWolf.h"
 
 //플레이어 관련
-#include "Player_Header.h"
+#include "ShotGun.h"
+#include "Player.h"
+#include "Body_Player.h"
+#include "Camera_Player.h"
+#include "Knife.h"
+#include "HandGun.h"
+#include "Sniper.h"
 
 //맵 관련
 #include "BackGround.h"

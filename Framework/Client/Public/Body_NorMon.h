@@ -30,7 +30,7 @@ public:
 	virtual void			Update(_float fTimeDelta);
 	virtual void			Late_Update(_float fTimeDelta);
 	virtual HRESULT			Render();
-
+	virtual HRESULT			Render_Shadow() override;
 public:
 
 	_float4x4*				Get_BoneMatrix(const _wstring pBoneName);

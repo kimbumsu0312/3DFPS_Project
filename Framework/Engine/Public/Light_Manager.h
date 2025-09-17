@@ -14,6 +14,7 @@ public:
 	HRESULT								Render(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 
 	_bool								Update_LightPotion(_wstring LightTag, _float4 LightPos);
+	_bool								OnOff_Light(_wstring LightTag, _bool isOnoff);
 private:
 	unordered_map<_wstring,
 		class CLight*>					m_Lights;

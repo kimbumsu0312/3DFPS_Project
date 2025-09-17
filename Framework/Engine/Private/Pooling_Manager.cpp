@@ -80,7 +80,7 @@ void CPooling_Manager::Free()
 			pQueue.second.pop();
 		}
 	}
-	m_ObjectPool.clear();
+	//m_ObjectPool.clear();
 
 	Safe_Release(m_pGameInstance);
 }

@@ -18,6 +18,7 @@
 #include "Font_Manager.h"
 #include "Collision_Manager.h"
 #include "Target_Manager.h"
+#include "Shadow.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -34,6 +35,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	
 	m_pInput_Device = CInput_Device::Create(EngineDesc.hInst, EngineDesc.hWnd);
 	if (nullptr == m_pInput_Device)
+		return E_FAIL;
+
+	m_pShadow = CShadow::Create(EngineDesc.iWinSizeX, EngineDesc.iWinSizeY);
+	if (nullptr == m_pShadow)
 		return E_FAIL;
 
 	m_pTimer_Manager = CTimer_Manager::Create();
@@ -104,10 +109,10 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pInput_Device->Update();
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
-	m_pPipeLine->Update();
 	m_pPicking->Update();
 
 	m_pObject_Manager->Update(fTimeDelta);
+	m_pPipeLine->Update();
 	m_pObject_Manager->Late_Update(fTimeDelta);
 
 	m_pCollision_Manager->Update();
@@ -284,6 +289,14 @@ HRESULT CGameInstance::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pR
 {
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
+void CGameInstance::On_Static_Shadow(_bool IsOn)
+{
+	m_pRenderer->On_Static_Shadow(IsOn);
+}
+_bool CGameInstance::Get_MapShadow()
+{
+	return m_pRenderer->Get_MapShadowOn();
+}
 #ifdef _DEBUG
 
 void CGameInstance::IsDebugRender(DEBUG_RENDER eTag)
@@ -305,6 +318,16 @@ _matrix CGameInstance::Get_Transform_Matrix(D3DTS eTransformState) const
 const _float4x4* CGameInstance::Get_Transform_Float4x4(D3DTS eTransformState) const
 {
 	return m_pPipeLine->Get_Transform_Float4x4(eTransformState);
+}
+
+const _float4x4* CGameInstance::Get_ShadowLight_Transform_Float4x4(D3DTS eTransformState) const
+{
+	return m_pShadow->Get_Transform_Float4x4(eTransformState);
+}
+
+HRESULT CGameInstance::Ready_ShadowLight(SHADOW_LIGHT_DESC LightDesc)
+{
+	return m_pShadow->Ready_ShadowLight(LightDesc);
 }
 
 _matrix CGameInstance::Get_Transform_Matrix_Inverse(D3DTS eTransformState) const
@@ -350,6 +373,11 @@ HRESULT CGameInstance::Render_Lights(CShader* pShader, CVIBuffer_Rect* pVIBuffer
 _bool CGameInstance::Update_LightPotion(_wstring LightTag, _float4 LightPos)
 {
 	return m_pLight_Manager->Update_LightPotion(LightTag, LightPos);
+}
+
+_bool CGameInstance::OnOff_Light(_wstring LightTag, _bool isOnoff)
+{
+	return m_pLight_Manager->OnOff_Light(LightTag, isOnoff);
 }
 
 HRESULT CGameInstance::Add_Object_ToPool(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, _uint iValue, void* pArg)
@@ -512,9 +540,9 @@ HRESULT CGameInstance::Add_MRT(const _wstring& strMRTTag, const _wstring& strTar
 	return m_pTarget_Manager->Add_MRT(strMRTTag, strTargetTag);
 }
 
-HRESULT CGameInstance::Begin_MRT(const _wstring& strMRTTag)
+HRESULT CGameInstance::Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV, _bool isClear)
 {
-	return m_pTarget_Manager->Begin_MRT(strMRTTag);
+	return m_pTarget_Manager->Begin_MRT(strMRTTag, pDSV, isClear);
 }
 
 HRESULT CGameInstance::End_MRT()
@@ -547,6 +575,7 @@ HRESULT CGameInstance::Render_RT_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuff
 void CGameInstance::Release_Engine()
 {
 	Release();
+	Safe_Release(m_pShadow);
 	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pFont_Manager);

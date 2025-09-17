@@ -39,6 +39,10 @@ void CBaseMapObj::Late_Update(_float fTimeDelta)
 {
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
         return;
+
+	if(m_pGameInstance->Get_MapShadow() == true)
+		if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::SHADOW, this)))
+			return;
 }
 
 HRESULT CBaseMapObj::Render()
@@ -52,9 +56,35 @@ HRESULT CBaseMapObj::Render()
 		if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_DiffuseTexture", i, 0, 0)))
 			continue;
 
-		m_pShaderCom->Begin(0);
+		if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_NormalTexture", i, 1, 0)))
+			m_pShaderCom->Begin(0);
+		else
+			m_pShaderCom->Begin(2);
 		m_pModelCom->Render(i);
 	}
+	return S_OK;
+}
+
+HRESULT CBaseMapObj::Render_Shadow()
+{
+	m_pGameInstance->On_Static_Shadow(false);
+	if (FAILED(m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix")))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_ShadowLight_Transform_Float4x4(D3DTS::VIEW))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_ShadowLight_Transform_Float4x4(D3DTS::PROJ))))
+		return E_FAIL;
+
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		m_pShaderCom->Begin(4);
+
+		m_pModelCom->Render(i);
+	}
+
 	return S_OK;
 }
 

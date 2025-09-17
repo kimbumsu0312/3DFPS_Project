@@ -38,7 +38,8 @@ HRESULT CLight_Manager::Render(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
 {
     for (auto& pLight : m_Lights)
     {
-        pLight.second->Render(pShader, pVIBuffer);
+        if(pLight.second->Get_LightOnOff() == true)
+            pLight.second->Render(pShader, pVIBuffer);
     }
     return S_OK;
 }
@@ -51,6 +52,18 @@ _bool CLight_Manager::Update_LightPotion(_wstring LightTag, _float4 LightPos)
         return false;
 
     pLight->Update_Postion(LightPos);
+    return true;
+}
+
+_bool CLight_Manager::OnOff_Light(_wstring LightTag, _bool isOnoff)
+{
+    CLight* pLight = Find_Light(LightTag);
+
+    if (pLight == nullptr)
+        return false;
+
+    pLight->On_Light(isOnoff);
+
     return true;
 }
 

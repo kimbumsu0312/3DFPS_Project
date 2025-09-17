@@ -91,7 +91,7 @@ PS_OUT PS_MAIN_MUZZLE(PS_IN In)
     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     if (Out.vColor.r > 0.8f && Out.vColor.g > 0.8f && Out.vColor.b > 0.8f)
-        Out.vColor.rgb = Out.vColor.rgb * 2.f;
+        Out.vColor.rgb = Out.vColor.rgb + 2.f;
     
     return Out;
 }

@@ -196,6 +196,9 @@
     <Filter Include="01.Utility\03.Component\VIBuffer\Instance\Model\Mesh">
       <UniqueIdentifier>{db76808c-ad3d-4f75-8c59-bacd97582f09}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\10.Shadow">
+      <UniqueIdentifier>{35a509b5-5bc8-4968-9349-ca76b2065d68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -402,6 +405,9 @@
     <ClInclude Include="..\public\Model_Instance.h">
       <Filter>01.Utility\03.Component\VIBuffer\Instance\Model</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Shadow.h">
+      <Filter>01.Utility\10.Shadow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -589,6 +595,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Model_Instance.cpp">
       <Filter>01.Utility\03.Component\VIBuffer\Instance\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Shadow.cpp">
+      <Filter>01.Utility\10.Shadow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
