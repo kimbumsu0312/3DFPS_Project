@@ -45,7 +45,6 @@ void CMuzzle::Update(_float fTimeDelta)
 
 void CMuzzle::Late_Update(_float fTimeDelta)
 {
-    XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
     ++m_iCount;
     switch (m_iCount)
     {
@@ -68,7 +67,7 @@ void CMuzzle::Late_Update(_float fTimeDelta)
         m_pGameInstance->OnOff_Light(TEXT("Light_Muzzle"), false);
         break;
     }
-
+    XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::EFFECT, this)))
 		return;
 }

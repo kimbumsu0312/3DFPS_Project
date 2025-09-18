@@ -24,7 +24,7 @@ public:
 							XMVectorGetX(XMVector3Length(Get_State(STATE::RIGHT))),
 							XMVectorGetX(XMVector3Length(Get_State(STATE::UP))),
 							XMVectorGetX(XMVector3Length(Get_State(STATE::LOOK))) ); }
-
+	void					Set_RotationPerSec(_float fSpeed) { m_fRotationPerSec = fSpeed; }
 	void					Set_State(STATE eState, _fvector vState) {	XMStoreFloat4(reinterpret_cast<_float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]), vState); }
 	_vector					Get_State(STATE eState) const {	return XMLoadFloat4(reinterpret_cast<const _float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]));}
 	void					Set_WorldMatrix(_float4x4 WorldMat) { m_WorldMatrix = WorldMat; }

@@ -19,6 +19,8 @@ private:
 	LEVEL						m_eNextLevelID = { LEVEL::END };
 	class CLoader*				m_pLoader = { nullptr };
 
+	_bool						m_bIsNextLevel = { false };
+	_bool						m_bisEvent = { false };
 private:
 	HRESULT						Ready_GameObjects();
 	HRESULT						Ready_LoadingThread();

@@ -19,6 +19,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 
 	if (FAILED(Ready_LoadingThread()))
 		return E_FAIL;
+	m_pGameInstance->Subscribe<Event_NextLevel>([&](const Event_NextLevel& e) {m_bIsNextLevel = true; });
 
 	return S_OK;
 }
@@ -34,14 +35,24 @@ void CLevel_Loading::Update(_float fTimeDelta)
 		{
 		case LEVEL::LOGO:
 			pNewLevel = CLevel_Logo::Create(m_pDevice, m_pContext);
+			if (FAILED(m_pGameInstance->Open_Level(static_cast<_uint>(m_eNextLevelID), pNewLevel)))
+				return;
 			break;
 		case LEVEL::GAMEPLAY:
-			pNewLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
+			if (!m_bisEvent)
+			{
+				m_pGameInstance->Publish(Event_EndLoding{});
+				m_bisEvent = true;
+			}
+
+			if (m_bIsNextLevel)
+			{
+				pNewLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
+				if (FAILED(m_pGameInstance->Open_Level(static_cast<_uint>(m_eNextLevelID), pNewLevel)))
+					return;
+			}
 			break;
 		}
-
-		if (FAILED(m_pGameInstance->Open_Level(static_cast<_uint>(m_eNextLevelID), pNewLevel)))
-			return;
 	}
 }
 
@@ -54,6 +65,25 @@ HRESULT CLevel_Loading::Render()
 
 HRESULT CLevel_Loading::Ready_GameObjects()
 {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::LOADING), TEXT("Layer_UI"),
+		ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Object_LodingUI"))))
+		return E_FAIL;
+
+	CUIObject::UIOBJECT_DESC Desc = {};
+	Desc.iIndex = 0;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::LOADING), TEXT("Layer_UI"),
+		ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Object_Loding_Side"), &Desc)))
+		return E_FAIL;
+	Desc.iIndex = 1;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::LOADING), TEXT("Layer_UI"),
+		ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Object_Loding_Side"), &Desc)))
+		return E_FAIL;
+	
+	Desc.fRotationPerSec = 1.f;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::LOADING), TEXT("Layer_UI"),
+		ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Object_Loding_Icon"), &Desc)))
+		return E_FAIL;
+	
     return S_OK;
 }
 

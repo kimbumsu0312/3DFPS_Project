@@ -195,6 +195,9 @@
     <ClInclude Include="..\public\Guide_Paper_Tex.h" />
     <ClInclude Include="..\public\Idle_Alcina.h" />
     <ClInclude Include="..\public\Idle_WereWolf.h" />
+    <ClInclude Include="..\public\LodingUI.h" />
+    <ClInclude Include="..\public\Loding_Icon.h" />
+    <ClInclude Include="..\public\Loding_Side.h" />
     <ClInclude Include="..\public\MonState_Alcina.h" />
     <ClInclude Include="..\public\Monstate_WereWolf.h" />
     <ClInclude Include="..\public\MsgItem.h" />
@@ -358,6 +361,9 @@
     <ClCompile Include="..\private\Guide_Paper_Tex.cpp" />
     <ClCompile Include="..\private\Idle_Alcina.cpp" />
     <ClCompile Include="..\private\Idle_WereWolf.cpp" />
+    <ClCompile Include="..\private\LodingUI.cpp" />
+    <ClCompile Include="..\private\Loding_Icon.cpp" />
+    <ClCompile Include="..\private\Loding_Side.cpp" />
     <ClCompile Include="..\private\MonState_Alcina.cpp" />
     <ClCompile Include="..\private\Monstate_WereWolf.cpp" />
     <ClCompile Include="..\private\MsgItem.cpp" />

@@ -44,6 +44,14 @@ HRESULT CRenderer::Initialize()
     if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_StillLightDepth"), g_iMaxWidth, g_iMaxHeight, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.0f, 1.0f, 1.0f, 1.0f))))
         return E_FAIL;
 
+    if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Emissive"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f))))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_BlurX"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f))))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_BlurY"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f))))
+        return E_FAIL;
 
     //게임 오브젝트들의 정보를 저장 받음
     //각 랜더 타겟 뷰에 필요한 정보들을 담아두고 이후 필요한 연산에서 꺼내서 쓸수 있게한다.
@@ -71,7 +79,17 @@ HRESULT CRenderer::Initialize()
     if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow"), TEXT("Target_LightDepth"))))
         return E_FAIL;
 
+    //최종 장면
     if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_BackBuffer"), TEXT("Target_BackBuffer"))))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_BackBuffer"), TEXT("Target_Emissive"))))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_BlurX"), TEXT("Target_BlurX"))))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_BlurY"), TEXT("Target_BlurY"))))
         return E_FAIL;
 
     m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
@@ -94,19 +112,27 @@ HRESULT CRenderer::Initialize()
     if (FAILED(Ready_Shadow_Depth_Stencil_View()))
         return E_FAIL;
 #ifdef _DEBUG
-    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Diffuse"), 100.0f, 100.0f, 200.f, 200.f)))
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Diffuse"), 50.0f, 50.0f, 100.f, 100.f)))
         return E_FAIL;
-    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Normal"), 100.0f, 300.0f, 200.f, 200.f)))
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Normal"), 50.0f, 150.0f, 100.f, 100.f)))
         return E_FAIL;
-    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Shade"), 300.0f, 100.0f, 200.f, 200.f)))
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Shade"), 150.0f, 50.0f, 100.f, 100.f)))
         return E_FAIL;
-    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Specular"), 300.0f, 300.0f, 200.f, 200.f)))
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Specular"), 150.0f, 150.0f, 100.f, 100.f)))
         return E_FAIL;
-    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_BackBuffer"), 500.0f, 100.0f, 200.f, 200.f)))
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_BackBuffer"), 250.0f, 50.0f, 100.f, 100.f)))
         return E_FAIL;
-    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_LightDepth"), ViewportDesc.Width - 100.f, 100.0f, 200.f, 200.f)))
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Emissive"), 250.0f, 150.0f, 100.f, 100.f)))
         return E_FAIL;
-    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_StillLightDepth"), ViewportDesc.Width - 100.f, 300.0f, 200.f, 200.f)))
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_BlurX"), 250.0f, 250.f, 100.f, 100.f)))
+        return E_FAIL;
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_BlurY"), 250.0f, 350.0f, 100.f, 100.f)))
+        return E_FAIL;
+
+
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_LightDepth"), ViewportDesc.Width - 50.0f, 50.0f, 100.f, 100.f)))
+        return E_FAIL;
+    if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_StillLightDepth"), ViewportDesc.Width - 50.0f, 150.0f, 100.f, 100.f)))
         return E_FAIL;
 #endif // _DEBUG
 
@@ -149,6 +175,9 @@ HRESULT CRenderer::Draw()
         return E_FAIL;
 
     if (FAILED(Render_Effect()))
+        return E_FAIL;
+
+    if (FAILED(Render_Bloom()))
         return E_FAIL;
 
     if (FAILED(Render_Fog()))
@@ -395,12 +424,60 @@ HRESULT CRenderer::Render_Blend()
     return S_OK;
 }
 
-HRESULT CRenderer::Render_Fog()
+HRESULT CRenderer::Render_Bloom()
 {
-    //실제 랜더
     if (FAILED(m_pGameInstance->End_MRT()))
         return E_FAIL;
 
+    if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_BlurX"))))
+        return E_FAIL;
+
+    if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+        return E_FAIL;
+    if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+        return E_FAIL;
+    if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_Emissive"), m_pShader, "g_EmissiveTexture")))
+        return E_FAIL;
+
+    m_pShader->Begin(4);
+
+    m_pVIBuffer->Bind_Resources();
+    m_pVIBuffer->Render();
+
+    if (FAILED(m_pGameInstance->End_MRT()))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_BlurY"))))
+        return E_FAIL;
+
+    if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+        return E_FAIL;
+    if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+        return E_FAIL;
+    if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_BackBuffer"), m_pShader, "g_DiffuseTexture")))
+        return E_FAIL;
+    if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_BlurX"), m_pShader, "g_BlurXTexture")))
+        return E_FAIL;
+
+    m_pShader->Begin(5);
+
+    m_pVIBuffer->Bind_Resources();
+    m_pVIBuffer->Render();
+
+    if (FAILED(m_pGameInstance->End_MRT()))
+        return E_FAIL;
+
+    return S_OK;
+}
+
+HRESULT CRenderer::Render_Fog()
+{
     if (FAILED(m_pFogShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
         return E_FAIL;
     if (FAILED(m_pFogShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
@@ -408,7 +485,7 @@ HRESULT CRenderer::Render_Fog()
     if (FAILED(m_pFogShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
         return E_FAIL;
 
-    if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_BackBuffer"), m_pFogShader, "g_DiffuseTexture")))
+    if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_BlurY"), m_pFogShader, "g_DiffuseTexture")))
         return E_FAIL;
 
     if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_Depth"), m_pFogShader, "g_DepthTexture")))

@@ -450,9 +450,6 @@
     <ClInclude Include="..\public\Terrain.h">
       <Filter>02.GameObject\Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Fade_UI.h">
-      <Filter>02.GameObject\UIObject\Loding_UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Inventory.h">
       <Filter>02.GameObject\UIObject\Inventory</Filter>
     </ClInclude>
@@ -873,6 +870,18 @@
     <ClInclude Include="..\public\Spark_Particle.h">
       <Filter>03.Effect\Spark\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\LodingUI.h">
+      <Filter>02.GameObject\UIObject\Loding_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Fade_UI.h">
+      <Filter>02.GameObject\UIObject\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Loding_Side.h">
+      <Filter>02.GameObject\UIObject\Loding_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Loding_Icon.h">
+      <Filter>02.GameObject\UIObject\Loding_UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -932,9 +941,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Terrain.cpp">
       <Filter>02.GameObject\Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Fade_UI.cpp">
-      <Filter>02.GameObject\UIObject\Loding_UI</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Inventory.cpp">
       <Filter>02.GameObject\UIObject\Inventory</Filter>
@@ -1337,6 +1343,18 @@
     </ClCompile>
     <ClCompile Include="..\private\Spark_Particle.cpp">
       <Filter>03.Effect\Spark\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LodingUI.cpp">
+      <Filter>02.GameObject\UIObject\Loding_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Fade_UI.cpp">
+      <Filter>02.GameObject\UIObject\ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Loding_Side.cpp">
+      <Filter>02.GameObject\UIObject\Loding_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Loding_Icon.cpp">
+      <Filter>02.GameObject\UIObject\Loding_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

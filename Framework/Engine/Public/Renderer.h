@@ -53,6 +53,7 @@ private:
 	HRESULT						Render_Combined();
 	HRESULT						Render_NonLight();
 	HRESULT						Render_Blend();
+	HRESULT						Render_Bloom();
 	HRESULT						Render_Fog();
 	HRESULT						Render_Effect();
 	HRESULT						Render_UI();

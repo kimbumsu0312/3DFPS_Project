@@ -1,5 +1,7 @@
 #include "Engine_Shader_Defines.hlsli"
 
+float           g_blurValue = 2.f;
+
 matrix          g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 //랜더 타겟 텍스처에 그려진 객체의 월드 위치를 계산하기 위해 필요
@@ -29,6 +31,10 @@ texture2D       g_SpecularTexture;
 texture2D       g_LightDepthTexture;
 texture2D       g_StillLightDepthTexture;
 texture2D       g_BackBufferTexture;
+
+texture2D       g_EmissiveTexture;
+texture2D       g_BlurXTexture;
+texture2D       g_BlurYTexture;
 
 struct VS_IN
 {
@@ -208,6 +214,68 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     return Out;
 }
 
+float g_fWeights[13] =
+{
+    0.0561, 0.1353, 0.278, 0.4868, 0.7261, 0.9231, 1.f, 0.9231, 0.7261, 0.4868, 0.278, 0.1353, 0.0561
+};
+//float g_fWeights[13] =
+//{
+//    0.0022, 0.0086, 0.0270, 0.0656, 0.1209, 0.1747, 0.1974,
+//    0.1747, 0.1209, 0.0656, 0.0270, 0.0086, 0.0022
+//};
+
+
+struct PS_OUT_BLUR_X
+{
+    vector vBlurX : SV_TARGET0;
+};
+
+PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
+{
+    PS_OUT_BLUR_X Out;
+    
+    float2 vTexcoord = {0.f,0.f };
+    vector vColor = { 0.f, 0.f, 0.f, 0.f };
+    
+    for (int i = -6; i < 7; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x + i / 1920.0f;
+        vTexcoord.y = In.vTexcoord.y;
+        
+        vColor += g_fWeights[i + 6] * g_EmissiveTexture.Sample(DefaultSampler_CLAMP, vTexcoord);
+    }
+    
+    Out.vBlurX = vColor / g_blurValue;
+    
+    return Out;
+}
+
+struct PS_OUT_BLUR_Y
+{
+    vector vBlurY : SV_TARGET0;
+};
+
+PS_OUT_BLUR_Y PS_MAIN_BLUR_Y(PS_IN In)
+{
+    PS_OUT_BLUR_Y Out;
+    
+    float2 vTexcoord = { 0.f, 0.f };
+    vector vColor = {0.f,0.f,0.f,0.f };
+    
+    for (int i = -6; i < 7; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x;
+        vTexcoord.y = In.vTexcoord.y + i / 1080.0f;
+        
+        vColor += g_fWeights[i + 6] * g_BlurXTexture.Sample(DefaultSampler_CLAMP, vTexcoord);
+    }
+    
+    vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    Out.vBlurY = vDiffuse + (vColor / g_blurValue);
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass Debug //0
@@ -255,5 +323,26 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_COMBINED();
     }
 
+    pass BlurX //4
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLUR_X();
+    }
+
+    pass BlurY //5
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLUR_Y();
+    }
 
 }

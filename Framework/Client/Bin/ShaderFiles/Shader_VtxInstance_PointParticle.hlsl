@@ -112,6 +112,14 @@ struct PS_OUT
     float4 vColor : SV_TARGET0;
     
 };
+
+struct PS_EMISSIVE
+{
+    float4 vColor : SV_TARGET0;
+    float4 vEmissive : SV_TARGET1;
+};
+
+
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -249,9 +257,9 @@ PS_OUT PS_Blood_Splatter(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_Spark(PS_IN In)
+PS_EMISSIVE PS_Spark(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT) 0;
+    PS_EMISSIVE Out = (PS_EMISSIVE) 0;
 
     int iTotalFrame = g_iTexValueX * g_iTexValueY;
     int iTexIndex = In.vLifeTime.x * iTotalFrame;
@@ -278,6 +286,7 @@ PS_OUT PS_Spark(PS_IN In)
         Out.vColor.rgb = Out.vColor.rgb * 3.f;
     float fColor = saturate(In.vLifeTime.y - In.vLifeTime.x);
     Out.vColor.a = Out.vColor.a * fColor * 0.5f;
+    Out.vEmissive = Out.vColor;
     
     return Out;
 }

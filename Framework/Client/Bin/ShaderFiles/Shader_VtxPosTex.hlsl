@@ -64,6 +64,12 @@ struct PS_OUT
     float4 vColor : SV_TARGET;
 };
 
+struct PS_EMISSIVE
+{
+    float4 vColor : SV_TARGET0;
+    float4 vEmissive : SV_TARGET1;
+};
+
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -83,9 +89,9 @@ PS_OUT PS_MAIN_COLOR(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_MAIN_MUZZLE(PS_IN In)
+PS_EMISSIVE PS_MAIN_MUZZLE(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT) 0;
+    PS_EMISSIVE Out = (PS_EMISSIVE) 0;
     
     In.vTexcoord = g_UVMin + (g_UVMax - g_UVMin) * In.vTexcoord;
     
@@ -93,6 +99,7 @@ PS_OUT PS_MAIN_MUZZLE(PS_IN In)
     if (Out.vColor.r > 0.8f && Out.vColor.g > 0.8f && Out.vColor.b > 0.8f)
         Out.vColor.rgb = Out.vColor.rgb + 2.f;
     
+    Out.vEmissive = Out.vColor;
     return Out;
 }
 

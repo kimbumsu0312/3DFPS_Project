@@ -89,4 +89,9 @@ namespace Client
 	{
 		_bool		isFps;
 	}EVENT_MOUSE_MODE;
+
+	typedef struct Event_EndLoding
+	{
+	}Event_EndLoding;
+	
 }

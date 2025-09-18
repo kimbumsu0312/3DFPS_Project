@@ -22,6 +22,9 @@
 #include "WeaponObject.h"
 #include "UI_Header.h"
 #include "Guide_Paper.h"
+#include "LodingUI.h"
+#include "Loding_Side.h"
+#include "Loding_Icon.h"
 
 //몬스터 관련
 #include "Monster_Header.h"

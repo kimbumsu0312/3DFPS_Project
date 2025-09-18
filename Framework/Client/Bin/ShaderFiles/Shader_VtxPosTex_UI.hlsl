@@ -1,10 +1,14 @@
 #include "Engine_Shader_Defines.hlsli"
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix, g_PenalMatrix;
+
 float g_Alpha;
+float g_FadeOut;
+
 float2 g_MinUV, g_MaxUV;
 float4 g_Vector, g_Size, g_vColor;
 Texture2D g_Texture;
+
 
 struct VS_IN
 {
@@ -83,7 +87,6 @@ PS_OUT PS_Inven_Bass(PS_IN In)
 
 PS_OUT PS_Tex(PS_IN In)
 {
-    
     PS_OUT Out = (PS_OUT) 0;
     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
@@ -172,6 +175,26 @@ PS_OUT PS_Guide_Ui(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_LodingUI(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vColor.rgb *= g_FadeOut;
+    
+    return Out;
+}
+
+PS_OUT PS_Loding_Icon(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+        
+    In.vTexcoord = g_MinUV + (g_MaxUV - g_MinUV) * In.vTexcoord;
+     
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vColor.rgb = 1.f;
+    return Out;
+}
 technique11 DefaultTechnique
 {
     pass UI_TexUV_Pass_0
@@ -282,6 +305,27 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Guide_Ui();
+    }
+
+    pass UI_LodingUI_Pass_10
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_LodingUI();
+    }
+    pass UI_Loding_Icon_Pass_11
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Loding_Icon();
     }
 
 }
