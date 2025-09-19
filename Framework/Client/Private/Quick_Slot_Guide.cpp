@@ -108,8 +108,8 @@ void CQuick_Slot_Guide::Render_Font()
     vFontPos.x = m_vPos.x - 1;
     vFontPos.y = m_vPos.y - 1;
  
-    m_pGameInstance->DrawText(TEXT("Font_Godic"), m_szIndex.c_str(), _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, 0.8f }, 0.f, _float2{ 0.5f, 0.5f }, { 0.6f, 0.6f });
-    m_pGameInstance->DrawText(TEXT("Font_Godic"), m_szIndex.c_str(), vFontPos, _fvector{ 1.f, 1.f, 1.f, 0.8f }, 0.f, _float2{ 0.5f, 0.5f }, { 0.6f, 0.6f });
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), m_szIndex.c_str(), _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, m_fAlpha }, 0.f, _float2{ 0.5f, 0.5f }, { 0.6f, 0.6f });
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), m_szIndex.c_str(), vFontPos, _fvector{ 1.f, 1.f, 1.f, m_fAlpha }, 0.f, _float2{ 0.5f, 0.5f }, { 0.6f, 0.6f });
 
 }
 

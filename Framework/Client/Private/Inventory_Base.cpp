@@ -40,7 +40,7 @@ HRESULT CInventory_Base::Initialize(void* pArg)
     if (FAILED(Ready_Children()))
         return E_FAIL;
 
-    m_pGameInstance->Subscribe<Event_Inventory_Open>([&](const Event_Inventory_Open& e) { Open_UI(e.bIsOpen); });
+    m_pGameInstance->Subscribe<Event_Inventory_Open>([&](const Event_Inventory_Open& e) { Open_UI(e.bIsOpen); m_fAlpha = 0.f; });
 
     return S_OK;
 }
@@ -48,6 +48,7 @@ HRESULT CInventory_Base::Initialize(void* pArg)
 void CInventory_Base::Priority_Update(_float fTimeDelta)
 {
     //Change_Penal();
+    m_fAlpha += fTimeDelta * 0.5f;
     __super::Priority_Update(fTimeDelta);
 }
 
@@ -65,6 +66,7 @@ void CInventory_Base::Late_Update(_float fTimeDelta)
         return;
     __super::Late_Update(fTimeDelta);
 
+    m_pInfo->Update_Alpha(m_fAlpha);
 }
 
 HRESULT CInventory_Base::Render()
@@ -144,6 +146,8 @@ HRESULT CInventory_Base::Ready_Children()
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
+    m_pInfo = dynamic_cast<CUI_Tex*>(pGameObject);
+    Safe_AddRef(m_pInfo);
 
     Desc.IsFont = false;
     Desc.szText = {};
@@ -318,6 +322,7 @@ CGameObject* CInventory_Base::Clone(void* pArg)
 
 void CInventory_Base::Free()
 {
+    Safe_Release(m_pInfo);
     Safe_Release(m_pItemPenal);
     Safe_Release(m_pCreatePenal);
     __super::Free();

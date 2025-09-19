@@ -175,6 +175,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+
 	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		MuzzleDesc{};
 	MuzzleDesc.iNumInstance = 20;
 	MuzzleDesc.vCenter = _float3(0.f, 0.f, -0.5f);
@@ -253,6 +254,32 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CModel_Instance::Create(m_pDevice, m_pContext, FlyModelData, &FlyDesc))))
 		return E_FAIL;
 
+	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		ScreenBlodeDesc{};
+	ScreenBlodeDesc.iNumInstance = 200;
+	ScreenBlodeDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	ScreenBlodeDesc.vRange = _float3(180.f, 100.f, 0.f);
+	ScreenBlodeDesc.vSize = _float2(10.f, 100.f);
+	ScreenBlodeDesc.vLifeTime = _float2(0.7f, 1.5f);
+	ScreenBlodeDesc.vPivot = _float3(0.f, 0.f, 0.f);
+	ScreenBlodeDesc.vSpeed = _float2(0.f, 0.f);
+	ScreenBlodeDesc.IsLoop = false;
+	ScreenBlodeDesc.vSplat = _float2(0.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_ScreenBlode_0"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &ScreenBlodeDesc))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_ScreenBlode_1"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &ScreenBlodeDesc))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_ScreenBlode_2"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &ScreenBlodeDesc))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_ScreenBlode_3"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &ScreenBlodeDesc))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_ScreenBlode_4"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &ScreenBlodeDesc))))
+		return E_FAIL;
 #pragma region Player_Model
 	/* Prototype_Model_Player*/
     if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Player/Player.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Model_Player"))))
@@ -599,6 +626,14 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_BulletCount"),
 		CBulletCount::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Screen_Blood"),
+		CScreen_Blood::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Screen_Blood_Particle"),
+		CScreen_Blood_Particle::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 #pragma endregion

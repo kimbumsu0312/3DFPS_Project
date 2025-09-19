@@ -31,7 +31,8 @@ HRESULT CInventory_Coin::Initialize(void* pArg)
 
     if (FAILED(Ready_Components()))
         return E_FAIL;
-
+    m_pGameInstance->Subscribe<Event_Inventory_Open>([&](const Event_Inventory_Open& e)
+        { m_fAlpha = 0.f; });
     return S_OK;
 }
 
@@ -42,7 +43,7 @@ void CInventory_Coin::Priority_Update(_float fTimeDelta)
 
 void CInventory_Coin::Update(_float fTimeDelta)
 {
-
+    m_fAlpha += fTimeDelta * 0.5f;
 }
 
 void CInventory_Coin::Late_Update(_float fTimeDelta)
@@ -83,15 +84,15 @@ void CInventory_Coin::Render_Font()
     _int iCoin = CPlayer_Manager::GetInstance()->Get_Coin();
     wsprintf(szCountChar, L"%d", iCoin);
     
-    m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, 0.8f }, 0.f, _float2{ 1.f,0.5f }, { 1.2f, 1.2f });
-    m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, vFontPos, _fvector{ 1.f, 1.f, 1.f, 0.8f }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, m_fAlpha }, 0.f, _float2{ 1.f,0.5f }, { 1.2f, 1.2f });
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), szCountChar, vFontPos, _fvector{ 1.f, 1.f, 1.f, m_fAlpha }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
 
     vFontPos.x = m_vPos.x + 200.f;
     vFontPos.y = m_vPos.y + 5.f;
     _wstring szText = TEXT("Lei");
 
-    m_pGameInstance->DrawText(TEXT("Font_Godic"), szText.c_str(), _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, 0.8f }, 0.f, _float2{ 1.f,0.5f }, { 0.8f, 0.8f });
-    m_pGameInstance->DrawText(TEXT("Font_Godic"), szText.c_str(), vFontPos, _fvector{ 1.f, 1.f, 1.f, 0.8f }, 0.f, _float2{ 1.f, 0.5f }, { 0.8f, 0.8f });
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), szText.c_str(), _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, m_fAlpha }, 0.f, _float2{ 1.f,0.5f }, { 0.8f, 0.8f });
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), szText.c_str(), vFontPos, _fvector{ 1.f, 1.f, 1.f, m_fAlpha }, 0.f, _float2{ 1.f, 0.5f }, { 0.8f, 0.8f });
 
 }
 

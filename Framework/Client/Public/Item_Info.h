@@ -35,7 +35,7 @@ private:
 	_uint						m_iPassIndex = {};
 
 	_int						m_iItemIndex = {};
-
+	_float						m_fAlpha = {};
 private:
 	HRESULT						Ready_Components();
 	void						Render_Font();

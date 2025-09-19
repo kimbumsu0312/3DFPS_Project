@@ -41,12 +41,15 @@ HRESULT CItem_Info::Initialize(void* pArg)
     m_pGameInstance->Subscribe<Event_Inven_Info>([&](const Event_Inven_Info& e)
         { m_iItemIndex = e.iItemIndex; });
 
+    m_pGameInstance->Subscribe<Event_Inventory_Open>([&](const Event_Inventory_Open& e) { m_fAlpha = 0.f; });
+
     return S_OK;
 }
 
 void CItem_Info::Priority_Update(_float fTimeDelta)
 {
     m_iItemIndex = { -1 };
+    m_fAlpha += fTimeDelta * 0.5f;
 }
 
 void CItem_Info::Update(_float fTimeDelta)
@@ -91,15 +94,15 @@ void CItem_Info::Render_Font()
     vFontPos.y = m_vPos.y - 30;
 
     _wstring szName = g_ItemData[m_iItemIndex].m_szName;
-    m_pGameInstance->DrawText(TEXT("Font_Godic"), szName.c_str(), _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, 0.8f }, 0.f, _float2{ 0.5f, 0.5f }, { 0.8f, 0.8f });
-    m_pGameInstance->DrawText(TEXT("Font_Godic"), szName.c_str(), vFontPos, _fvector{1.f, 1.f, 1.f, 0.8f}, 0.f, _float2{0.5f, 0.5f}, {0.8f, 0.8f});
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), szName.c_str(), _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, m_fAlpha }, 0.f, _float2{ 0.5f, 0.5f }, { 0.8f, 0.8f });
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), szName.c_str(), vFontPos, _fvector{1.f, 1.f, 1.f, m_fAlpha }, 0.f, _float2{0.5f, 0.5f}, {0.8f, 0.8f});
 
     szName = g_ItemData[m_iItemIndex].m_szInfo;
     vFontPos.x = m_vPos.x;
     vFontPos.y = m_vPos.y + 5;
 
-    m_pGameInstance->DrawText(TEXT("Font_Godic"), szName.c_str(), _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, 0.8f }, 0.f, _float2{ 0.5f, 0.5f }, { 0.6f, 0.6f });
-    m_pGameInstance->DrawText(TEXT("Font_Godic"), szName.c_str(), vFontPos, _fvector{ 1.f, 1.f, 1.f, 0.8f }, 0.f, _float2{ 0.5f, 0.5f }, { 0.6f, 0.6f });
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), szName.c_str(), _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, m_fAlpha }, 0.f, _float2{ 0.5f, 0.5f }, { 0.6f, 0.6f });
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), szName.c_str(), vFontPos, _fvector{ 1.f, 1.f, 1.f, m_fAlpha }, 0.f, _float2{ 0.5f, 0.5f }, { 0.6f, 0.6f });
     
     if (g_ItemData[m_iItemIndex].m_eQuickSlot == QUICKSLOT_TYPE::EQUIP)
     {
@@ -107,8 +110,8 @@ void CItem_Info::Render_Font()
         vFontPos.x = m_vPos.x;
         vFontPos.y = m_vPos.y + 30;
 
-        m_pGameInstance->DrawText(TEXT("Font_Godic"), szName.c_str(), _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, 0.8f }, 0.f, _float2{ 0.5f, 0.5f }, { 0.55f, 0.55f });
-        m_pGameInstance->DrawText(TEXT("Font_Godic"), szName.c_str(), vFontPos, _fvector{ 0.7f, 0.7f, 0.f, 0.8f }, 0.f, _float2{ 0.5f, 0.5f }, { 0.55f, 0.55f });
+        m_pGameInstance->DrawText(TEXT("Font_Godic"), szName.c_str(), _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, m_fAlpha }, 0.f, _float2{ 0.5f, 0.5f }, { 0.55f, 0.55f });
+        m_pGameInstance->DrawText(TEXT("Font_Godic"), szName.c_str(), vFontPos, _fvector{ 0.7f, 0.7f, 0.f, m_fAlpha }, 0.f, _float2{ 0.5f, 0.5f }, { 0.55f, 0.55f });
     }
 }
 

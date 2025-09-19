@@ -34,6 +34,8 @@ void CPlayer_Manager::Player_Hp(_int iValue)
 	m_bIsDamage = true;
 	m_fCulHp += iValue;
 	m_pGameInstance->Publish(Event_Player_Hp_UI_Open{ 0 });
+	m_pGameInstance->Publish(Event_OnDamageUI_OPEN{});
+	
 	if (m_fPreHp != m_fCulHp)
 	{
 		if (m_fCulHp >= m_fMaxHp * 0.75)

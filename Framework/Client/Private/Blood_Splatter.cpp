@@ -59,7 +59,7 @@ void CBlood_Splatter::Late_Update(_float fTimeDelta)
     if (m_fCount >= 1.f)
     {
         m_fCount = 0.f;
-        m_pVIBufferCom->Reseet();
+        m_pVIBufferCom->Reset();
         m_BlackBoard->Set_Data().isEndEffect2 = true;
         m_pTransformCom->Set_State(STATE::POSITION, _vector{ 0.f, 0.f, 0.f, 1.f });
         m_pTransformCom->Rotation(_vector{ 0.f, 0.f, 1.f, 0.f }, XMConvertToRadians(0.f));
@@ -97,7 +97,7 @@ HRESULT CBlood_Splatter::Ready_Components()
         TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
         return E_FAIL;
 
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Blude_Splatter"),
+    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Bloode_Splatter"),
         TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
         return E_FAIL;
 

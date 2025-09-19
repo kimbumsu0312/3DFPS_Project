@@ -100,4 +100,8 @@ namespace Client
 		_int iCulGunBullet;
 		_int iCulInvenBullet;
 	}Event_BulletCount_UI_OPEN;
+
+	typedef struct Event_OnDamageUI
+	{
+	}Event_OnDamageUI_OPEN;
 }

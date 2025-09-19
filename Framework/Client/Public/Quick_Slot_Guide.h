@@ -21,12 +21,14 @@ public:
 	virtual void				Late_Update(_float fTimeDelta);
 	virtual HRESULT				Render();
 
+	void						Update_Alpha(_float fAlpha) { m_fAlpha = fAlpha; }
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	_float4						m_vBackGroundColor = {};
 	_int						m_iIndex = {};
 
 	_wstring					m_szIndex = {};
+	_float						m_fAlpha = {};
 private:
 	HRESULT						Ready_Components();
 	void						Render_Font();

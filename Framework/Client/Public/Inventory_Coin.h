@@ -25,6 +25,7 @@ public:
 private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 
+	_float						m_fAlpha = { 0.f };
 private:
 	HRESULT						Ready_Components();
 	void						Render_Font();

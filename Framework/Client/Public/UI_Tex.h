@@ -44,7 +44,7 @@ private:
 	_wstring					m_szText = {};
 	_bool						m_bIsFont = {};
 	RENDERGROUP					m_eRanderGroup = { RENDERGROUP::UI };
-	_float						m_fAlpha = { 0.8f};
+	_float						m_fAlpha = { 1.f};
 
 private:
 	HRESULT						Ready_Components();

@@ -75,6 +75,7 @@ void CAnnounce::Late_Update(_float fTimeDelta)
     if (FAILED(m_pGameInstance->Add_RenderGroup(m_eRnderGroup, this)))
         return;
     __super::Late_Update(fTimeDelta);
+    m_pInfo->Update_Alpha(m_fAlpha);
 }
 
 HRESULT CAnnounce::Render()

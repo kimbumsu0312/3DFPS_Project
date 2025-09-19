@@ -178,6 +178,7 @@
     <ClInclude Include="..\public\BehaviorTree_Daniela.h" />
     <ClInclude Include="..\public\BehaviorTree_Normon_1.h" />
     <ClInclude Include="..\public\BehaviorTree_WereWolf.h" />
+    <ClInclude Include="..\public\Screen_Blood_Particle.h" />
     <ClInclude Include="..\public\Blood_Splatter.h" />
     <ClInclude Include="..\public\Blood_Effect.h" />
     <ClInclude Include="..\public\Blood_Smoke.h" />
@@ -273,6 +274,7 @@
     <ClInclude Include="..\public\Quick_Slot_Item.h" />
     <ClInclude Include="..\public\Reload_Player.h" />
     <ClInclude Include="..\Public\Scouting_NorMon_1.h" />
+    <ClInclude Include="..\public\Screen_Blood.h" />
     <ClInclude Include="..\public\SeletctorNode.h" />
     <ClInclude Include="..\public\SequenceNode.h" />
     <ClInclude Include="..\public\ShotGun.h" />
@@ -349,6 +351,7 @@
     <ClCompile Include="..\private\BehaviorTree_Daniela.cpp" />
     <ClCompile Include="..\private\BehaviorTree_Normon_1.cpp" />
     <ClCompile Include="..\private\BehaviorTree_WereWolf.cpp" />
+    <ClCompile Include="..\private\Screen_Blood_Particle.cpp" />
     <ClCompile Include="..\private\Blood_Splatter.cpp" />
     <ClCompile Include="..\private\Blood_Effect.cpp" />
     <ClCompile Include="..\private\Blood_Smoke.cpp" />
@@ -440,6 +443,7 @@
     <ClCompile Include="..\private\Quick_Slot_Item.cpp" />
     <ClCompile Include="..\private\Reload_Player.cpp" />
     <ClCompile Include="..\Private\Scouting_NorMon_1.cpp" />
+    <ClCompile Include="..\private\Screen_Blood.cpp" />
     <ClCompile Include="..\private\SeletctorNode.cpp" />
     <ClCompile Include="..\private\SequenceNode.cpp" />
     <ClCompile Include="..\private\ShotGun.cpp" />

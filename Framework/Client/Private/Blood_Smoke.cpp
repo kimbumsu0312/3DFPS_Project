@@ -60,7 +60,7 @@ void CBlood_Smoke::Late_Update(_float fTimeDelta)
     if (m_fCount >= 1.f)
     {
         m_fCount = 0;
-        m_pVIBufferCom->Reseet();
+        m_pVIBufferCom->Reset();
         m_BlackBoard->Set_Data().isEndEffect1 = true;
         m_pTransformCom->Set_State(STATE::POSITION, _vector{ 0.f, 0.f, 0.f, 1.f });
         m_pTransformCom->Rotation(_vector{ 0.f, 0.f, 1.f, 0.f }, XMConvertToRadians(0.f));

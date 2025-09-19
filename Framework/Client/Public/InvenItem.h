@@ -59,6 +59,7 @@ private:
 	INVENRECT				m_ItemRect = {};
 	INVENRECT				m_FontPos = {};
 
+	_float					m_fAlpha = {};
 private:
 	HRESULT					Ready_Components();
 	HRESULT					Ready_Children();

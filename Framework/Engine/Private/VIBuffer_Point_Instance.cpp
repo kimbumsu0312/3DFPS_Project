@@ -240,7 +240,7 @@ void CVIBuffer_Point_Instance::Sprite_Sort(_float fSpriteSpeed, _matrix WolrdMat
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
-void CVIBuffer_Point_Instance::Reseet()
+void CVIBuffer_Point_Instance::Reset()
 {
 	D3D11_MAPPED_SUBRESOURCE	SubResource{};
 

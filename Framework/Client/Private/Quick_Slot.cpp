@@ -81,6 +81,8 @@ void CQuick_Slot::Late_Update(_float fTimeDelta)
 
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::UI, this)))
         return;
+
+    static_cast<CQuick_Slot_Guide*>(m_vecChildren[0])->Update_Alpha(m_fAlpha);
     __super::Late_Update(fTimeDelta);
 }
 

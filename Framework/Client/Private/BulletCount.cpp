@@ -138,32 +138,32 @@ void CBulletCount::Render_Font()
 
     if (m_iCulGunBullet <= 0)
     {
-        m_pGameInstance->DrawText(TEXT("Font_Godic"), szGunBulletChar, _float2(m_vPos.x - 18, m_vPos.y +2), _fvector{ 0.f, 0.f, 0.f, 1.f }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
-        m_pGameInstance->DrawText(TEXT("Font_Godic"), szGunBulletChar, _float2(m_vPos.x - 20, m_vPos.y), _fvector{ 0.8f, 0.2f, 0.2f, 1.f }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
+        m_pGameInstance->DrawText(TEXT("Font_Godic"), szGunBulletChar, _float2(m_vPos.x - 18, m_vPos.y +2), _fvector{ 0.f, 0.f, 0.f, m_fAlpha }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
+        m_pGameInstance->DrawText(TEXT("Font_Godic"), szGunBulletChar, _float2(m_vPos.x - 20, m_vPos.y), _fvector{ 0.8f, 0.2f, 0.2f, m_fAlpha }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
     }
     else if (m_iCulGunBullet == g_ItemData[m_iItemIndex].m_iMaxItem)
     {
-        m_pGameInstance->DrawText(TEXT("Font_Godic"), szGunBulletChar, _float2(m_vPos.x - 18, m_vPos.y + 2), _fvector{ 0.f, 0.f, 0.f, 1.f }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
-        m_pGameInstance->DrawText(TEXT("Font_Godic"), szGunBulletChar, _float2(m_vPos.x - 20, m_vPos.y), _fvector{ 0.f, 0.7f, 0.7f, 1.f }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
+        m_pGameInstance->DrawText(TEXT("Font_Godic"), szGunBulletChar, _float2(m_vPos.x - 18, m_vPos.y + 2), _fvector{ 0.f, 0.f, 0.f, m_fAlpha }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
+        m_pGameInstance->DrawText(TEXT("Font_Godic"), szGunBulletChar, _float2(m_vPos.x - 20, m_vPos.y), _fvector{ 0.f, 0.7f, 0.7f, m_fAlpha }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
     }
     else
     {
-        m_pGameInstance->DrawText(TEXT("Font_Godic"), szGunBulletChar, _float2(m_vPos.x - 18, m_vPos.y + 2), _fvector{ 0.f, 0.f, 0.f, 1.f }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
-        m_pGameInstance->DrawText(TEXT("Font_Godic"), szGunBulletChar, _float2(m_vPos.x - 20, m_vPos.y), _fvector{ 1.f, 1.f, 1.f, 1.f }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
+        m_pGameInstance->DrawText(TEXT("Font_Godic"), szGunBulletChar, _float2(m_vPos.x - 18, m_vPos.y + 2), _fvector{ 0.f, 0.f, 0.f, m_fAlpha }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
+        m_pGameInstance->DrawText(TEXT("Font_Godic"), szGunBulletChar, _float2(m_vPos.x - 20, m_vPos.y), _fvector{ 1.f, 1.f, 1.f, m_fAlpha }, 0.f, _float2{ 1.f, 0.5f }, { 1.2f, 1.2f });
     }
 
-    m_pGameInstance->DrawText(TEXT("Font_Godic"), TEXT("/"), _float2(m_vPos.x + 2, m_vPos.y + 2), _fvector{0.f, 0.f, 0.f, 0.5f }, 0.f, _float2{0.5f, 0.5f}, { 1.2f, 1.2f });
-    m_pGameInstance->DrawText(TEXT("Font_Godic"), TEXT("/"), m_vPos, _fvector{ 1.f, 1.f, 1.f, 1.f }, 0.f, _float2{ 0.5f, 0.5f }, { 1.2f, 1.2f });
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), TEXT("/"), _float2(m_vPos.x + 2, m_vPos.y + 2), _fvector{0.f, 0.f, 0.f, m_fAlpha }, 0.f, _float2{0.5f, 0.5f}, { 1.2f, 1.2f });
+    m_pGameInstance->DrawText(TEXT("Font_Godic"), TEXT("/"), m_vPos, _fvector{ 1.f, 1.f, 1.f, m_fAlpha }, 0.f, _float2{ 0.5f, 0.5f }, { 1.2f, 1.2f });
 
     if (m_iCulInvenBullet <= 0)
     {
-        m_pGameInstance->DrawText(TEXT("Font_Godic"), szInvenBulletChar, _float2(m_vPos.x + 22, m_vPos.y + 2), _fvector{ 0.f, 0.f, 0.f, 1.f }, 0.f, _float2{ 0.f, 0.5f }, { 1.2f, 1.2f });
-        m_pGameInstance->DrawText(TEXT("Font_Godic"), szInvenBulletChar, _float2(m_vPos.x + 20, m_vPos.y), _fvector{ 0.8f, 0.2f, 0.2f, 1.f }, 0.f, _float2{ 0.f, 0.5f }, { 1.2f, 1.2f });
+        m_pGameInstance->DrawText(TEXT("Font_Godic"), szInvenBulletChar, _float2(m_vPos.x + 22, m_vPos.y + 2), _fvector{ 0.f, 0.f, 0.f, m_fAlpha }, 0.f, _float2{ 0.f, 0.5f }, { 1.2f, 1.2f });
+        m_pGameInstance->DrawText(TEXT("Font_Godic"), szInvenBulletChar, _float2(m_vPos.x + 20, m_vPos.y), _fvector{ 0.8f, 0.2f, 0.2f, m_fAlpha }, 0.f, _float2{ 0.f, 0.5f }, { 1.2f, 1.2f });
     }
     else
     {
-        m_pGameInstance->DrawText(TEXT("Font_Godic"), szInvenBulletChar, _float2(m_vPos.x + 22, m_vPos.y + 2), _fvector{ 0.f, 0.f, 0.f, 1.f }, 0.f, _float2{ 0.f, 0.5f }, { 1.2f, 1.2f });
-        m_pGameInstance->DrawText(TEXT("Font_Godic"), szInvenBulletChar, _float2(m_vPos.x + 20, m_vPos.y), _fvector{ 1.f, 1.f, 1.f, 1.f }, 0.f, _float2{ 0.f, 0.5f }, { 1.2f, 1.2f });
+        m_pGameInstance->DrawText(TEXT("Font_Godic"), szInvenBulletChar, _float2(m_vPos.x + 22, m_vPos.y + 2), _fvector{ 0.f, 0.f, 0.f, m_fAlpha }, 0.f, _float2{ 0.f, 0.5f }, { 1.2f, 1.2f });
+        m_pGameInstance->DrawText(TEXT("Font_Godic"), szInvenBulletChar, _float2(m_vPos.x + 20, m_vPos.y), _fvector{ 1.f, 1.f, 1.f, m_fAlpha }, 0.f, _float2{ 0.f, 0.5f }, { 1.2f, 1.2f });
     }
 }
 

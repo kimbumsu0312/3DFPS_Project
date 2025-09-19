@@ -30,7 +30,7 @@ public:
 	void								Drop_Diagonal(_float fTimeDelta, _float3 vCutMinPos, _float3 vCutMaxPos);
 	void								Sprite_Sort(_float fSpriteSpeed, _matrix WolrdMat);
 
-	void								Reseet();
+	void								Reset();
 private:
 	_float3								m_vPivot = {};
 	_float*								m_pSpeeds = {};

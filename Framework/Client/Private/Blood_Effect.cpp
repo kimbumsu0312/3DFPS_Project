@@ -17,7 +17,7 @@ HRESULT CBlood_Effect::Initialize_Prototype()
         CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Muzzle/Smoke_Effect_%d.png"), 1))))
         return E_FAIL;
 
-    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Blude_Splatter"),
+    if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Bloode_Splatter"),
         CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Blood/Blood_Effect_%d.png"), 1))))
         return E_FAIL;
 

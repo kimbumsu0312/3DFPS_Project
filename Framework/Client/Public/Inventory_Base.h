@@ -34,7 +34,8 @@ private:
 
 	class CItem_Penal*			m_pItemPenal = { nullptr };
 	class CCreate_Penal*		m_pCreatePenal = { nullptr };
-
+	class CUI_Tex*				m_pInfo = {nullptr};
+	_float						m_fAlpha = {};
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children_Prototype();

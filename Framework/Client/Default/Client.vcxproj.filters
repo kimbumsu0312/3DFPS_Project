@@ -403,6 +403,9 @@
     <Filter Include="02.GameObject\UIObject\Hud\BulletCount">
       <UniqueIdentifier>{78f04563-3dbb-4f90-8881-75d6510d582e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\UIObject\Screen_Blood">
+      <UniqueIdentifier>{97c0ad30-4500-4c3c-9a39-0616c0e0e76e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -912,6 +915,12 @@
     <ClInclude Include="..\public\BulletCount.h">
       <Filter>02.GameObject\UIObject\Hud\BulletCount</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Screen_Blood.h">
+      <Filter>02.GameObject\UIObject\Screen_Blood</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Screen_Blood_Particle.h">
+      <Filter>02.GameObject\UIObject\Screen_Blood</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -1400,6 +1409,12 @@
     </ClCompile>
     <ClCompile Include="..\private\BulletCount.cpp">
       <Filter>02.GameObject\UIObject\Hud\BulletCount</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Screen_Blood.cpp">
+      <Filter>02.GameObject\UIObject\Screen_Blood</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Screen_Blood_Particle.cpp">
+      <Filter>02.GameObject\UIObject\Screen_Blood</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

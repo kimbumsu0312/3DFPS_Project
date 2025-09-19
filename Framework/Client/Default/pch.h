@@ -26,7 +26,7 @@
 #include "Loding_Side.h"
 #include "Loding_Icon.h"
 #include "BulletCount.h"
-
+#include "Screen_Blood.h"
 //몬스터 관련
 #include "Monster_Header.h"
 #include "Alcina.h"
@@ -69,7 +69,7 @@
 #include "Blood_Effect.h"
 #include "Fly_Effect.h"
 #include "Spark_Effect.h"
-
+#include "Screen_Blood_Particle.h"
 //카메라
 #include "LogoCamera.h"
 
