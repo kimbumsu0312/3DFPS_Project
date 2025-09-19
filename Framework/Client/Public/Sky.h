@@ -9,6 +9,11 @@ NS_END
 NS_BEGIN(Client)
 class CSky final : public CGameObject
 {
+public:
+	typedef struct tagSkyBox : public CGameObject::GAMEOBJECT_DESC
+	{
+		_float4 vColor{};
+	}SKYBOX_DESC;
 private:
 	CSky(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CSky(const CSky& Prototype);
@@ -27,6 +32,7 @@ private:
 	CTexture*				m_pTextureCom = { nullptr };
 	CVIBuffer_Cube*			m_pVIBufferCom = { nullptr };
 
+	_float4					m_vColor = {};
 private:
 	HRESULT					Ready_Components();
 	HRESULT					Bind_ShaderResources();

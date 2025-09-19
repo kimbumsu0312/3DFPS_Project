@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Loader.h"
 
-
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_pDevice{ pDevice }, m_pContext { pContext }, m_pGameInstance { CGameInstance::GetInstance()}
 {
 	Safe_AddRef(m_pGameInstance);
@@ -72,7 +71,42 @@ HRESULT CLoader::Loading_For_Logo_Level()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Logo/Logo.png"), 1))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Snow"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Snow/Snow.png"), 1))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("모델을 로딩중입니다."));
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Crow/Crow.json", ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Model_Crow"))))
+		return E_FAIL;
+
+	/* Prototype_Component_Particle_Snow */
+	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		SnowDesc{};
+	SnowDesc.iNumInstance = 6000;
+	SnowDesc.vCenter = _float3(0.f, 20.f, 0.f);
+	SnowDesc.vRange = _float3(50.f, 1.f, 50.f);
+	SnowDesc.vSize = _float2(0.2f, 0.1f);
+	SnowDesc.vLifeTime = _float2(3.0f, 6.f);
+	SnowDesc.vPivot = _float3(0.f, 0.f, 0.f);
+	SnowDesc.vSpeed = _float2(7.5f, 10.5f);
+	SnowDesc.IsLoop = true;
+	SnowDesc.vSplat = _float2(0.f, 0.f);
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Particle_Snow"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &SnowDesc))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/map/Logo/Flower1/Flower1.json", ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Model_Flower1"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/map/Logo/Flower2/Flower2.json", ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Model_Flower2"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/map/Logo/Flower3/Flower3.json", ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Model_Flower3"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/map/Logo/Grass/Grass.json", ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Model_Grass"))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("셰이더를 로딩중입니다."));
 
@@ -85,6 +119,36 @@ HRESULT CLoader::Loading_For_Logo_Level()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_UI"),
 		CLogo_UI::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Camera_Logo"),
+		CLogoCamera::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* Prototype_GameObject_Sky */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Sky"),
+		CSky::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Snow"),
+		CSnow::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Body_Crow"),
+		CBody_Crow::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Crow"),
+		CCrow::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Camera_Free"),
+		CCamera_Free::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_LogoMap"),
+		CLogoMap::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
 	m_isFinished = true;
@@ -100,16 +164,8 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Bullet/Aim_%d.png"), 2))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Sky"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Sky/Sky_3.dds"), 1))))
-		return E_FAIL;
-
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.jpg"), 1))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Snow"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Snow/Snow.png"), 1))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("모델을 로딩중입니다."));
@@ -117,26 +173,6 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	/* Prototype_Component_VIBuffer_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-	/* Prototype_Component_VIBuffer_Cube */
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Cube"),
-		CVIBuffer_Cube::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	/* Prototype_Component_Particle_Snow */
-	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		SnowDesc{};
-	SnowDesc.iNumInstance = 6000;
-	SnowDesc.vCenter = _float3(0.f, 20.f, 0.f);
-	SnowDesc.vRange = _float3(50.f, 1.f, 50.f);
-	SnowDesc.vSize = _float2(0.2f, 0.1f);
-	SnowDesc.vLifeTime = _float2(3.0f, 6.f);
-	SnowDesc.vPivot = _float3(0.f, 0.f, 0.f);
-	SnowDesc.vSpeed = _float2(7.5f, 10.5f);
-	SnowDesc.IsLoop = true;
-	SnowDesc.vSplat = _float2(0.f, 0.f);
-
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Snow"),
-		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &SnowDesc))))
 		return E_FAIL;
 
 	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		MuzzleDesc{};
@@ -413,14 +449,6 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CTerrain::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
-		CCamera_Free::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-	/* Prototype_GameObject_Sky */
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Sky"),
-		CSky::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
 	if(FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_MonSpawneer"),
 		CMonSpawner::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -568,6 +596,11 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_Guide_Paper"),
 		CGuide_Paper::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_UI_BulletCount"),
+		CBulletCount::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 #pragma endregion
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Map"),
 		CBaseMapObj::Create(m_pDevice, m_pContext))))
@@ -590,10 +623,6 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		return E_FAIL;
 
 #pragma region Effect
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
-		CSnow::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Muzzle_Effect"),
 		CMuzzle_Effect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;

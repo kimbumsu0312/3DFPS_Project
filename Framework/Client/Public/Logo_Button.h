@@ -27,6 +27,8 @@ private:
 	_uint						m_iMaxIndex = {};
 	_bool						m_bIsSelete = { false };
 	_float4						m_vBackGroundColor = {};
+
+	_wstring					m_szText = {};
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children_Prototype();
@@ -35,6 +37,8 @@ private:
 	void						Button_Event();
 	void						Button_Selete();
 	
+	void						Render_Font();
+
 public:
 	static CLogo_Button*		Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject*		Clone(void* pArg) override;

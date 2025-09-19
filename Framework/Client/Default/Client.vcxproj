@@ -181,8 +181,11 @@
     <ClInclude Include="..\public\Blood_Splatter.h" />
     <ClInclude Include="..\public\Blood_Effect.h" />
     <ClInclude Include="..\public\Blood_Smoke.h" />
+    <ClInclude Include="..\public\Body_Crow.h" />
     <ClInclude Include="..\public\Body_WereWolf.h" />
+    <ClInclude Include="..\public\BulletCount.h" />
     <ClInclude Include="..\public\Critical_Attack_Daniela.h" />
+    <ClInclude Include="..\public\Crow.h" />
     <ClInclude Include="..\public\Damage_Alcina.h" />
     <ClInclude Include="..\public\Damage_WereWolf.h" />
     <ClInclude Include="..\public\Die_Alcina.h" />
@@ -198,6 +201,8 @@
     <ClInclude Include="..\public\LodingUI.h" />
     <ClInclude Include="..\public\Loding_Icon.h" />
     <ClInclude Include="..\public\Loding_Side.h" />
+    <ClInclude Include="..\public\LogoCamera.h" />
+    <ClInclude Include="..\public\LogoMap.h" />
     <ClInclude Include="..\public\MonState_Alcina.h" />
     <ClInclude Include="..\public\Monstate_WereWolf.h" />
     <ClInclude Include="..\public\MsgItem.h" />
@@ -347,8 +352,11 @@
     <ClCompile Include="..\private\Blood_Splatter.cpp" />
     <ClCompile Include="..\private\Blood_Effect.cpp" />
     <ClCompile Include="..\private\Blood_Smoke.cpp" />
+    <ClCompile Include="..\private\Body_Crow.cpp" />
     <ClCompile Include="..\private\Body_WereWolf.cpp" />
+    <ClCompile Include="..\private\BulletCount.cpp" />
     <ClCompile Include="..\private\Critical_Attack_Daniela.cpp" />
+    <ClCompile Include="..\private\Crow.cpp" />
     <ClCompile Include="..\private\Damage_Alcina.cpp" />
     <ClCompile Include="..\private\Damage_WereWolf.cpp" />
     <ClCompile Include="..\private\Die_Alcina.cpp" />
@@ -364,6 +372,8 @@
     <ClCompile Include="..\private\LodingUI.cpp" />
     <ClCompile Include="..\private\Loding_Icon.cpp" />
     <ClCompile Include="..\private\Loding_Side.cpp" />
+    <ClCompile Include="..\private\LogoCamera.cpp" />
+    <ClCompile Include="..\private\LogoMap.cpp" />
     <ClCompile Include="..\private\MonState_Alcina.cpp" />
     <ClCompile Include="..\private\Monstate_WereWolf.cpp" />
     <ClCompile Include="..\private\MsgItem.cpp" />

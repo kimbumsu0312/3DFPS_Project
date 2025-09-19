@@ -26,6 +26,7 @@ public:
 	void			Add_QuickSlotItem(_int iSlotIndex, _int iItemIndex);
 	void			Selete_Slot(_int i);
 	const _int&		Get_QuickSlotItem(_int index) { return m_iQuickSlot[index - 1]; }
+	_int			Get_SeleteItemIndex() { return m_iQuickSlot[m_iSeleteItem]; }
 
 	void			Update_Cell(_int iIndex) { m_iCellIndex = iIndex; }
 	const _int&		Get_CellIndex() {return m_iCellIndex; }

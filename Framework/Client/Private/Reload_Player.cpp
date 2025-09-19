@@ -58,6 +58,13 @@ void CReload_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 
 void CReload_Player::Exit(CPlayer* pContainer)
 {
+    _int ItemIndex = CPlayer_Manager::GetInstance()->Get_SeleteItemIndex();
+    _int iGunBullet = {};
+    _int iInvenBullet = {};
+
+    if (CInven_Manager::GetInstance()->Get_BulletCount(ItemIndex, iGunBullet, iInvenBullet))
+        m_pGameInstance->Publish(Event_BulletCount_UI_OPEN{ ItemIndex, iGunBullet, iInvenBullet });
+
     m_eAnimState = STATE_ANIM::END;
 }
 

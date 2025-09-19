@@ -442,6 +442,15 @@ void CPlayer::InputKey_AttackState(_float fTimeDelta)
 		{
 			if (CPlayer_Manager::GetInstance()->Reload())
 				m_BlackBoard->Set_Data().isReload = true;
+			else
+			{
+				_int ItemIndex = CPlayer_Manager::GetInstance()->Get_SeleteItemIndex();
+				_int iGunBullet = {};
+				_int iInvenBullet = {};
+
+				if(CInven_Manager::GetInstance()->Get_BulletCount(ItemIndex, iGunBullet, iInvenBullet))
+					m_pGameInstance->Publish(Event_BulletCount_UI_OPEN{ ItemIndex, iGunBullet, iInvenBullet });
+			}
 		}
 	}
 	if (m_pGameInstance->IsMouseDown(MOUSEKEYSTATE::LB) && m_BlackBoard->Set_Data().isAttack == false)

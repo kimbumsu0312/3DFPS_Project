@@ -45,6 +45,16 @@ HRESULT CLogo_Button::Initialize(void* pArg)
 	if (FAILED(Ready_Children()))
 		return E_FAIL;
 
+	switch (m_iIndex)
+	{
+	case 1:
+		m_szText = TEXT("게임 시작");
+		break;
+	case 2:
+		m_szText = TEXT("게임 종료");
+	default:
+		break;
+	}
 	m_pGameInstance->Subscribe<Event_NonSelete_LogoButton>([&](const Event_NonSelete_LogoButton& e) {m_bIsSelete = false; });
 	m_pGameInstance->Subscribe<Event_Selete_LogoButton>([&](const Event_Selete_LogoButton& e) { if (e.iIndex == m_iIndex) { m_bIsSelete = true; } });
 
@@ -74,14 +84,14 @@ void CLogo_Button::Late_Update(_float fTimeDelta)
 
 HRESULT CLogo_Button::Render()
 {
+	Render_Font();
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_Vector", &m_vBackGroundColor, sizeof(_float4))))
+	//	return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_Vector", &m_vBackGroundColor, sizeof(_float4))))
-		return E_FAIL;
+	//__super::Bind_ShaderTransform_Resourc(1);
 
-	__super::Bind_ShaderTransform_Resourc(1);
-
-	m_pVIBufferCom->Bind_Resources();
-	m_pVIBufferCom->Render();
+	//m_pVIBufferCom->Bind_Resources();
+	//m_pVIBufferCom->Render();
 
 	return S_OK;
 }
@@ -109,7 +119,7 @@ HRESULT CLogo_Button::Ready_Children()
 	CUIObject* pGameObject = nullptr;
 	
 	UIOBJECT_DESC Desc;
-	Desc.vSize = { 255.f, 18.f };
+	Desc.vSize = { 155.f, 23.f };
 	Desc.vPos = { 0, 20 };
 	Desc.vMinUV = { 500.f / 1024.f, 0.f };
 	Desc.vMaxUV = { 755.f / 1024.f, 18.f / 512.f };
@@ -120,7 +130,7 @@ HRESULT CLogo_Button::Ready_Children()
 		return E_FAIL;
 	Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
 
-	Desc.vSize = { 255.f, 20.f };
+	Desc.vSize = { 135.f, 42.f };
 	Desc.vPos = { 0, 0 };
 	Desc.vMinUV = { 500.f / 1024.f, 20.f / 512.f};
 	Desc.vMaxUV = { 755.f / 1024.f, 40.f / 512.f };
@@ -143,10 +153,7 @@ void CLogo_Button::Button_Event()
 			m_pGameInstance->Publish(Event_Level_Change{});
 			break;
 		case 2:
-			break;
-		case 3:
-			break;
-		case 4:
+			DestroyWindow(g_hWnd);
 			break;
 		}
 	}
@@ -162,6 +169,23 @@ void CLogo_Button::Button_Selete()
 		m_bIsSelete = true;
 	}
 
+
+}
+
+void CLogo_Button::Render_Font()
+{
+	_vector vColor = _fvector{ 0.5f, 0.5f, 0.5f, 1.f };
+	_float2 vFontPos = {};
+	vFontPos.x = m_vPos.x;
+	vFontPos.y = m_vPos.y;
+
+	if (m_bIsSelete)
+	{
+		vColor = _fvector{ 1.f, 1.f, 1.f, 1.f };
+	}
+
+	m_pGameInstance->DrawText(TEXT("Font_Godic"), m_szText.c_str(), _float2{ vFontPos.x + 2, vFontPos.y + 2 }, _fvector{ 0.f, 0.f, 0.f, 1.f }, 0.f, _float2{ 0.5f, 0.5f }, { 0.8f, 0.8f });
+	m_pGameInstance->DrawText(TEXT("Font_Godic"), m_szText.c_str(), vFontPos, vColor, 0.f, _float2{ 0.5f, 0.5f }, { 0.8f, 0.8f });
 
 }
 

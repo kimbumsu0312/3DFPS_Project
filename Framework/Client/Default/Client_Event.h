@@ -93,5 +93,11 @@ namespace Client
 	typedef struct Event_EndLoding
 	{
 	}Event_EndLoding;
-	
+
+	typedef struct Event_BulletCount_OPEN
+	{
+		_int iItemIndex;
+		_int iCulGunBullet;
+		_int iCulInvenBullet;
+	}Event_BulletCount_UI_OPEN;
 }

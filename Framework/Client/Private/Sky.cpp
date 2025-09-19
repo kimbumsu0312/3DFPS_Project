@@ -16,6 +16,12 @@ HRESULT CSky::Initialize_Prototype()
 
 HRESULT CSky::Initialize(void* pArg)
 {
+	if (pArg == nullptr)
+		return E_FAIL;
+
+	SKYBOX_DESC* pDesc = static_cast<SKYBOX_DESC*>(pArg);
+
+	m_vColor = pDesc->vColor;
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -46,6 +52,7 @@ HRESULT CSky::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
+	m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4));
 	m_pShaderCom->Begin(2);
 
 	m_pVIBufferCom->Bind_Resources();
@@ -61,11 +68,11 @@ HRESULT CSky::Ready_Components()
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
 		return E_FAIL;
 
-	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Cube"),
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Cube"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
 		return E_FAIL;
 
-	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Sky"),
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Sky"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
 		return E_FAIL;
 

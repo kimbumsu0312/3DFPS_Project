@@ -25,6 +25,7 @@
 #include "LodingUI.h"
 #include "Loding_Side.h"
 #include "Loding_Icon.h"
+#include "BulletCount.h"
 
 //몬스터 관련
 #include "Monster_Header.h"
@@ -68,4 +69,12 @@
 #include "Blood_Effect.h"
 #include "Fly_Effect.h"
 #include "Spark_Effect.h"
+
+//카메라
+#include "LogoCamera.h"
+
+//자연
+#include "Body_Crow.h"
+#include "Crow.h"
+#include "LogoMap.h"
 #endif //PCH_H

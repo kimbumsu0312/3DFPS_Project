@@ -18,7 +18,7 @@ HRESULT CLogo_Name::Initialize(void* pArg)
 {
     UIOBJECT_DESC* Desc = static_cast<UIOBJECT_DESC*>(pArg);
 
-    m_vLocalPos.x = 0.f;
+    m_vLocalPos.x = Desc->OffsetX;
     m_vLocalPos.y = Desc->OffsetY;
    
     m_vLocalSize = Desc->vSize;

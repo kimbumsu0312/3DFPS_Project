@@ -105,23 +105,24 @@ HRESULT CLogo_UI::Ready_Children()
     CUIObject* pGameObject = nullptr;
 
     UIOBJECT_DESC Desc;
+    //Desc.OffsetX = (g_iWinSizeX * -0.5f) + ((1024.f * 0.5f) * 0.5f);
+    Desc.OffsetX = 0.f;
     Desc.OffsetY = -150.f;
    
-    Desc.vMinUV.x = 0;
-    Desc.vMinUV.y = 150.f / 512.f;
-    Desc.vMaxUV.x = 440.f / 1024.f;
-    Desc.vMaxUV.y = 320.f / 512.f;
-    Desc.vSize = { 1024.f * 0.3f, 512.f * 0.3f };
+    Desc.vMinUV = { 10 / 1024.f, 150.f / 512.f };
+    Desc.vMaxUV = { 440.f / 1024.f,  320.f / 512.f };
+
+    Desc.vSize = { 1024.f * 0.4f, 512.f * 0.3f };
 
     pGameObject = dynamic_cast<CUIObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_Logo_Name"), &Desc));
     if (nullptr == pGameObject)
         return E_FAIL;
     Add_Child(this, pGameObject, m_pShaderCom, m_pTextureCom);
     
-    m_iNumMaxButton = 4;
+    m_iNumMaxButton = 2;
     Desc.iMaxIndex = m_iNumMaxButton;
     Desc.vSize = { 200.f, 50.f };
-    Desc.vPos = {0.f, 100.f };
+    Desc.vPos = {0.f, -70.f };
     Desc.OffsetY = 60.f;
 
     m_iNumSeleteButton = 1;

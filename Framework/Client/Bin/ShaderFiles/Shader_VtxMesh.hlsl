@@ -5,6 +5,7 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D   g_DiffuseTexture;
 texture2D   g_NormalTexture;
 texture2D   g_NoiesTexture;
+texture2D   g_AtosTexture;
 float       g_fNoiesValue = 0.f;
 
 struct VS_IN
@@ -157,6 +158,31 @@ PS_OUT PS_NORAMLNOIES(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_Grass(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vAtos = g_AtosTexture.Sample(DefaultSampler, In.vTexcoord);
+            
+    if(vAtos.r < 0.5f)
+        discard;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz * -1.f, In.vNormal.xyz);
+    vNormal = mul(vNormal, WorldMatrix);
+
+
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w, 0.f, 0.f);
+    
+    return Out;
+}
+
 struct PS_IN_SHADOW
 {
     float4 vPosition : SV_POSITION;
@@ -234,6 +260,16 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
     }
+    pass GrassPass
+    {
+       // SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Grass();
+    }
 }
 

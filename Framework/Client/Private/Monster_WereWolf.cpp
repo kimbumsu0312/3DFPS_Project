@@ -61,15 +61,6 @@ HRESULT CMonster_WereWolf::Initialize(void* pArg)
 
 void CMonster_WereWolf::Priority_Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->IsKeyDown(DIK_J))
-		Event_1();
-
-	if (m_pGameInstance->IsKeyDown(DIK_K))
-		Event_2();
-
-	if (m_pGameInstance->IsKeyDown(DIK_L))
-		Event_3();
-
 	m_pTransformCom->PrePostion_Update();
 	m_pBodyObject->Priority_Update(fTimeDelta);
 }

@@ -70,8 +70,15 @@ _bool CPlayer_Manager::Gun_Shoting()
 {
 	if (CInven_Manager::GetInstance()->Bullet_Check(m_iSeleteItem) == true)
 		return true;
-
+	
 	m_pGameInstance->Publish(Event_Announce_UI_OPEN{ 1, 0, TEXT("장전된 총알이 부족합니다."), RENDERGROUP::PRIORITY_UI });
+	
+	_int ItemIndex = Get_SeleteItemIndex();
+	_int iGunBullet = {};
+	_int iInvenBullet = {};
+
+	if (CInven_Manager::GetInstance()->Get_BulletCount(ItemIndex, iGunBullet, iInvenBullet))
+		m_pGameInstance->Publish(Event_BulletCount_UI_OPEN{ ItemIndex, iGunBullet, iInvenBullet });
 	return false;
 }
 
@@ -81,6 +88,13 @@ _bool CPlayer_Manager::Reload()
 		return true;
 	
 	m_pGameInstance->Publish(Event_Announce_UI_OPEN{ 1, 0, TEXT("인벤토리 내 총알이 부족합니다."), RENDERGROUP::PRIORITY_UI });
+
+	_int ItemIndex = Get_SeleteItemIndex();
+	_int iGunBullet = {};
+	_int iInvenBullet = {};
+
+	if (CInven_Manager::GetInstance()->Get_BulletCount(ItemIndex, iGunBullet, iInvenBullet))
+		m_pGameInstance->Publish(Event_BulletCount_UI_OPEN{ ItemIndex, iGunBullet, iInvenBullet });
 	return false;
 }
 

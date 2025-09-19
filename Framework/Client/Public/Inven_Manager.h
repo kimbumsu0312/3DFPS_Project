@@ -29,9 +29,11 @@ public:
 
 	void						InvenOpen(_bool IsOpen);
 	const INVENTORY_DESC&		Get_InvenData();
-	_bool						Reload_Check(_int i);
-	_bool						Bullet_Check(_int i);
+	_bool						Reload_Check(_int iItemIndex );
+	_bool						Bullet_Check(_int iItemIndex);
 	_bool						IsItemCheck(_int i, class CInvenItem* pItem);
+
+	_bool						Get_BulletCount(_int iItemIndex, _int& OutGunBullet, _int& OutInvenBullet);
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
 

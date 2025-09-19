@@ -47,7 +47,6 @@ struct PS_OUT
 struct PS_OUT_DEPTH
 {
     float4 vDiffuse : SV_TARGET0;
-    float4 vDepth : SV_TARGET2;
 };
 PS_OUT PS_MAIN(PS_IN In)
 {
@@ -71,8 +70,7 @@ PS_OUT_DEPTH PS_SKY_COLOR(PS_IN In)
 {
     PS_OUT_DEPTH Out = (PS_OUT_DEPTH) 0;
     
-    Out.vDiffuse = float4(0.4f, 0.4f, 0.4f, 1.f);
-    Out.vDepth = float4(1.f, 1.f, 0.f, 0.f);
+    Out.vDiffuse = g_vColor;
     return Out;
 }
 

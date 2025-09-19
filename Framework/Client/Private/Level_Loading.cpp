@@ -21,6 +21,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 		return E_FAIL;
 	m_pGameInstance->Subscribe<Event_NextLevel>([&](const Event_NextLevel& e) {m_bIsNextLevel = true; });
 
+
 	return S_OK;
 }
 

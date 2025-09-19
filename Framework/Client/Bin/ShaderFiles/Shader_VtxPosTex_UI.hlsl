@@ -195,6 +195,18 @@ PS_OUT PS_Loding_Icon(PS_IN In)
     Out.vColor.rgb = 1.f;
     return Out;
 }
+
+PS_OUT PS_Bullet_Count(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    In.vTexcoord = g_MinUV + (g_MaxUV - g_MinUV) * In.vTexcoord;
+     
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vColor.a = Out.vColor.a * g_Alpha;
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass UI_TexUV_Pass_0
@@ -327,5 +339,14 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Loding_Icon();
     }
-
+    pass UI_Bullet_Count_Pass_12
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Bullet_Count();
+    }
 }

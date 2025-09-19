@@ -233,15 +233,15 @@ const CInven_Manager::INVENTORY_DESC& CInven_Manager::Get_InvenData()
 
 }
 
-_bool CInven_Manager::Reload_Check(_int i)
+_bool CInven_Manager::Reload_Check(_int iItemIndex)
 {
 	for (auto Item : m_InvenItems)
 	{
-		if (Item->Get_ItemData().iItemIndex == i)
+		if (Item->Get_ItemData().iItemIndex == iItemIndex)
 		{
-			if (Item->Get_ItemData().iItemCount < g_ItemData[i].m_iMaxItem)
+			if (Item->Get_ItemData().iItemCount < g_ItemData[iItemIndex].m_iMaxItem)
 			{
-				switch (g_ItemData[i].m_iItemID)
+				switch (g_ItemData[iItemIndex].m_iItemID)
 				{
 				case 0:
 					if (IsItemCheck(0, Item) == true)
@@ -268,11 +268,11 @@ _bool CInven_Manager::Reload_Check(_int i)
 	return false;
 }
 
-_bool CInven_Manager::Bullet_Check(_int i)
+_bool CInven_Manager::Bullet_Check(_int iItemIndex)
 {
 	for (auto Item : m_InvenItems)
 	{
-		if (Item->Get_ItemData().iItemIndex == i)
+		if (Item->Get_ItemData().iItemIndex == iItemIndex)
 		{
 			if (Item->Get_ItemData().iItemCount > 0)
 			{
@@ -281,6 +281,7 @@ _bool CInven_Manager::Bullet_Check(_int i)
 			}
 			else
 				return false;
+
 		}
 	}
 	return false;
@@ -352,6 +353,20 @@ _bool CInven_Manager::IsItemCheck(_int i, CInvenItem* pItem)
 		}
 	}
 	return true;
+}
+
+_bool CInven_Manager::Get_BulletCount(_int iItemIndex, _int& OutGunBullet, _int& OutInvenBullet)
+{
+	for (auto Item : m_InvenItems)
+	{
+		if (Item->Get_ItemData().iItemIndex == iItemIndex)
+		{
+			OutGunBullet = Item->Get_ItemData().iItemCount;
+			OutInvenBullet = m_iBullet[Item->Get_ItemData().iItemIndex];
+			return true;
+		}
+	}
+	return false;
 }
 
 _bool CInven_Manager::AddItem_Check(const _int& pSizeX, const _int& pSizeY, _int& iItemGridX, _int& iItemGridY)

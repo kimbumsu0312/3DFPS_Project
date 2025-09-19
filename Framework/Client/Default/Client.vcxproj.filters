@@ -388,6 +388,21 @@
     <Filter Include="03.Effect\Spark\Particle">
       <UniqueIdentifier>{8abf88fa-4c9c-4b3d-adf4-38d080a1345b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObject\Camera\LogoCamera">
+      <UniqueIdentifier>{2d95848b-8418-40dc-a598-9b606f16e7bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Animal">
+      <UniqueIdentifier>{667be06a-c39f-40ee-9cae-88a8582258db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Animal\Crow">
+      <UniqueIdentifier>{172d7473-177f-47eb-8b32-a36271aa9113}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Animal\Crow\Body">
+      <UniqueIdentifier>{608de8e9-a56f-435f-8d25-f80800b61aec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\UIObject\Hud\BulletCount">
+      <UniqueIdentifier>{78f04563-3dbb-4f90-8881-75d6510d582e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -882,6 +897,21 @@
     <ClInclude Include="..\public\Loding_Icon.h">
       <Filter>02.GameObject\UIObject\Loding_UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\LogoCamera.h">
+      <Filter>02.GameObject\Camera\LogoCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Crow.h">
+      <Filter>02.GameObject\Animal\Crow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Body_Crow.h">
+      <Filter>02.GameObject\Animal\Crow\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LogoMap.h">
+      <Filter>02.GameObject\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BulletCount.h">
+      <Filter>02.GameObject\UIObject\Hud\BulletCount</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -1355,6 +1385,21 @@
     </ClCompile>
     <ClCompile Include="..\private\Loding_Icon.cpp">
       <Filter>02.GameObject\UIObject\Loding_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LogoCamera.cpp">
+      <Filter>02.GameObject\Camera\LogoCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Crow.cpp">
+      <Filter>02.GameObject\Animal\Crow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Body_Crow.cpp">
+      <Filter>02.GameObject\Animal\Crow\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LogoMap.cpp">
+      <Filter>02.GameObject\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BulletCount.cpp">
+      <Filter>02.GameObject\UIObject\Hud\BulletCount</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
