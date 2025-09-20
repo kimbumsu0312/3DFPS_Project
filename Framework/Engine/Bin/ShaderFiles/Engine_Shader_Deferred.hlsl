@@ -209,7 +209,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     if (vPosition.w - 0.1f > fViewZ)
         ShadowFactor *= 0.7f;
 
-    Out.vColor = (vDiffuse * vShade + vSpecular) * ShadowFactor;
+    Out.vColor = (vDiffuse * vShade + vSpecular) * (ShadowFactor + vShade * 0.3f);
     
     return Out;
 }

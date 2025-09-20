@@ -13,6 +13,9 @@ HRESULT CWalk_Alcina::Initalize(void* pArg)
 
 void CWalk_Alcina::Enter(CAlcina* pContainer)
 {
+    if(!m_bIsLight)
+       m_pGameInstance->OnOff_Light(TEXT("Light_Alchina"), true);
+
     m_eAnimState = STATE_ANIM::START;
     *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CAlcina::ANIM_STATE::NORMAL);
     DIRECTION eDir = PlayerDIR(pContainer->Get_TransForm()->Get_State(STATE::POSITION), pContainer->Get_TransForm()->Get_State(STATE::LOOK));

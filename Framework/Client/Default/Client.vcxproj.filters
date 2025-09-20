@@ -391,20 +391,32 @@
     <Filter Include="02.GameObject\Camera\LogoCamera">
       <UniqueIdentifier>{2d95848b-8418-40dc-a598-9b606f16e7bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Animal">
-      <UniqueIdentifier>{667be06a-c39f-40ee-9cae-88a8582258db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Animal\Crow">
-      <UniqueIdentifier>{172d7473-177f-47eb-8b32-a36271aa9113}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObject\Animal\Crow\Body">
-      <UniqueIdentifier>{608de8e9-a56f-435f-8d25-f80800b61aec}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\UIObject\Hud\BulletCount">
       <UniqueIdentifier>{78f04563-3dbb-4f90-8881-75d6510d582e}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObject\UIObject\Screen_Blood">
       <UniqueIdentifier>{97c0ad30-4500-4c3c-9a39-0616c0e0e76e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Map\MapBase">
+      <UniqueIdentifier>{e57d6b1a-74c0-4d17-97a6-6052fb8968cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Map\Event">
+      <UniqueIdentifier>{9bb964b2-bf05-4501-8e4f-ccf7d5fe2c99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Map\Event\Door">
+      <UniqueIdentifier>{66646c8b-e620-4898-ae29-cbfc2ff3f8a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Map\Event\Door\Model">
+      <UniqueIdentifier>{be38c0da-3aa0-4f30-bda4-f65e58c2f5fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Map\Animal">
+      <UniqueIdentifier>{667be06a-c39f-40ee-9cae-88a8582258db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Map\Animal\Crow">
+      <UniqueIdentifier>{172d7473-177f-47eb-8b32-a36271aa9113}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Map\Animal\Crow\Body">
+      <UniqueIdentifier>{608de8e9-a56f-435f-8d25-f80800b61aec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -638,9 +650,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Idle_NorMon_1.h">
       <Filter>02.GameObject\Monster\Normal_Mon1\MonState_Normal\State</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\BaseMapObj.h">
-      <Filter>02.GameObject\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\public\WeaponSwap_Player.h">
       <Filter>02.GameObject\Player\PlayerState\State\WeponSwap</Filter>
@@ -904,13 +913,10 @@
       <Filter>02.GameObject\Camera\LogoCamera</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Crow.h">
-      <Filter>02.GameObject\Animal\Crow</Filter>
+      <Filter>02.GameObject\Map\Animal\Crow</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Body_Crow.h">
-      <Filter>02.GameObject\Animal\Crow\Body</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\LogoMap.h">
-      <Filter>02.GameObject\Map</Filter>
+      <Filter>02.GameObject\Map\Animal\Crow\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BulletCount.h">
       <Filter>02.GameObject\UIObject\Hud\BulletCount</Filter>
@@ -920,6 +926,18 @@
     </ClInclude>
     <ClInclude Include="..\public\Screen_Blood_Particle.h">
       <Filter>02.GameObject\UIObject\Screen_Blood</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LogoMap.h">
+      <Filter>02.GameObject\Map\MapBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BaseMapObj.h">
+      <Filter>02.GameObject\Map\MapBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Event_Door.h">
+      <Filter>02.GameObject\Map\Event\Door</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Model_Door.h">
+      <Filter>02.GameObject\Map\Event\Door\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1133,9 +1151,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Idle_NorMon_1.cpp">
       <Filter>02.GameObject\Monster\Normal_Mon1\MonState_Normal\State</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\BaseMapObj.cpp">
-      <Filter>02.GameObject\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\private\WeaponSwap_Player.cpp">
       <Filter>02.GameObject\Player\PlayerState\State\WeponSwap</Filter>
@@ -1399,13 +1414,10 @@
       <Filter>02.GameObject\Camera\LogoCamera</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Crow.cpp">
-      <Filter>02.GameObject\Animal\Crow</Filter>
+      <Filter>02.GameObject\Map\Animal\Crow</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Body_Crow.cpp">
-      <Filter>02.GameObject\Animal\Crow\Body</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\LogoMap.cpp">
-      <Filter>02.GameObject\Map</Filter>
+      <Filter>02.GameObject\Map\Animal\Crow\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BulletCount.cpp">
       <Filter>02.GameObject\UIObject\Hud\BulletCount</Filter>
@@ -1415,6 +1427,18 @@
     </ClCompile>
     <ClCompile Include="..\private\Screen_Blood_Particle.cpp">
       <Filter>02.GameObject\UIObject\Screen_Blood</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BaseMapObj.cpp">
+      <Filter>02.GameObject\Map\MapBase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LogoMap.cpp">
+      <Filter>02.GameObject\Map\MapBase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Event_Door.cpp">
+      <Filter>02.GameObject\Map\Event\Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Model_Door.cpp">
+      <Filter>02.GameObject\Map\Event\Door\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

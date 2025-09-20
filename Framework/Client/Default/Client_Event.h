@@ -104,4 +104,11 @@ namespace Client
 	typedef struct Event_OnDamageUI
 	{
 	}Event_OnDamageUI_OPEN;
+
+	typedef struct Event_OpenDoor
+	{
+		_bool isOpen;
+		_float fSpeed;
+	}Event_OpenDoor;
+
 }

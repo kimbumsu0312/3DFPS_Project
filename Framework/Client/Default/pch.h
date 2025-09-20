@@ -27,6 +27,7 @@
 #include "Loding_Icon.h"
 #include "BulletCount.h"
 #include "Screen_Blood.h"
+
 //몬스터 관련
 #include "Monster_Header.h"
 #include "Alcina.h"
@@ -48,6 +49,8 @@
 #include "Terrain.h"
 #include "Sky.h"
 #include "BaseMapObj.h"
+#include "Model_Door.h"
+#include "Event_Door.h"
 
 //아이템 관련
 #include "InvenItem.h"

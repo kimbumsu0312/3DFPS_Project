@@ -13,6 +13,8 @@ HRESULT CChase_Daniela::Initalize(void* pArg)
 
 void CChase_Daniela::Enter(CDaniela* pContainer)
 {
+    if(!m_bIsLight)
+       m_pGameInstance->OnOff_Light(TEXT("Light_Daniela"), true);
     m_eAnimState = STATE_ANIM::START;
     pContainer->Switch_AnimState(ENUM_CLASS(CDaniela::ANIM_STATE::NORMAL));
     pContainer->Switch_Anim("Walk_Loop", true);

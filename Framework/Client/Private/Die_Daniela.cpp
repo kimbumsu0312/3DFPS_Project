@@ -30,8 +30,12 @@ void CDie_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
         if (m_isNoies)
         {
             pContainer->Get_BlackBoard()->Set_Data().fNoies += fDeltatime * 0.5f;
-            if(pContainer->Get_BlackBoard()->Get_Data().fNoies > 1.f)
+            if (pContainer->Get_BlackBoard()->Get_Data().fNoies > 1.f)
+            {
                 pContainer->SetDead();
+                m_pGameInstance->OnOff_Light(TEXT("Light_Daniela"), false);
+
+            }
         }
         else if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {

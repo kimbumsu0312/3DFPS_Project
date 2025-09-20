@@ -178,6 +178,8 @@
     <ClInclude Include="..\public\BehaviorTree_Daniela.h" />
     <ClInclude Include="..\public\BehaviorTree_Normon_1.h" />
     <ClInclude Include="..\public\BehaviorTree_WereWolf.h" />
+    <ClInclude Include="..\public\Event_Door.h" />
+    <ClInclude Include="..\public\Model_Door.h" />
     <ClInclude Include="..\public\Screen_Blood_Particle.h" />
     <ClInclude Include="..\public\Blood_Splatter.h" />
     <ClInclude Include="..\public\Blood_Effect.h" />
@@ -351,6 +353,8 @@
     <ClCompile Include="..\private\BehaviorTree_Daniela.cpp" />
     <ClCompile Include="..\private\BehaviorTree_Normon_1.cpp" />
     <ClCompile Include="..\private\BehaviorTree_WereWolf.cpp" />
+    <ClCompile Include="..\private\Event_Door.cpp" />
+    <ClCompile Include="..\private\Model_Door.cpp" />
     <ClCompile Include="..\private\Screen_Blood_Particle.cpp" />
     <ClCompile Include="..\private\Blood_Splatter.cpp" />
     <ClCompile Include="..\private\Blood_Effect.cpp" />

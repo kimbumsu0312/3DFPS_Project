@@ -14,6 +14,8 @@ public:
 	virtual void				Update(CDaniela* pContainer, _float fTimeDelta) override;
 	virtual void				Exit(CDaniela* pContainer) override;
 
+private:
+	_bool						m_bIsLight = {};
 public:
 	static CChase_Daniela* Create(void* pArg = nullptr);
 	virtual void				Free() override;

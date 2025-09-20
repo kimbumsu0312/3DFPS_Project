@@ -24,6 +24,7 @@ void CIdle_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
 
 void CIdle_Alcina::Exit(CAlcina* pContainer)
 {
+    m_pGameInstance->Publish(Event_OpenDoor{ false, 2.f });
 }
 
 CIdle_Alcina* CIdle_Alcina::Create(void* pArg)

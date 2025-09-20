@@ -16,13 +16,17 @@ void CDie_Bela::Enter(CBela* pContainer)
     m_eAnimState = STATE_ANIM::LOOP;
     //pContainer->Switch_AnimState(ENUM_CLASS(CBela::BOSS_SISTER::DAMAGE));
     pContainer->Switch_Anim("Freezes_Die", false);
+
 }
 
 void CDie_Bela::Update(CBela* pContainer, _float fDeltatime)
 {
     pContainer->Get_BlackBoard()->Set_Data().fNoies += fDeltatime * 0.5f;
     if (pContainer->Get_BlackBoard()->Get_Data().fNoies > 1.f)
+    {
         pContainer->SetDead();
+        m_pGameInstance->Publish(Event_OpenDoor{ true , 1.f });
+    }
 }
 
 void CDie_Bela::Exit(CBela* pContainer)

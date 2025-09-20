@@ -83,10 +83,10 @@ HRESULT CLoader::Loading_For_Logo_Level()
 	/* Prototype_Component_Particle_Snow */
 	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		SnowDesc{};
 	SnowDesc.iNumInstance = 6000;
-	SnowDesc.vCenter = _float3(0.f, 20.f, 0.f);
-	SnowDesc.vRange = _float3(50.f, 1.f, 50.f);
-	SnowDesc.vSize = _float2(0.2f, 0.1f);
-	SnowDesc.vLifeTime = _float2(3.0f, 6.f);
+	SnowDesc.vCenter = _float3(2.f, 20.f, 0.f);
+	SnowDesc.vRange = _float3(50.f, 10.f, 50.f);
+	SnowDesc.vSize = _float2(0.15f, 0.3f);
+	SnowDesc.vLifeTime = _float2(2.0f, 6.f);
 	SnowDesc.vPivot = _float3(0.f, 0.f, 0.f);
 	SnowDesc.vSpeed = _float2(7.5f, 10.5f);
 	SnowDesc.IsLoop = true;
@@ -460,6 +460,9 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/WoodTable/WoodTable.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_WoodTable"))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Map/Object/Door/Door.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Door"))))
+		return E_FAIL;
+
 #pragma endregion
 #pragma region ItemObject
 	if (FAILED(m_pGameInstance->Load_Objcet("../Bin/Resources/Models/Item/Bullet_HandGun/Bullet_HandGun.json", ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Bullet_HandGun"))))
@@ -669,6 +672,14 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CBaseMapObj::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Part_Model_Door"),
+		CModel_Door::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Map_Event_Door"),
+		CEvent_Door::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_WorldItem_Pool"),
 		CPoolWorld_Item::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -690,7 +701,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CMuzzle_Effect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Blode_Effect"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Blood_Effect"),
 		CBlood_Effect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 

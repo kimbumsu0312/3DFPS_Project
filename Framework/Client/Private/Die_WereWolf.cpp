@@ -32,6 +32,11 @@ void CDie_WereWolf::Update(CMonster_WereWolf* pContainer, _float fDeltatime)
             if (pContainer->Get_BlackBoard()->Get_Data().fNoies > 1.f)
             {
                 pContainer->SetDead();
+                m_pGameInstance->OnOff_Light(TEXT("Light_WereWolf1"), false);
+                m_pGameInstance->OnOff_Light(TEXT("Light_WereWolf2"), false);
+                m_pGameInstance->OnOff_Light(TEXT("Light_WereWolf3"), false);
+                m_pGameInstance->OnOff_Light(TEXT("Light_WereWolf4"), false);
+
             }
         }
         else if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)

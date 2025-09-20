@@ -16,6 +16,8 @@ public:
 
 private:
 	_int						m_iPreTargetIndex = {};
+
+	_bool						m_bIsLight = {};
 public:
 	static CWalk_Alcina*		Create(void* pArg = nullptr);
 	virtual void				Free() override;

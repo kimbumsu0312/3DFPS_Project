@@ -15,6 +15,7 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 HRESULT CLevel_GamePlay::Initialize()
 {
 	m_pGameInstance->OnOff_Light(TEXT("Light_Default_Logo"), false);
+
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
@@ -118,24 +119,110 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 	LightDesc.eType = LIGHT_DESC::TYPE::DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(0.25f, 0.3f, 0.45f, 1.0f);
-	LightDesc.vAmbient = _float4(0.1f, 0.15f, 0.2f, 1.0f);
+	LightDesc.vDiffuse = _float4(0.2f, 0.25f, 0.4f, 1.0f);
+	LightDesc.vAmbient = _float4(0.05f, 0.1f, 0.15f, 1.0f);
 	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.35f, 1.0f);
 
 	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_Default"), LightDesc)))
 		return E_FAIL;
 
-	//LightDesc.eType = LIGHT_DESC::TYPE::POINT;
-	//LightDesc.vPosition = _float4(-30.95f, -8.97f, 68.67f, 1.f);
-	//LightDesc.fRange = 10.f;
+	//다니엘라 방
+	LightDesc.eType = LIGHT_DESC::TYPE::POINT;
+	LightDesc.vPosition = _float4(-35.51f, -2.65f, 45.86f, 1.f);
+	LightDesc.fRange = 15.f;
 
-	//LightDesc.vDiffuse = _float4(1.f, 0.f, 0.f, 1.f);
-	//LightDesc.vAmbient = _float4(0.4f, 0.1f, 0.1f, 1.f);
-	//LightDesc.vSpecular = LightDesc.vDiffuse;
+	LightDesc.vDiffuse = _float4(0.45f, 0.25f, 0.25f, 1.f);
+	LightDesc.vAmbient = _float4(0.4f, 0.15f, 0.15f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
 
-	//if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_Map"), LightDesc)))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_Daniela"), LightDesc)))
+		return E_FAIL;
+	m_pGameInstance->OnOff_Light(TEXT("Light_Daniela"), false);
 
+	//웨어 울프 방
+	LightDesc.eType = LIGHT_DESC::TYPE::POINT;
+	LightDesc.vPosition = _float4(-67.32f, -1.65f, 38.54f, 1.f);
+	LightDesc.fRange = 10.f;
+
+	LightDesc.vDiffuse = _float4(0.65f, 0.05f, 0.05f, 1.f);
+	LightDesc.vAmbient = _float4(0.4f, 0.2f, 0.2f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_WereWolf1"), LightDesc)))
+		return E_FAIL;
+
+	LightDesc.eType = LIGHT_DESC::TYPE::POINT;
+	LightDesc.vPosition = _float4(-58.08f, -1.65f, 38.50f, 1.f);
+	LightDesc.fRange = 10.f;
+
+	LightDesc.vDiffuse = _float4(0.65f, 0.05f, 0.05f, 1.f);
+	LightDesc.vAmbient = _float4(0.4f, 0.2f, 0.2f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_WereWolf2"), LightDesc)))
+		return E_FAIL;
+
+	LightDesc.eType = LIGHT_DESC::TYPE::POINT;
+	LightDesc.vPosition = _float4(-48.90f, -1.65f, 38.59f, 1.f);
+	LightDesc.fRange = 10.f;
+
+	LightDesc.vDiffuse = _float4(0.65f, 0.05f, 0.05f, 1.f);
+	LightDesc.vAmbient = _float4(0.4f, 0.2f, 0.2f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_WereWolf3"), LightDesc)))
+		return E_FAIL;
+
+	LightDesc.eType = LIGHT_DESC::TYPE::POINT;
+	LightDesc.vPosition = _float4(-48.87f, -1.65f, 31.35f, 1.f);
+	LightDesc.fRange = 10.f;
+
+	LightDesc.vDiffuse = _float4(0.65f, 0.05f, 0.05f, 1.f);
+	LightDesc.vAmbient = _float4(0.4f, 0.2f, 0.2f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_WereWolf4"), LightDesc)))
+		return E_FAIL;
+	m_pGameInstance->OnOff_Light(TEXT("Light_WereWolf1"), false);
+	m_pGameInstance->OnOff_Light(TEXT("Light_WereWolf2"), false);
+	m_pGameInstance->OnOff_Light(TEXT("Light_WereWolf3"), false);
+	m_pGameInstance->OnOff_Light(TEXT("Light_WereWolf4"), false);
+	//벨라 방
+	LightDesc.eType = LIGHT_DESC::TYPE::POINT;
+	LightDesc.vPosition = _float4(-63.29f, -8.53f, 54.51f, 1.f);
+	LightDesc.fRange = 15.f;
+
+	LightDesc.vDiffuse = _float4(0.65f, 0.05f, 0.05f, 1.f);
+	LightDesc.vAmbient = _float4(0.6f, 0.2f, 0.2f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_Bela"), LightDesc)))
+		return E_FAIL;
+	m_pGameInstance->OnOff_Light(TEXT("Light_Bela"), false);
+	//알치나 방
+	LightDesc.eType = LIGHT_DESC::TYPE::POINT;
+	LightDesc.vPosition = _float4(-10.07f, -5.27f, 48.96f, 1.f);
+	LightDesc.fRange = 10.f;
+
+	LightDesc.vDiffuse = _float4(1.f, 0.1f, 0.1f, 1.f);
+	LightDesc.vAmbient = _float4(0.4f, 0.02f, 0.02f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_Alchina"), LightDesc)))
+		return E_FAIL;
+	m_pGameInstance->OnOff_Light(TEXT("Light_Alchina"), false);
+	//세이프 룸
+	LightDesc.eType = LIGHT_DESC::TYPE::POINT;
+	LightDesc.vPosition = _float4(-88.98f, -8.52f, 16.94f, 1.f);
+	LightDesc.fRange = 7.f;
+
+	LightDesc.vDiffuse = _float4(0.75f, 0.8f, 0.95f, 1.0f);
+	LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 1.0f);
+	LightDesc.vSpecular = _float4(0.0f, 0.0f, 0.0f, 1.0f);
+	if (FAILED(m_pGameInstance->Add_Light(TEXT("Light_SafeRoom"), LightDesc)))
+		return E_FAIL;
+
+	//플레이어
 	LightDesc.eType = LIGHT_DESC::TYPE::POINT;
 	LightDesc.vPosition = _float4(-30.95f, -8.97f, 63.67f, 1.f);
 	LightDesc.fRange = 10.f;
@@ -202,6 +289,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _wstring& strLayerTag)
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_MapNevi"))))
+		return E_FAIL;
+
+	CGameObject::GAMEOBJECT_DESC DoorDesc = {};
+	DoorDesc.fRotationPerSec = 1.f;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Map_Event_Door"), &DoorDesc)))
 		return E_FAIL;
 
 	CSky::SKYBOX_DESC Desc{};
@@ -288,7 +382,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring& strLayerTag)
 
 	BlodeDesc.szPoolingPath = TEXT("Pool_Blood");
 
-	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Blode_Effect"), 100, &BlodeDesc)))
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Blood_Effect"), 100, &BlodeDesc)))
 		return E_FAIL;
 
 	CPoolingObject::POOLOBJECT_DESC FlyDesc{};
