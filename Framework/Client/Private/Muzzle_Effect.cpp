@@ -1,4 +1,4 @@
-#include "pch.h"
+  #include "pch.h"
 #include "Muzzle_Effect.h"
 #include "Muzzle.h"
 #include "Muzzle_Smoke.h"
@@ -34,6 +34,9 @@ HRESULT CMuzzle_Effect::Initialize_Prototype()
 
 HRESULT CMuzzle_Effect::Initialize(void* pArg)
 {
+    MUZZLE_EFFECT_DESC* pDesc = static_cast<MUZZLE_EFFECT_DESC*>(pArg);
+
+    m_eGunType = pDesc->eGunType;
 
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
@@ -96,6 +99,7 @@ HRESULT CMuzzle_Effect::Ready_PartObjects()
     CMuzzle::MUZZLE_DATA Desc;
     Desc.pParentMatrix = m_pTransformCom->Get_WorldMatrixPtr();
     Desc.m_BlackBoard = m_BlackBoard;
+    Desc.eGunType = m_eGunType;
 
     if (FAILED(__super::Add_PartObject(TEXT("Part_Muzzle"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Muzzle"),&Desc)))
         return E_FAIL;
@@ -105,6 +109,7 @@ HRESULT CMuzzle_Effect::Ready_PartObjects()
     SmokeDesc.m_BlackBoard = m_BlackBoard;
     SmokeDesc.fRotationPerSec = 1.f;
     SmokeDesc.fSpeedPerSec = 1.f;
+    SmokeDesc.eGunType = m_eGunType;
 
     if (FAILED(__super::Add_PartObject(TEXT("Part_Smoke"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Muzzle_Smoke"), &SmokeDesc)))
         return E_FAIL;

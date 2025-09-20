@@ -20,6 +20,21 @@ HRESULT CMuzzle::Initialize(void* pArg)
     MUZZLE_DATA* pDesc = static_cast<MUZZLE_DATA*>(pArg);
 
     m_BlackBoard = pDesc->m_BlackBoard;
+
+    switch (pDesc->eGunType)
+    {
+    case CMuzzle_Effect::Gun_Type::HANDGUN:
+        m_fSize = 0.2f;
+        break;
+    case CMuzzle_Effect::Gun_Type::SHOTGUN:
+        m_fSize = 0.5f;
+        break;
+    case CMuzzle_Effect::Gun_Type::SNIPER:
+        m_fSize = 0.35f;
+        break;
+    default:
+        return E_FAIL;
+    }
     Safe_AddRef(m_BlackBoard);
 
     if (FAILED(__super::Initialize(pArg)))
@@ -29,8 +44,9 @@ HRESULT CMuzzle::Initialize(void* pArg)
         return E_FAIL;
 
     //m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(CPlayer_Manager::GetInstance()->Get_PlayerPos(), 1.f));
+    m_pTransformCom->Scale(_float3(m_fSize, m_fSize, 1.f));
     m_iCount = 0;
-
+    m_pTransformCom->Set_State(STATE::POSITION, { 0.f, 0.05f, 0.f, 1.f });
     return S_OK;
 }
 
@@ -45,6 +61,7 @@ void CMuzzle::Update(_float fTimeDelta)
 
 void CMuzzle::Late_Update(_float fTimeDelta)
 {
+    XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
     ++m_iCount;
     switch (m_iCount)
     {
@@ -52,12 +69,12 @@ void CMuzzle::Late_Update(_float fTimeDelta)
         m_pGameInstance->Update_LightPotion(TEXT("Light_Muzzle"), _float4{ m_CombinedWorldMatrix.m[3][0],m_CombinedWorldMatrix.m[3][1] + 4.f
                     ,m_CombinedWorldMatrix.m[3][2],m_CombinedWorldMatrix.m[3][3]});
         m_pGameInstance->OnOff_Light(TEXT("Light_Muzzle"), true);
-        m_pTransformCom->Scale(_float3(0.5f, 0.5f, 1.f));
+        m_pTransformCom->Scale(_float3(m_fSize, m_fSize, 1.f));
         m_vUVMin = { 0.f, 0.f };
         m_vUVMax = { 0.5f, 1.f };
         break;
     case 2:
-        m_pTransformCom->Scale(_float3(0.3f, 0.3f, 1.f));
+        m_pTransformCom->Scale(_float3(m_fSize * 0.8f, m_fSize * 0.8f, 1.f));
         m_vUVMin = { 0.5f, 0.f };
         m_vUVMax = { 1.f, 1.f };
         break;
@@ -67,7 +84,6 @@ void CMuzzle::Late_Update(_float fTimeDelta)
         m_pGameInstance->OnOff_Light(TEXT("Light_Muzzle"), false);
         break;
     }
-    XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::EFFECT, this)))
 		return;
 }

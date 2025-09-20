@@ -16,6 +16,7 @@ class CMuzzle_Smoke final : public CPartObject
 public:
 	typedef struct Muzzle_Smoke : public CPartObject::PARTOBJECT_DESC {
 		CBlackBoard<CMuzzle_Effect::MUZZLE_EFFECT_DATA>* m_BlackBoard = { nullptr };
+		CMuzzle_Effect::Gun_Type eGunType = {};
 	}MUZZLE_SMOKE_DATA;
 private:
 	CMuzzle_Smoke(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -41,7 +42,9 @@ private:
 	CBlackBoard<CMuzzle_Effect::MUZZLE_EFFECT_DATA>* m_BlackBoard = { nullptr };
 
 	_float							m_fCount = {};
-
+	_float							m_fSpeed = {};
+	CMuzzle_Effect::Gun_Type		m_eGunType = {};
+	
 private:
 	HRESULT							Ready_Components();
 	HRESULT							Bind_ShaderResources();

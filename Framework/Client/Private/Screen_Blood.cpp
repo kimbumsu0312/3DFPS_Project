@@ -21,7 +21,7 @@ HRESULT CScreen_Blood::Initialize(void* pArg)
     m_vLocalSize.x = g_iWinSizeX;
     m_vLocalSize.y = g_iWinSizeY;
     m_fAlpha = 0.f;
-    m_vColor = { 0.924f, 0.235f, 0.157f, 1.f };
+    m_vColor = { 0.874f, 0.235f, 0.157f, 1.f };
     if (FAILED(__super::Initialize()))
         return E_FAIL;
 

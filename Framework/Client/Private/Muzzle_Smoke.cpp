@@ -20,12 +20,27 @@ HRESULT CMuzzle_Smoke::Initialize(void* pArg)
     m_iTexSizeX = 8;
     m_iTexSizeY = 8;
 
-
     MUZZLE_SMOKE_DATA* pDesc = static_cast<MUZZLE_SMOKE_DATA*>(pArg);
-
+    m_eGunType = pDesc->eGunType;
     m_BlackBoard = pDesc->m_BlackBoard;
     Safe_AddRef(m_BlackBoard);
 
+    switch (m_eGunType)
+    {
+    case CMuzzle_Effect::Gun_Type::HANDGUN:
+        m_fSpeed = 1.f;
+        break;
+    case CMuzzle_Effect::Gun_Type::SHOTGUN:
+        m_fSpeed = 3.f;
+        break;
+    case CMuzzle_Effect::Gun_Type::SNIPER:
+        m_fSpeed = 2.f;
+        break;
+    default:
+        return E_FAIL;
+    }
+
+ 
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
@@ -49,7 +64,7 @@ void CMuzzle_Smoke::Late_Update(_float fTimeDelta)
 {
     m_fCount += fTimeDelta * 0.3f;
 
-    m_pTransformCom->Go_Right(fTimeDelta * 3.f);
+    m_pTransformCom->Go_Right(fTimeDelta * m_fSpeed);
     m_pTransformCom->Turn(_vector{ 0.f, 0.f, 1.f, 0.f }, fTimeDelta * XMConvertToRadians(15.f));
     m_pTransformCom->Scale(_float3{ 1.f + (2.f * m_fCount), 1.f + (2.f * m_fCount), 1.f });
     XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
@@ -93,9 +108,28 @@ HRESULT CMuzzle_Smoke::Ready_Components()
         TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom), nullptr)))
         return E_FAIL;
 
-    if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Muzzle_Smoke"),
-        TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
+    switch (m_eGunType)
+    {
+    case CMuzzle_Effect::Gun_Type::HANDGUN:
+        if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Muzzle_Smoke_HandGun"),
+            TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
+            return E_FAIL;
+        break;
+    case CMuzzle_Effect::Gun_Type::SHOTGUN:
+        if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Muzzle_Smoke_ShotGun"),
+            TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
+            return E_FAIL;
+        break;
+    case CMuzzle_Effect::Gun_Type::SNIPER:
+        if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Muzzle_Smoke_Sniper"),
+            TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), nullptr)))
+            return E_FAIL;
+        break;
+    default:
         return E_FAIL;
+    }
+
+
 
     if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Muzzle_Smoke"),
         TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))

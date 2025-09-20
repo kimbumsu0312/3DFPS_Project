@@ -105,7 +105,7 @@ void CShotGun::Late_Update(_float fTimeDelta)
 
             Desc.vPos = vWorldTrans + vOffset;
 
-            m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Muzzle"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
+            m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Muzzle_ShotGun"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
         }
     }
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))

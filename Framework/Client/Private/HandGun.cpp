@@ -81,7 +81,7 @@ void CHandGun::Late_Update(_float fTimeDelta)
             vOffset = XMVector3Rotate(vOffset, vWorldRot);
             Desc.vPos = vWorldTrans + vOffset;
 
-            m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Muzzle"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
+            m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Muzzle_HandGun"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
         }
     }
     if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))

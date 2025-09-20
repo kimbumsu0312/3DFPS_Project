@@ -7,6 +7,7 @@ vector  g_vCamPosition;
 int     g_iTexValueX;
 int     g_iTexValueY;
 
+float g_Alpha;
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -356,18 +357,18 @@ PS_OUT PS_ScreenBlood_Splatter(PS_IN In)
     
     if (Out.vColor.r < 0.6f)
     {
-        Out.vColor.r = Out.vColor.r * 1.0f;
-        Out.vColor.g = Out.vColor.r * 0.1f;
-        Out.vColor.b = Out.vColor.r * 0.1f;
+        Out.vColor.r = Out.vColor.r * 0.2f;
+        Out.vColor.g = Out.vColor.r * 0.05f;
+        Out.vColor.b = Out.vColor.r * 0.05f;
     }
     else
     {
-        Out.vColor.r = Out.vColor.r * 0.6f;
+        Out.vColor.r = Out.vColor.r * 0.2f;
         Out.vColor.g = Out.vColor.r * 0.05f;
         Out.vColor.b = Out.vColor.r * 0.05f;
     }
     float fColor = saturate(In.vLifeTime.y - In.vLifeTime.x);
-    Out.vColor.a = Out.vColor.a * (fColor * 1.5f);
+    Out.vColor.a = Out.vColor.a * (fColor * 1.5f) * g_Alpha;
 
     return Out;
 }

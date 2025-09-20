@@ -6,6 +6,11 @@ NS_BEGIN(Client)
 class CMuzzle_Effect final : public CPoolingContainer
 {
 public:
+	enum class Gun_Type { HANDGUN, SHOTGUN, SNIPER, END};
+	typedef struct Muzzle_Effect_Desc : public CPoolingContainer::POOLOBJECT_DESC {
+		Gun_Type eGunType = { };
+	}MUZZLE_EFFECT_DESC;
+
 	typedef struct Muzzle_Effect {
 		_float fEffectTime = {};
 		_bool  isEndEffect1 = false;
@@ -14,7 +19,6 @@ public:
 	
 	typedef struct Muzzle_Effect_Init {
 		_vector vPos = {};
-
 	}MUZZLE_EFFECT_INIT;
 
 private:
@@ -35,8 +39,8 @@ public:
 	virtual void				Return_Pool() override;
 
 private:
-	CBlackBoard<MUZZLE_EFFECT_DATA>* m_BlackBoard = { nullptr };
-
+	CBlackBoard<MUZZLE_EFFECT_DATA>*	m_BlackBoard = { nullptr };
+	Gun_Type							m_eGunType = { };
 private:
 	HRESULT						Ready_PartObjects();
 	HRESULT						Ready_BlackBoard();

@@ -260,11 +260,28 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring& strLayerTag)
 {
-	CPoolingObject::POOLOBJECT_DESC MuzzleDesc{};
+	CMuzzle_Effect::MUZZLE_EFFECT_DESC MuzzleHandGunDesc{};
 
-	MuzzleDesc.szPoolingPath = TEXT("Pool_Muzzle");
+	MuzzleHandGunDesc.szPoolingPath = TEXT("Pool_Muzzle_HandGun");
+	MuzzleHandGunDesc.eGunType = CMuzzle_Effect::Gun_Type::HANDGUN;
 
-	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Muzzle_Effect"), 30, &MuzzleDesc)))
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Muzzle_Effect"), 50, &MuzzleHandGunDesc)))
+		return E_FAIL;
+
+	CMuzzle_Effect::MUZZLE_EFFECT_DESC MuzzleShotGunDesc{};
+
+	MuzzleShotGunDesc.szPoolingPath = TEXT("Pool_Muzzle_ShotGun");
+	MuzzleShotGunDesc.eGunType = CMuzzle_Effect::Gun_Type::SHOTGUN;
+
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Muzzle_Effect"), 20, &MuzzleShotGunDesc)))
+		return E_FAIL;
+
+	CMuzzle_Effect::MUZZLE_EFFECT_DESC MuzzleSniperDesc{};
+
+	MuzzleSniperDesc.szPoolingPath = TEXT("Pool_Muzzle_Sniper");
+	MuzzleSniperDesc.eGunType = CMuzzle_Effect::Gun_Type::SNIPER;
+
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Muzzle_Effect"), 20, &MuzzleSniperDesc)))
 		return E_FAIL;
 
 	CPoolingObject::POOLOBJECT_DESC BlodeDesc{};

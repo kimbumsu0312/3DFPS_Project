@@ -177,6 +177,20 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 
 
 	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		MuzzleDesc{};
+	MuzzleDesc.iNumInstance = 8;
+	MuzzleDesc.vCenter = _float3(0.f, 0.f, -0.5f);
+	MuzzleDesc.vRange = _float3(0.5f, 3.f, 0.5f);
+	MuzzleDesc.vSize = _float2(0.5f, 1.3f);
+	MuzzleDesc.vLifeTime = _float2(1.f, 1.f);
+	MuzzleDesc.vPivot = _float3(0.f, 0.f, 1.f);
+	MuzzleDesc.vSpeed = _float2(6.f, 0.8f);
+	MuzzleDesc.IsLoop = false;
+	MuzzleDesc.vSplat = _float2(0.f, 0.f);
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Muzzle_Smoke_HandGun"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &MuzzleDesc))))
+		return E_FAIL;
+
 	MuzzleDesc.iNumInstance = 20;
 	MuzzleDesc.vCenter = _float3(0.f, 0.f, -0.5f);
 	MuzzleDesc.vRange = _float3(3.f, 2.f, 0.5f);
@@ -187,7 +201,21 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	MuzzleDesc.IsLoop = false;
 	MuzzleDesc.vSplat = _float2(0.f, 0.f);
 
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Muzzle_Smoke"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Muzzle_Smoke_ShotGun"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &MuzzleDesc))))
+		return E_FAIL;
+
+	MuzzleDesc.iNumInstance = 10;
+	MuzzleDesc.vCenter = _float3(0.f, 0.f, -0.5f);
+	MuzzleDesc.vRange = _float3(3.f, 2.f, 0.5f);
+	MuzzleDesc.vSize = _float2(2.f, 3.f);
+	MuzzleDesc.vLifeTime = _float2(1.f, 1.f);
+	MuzzleDesc.vPivot = _float3(0.f, 0.f, 1.f);
+	MuzzleDesc.vSpeed = _float2(10.f, 10.0f);
+	MuzzleDesc.IsLoop = false;
+	MuzzleDesc.vSplat = _float2(0.f, 0.f);
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Muzzle_Smoke_Sniper"),
 		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &MuzzleDesc))))
 		return E_FAIL;
 
@@ -255,10 +283,10 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		return E_FAIL;
 
 	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		ScreenBlodeDesc{};
-	ScreenBlodeDesc.iNumInstance = 200;
+	ScreenBlodeDesc.iNumInstance = 15;
 	ScreenBlodeDesc.vCenter = _float3(0.f, 0.f, 0.f);
 	ScreenBlodeDesc.vRange = _float3(180.f, 100.f, 0.f);
-	ScreenBlodeDesc.vSize = _float2(10.f, 100.f);
+	ScreenBlodeDesc.vSize = _float2(200.f, 300.f);
 	ScreenBlodeDesc.vLifeTime = _float2(0.7f, 1.5f);
 	ScreenBlodeDesc.vPivot = _float3(0.f, 0.f, 0.f);
 	ScreenBlodeDesc.vSpeed = _float2(0.f, 0.f);

@@ -33,7 +33,7 @@ HRESULT CScreen_Blood_Particle::Initialize(void* pArg)
         {  ++m_iIndex;
     if (m_iIndex > 4)
         m_iIndex = 0;
-    m_fAlpha = 1.f;
+    m_fAlpha = 0.5f;
     m_pVIBufferCom[m_iIndex]->Reset();
         });
 
@@ -47,7 +47,7 @@ void CScreen_Blood_Particle::Priority_Update(_float fTimeDelta)
         ++m_iIndex;
         if (m_iIndex > 4)
             m_iIndex = 0;
-        m_fAlpha = 2.f;
+        m_fAlpha = 0.5f;
         m_pVIBufferCom[m_iIndex]->Reset();
     }
 }
@@ -57,7 +57,7 @@ void CScreen_Blood_Particle::Update(_float fTimeDelta)
     if (m_fAlpha < 0.f)
         return;
 
-    m_fAlpha -= fTimeDelta;
+    m_fAlpha -= fTimeDelta * 0.5f;
     m_pVIBufferCom[m_iIndex]->Spread(fTimeDelta);
 }
 
@@ -76,6 +76,8 @@ HRESULT CScreen_Blood_Particle::Render()
     m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_vPos.x - g_iWinSizeX * 0.5f, -m_vPos.y + g_iWinSizeY * 0.5f, 0.0f, 1.0f));
     m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix");
  
+    if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+        return E_FAIL;
     if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
         return E_FAIL;
 

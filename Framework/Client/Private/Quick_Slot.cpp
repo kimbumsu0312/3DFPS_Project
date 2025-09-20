@@ -83,6 +83,9 @@ void CQuick_Slot::Late_Update(_float fTimeDelta)
         return;
 
     static_cast<CQuick_Slot_Guide*>(m_vecChildren[0])->Update_Alpha(m_fAlpha);
+    static_cast<CQuick_Slot_Guide*>(m_vecChildren[1])->Update_Alpha(m_fAlpha);
+    static_cast<CQuick_Slot_Guide*>(m_vecChildren[2])->Update_Alpha(m_fAlpha);
+    static_cast<CQuick_Slot_Guide*>(m_vecChildren[3])->Update_Alpha(m_fAlpha);
     __super::Late_Update(fTimeDelta);
 }
 
