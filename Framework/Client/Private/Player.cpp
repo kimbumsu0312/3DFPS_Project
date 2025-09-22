@@ -60,7 +60,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pColliderBone[PLAYER_VIEW] = m_pBodyObject->Get_BoneMatrix(TEXT("Cam"));
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-30.95f, -8.97f, 63.67f, 1.f));
-	CPlayer_Manager::GetInstance()->Update_Cell(m_pNavigationCom->Get_CulIndex());
 	m_pTransformCom->Rotation(_vector{ 0.f, 1.f, 0.f, 0.f }, XMConvertToRadians(180.f));
 
 	return S_OK;
@@ -114,6 +113,10 @@ void CPlayer::Update(_float fTimeDelta)
 
 	m_pTransformCom->Set_State(Engine::STATE::POSITION,	m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
 	CPlayer_Manager::GetInstance()->Set_PlayerPos(m_pTransformCom->Get_State(STATE::POSITION));
+	CPlayer_Manager::GetInstance()->Update_Cell(m_pNavigationCom->Get_CulIndex());
+	CPlayer_Manager::GetInstance()->Set_PlayerWorld(m_pTransformCom->Get_WorldMatrix());
+
+
 	Collider_Update();
 	m_pBodyObject->Update(fTimeDelta);
 	m_pCamera->Update(fTimeDelta);

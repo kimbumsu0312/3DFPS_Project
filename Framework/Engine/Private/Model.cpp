@@ -86,7 +86,7 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, 
     return m_Meshes[iMeshIndex]->Bind_BoneMatrices(pShader, pConstantName, m_Bones);
 }
 
-_bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex)
+_bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const ANIMEFRAME& pAnimFrameData, _int RootNodeIndex, _bool IsBogan)
 {
     m_bIsAnimFished = false;
 
@@ -96,10 +96,10 @@ _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const A
     _vector vCombinedPos = {};
     _vector vCombinedRot = {};
 
-    if (m_fTransitionTime < m_fTransitionDuration)
+    if (m_fTransitionTime < m_fTransitionDuration && IsBogan == true)
     {
         m_bPreRootSet = true;
-        m_fTransitionTime += fTimeDelta;
+        m_fTransitionTime += 0.016;
         _float fRatio = min(m_fTransitionTime / m_fTransitionDuration, 1.0f);
        
         m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices_Transition(m_Bones, pAnimFrameData, fRatio);

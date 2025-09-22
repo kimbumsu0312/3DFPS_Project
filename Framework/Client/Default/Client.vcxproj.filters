@@ -208,9 +208,6 @@
     <Filter Include="02.GameObject\Monster\Boss\Bela\MonState_Bela">
       <UniqueIdentifier>{8bebce12-7ada-4fbe-a178-11f7d9d8b812}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObject\Monster\Boss\Bela\MonState_Bela\State">
-      <UniqueIdentifier>{7d65a639-df1f-4dea-b855-569058a8f133}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\MapNevi">
       <UniqueIdentifier>{44c76977-7ae8-4ba8-8685-1096bfe61e7f}</UniqueIdentifier>
     </Filter>
@@ -417,6 +414,12 @@
     </Filter>
     <Filter Include="02.GameObject\Map\Animal\Crow\Body">
       <UniqueIdentifier>{608de8e9-a56f-435f-8d25-f80800b61aec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Boss\Bela\MonState_Bela\Chase">
+      <UniqueIdentifier>{7d65a639-df1f-4dea-b855-569058a8f133}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Boss\Bela\MonState_Bela\Event">
+      <UniqueIdentifier>{274968f3-d732-4ffa-9602-c5ec315f0bff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -699,20 +702,14 @@
     <ClInclude Include="..\public\Monstate_Bela.h">
       <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Attack_Bela.h">
-      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\State</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Chase_Bela.h">
-      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\State</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Damage_Bela.h">
-      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\State</Filter>
+    <ClInclude Include="..\public\Walk_Bela.h">
+      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Chase</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Die_Bela.h">
-      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\State</Filter>
+      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Chase</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Idle_Bela.h">
-      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\State</Filter>
+      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Chase</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MapNevi.h">
       <Filter>02.GameObject\MapNevi</Filter>
@@ -938,6 +935,18 @@
     </ClInclude>
     <ClInclude Include="..\public\Model_Door.h">
       <Filter>02.GameObject\Map\Event\Door\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spawn_Bela.h">
+      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Event_1_Bela.h">
+      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Event_2_Bela.h">
+      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Event_3_Bela.h">
+      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1197,20 +1206,14 @@
     <ClCompile Include="..\private\Monstate_Bela.cpp">
       <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Attack_Bela.cpp">
-      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\State</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Chase_Bela.cpp">
-      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\State</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Damage_Bela.cpp">
-      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\State</Filter>
+    <ClCompile Include="..\private\Walk_Bela.cpp">
+      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Chase</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Die_Bela.cpp">
-      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\State</Filter>
+      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Chase</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Idle_Bela.cpp">
-      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\State</Filter>
+      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Chase</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapNevi.cpp">
       <Filter>02.GameObject\MapNevi</Filter>
@@ -1439,6 +1442,18 @@
     </ClCompile>
     <ClCompile Include="..\private\Model_Door.cpp">
       <Filter>02.GameObject\Map\Event\Door\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spawn_Bela.cpp">
+      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Event_1_Bela.cpp">
+      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Event_2_Bela.cpp">
+      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Event_3_Bela.cpp">
+      <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

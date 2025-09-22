@@ -41,7 +41,7 @@ HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(const INSTANCE_DESC* pDes
 
 	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &VBInitialData, &m_pVB)))
 		return E_FAIL;
-
+	
 	Safe_Delete_Array(pVertices);
 
 	m_VBInstanceDesc.ByteWidth = m_iNumInstance * m_iInstanceVertexStride;

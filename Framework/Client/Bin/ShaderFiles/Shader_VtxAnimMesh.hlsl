@@ -5,7 +5,10 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D   g_DiffuseTexture;
 texture2D   g_NormalTexture;
 texture2D   g_NoiesTexture;
+texture2D   g_FreezesTexture;
+
 float       g_fNoiesValue = 0.f;
+float       g_fFreezesValue = 0.f;
 
 matrix      g_BoneMatrices[950];
 
@@ -186,6 +189,40 @@ PS_OUT PS_NOIESNORAML(PS_IN In)
     
 }
 
+PS_OUT PS_FREEZESNORAML(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    vector vMaskelNoies = g_NoiesTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vMaskeClack = g_FreezesTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    if (g_fNoiesValue > vMaskelNoies.r)
+    {
+        float4 FreezeColor = float4(0.6f, 0.8f, 1.0f, 1.0f); // ¿¬ÇÑ ¼­¸®ºû
+        float fStrength = saturate(g_fNoiesValue);
+        vMtrlDiffuse = vMtrlDiffuse * FreezeColor;
+        
+        vMtrlDiffuse += FreezeColor * fStrength * 0.3f;
+    }
+
+    if (g_fFreezesValue > vMaskeClack.r)
+        discard;
+    
+    vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz * -1.f, In.vNormal.xyz);
+    vNormal = mul(vNormal, WorldMatrix);
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w, 0.f, 0.f);
+    
+    return Out;
+    
+    
+}
+
 struct PS_IN_SHADOW
 {
     float4 vPosition : SV_POSITION;
@@ -259,6 +296,17 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN_SHADOW();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
+    }
+
+    pass FreezesPass //5
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_FREEZESNORAML();
     }
 }
 

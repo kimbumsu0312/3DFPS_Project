@@ -42,7 +42,7 @@ void CBody_Bela::Update(_float fTimeDelta)
 {
     CBela::BELA_DATA& pData = m_BlackBoard->Set_Data();
 
-    *pData.bIsAnimFinsh = m_pAnimCom->Player_Animation(*pData.iAnimState, *pData.szAnimTag, *pData.bIsAnimLoop, m_pModelCom, fTimeDelta, m_iRootLodeIndex);
+    *pData.bIsAnimFinsh = m_pAnimCom->Player_Animation(*pData.iAnimState, *pData.szAnimTag, *pData.bIsAnimLoop, m_pModelCom, fTimeDelta, m_iRootLodeIndex, false);
 
     Update_CombinedMatrix();
 }
@@ -60,7 +60,11 @@ HRESULT CBody_Bela::Render()
 
     _uint iNumMeshes = m_pModelCom->Get_NumMeshes();
     m_pShaderCom->Bind_RawValue("g_fNoiesValue", &m_BlackBoard->Get_Data().fNoies, sizeof(m_BlackBoard->Get_Data().fNoies));
-    m_pNoiesTexCom->Bind_Shader_Resource(m_pShaderCom, "g_NoiesTexture", 0);
+    m_pShaderCom->Bind_RawValue("g_fFreezesValue", &m_BlackBoard->Get_Data().fFreezes, sizeof(m_BlackBoard->Get_Data().fFreezes));
+
+
+    m_pNoiesTexCom->Bind_Shader_Resource(m_pShaderCom, "g_NoiesTexture", 1);
+    m_pNoiesTexCom->Bind_Shader_Resource(m_pShaderCom, "g_FreezesTexture", 2);
 
     for (_uint i = 0; i < iNumMeshes; i++)
     {
@@ -70,7 +74,9 @@ HRESULT CBody_Bela::Render()
         if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
             continue;
 
-        if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_NormalTexture", i, 1, 0)))
+        if(m_BlackBoard->Get_Data().IsFreezes == true)
+            m_pShaderCom->Begin(5);
+        else if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_NormalTexture", i, 1, 0)))
             m_pShaderCom->Begin(1);
         else
             m_pShaderCom->Begin(3);

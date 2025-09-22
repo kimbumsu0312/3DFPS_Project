@@ -165,7 +165,6 @@
     <ClInclude Include="..\public\Announce.h" />
     <ClInclude Include="..\public\ActionNode.h" />
     <ClInclude Include="..\public\Attack_Alcina.h" />
-    <ClInclude Include="..\public\Attack_Bela.h" />
     <ClInclude Include="..\public\Attack_Daniela.h" />
     <ClInclude Include="..\Public\Attack_NorMon_1.h" />
     <ClInclude Include="..\Public\Attack_Player.h" />
@@ -178,6 +177,9 @@
     <ClInclude Include="..\public\BehaviorTree_Daniela.h" />
     <ClInclude Include="..\public\BehaviorTree_Normon_1.h" />
     <ClInclude Include="..\public\BehaviorTree_WereWolf.h" />
+    <ClInclude Include="..\public\Event_1_Bela.h" />
+    <ClInclude Include="..\public\Event_2_Bela.h" />
+    <ClInclude Include="..\public\Event_3_Bela.h" />
     <ClInclude Include="..\public\Event_Door.h" />
     <ClInclude Include="..\public\Model_Door.h" />
     <ClInclude Include="..\public\Screen_Blood_Particle.h" />
@@ -224,12 +226,11 @@
     <ClInclude Include="..\public\Button.h" />
     <ClInclude Include="..\public\Camera_Free.h" />
     <ClInclude Include="..\public\Camera_Player.h" />
-    <ClInclude Include="..\public\Chase_Bela.h" />
+    <ClInclude Include="..\public\Walk_Bela.h" />
     <ClInclude Include="..\public\Chase_Daniela.h" />
     <ClInclude Include="..\Public\Chase_NorMon_1.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
-    <ClInclude Include="..\public\Damage_Bela.h" />
     <ClInclude Include="..\public\Damage_Daniela.h" />
     <ClInclude Include="..\Public\Damage_NorMon_1.h" />
     <ClInclude Include="..\public\Daniela.h" />
@@ -287,6 +288,7 @@
     <ClInclude Include="..\public\Spark_Particle.h" />
     <ClInclude Include="..\public\SpawnPoint.h" />
     <ClInclude Include="..\Public\Idle_NorMon_1.h" />
+    <ClInclude Include="..\public\Spawn_Bela.h" />
     <ClInclude Include="..\Public\StateObject.h" />
     <ClInclude Include="..\Public\Player_Header.h" />
     <ClInclude Include="..\public\Trigger.h" />
@@ -340,7 +342,6 @@
     <ClCompile Include="..\private\Announce.cpp" />
     <ClCompile Include="..\private\ActionNode.cpp" />
     <ClCompile Include="..\private\Attack_Alcina.cpp" />
-    <ClCompile Include="..\private\Attack_Bela.cpp" />
     <ClCompile Include="..\private\Attack_Daniela.cpp" />
     <ClCompile Include="..\Private\Attack_NorMon_1.cpp" />
     <ClCompile Include="..\Private\Attack_Player.cpp" />
@@ -353,6 +354,9 @@
     <ClCompile Include="..\private\BehaviorTree_Daniela.cpp" />
     <ClCompile Include="..\private\BehaviorTree_Normon_1.cpp" />
     <ClCompile Include="..\private\BehaviorTree_WereWolf.cpp" />
+    <ClCompile Include="..\Private\Event_1_Bela.cpp" />
+    <ClCompile Include="..\private\Event_2_Bela.cpp" />
+    <ClCompile Include="..\private\Event_3_Bela.cpp" />
     <ClCompile Include="..\private\Event_Door.cpp" />
     <ClCompile Include="..\private\Model_Door.cpp" />
     <ClCompile Include="..\private\Screen_Blood_Particle.cpp" />
@@ -399,10 +403,9 @@
     <ClCompile Include="..\private\Button.cpp" />
     <ClCompile Include="..\private\Camera_Free.cpp" />
     <ClCompile Include="..\private\Camera_Player.cpp" />
-    <ClCompile Include="..\private\Chase_Bela.cpp" />
+    <ClCompile Include="..\private\Walk_Bela.cpp" />
     <ClCompile Include="..\private\Chase_Daniela.cpp" />
     <ClCompile Include="..\Private\Chase_NorMon_1.cpp" />
-    <ClCompile Include="..\private\Damage_Bela.cpp" />
     <ClCompile Include="..\private\Damage_Daniela.cpp" />
     <ClCompile Include="..\Private\Damage_NorMon_1.cpp" />
     <ClCompile Include="..\Private\Daniela.cpp" />
@@ -458,6 +461,7 @@
     <ClCompile Include="..\private\Spark_Particle.cpp" />
     <ClCompile Include="..\private\SpawnPoint.cpp" />
     <ClCompile Include="..\Private\Idle_NorMon_1.cpp" />
+    <ClCompile Include="..\private\Spawn_Bela.cpp" />
     <ClCompile Include="..\Private\StateObject.cpp" />
     <ClCompile Include="..\private\Trigger.cpp" />
     <ClCompile Include="..\private\UI_Tex.cpp" />

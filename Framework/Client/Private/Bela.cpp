@@ -8,9 +8,12 @@
 
 #include "Idle_Bela.h"
 #include "Die_Bela.h"
-#include "Damage_Bela.h"
-#include "Chase_Bela.h"
-#include "Attack_Bela.h"
+#include "Walk_Bela.h"
+#include "Spawn_Bela.h"
+#include "Event_1_Bela.h"
+#include "Event_2_Bela.h"
+#include "Event_3_Bela.h"
+
 CBela::CBela(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : CContainerObject(pDevice, pContext)
 {
 }
@@ -52,18 +55,32 @@ HRESULT CBela::Initialize(void* pArg)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-61.79f, -11.11f, 46.83f, 1.f));
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(-90.f));
 
+	m_pGameInstance->Subscribe<Event_BelaSpawn>([&](const Event_BelaSpawn& e) {Event_Spawn(); });
+
 	return S_OK;
 }
 
 void CBela::Priority_Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->IsKeyDown(DIK_K))
+		m_BlackBoard->Set_Data().IsSpawn == true ? m_BlackBoard->Set_Data().IsSpawn = false : m_BlackBoard->Set_Data().IsSpawn = true;
+
+	if (m_pGameInstance->IsKeyDown(DIK_L))
+		m_BlackBoard->Get_Data().iHp <= 0 ? m_BlackBoard->Set_Data().iHp = 100 : m_BlackBoard->Set_Data().iHp = 0;
+
 	m_pTransformCom->PrePostion_Update();
 	m_pBodyObject->Priority_Update(fTimeDelta);
 	m_pWeaponObject->Priority_Update(fTimeDelta);
+
+	if (m_BlackBoard->Get_Data().bIsFly == true)
+		m_pEffect->Priority_Update(fTimeDelta);
+	if (m_BlackBoard->Get_Data().bIsSpawnFly == true)
+		m_pSpawnEffect->Priority_Update(fTimeDelta);
 }
 
 void CBela::Update(_float fTimeDelta)
 {
+	m_pBehaviorTree->Update();
 	State_Change();
 	m_pCulStateObject->Update(this, fTimeDelta);
 
@@ -73,10 +90,27 @@ void CBela::Update(_float fTimeDelta)
 	m_pWeaponObject->Update(fTimeDelta);
 
 	Collider_Update();
+	_vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
+	vPos = XMVectorSetY(vPos, XMVectorGetY(vPos) + 1.5f);
+	
+	if (m_BlackBoard->Get_Data().bIsFly == true)
+	{
+		m_pEffect->Set_Potion(vPos);
+		m_pEffect->Update(fTimeDelta);
+	}
+	if (m_BlackBoard->Get_Data().bIsSpawnFly == true)
+	{
+		m_pSpawnEffect->Set_Potion(vPos);
+		m_pSpawnEffect->Update(fTimeDelta);
+	}
+
 }
 
 void CBela::Late_Update(_float fTimeDelta)
 {
+	if (m_szCulStateTag == TEXT("Idle"))
+		return;
+
 	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
@@ -88,6 +122,12 @@ void CBela::Late_Update(_float fTimeDelta)
 
 	m_pBodyObject->Late_Update(fTimeDelta);
 	m_pWeaponObject->Late_Update(fTimeDelta, m_BlackBoard->Get_Data().fNoies );
+	
+	if (m_BlackBoard->Get_Data().bIsFly == true)
+		m_pEffect->Late_Update(fTimeDelta);
+
+	if (m_BlackBoard->Get_Data().bIsSpawnFly == true)
+		m_pSpawnEffect->Late_Update(fTimeDelta);
 }
 
 HRESULT CBela::Render()
@@ -146,20 +186,48 @@ void CBela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollisi
 		switch (TargetCollision.iObjType)
 		{
 		case ENUM_CLASS(OBJECT_TYPE::RAY):
-			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
-				m_BlackBoard->Set_Data().IsHitPoint.IsHead = true;
-			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_BODY))
-				m_BlackBoard->Set_Data().IsHitPoint.IsBody = true;
-			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_R))
-				m_BlackBoard->Set_Data().IsHitPoint.isSholder_R = true;
-			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_SHOULDER_L))
-				m_BlackBoard->Set_Data().IsHitPoint.IsSholder_L = true;
-
-		Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
-		m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
+			if (m_BlackBoard->Get_Data().IsFreezes == true)
+			{
+				m_BlackBoard->Set_Data().IsDamage = true;
+				Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
+				m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
+			}
 			break;
 		}
 	}
+}
+
+void CBela::Spawn_EffectReset()
+{
+	m_pSpawnEffect->Reset();
+}
+
+void CBela::SetUp_Node()
+{
+	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
+	_float3 vNextPos{};
+	_vector vPlayerPos{};
+
+	XMStoreFloat3(&vNextPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
+	vPlayerPos = XMVectorSetW(XMLoadFloat3(&vNextPos), 1.f);
+	m_pNavigationCom->SetUp_Node(CPlayer_Manager::GetInstance()->Get_CellIndex(), vNextPos);
+}
+
+void CBela::Target_LookTurn_Navi(_float fTimeDelta)
+{
+	_vector vMonPos = m_pTransformCom->Get_State(STATE::POSITION);
+	_float3 vNextPos{};
+	XMStoreFloat3(&vNextPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
+
+	if (m_pNavigationCom->IsNaviNode(vMonPos, vNextPos) == true)
+		SetUp_Node();
+
+	_vector vDir = XMVector3Normalize(XMVectorSetY(XMLoadFloat3(&vNextPos) - vMonPos, 0.f));
+	_vector vLook = XMVector3Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+
+	_vector vAxis = XMVector3Normalize(XMVector3Cross(vLook, vDir));
+
+	m_pTransformCom->Turn(vAxis, fTimeDelta * 5.f);
 }
 
 HRESULT CBela::Ready_Components()
@@ -240,6 +308,21 @@ HRESULT CBela::Ready_PartObjects()
 	m_pWeaponObject = pWeaponObject;
 	Safe_AddRef(m_pWeaponObject);
 
+	CFly_Effect::FLY_EFFECT_DESC FlyDesc{};
+	FlyDesc.isDead = false;
+	FlyDesc.eType = CFly_Effect::Fly_Type::SPIN;
+	FlyDesc.szPoolingPath = TEXT("Pool_Fly_Spin");
+	FlyDesc.fRotationPerSec = 1.f;
+	FlyDesc.fSpeedPerSec = 1.f;
+
+	m_pEffect = dynamic_cast<CFly_Effect*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Fly_Effect"), &FlyDesc));
+	
+	FlyDesc.eType = CFly_Effect::Fly_Type::SPREAD;
+	FlyDesc.szPoolingPath = TEXT("Pool_Fly_Spread");
+	FlyDesc.fRotationPerSec = 1.f;
+	FlyDesc.fSpeedPerSec = 1.f;
+	
+	m_pSpawnEffect = dynamic_cast<CFly_Effect*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Fly_Effect"), &FlyDesc));
 	return S_OK;
 }
 
@@ -253,22 +336,22 @@ HRESULT CBela::Ready_Utility()
 	m_BlackBoard->Set_Data().szCulStateTag = &m_szCulStateTag;
 
 	m_BlackBoard->Set_Data().iHp = 1000;
-	m_BlackBoard->Set_Data().iDamage = 0;
 
+	m_BlackBoard->Set_Data().IsDamage = false;
 	m_BlackBoard->Set_Data().IsHitPoint.IsBody = false;
 	m_BlackBoard->Set_Data().IsHitPoint.IsHead = false;
 	m_BlackBoard->Set_Data().IsHitPoint.IsSholder_L = false;
 	m_BlackBoard->Set_Data().IsHitPoint.isSholder_R = false;
 
-	m_BlackBoard->Set_Data().fAttackCool = 0.f;
 	m_BlackBoard->Set_Data().IsChase = false;
-	m_BlackBoard->Set_Data().IsIdle = true;
-
-	m_BlackBoard->Set_Data().iWeapon = 0;
-	m_BlackBoard->Set_Data().iStartMotion = 0;
 
 	m_BlackBoard->Set_Data().MonPos = m_pTransformCom->Get_WorldMatrixPtr();
 	m_BlackBoard->Set_Data().fNoies = 0.f;
+	m_BlackBoard->Set_Data().fFreezes = 0.f;
+	m_BlackBoard->Set_Data().bIsFly = false;
+	m_BlackBoard->Set_Data().bIsSpawnFly = false;
+	m_BlackBoard->Set_Data().fMoveSpeed = 3.f;
+	m_BlackBoard->Set_Data().IsFreezes = false;
 
 	m_pBehaviorTree = CBehaviorTree_Bela::Create(m_BlackBoard);
 
@@ -278,13 +361,55 @@ HRESULT CBela::Ready_Utility()
 HRESULT CBela::Ready_StateObjects()
 {
 	Add_StateObject(TEXT("Idle"), CIdle_Bela::Create());
-	Add_StateObject(TEXT("Attack"), CAttack_Bela::Create());
-	Add_StateObject(TEXT("Chase"), CChase_Bela::Create());
-	Add_StateObject(TEXT("Damage"), CDamage_Bela::Create());
+	Add_StateObject(TEXT("Walk"), CWalk_Bela::Create());
 	Add_StateObject(TEXT("Die"), CDie_Bela::Create());
+
+	Add_StateObject(TEXT("Spawn"), CSpawn_Bela::Create());
+	Add_StateObject(TEXT("Event_1"), CEvent_1_Bela::Create());
+	Add_StateObject(TEXT("Event_2"), CEvent_2_Bela::Create());
+	Add_StateObject(TEXT("Event_3"), CEvent_3_Bela::Create());
 
 	m_pCulStateObject = Find_StateObject(TEXT("Idle"));
 	Safe_AddRef(m_pCulStateObject);
+	return S_OK;
+}
+
+HRESULT CBela::Ready_TriggerEvent()
+{
+	CTrigger::TRIGEER_DESC TriggerDesc;
+
+	TriggerDesc.eType = TRIGGER_TYPE::PLAYER;
+	TriggerDesc.eObjType = OBJECT_TYPE::PLAYER;
+	TriggerDesc.TriggerEvent = { [&]() {return Event_2(); } };
+
+	TriggerDesc.vCenter = _float3{ 0.f, 0.f, 0.f };
+	TriggerDesc.vExtents = _float3{ 4.f, 4.f, 4.f };
+	TriggerDesc.vPos = _float3{ -69.40f, -8.68f, 30.08f };
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Trigger"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Trigger"), &TriggerDesc)))
+		return E_FAIL;
+
+	TriggerDesc.eType = TRIGGER_TYPE::PLAYER;
+	TriggerDesc.eObjType = OBJECT_TYPE::PLAYER;
+	TriggerDesc.TriggerEvent = { [&]() {return Event_3(); } };
+
+	TriggerDesc.vCenter = _float3{ 0.f, 0.f, 0.f };
+	TriggerDesc.vExtents = _float3{ 1.f, 1.f, 1.f };
+	TriggerDesc.vPos = _float3{ -56.29f, -8.68f, 29.79f };
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Trigger"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Trigger"), &TriggerDesc)))
+		return E_FAIL;
+
+	TriggerDesc.eType = TRIGGER_TYPE::PLAYER;
+	TriggerDesc.eObjType = OBJECT_TYPE::PLAYER;
+	TriggerDesc.TriggerEvent = { [&]() {return Event_DIe(); } };
+
+	TriggerDesc.vCenter = _float3{ 0.f, 0.f, 0.f };
+	TriggerDesc.vExtents = _float3{ 1.f, 1.f, 1.f };
+	TriggerDesc.vPos = _float3{ -33.32f, -8.69f, 27.04f };
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Trigger"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Trigger"), &TriggerDesc)))
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -380,6 +505,27 @@ void CBela::Collider_Update()
 	}
 }
 
+void CBela::Event_Spawn()
+{
+	m_BlackBoard->Set_Data().IsSpawn = true;
+	Ready_TriggerEvent();
+}
+
+void CBela::Event_2()
+{
+	m_BlackBoard->Set_Data().IsEvent_2 = true;
+}
+
+void CBela::Event_3()
+{
+	m_BlackBoard->Set_Data().IsEvent_3 = true;
+}
+
+void CBela::Event_DIe()
+{
+	m_BlackBoard->Set_Data().iHp = 0;
+}
+
 CBela* CBela::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CBela* pInstance = new CBela(pDevice, pContext);
@@ -423,4 +569,6 @@ void CBela::Free()
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_BlackBoard);
 	Safe_Release(m_pBehaviorTree);
-}
+	Safe_Release(m_pEffect);
+	Safe_Release(m_pSpawnEffect);
+} 

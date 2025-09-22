@@ -74,7 +74,6 @@ void CChannel::Update_TransformationMatrix(const vector<class CBone*>& Bones, _f
 
 void CChannel::Update_TransformationMatirx_Transition(const vector<class CBone*>& Bones, _uint pCurrentKeyFrameIndex, _float fRatio)
 {
-
     const _uint iStartIndex = Finde_KeyFrameIndex(pCurrentKeyFrameIndex);
     _vector vScale, vRotation, vTranslation;
 
@@ -84,7 +83,6 @@ void CChannel::Update_TransformationMatirx_Transition(const vector<class CBone*>
         vRotation = XMQuaternionIdentity();
         vTranslation = XMVectorZero();
     }
-       
     vScale = XMVectorLerp(vScale, XMLoadFloat3(&m_KeyFrames[iStartIndex].vScale), fRatio);
     vRotation = XMQuaternionSlerp(vRotation, XMLoadFloat4(&m_KeyFrames[iStartIndex].vRotation), fRatio);
     vTranslation = XMVectorSetW(XMVectorLerp(vTranslation, XMLoadFloat3(&m_KeyFrames[iStartIndex].vTranslation), fRatio), 1.f);

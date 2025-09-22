@@ -77,7 +77,9 @@ PS_OUT PS_MAIN(PS_IN In)
     
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     
-    Out.vDiffuse = vMtrlDiffuse;
+    float fColor = saturate(In.vLifeTime.y - In.vLifeTime.x);
+
+    Out.vDiffuse = vMtrlDiffuse.a * fColor;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w, 0.f, 0.f);
 

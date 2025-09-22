@@ -264,21 +264,50 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &SparkDesc))))
 		return E_FAIL;
 
-	CVIBuffer_Mesh_Instance::MESH_INSTANCE_DESC FlyDesc{};
-	FlyDesc.iNumInstance = 100;
-	FlyDesc.vCenter = _float3(0.f, 0.f, 0.f);
-	FlyDesc.vRange = _float3(1.f, 1.f, 1.f);
-	FlyDesc.vSize = _float2(1.f, 1.f);
-	FlyDesc.vLifeTime = _float2(7.f, 10.f);
-	FlyDesc.vPivot = _float3(0.f, 0.f, 0.f);
-	FlyDesc.vSpeed = _float2(1.f, 1.2f);
-	FlyDesc.isLoop = true;
-	FlyDesc.vSplat = _float2(0.f, 1.f);
 
 	SAVE_MODEL FlyModelData{};
 	m_pGameInstance->Load_ModelData("../Bin/Resources/Models/Effect/Fly/Fly.json", FlyModelData);
-		
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Fly"),
+
+	CVIBuffer_Mesh_Instance::MESH_INSTANCE_DESC FlyDesc{};
+	FlyDesc.iNumInstance = 2000;
+	FlyDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	FlyDesc.vRange = _float3(0.7f, 1.5f, 0.7f);
+	FlyDesc.vSize = _float2(0.3f, 0.5f);
+	FlyDesc.vLifeTime = _float2(6.f, 9.f);
+	FlyDesc.vPivot = _float3(0.f, 0.f, 0.f);
+	FlyDesc.vSpeed = _float2(1.f, 2.f);
+	FlyDesc.isLoop = false;
+	FlyDesc.vSplat = _float2(0.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Fly_Spread"),
+		CModel_Instance::Create(m_pDevice, m_pContext, FlyModelData, &FlyDesc))))
+		return E_FAIL;
+
+	FlyDesc.iNumInstance = 2000;
+	FlyDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	FlyDesc.vRange = _float3(3.f, 1.5f, 3.f);
+	FlyDesc.vSize = _float2(0.3f, 0.5f);
+	FlyDesc.vLifeTime = _float2(6.f, 9.f);
+	FlyDesc.vPivot = _float3(0.f, 0.f, 0.f);
+	FlyDesc.vSpeed = _float2(1.f, 2.f);
+	FlyDesc.isLoop = false;
+	FlyDesc.vSplat = _float2(0.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Fly_Spread_Return"),
+		CModel_Instance::Create(m_pDevice, m_pContext, FlyModelData, &FlyDesc))))
+		return E_FAIL;
+
+	FlyDesc.iNumInstance = 800;
+	FlyDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	FlyDesc.vRange = _float3(0.7f, 4.5f, 0.7f);
+	FlyDesc.vSize = _float2(0.3f, 0.5f);
+	FlyDesc.vLifeTime = _float2(6.f, 9.f);
+	FlyDesc.vPivot = _float3(0.f, 0.f, 0.f);
+	FlyDesc.vSpeed = _float2(1.f, 2.f);
+	FlyDesc.isLoop = true;
+	FlyDesc.vSplat = _float2(0.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Particle_Fly_Spin"),
 		CModel_Instance::Create(m_pDevice, m_pContext, FlyModelData, &FlyDesc))))
 		return E_FAIL;
 

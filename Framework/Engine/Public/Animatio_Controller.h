@@ -21,7 +21,7 @@ public:
 	virtual HRESULT					Initialize_Prototype();
 	virtual HRESULT					Initialize(void* pArg);
 
-	_bool							Player_Animation(_int iAnimIndex, string szAnimName, _bool IsLoop, class CModel* pModel, _float fTimeDelta, _int RootNodeIndex);
+	_bool							Player_Animation(_int iAnimIndex, string szAnimName, _bool IsLoop, class CModel* pModel, _float fTimeDelta, _int RootNodeIndex, _bool isBogan = true);
 	void							Set_AnimStatus(ANIM_STATUS eStatus);
 
 	HRESULT							Set_Animation(class CModel* pModel, _int iAnimIndex, string szAnimName, _bool IsLoop);

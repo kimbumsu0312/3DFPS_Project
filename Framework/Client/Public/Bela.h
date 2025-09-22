@@ -27,18 +27,27 @@ public:
 
 		BOSS_SISTER_HIT		IsHitPoint = {};
 		_bool				IsChase = { false };
-		_bool				IsIdle = { false };
 		_bool				IsAttack = { false };
-		const _float4x4* MonPos = { nullptr };
+		_bool				IsSpawn = { false };
+
+		_bool				IsEvent_1 = { false };
+		_bool				IsEvent_2 = { false };
+		_bool				IsEvent_3 = { false };
+
+		_bool				IsFreezes = { false };
+		_bool				IsDamage = {};
+
+		const _float4x4*	MonPos = { nullptr };
 
 		_int				iHp = {};
-		_int				iDamage = {};
-		_float				fAttackCool = {};
-		_int				iWeapon = {};
-		_int				iStartMotion = {};
-		_int				iDropItemIndex = {};
 
 		_float				fNoies = {};
+		_float				fFreezes = {};
+
+		_bool				bIsFly = {};
+		_bool				bIsSpawnFly = {};
+
+		_float				fMoveSpeed = {};
 	}BELA_DATA;
 
 private:
@@ -56,7 +65,8 @@ public:
 
 public:
 	void						Switch_Anim(string szAnimTag, _bool IsLoop);
-	CTransform*					Get_Transform(STATE eState) { return m_pTransformCom; }
+	CTransform*					Get_Transform() { return m_pTransformCom; }
+	CNavigation*				Get_Navi() {return m_pNavigationCom;}
 	CBlackBoard<BELA_DATA>*		Get_BlackBoard() { return m_BlackBoard; }
 
 	void						Target_LookTurn(_float fTimeDelta);
@@ -64,6 +74,9 @@ public:
 	void						Attack_Collision();
 	virtual void				OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 
+	void						Spawn_EffectReset();
+	void						SetUp_Node();
+	void						Target_LookTurn_Navi(_float fTimeDelta);
 private:
 	//컴포넌트 관련
 	CNavigation*				m_pNavigationCom = { nullptr };
@@ -92,11 +105,15 @@ private:
 	_bool						m_bIsAnimLoop = { true };
 	_bool						m_bIsAnimFinsh = { false };
 
+	//이펙트 관련
+	class CFly_Effect*			m_pEffect = { nullptr };
+	class CFly_Effect*			m_pSpawnEffect = { nullptr };
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_PartObjects();
 	HRESULT						Ready_Utility();
 	HRESULT						Ready_StateObjects();
+	HRESULT						Ready_TriggerEvent();
 
 	HRESULT						Add_StateObject(const _wstring& strStateObjectTag, CMonState_Bela* pStateObject);
 	class CMonState_Bela*		Find_StateObject(const _wstring& strPartObjectTag);
@@ -104,6 +121,12 @@ private:
 	void						State_Change();
 	void						Root_Move();
 	void						Collider_Update();
+
+	void						Event_Spawn();
+
+	void						Event_2();
+	void						Event_3();
+	void						Event_DIe();
 
 public:
 	static CBela*				Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

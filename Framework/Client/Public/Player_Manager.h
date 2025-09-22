@@ -16,10 +16,13 @@ public:
 	HRESULT			Initialize();
 	void			Player_Hp(_int iValue);
 	void			Set_PlayerPos(_vector vPos) { m_vPlayerPos = vPos;}
+	void			Set_PlayerWorld(_matrix vWorldMat) { m_PlayerWorldMat = vWorldMat; }
 
 	void			Damage_On() { m_bIsDamage = false; }
 
 	_vector			Get_PlayerPos() { return m_vPlayerPos; }
+	_matrix			Get_PlayerWorld() { return m_PlayerWorldMat; }
+
 	_int			Get_Coin() { return m_iCoin; }
 	const _int&		Get_Damage() { return m_iDamage; }
 	void			Set_Damage(_int iDamage) { m_iDamage = iDamage; }
@@ -40,7 +43,9 @@ private:
 	_float			m_fCulHp = {};
 	_int			m_iCoin = {};
 	_int			m_iDamage = {};
+
 	_vector			m_vPlayerPos = {};
+	_matrix			m_PlayerWorldMat = {};
 
 	_int			m_iCellIndex = {};
 	_int			m_iQuickSlot[ENUM_CLASS(QUICKSLOT::END)] = { -1};

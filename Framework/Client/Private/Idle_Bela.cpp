@@ -14,7 +14,7 @@ HRESULT CIdle_Bela::Initalize(void* pArg)
 void CIdle_Bela::Enter(CBela* pContainer)
 {
     m_eAnimState = STATE_ANIM::LOOP;
-    //pContainer->Switch_AnimState(ENUM_CLASS(CBela::BOSS_SISTER::NORMAL));
+    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CBela::ANIM_STATE::NORMAL);
     pContainer->Switch_Anim("Idle_Freezes", true);
 }
 

@@ -16,6 +16,8 @@ public:
     virtual void            Exit(CBela* pContainer) = 0;
 
 protected:
+    CGameInstance*          m_pGameInstance = { nullptr};
+protected:
     virtual void            Free() override;
 };
 NS_END

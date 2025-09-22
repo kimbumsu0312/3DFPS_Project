@@ -385,11 +385,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Blood_Effect"), 100, &BlodeDesc)))
 		return E_FAIL;
 
-	CPoolingObject::POOLOBJECT_DESC FlyDesc{};
+	CFly_Effect::FLY_EFFECT_DESC FlyDesc{};
+	FlyDesc.isDead = true;
+	FlyDesc.eType = CFly_Effect::Fly_Type::SPREAD;
+	FlyDesc.szPoolingPath = TEXT("Pool_Fly_Spread");
+	FlyDesc.fRotationPerSec = 1.f;
+	FlyDesc.fSpeedPerSec = 1.f;
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Fly_Effect"), 5, &FlyDesc)))
+		return E_FAIL;
 
-	FlyDesc.szPoolingPath = TEXT("Pool_Fly");
+	FlyDesc.eType = CFly_Effect::Fly_Type::SPIN;
+	FlyDesc.szPoolingPath = TEXT("Pool_Fly_Spin");
 
-	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Fly_Effect"), 10, &FlyDesc)))
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Fly_Effect"), 100, &FlyDesc)))
 		return E_FAIL;
 
 	FlyDesc.szPoolingPath = TEXT("Pool_Spark");

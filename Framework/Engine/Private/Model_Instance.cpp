@@ -75,9 +75,24 @@ HRESULT CModel_Instance::Render(_uint iMeshIndex)
 	return S_OK;
 }
 
-void CModel_Instance::Spread(_float fTimeDelta)
+void CModel_Instance::Spread(_float fTimeDelta, _bool IsLifeTime)
 {
-	m_pInstance_Buffer->Spread(fTimeDelta);
+	m_pInstance_Buffer->Spread(fTimeDelta, IsLifeTime);
+}
+
+void CModel_Instance::WorldOffset_Spin(_float fTimeDelta, _float3 vOffset)
+{
+	m_pInstance_Buffer->WorldOffset_Spin(fTimeDelta, vOffset);
+}
+
+void CModel_Instance::LocalOffset_Spin(_float fTimeDelta, _bool isLife)
+{
+	m_pInstance_Buffer->LocalOffset_Spin(fTimeDelta, isLife);
+}
+
+void CModel_Instance::Reset()
+{
+	m_pInstance_Buffer->Reset();
 }
 
 HRESULT CModel_Instance::Ready_Instance_Buffer(const CVIBuffer_Instance::INSTANCE_DESC* pDesc)

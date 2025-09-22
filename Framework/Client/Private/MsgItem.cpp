@@ -46,8 +46,13 @@ HRESULT CMsgItem::Initialize(void* pArg)
 void CMsgItem::Priority_Update(_float fTimeDelta)
 {
 	if (m_iCount >= 2)
+	{
+		if (m_iMsgType == 2)
+		{
+			m_pGameInstance->Publish(Event_BelaSpawn{});
+		}
 		SetDead();
-
+	}
 	m_pGuideUI->Priority_Update(fTimeDelta);
 }
 

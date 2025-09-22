@@ -20,7 +20,12 @@ public:
 	_uint							Get_NumMeshes() const { return m_iNumMeshes; }
 
 public:
-	void							Spread(_float fTimeDelta);
+	void							Spread(_float fTimeDelta, _bool IsLifeTime);
+	void							WorldOffset_Spin(_float fTimeDelta, _float3 vOffset);
+	void							LocalOffset_Spin(_float fTimeDelta, _bool isLife);
+
+	void							Reset();
+
 private:
 	class CVIBuffer_Mesh_Instance*	m_pInstance_Buffer = { nullptr };
 

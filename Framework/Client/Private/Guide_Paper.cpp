@@ -42,7 +42,7 @@ HRESULT CGuide_Paper::Initialize(void* pArg)
         return E_FAIL;
 
     m_pGameInstance->Subscribe<EVENT_GUIDE_PAPER>([&](const EVENT_GUIDE_PAPER& e)
-        { m_bIsOpen ? m_bIsOpen = false : m_bIsOpen = true; });
+        { m_bIsOpen ? m_bIsOpen = false : m_bIsOpen = true;       });
 
     return S_OK;
 }

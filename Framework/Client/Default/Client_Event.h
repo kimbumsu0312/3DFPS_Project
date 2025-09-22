@@ -111,4 +111,8 @@ namespace Client
 		_float fSpeed;
 	}Event_OpenDoor;
 
+	typedef struct Event_BelaSpawn
+	{
+	}Event_BelaSpawn;
+
 }

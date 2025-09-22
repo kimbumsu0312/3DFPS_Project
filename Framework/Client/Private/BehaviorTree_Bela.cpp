@@ -28,12 +28,6 @@ void CBehaviorTree_Bela::Update()
 		return;
 	}
 
-	if (m_pBlackBoard->Get_Data().iDamage > 0)
-	{
-		Switch_Damage();
-		return;
-	}
-
 	__super::Update();
 }
 
@@ -41,25 +35,39 @@ HRESULT CBehaviorTree_Bela::Ready_Node()
 {
 	CSeletctorNode* pRoot = CSeletctorNode::Create();
 
-	CSequenceNode* pAttackSequence = CSequenceNode::Create();
-	CActionNode* pAttackCondition = CActionNode::Create([&]() {return Condition_Attack(); });
-	CActionNode* pAttackSwitch = CActionNode::Create([&]() {return Switch_Attack(); });
-	pAttackSequence->Add_Node(pAttackCondition);
-	pAttackSequence->Add_Node(pAttackSwitch);
+	CSequenceNode* pEventSequence = CSequenceNode::Create();
+	pRoot->Add_Node(pEventSequence);
 
-	CSequenceNode* pWalkSequence = CSequenceNode::Create();
-	CActionNode* pWalkCondition = CActionNode::Create([&]() {return Condition_Chase(); });
-	CActionNode* pWalkSwitch = CActionNode::Create([&]() {return Switch_Chase(); });
-	pWalkSequence->Add_Node(pWalkCondition);
-	pWalkSequence->Add_Node(pWalkSwitch);
+	CActionNode* pEventCondition = CActionNode::Create([&]() {return Condition_Event_Check(); });
+	CSeletctorNode* pEventSeletctor = CSeletctorNode::Create();
+	pEventSequence->Add_Node(pEventCondition);
+	pEventSequence->Add_Node(pEventSeletctor);
 
-	CActionNode* pIdleSwitch = CActionNode::Create([&]() {return Switch_Idle(); });
+	CActionNode* pEvent3_Switch = CActionNode::Create([&]() {return Switch_Event_3(); });
+	CActionNode* pEvent2_Switch = CActionNode::Create([&]() {return Switch_Event_2(); });
+	CActionNode* pEvent1_Switch = CActionNode::Create([&]() {return Switch_Event_1(); });
+	CActionNode* pSpawn_Switch = CActionNode::Create([&]() {return Switch_Spawn(); });
 
-	pRoot->Add_Node(pAttackSequence);
-	pRoot->Add_Node(pWalkSequence);
-	pRoot->Add_Node(pIdleSwitch);
+	pEventSeletctor->Add_Node(pEvent3_Switch);
+	pEventSeletctor->Add_Node(pEvent2_Switch);
+	pEventSeletctor->Add_Node(pEvent1_Switch);
+	pEventSeletctor->Add_Node(pSpawn_Switch);
+
+	CSeletctorNode* pChaseSeletor = CSeletctorNode::Create();
+	pRoot->Add_Node(pChaseSeletor);
+
+	CSequenceNode* pWalk_Sequence = CSequenceNode::Create();
+	CActionNode* pIdle_Switch = CActionNode::Create([&]() {return Switch_Idle(); });
+	pChaseSeletor->Add_Node(pWalk_Sequence);
+	pChaseSeletor->Add_Node(pIdle_Switch);
+
+	CActionNode* pWalk_Condition = CActionNode::Create([&]() {return Condition_Walk(); });
+	CActionNode* pWalk_Switch = CActionNode::Create([&]() {return Switch_Walk(); });
+	pWalk_Sequence->Add_Node(pWalk_Condition);
+	pWalk_Sequence->Add_Node(pWalk_Switch);
 
 	m_pRootNode = pRoot;
+
 	return S_OK;
 }
 
@@ -70,56 +78,66 @@ CNode::TREE_STATE CBehaviorTree_Bela::Switch_Die()
 	return CNode::TREE_STATE::SUCCESS;
 }
 
-CNode::TREE_STATE CBehaviorTree_Bela::Switch_Damage()
+CNode::TREE_STATE CBehaviorTree_Bela::Condition_Event_Check()
 {
-	*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Damage");
-	m_pRootNode->Reset();
-	return CNode::TREE_STATE::SUCCESS;
-}
-
-CNode::TREE_STATE CBehaviorTree_Bela::Condition_Attack()
-{
-	if (m_pBlackBoard->Get_Data().IsChase == false || m_pBlackBoard->Get_Data().IsIdle == true)
-		return CNode::TREE_STATE::FAILED;
-
-	if (m_pBlackBoard->Get_Data().fAttackCool > 0.f)
-		return CNode::TREE_STATE::FAILED;
-
-	_vector vPlayerPos = CPlayer_Manager::GetInstance()->Get_PlayerPos();
-	_vector vMonPos = { m_pBlackBoard->Get_Data().MonPos->m[3][0], m_pBlackBoard->Get_Data().MonPos->m[3][1], m_pBlackBoard->Get_Data().MonPos->m[3][2] };
-	_float fDis = XMVectorGetX(XMVector3Length(vPlayerPos - vMonPos));
-
-	if (fDis <= 5.f)
-	{
-		m_pBlackBoard->Set_Data().IsAttack = true;
+	if (m_pBlackBoard->Get_Data().IsEvent_1 == true || m_pBlackBoard->Get_Data().IsEvent_2 == true 
+		|| m_pBlackBoard->Get_Data().IsEvent_3 == true || m_pBlackBoard->Get_Data().IsSpawn == true)
 		return CNode::TREE_STATE::SUCCESS;
-	}
 	else
 		return CNode::TREE_STATE::FAILED;
-
 }
 
-CNode::TREE_STATE CBehaviorTree_Bela::Switch_Attack()
+CNode::TREE_STATE CBehaviorTree_Bela::Switch_Event_3()
 {
-	*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Attack");
-
-	if (m_pBlackBoard->Get_Data().IsAttack == true)
+	if (m_pBlackBoard->Get_Data().IsEvent_3 == true)
+	{
+		*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Event_3");
 		return CNode::TREE_STATE::RUN;
-
+	}
 	return CNode::TREE_STATE::FAILED;
 }
 
-CNode::TREE_STATE CBehaviorTree_Bela::Condition_Chase()
+CNode::TREE_STATE CBehaviorTree_Bela::Switch_Event_2()
 {
-	if (m_pBlackBoard->Get_Data().IsChase == true && m_pBlackBoard->Get_Data().IsIdle == false)
+	if (m_pBlackBoard->Get_Data().IsEvent_2 == true)
+	{
+		*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Event_2");
+		return CNode::TREE_STATE::RUN;
+	}
+	return CNode::TREE_STATE::FAILED;
+}
+
+CNode::TREE_STATE CBehaviorTree_Bela::Switch_Event_1()
+{
+	if (m_pBlackBoard->Get_Data().IsEvent_1 == true)
+	{
+		*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Event_1");
+		return CNode::TREE_STATE::RUN;
+	}
+	return CNode::TREE_STATE::FAILED;
+}
+
+CNode::TREE_STATE CBehaviorTree_Bela::Switch_Spawn()
+{
+	if (m_pBlackBoard->Get_Data().IsSpawn == true)
+	{
+		*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Spawn");
+		return CNode::TREE_STATE::RUN;
+	}
+	return CNode::TREE_STATE::FAILED;
+}
+
+CNode::TREE_STATE CBehaviorTree_Bela::Condition_Walk()
+{
+	if (m_pBlackBoard->Get_Data().IsChase == true)
 		return CNode::TREE_STATE::SUCCESS;
 
 	return CNode::TREE_STATE::FAILED;
 }
 
-CNode::TREE_STATE CBehaviorTree_Bela::Switch_Chase()
+CNode::TREE_STATE CBehaviorTree_Bela::Switch_Walk()
 {
-	*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Chase");
+	*m_pBlackBoard->Set_Data().szCulStateTag = TEXT("Walk");
 
 	return CNode::TREE_STATE::SUCCESS;
 }

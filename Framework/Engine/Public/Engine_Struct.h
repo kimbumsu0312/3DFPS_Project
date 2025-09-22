@@ -193,6 +193,8 @@ namespace Engine
 		XMFLOAT4 vTranslation;
 
 		XMFLOAT2 vLifeTime;
+		float	 fAngle;
+		float    fScale;
 	}VTXINSTANCE_MESH;
 
 	typedef struct tagVertexInstanceParticle

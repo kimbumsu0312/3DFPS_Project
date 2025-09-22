@@ -13,19 +13,49 @@ HRESULT CDie_Bela::Initalize(void* pArg)
 
 void CDie_Bela::Enter(CBela* pContainer)
 {
-    m_eAnimState = STATE_ANIM::LOOP;
-    //pContainer->Switch_AnimState(ENUM_CLASS(CBela::BOSS_SISTER::DAMAGE));
+    m_eAnimState = STATE_ANIM::START;
+    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CBela::ANIM_STATE::DAMAGE);
     pContainer->Switch_Anim("Freezes_Die", false);
 
 }
 
 void CDie_Bela::Update(CBela* pContainer, _float fDeltatime)
 {
-    pContainer->Get_BlackBoard()->Set_Data().fNoies += fDeltatime * 0.5f;
-    if (pContainer->Get_BlackBoard()->Get_Data().fNoies > 1.f)
+    if (m_eAnimState == STATE_ANIM::START)
     {
-        pContainer->SetDead();
-        m_pGameInstance->Publish(Event_OpenDoor{ true , 1.f });
+        _float fNoies = pContainer->Get_BlackBoard()->Set_Data().fNoies -= fDeltatime * 0.5f;
+        
+        
+        if (pContainer->Get_BlackBoard()->Get_Data().fNoies <= 0.f)
+        {
+            m_eAnimState = STATE_ANIM::LOOP;
+            pContainer->Get_BlackBoard()->Set_Data().bIsFly = false;
+            pContainer->Spawn_EffectReset();
+            pContainer->Get_BlackBoard()->Set_Data().bIsSpawnFly = true;
+
+            pContainer->Get_BlackBoard()->Set_Data().fNoies = 0.f;
+            pContainer->Get_BlackBoard()->Set_Data().IsFreezes = true;
+        }
+    }
+    else if (m_eAnimState == STATE_ANIM::LOOP)
+    {
+        pContainer->Get_BlackBoard()->Set_Data().fNoies += fDeltatime * 0.1f;
+
+        if (pContainer->Get_BlackBoard()->Get_Data().IsDamage == true)
+        {
+            pContainer->Get_BlackBoard()->Set_Data().bIsSpawnFly = false;
+            m_eAnimState = STATE_ANIM::END;
+        }
+    }
+    else if (m_eAnimState == STATE_ANIM::END)
+    {
+        pContainer->Get_BlackBoard()->Set_Data().fFreezes += fDeltatime * 0.5f;
+
+        if (pContainer->Get_BlackBoard()->Get_Data().fFreezes >= 1.f)
+        {
+            pContainer->SetDead();
+            m_pGameInstance->Publish(Event_OpenDoor{ true , 1.f });
+        }
     }
 }
 

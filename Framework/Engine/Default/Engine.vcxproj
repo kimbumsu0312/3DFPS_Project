@@ -161,9 +161,10 @@ call Copy_Debug.bat</Command>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>d3d11.lib;dxguid.lib;dInput8.lib;DirectXTK.lib;Effects11.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdPartyLib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>cd $(ProjectDir)..\..\
+      <Command>cd /d "$(ProjectDir)..\.."
 call Copy_Release.bat</Command>
     </PostBuildEvent>
     <FxCompile>
