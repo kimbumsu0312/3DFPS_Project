@@ -164,7 +164,9 @@
     <ClInclude Include="..\public\Alcina.h" />
     <ClInclude Include="..\public\Announce.h" />
     <ClInclude Include="..\public\ActionNode.h" />
-    <ClInclude Include="..\public\Attack_Alcina.h" />
+    <ClInclude Include="..\public\Attack2_Alcina.h" />
+    <ClInclude Include="..\public\Attack3_Alcina.h" />
+    <ClInclude Include="..\public\Attack1_Alcina.h" />
     <ClInclude Include="..\public\Attack_Daniela.h" />
     <ClInclude Include="..\Public\Attack_NorMon_1.h" />
     <ClInclude Include="..\Public\Attack_Player.h" />
@@ -177,6 +179,7 @@
     <ClInclude Include="..\public\BehaviorTree_Daniela.h" />
     <ClInclude Include="..\public\BehaviorTree_Normon_1.h" />
     <ClInclude Include="..\public\BehaviorTree_WereWolf.h" />
+    <ClInclude Include="..\public\Event1_Alcina.h" />
     <ClInclude Include="..\public\Event_1_Bela.h" />
     <ClInclude Include="..\public\Event_2_Bela.h" />
     <ClInclude Include="..\public\Event_3_Bela.h" />
@@ -341,7 +344,9 @@
     <ClCompile Include="..\private\Alcina.cpp" />
     <ClCompile Include="..\private\Announce.cpp" />
     <ClCompile Include="..\private\ActionNode.cpp" />
-    <ClCompile Include="..\private\Attack_Alcina.cpp" />
+    <ClCompile Include="..\private\Attack2_Alcina.cpp" />
+    <ClCompile Include="..\private\Attack3_Alcina.cpp" />
+    <ClCompile Include="..\private\Attack1_Alcina.cpp" />
     <ClCompile Include="..\private\Attack_Daniela.cpp" />
     <ClCompile Include="..\Private\Attack_NorMon_1.cpp" />
     <ClCompile Include="..\Private\Attack_Player.cpp" />
@@ -354,6 +359,7 @@
     <ClCompile Include="..\private\BehaviorTree_Daniela.cpp" />
     <ClCompile Include="..\private\BehaviorTree_Normon_1.cpp" />
     <ClCompile Include="..\private\BehaviorTree_WereWolf.cpp" />
+    <ClCompile Include="..\private\Event1_Alcina.cpp" />
     <ClCompile Include="..\Private\Event_1_Bela.cpp" />
     <ClCompile Include="..\private\Event_2_Bela.cpp" />
     <ClCompile Include="..\private\Event_3_Bela.cpp" />
@@ -518,6 +524,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_Trail.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_UI.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

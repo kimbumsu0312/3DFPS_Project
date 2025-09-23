@@ -43,14 +43,15 @@ void CTrigger::Late_Update(_float fTimeDelta)
 {
 	if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom)))
 		return;
-	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
+#ifdef _DEBUG
+	if (FAILED(m_pGameInstance->Add_DebugComponent(m_pColliderCom)))
 		return;
+#endif // _DEBUG
 
 }
 
 HRESULT CTrigger::Render()
 {
-	m_pColliderCom->Render();
 	return S_OK;
 }
 

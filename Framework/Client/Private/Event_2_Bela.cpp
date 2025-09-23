@@ -70,9 +70,6 @@ void CEvent_2_Bela::Update(CBela* pContainer, _float fDeltatime)
             pContainer->Get_BlackBoard()->Set_Data().fNoies = 0.f;
             m_fAccTime = 0.f;
 
-            CFly_Effect::FLY_EFFECT_INIT Desc;
-            Desc.vPos = pContainer->Get_Transform()->Get_State(STATE::POSITION);
-            Desc.vPos = XMVectorSetY(Desc.vPos, XMVectorGetY(Desc.vPos) + 1.5f);
         }
     }
     else if (m_eAnimState == STATE_ANIM::END)

@@ -118,6 +118,22 @@ namespace Engine
 		};
 	}VTXPOSTEX;
 
+	typedef struct tagVertexPositionTexcoordTrail
+	{
+		XMFLOAT3	vPosition;
+		XMFLOAT2	vTexcoord;
+		XMFLOAT2	vLifeTime;
+
+		//상수값으로 사용 및 전역으로 생성해서 추가 메모리 할당을 받지 않게 처리
+		static const unsigned int iNumElements = { 3 };
+		//컴파일 타임에 상수 값을 계산하는 함수
+		static constexpr D3D11_INPUT_ELEMENT_DESC Elements[iNumElements] = {
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		};
+	}VTXPOSTEX_TRAIL;
+
 	typedef struct tagVertexCube
 	{
 		XMFLOAT3		vPosition;

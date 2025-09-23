@@ -14,17 +14,7 @@ void CDamage_Alcina::Enter(CAlcina* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
     *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CAlcina::ANIM_STATE::DAMAGE);
-
-    DIRECTION eDir = PlayerDIR(pContainer->Get_TransForm()->Get_State(STATE::POSITION), pContainer->Get_TransForm()->Get_State(STATE::LOOK));
-
-    if (eDir == DIRECTION::B || eDir == DIRECTION::BL || eDir == DIRECTION::BR)
-        pContainer->Switch_Anim("Damage_Turn_B", false);
-    else if (eDir == DIRECTION::L)
-        pContainer->Switch_Anim("Damage_Turn_L", false);
-    else if (eDir == DIRECTION::R)
-        pContainer->Switch_Anim("Damage_Turn_R", false);
-    else
-        Damage_F(pContainer);
+    Damage_F(pContainer);
 }
 
 void CDamage_Alcina::Update(CAlcina* pContainer, _float fDeltatime)

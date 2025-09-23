@@ -42,14 +42,6 @@ HRESULT CScreen_Blood_Particle::Initialize(void* pArg)
 
 void CScreen_Blood_Particle::Priority_Update(_float fTimeDelta)
 {
-    if (m_pGameInstance->IsKeyDown(DIK_J))
-    {
-        ++m_iIndex;
-        if (m_iIndex > 4)
-            m_iIndex = 0;
-        m_fAlpha = 0.5f;
-        m_pVIBufferCom[m_iIndex]->Reset();
-    }
 }
 
 void CScreen_Blood_Particle::Update(_float fTimeDelta)

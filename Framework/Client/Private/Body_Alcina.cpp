@@ -41,7 +41,7 @@ void CBody_Alcina::Update(_float fTimeDelta)
 {
     CAlcina::ALCHINA_DATA& Alchina_Data = m_pBlackBoard->Set_Data();
 
-    (*Alchina_Data.bIsAnimFinsh) = m_pAnimCom->Player_Animation((*Alchina_Data.iAnimState), (*Alchina_Data.szAnimTag), (*Alchina_Data.bIsAnimLoop), m_pModelCom, fTimeDelta, m_iRootLodeIndex);
+    (*Alchina_Data.bIsAnimFinsh) = m_pAnimCom->Player_Animation((*Alchina_Data.iAnimState), (*Alchina_Data.szAnimTag), (*Alchina_Data.bIsAnimLoop), m_pModelCom, fTimeDelta, m_iRootLodeIndex, m_pBlackBoard->Get_Data().isBogan);
 
     Update_CombinedMatrix();
 }

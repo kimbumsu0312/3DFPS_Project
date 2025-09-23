@@ -12,17 +12,33 @@ HRESULT CDie_Alcina::Initalize(void* pArg)
 
 void CDie_Alcina::Enter(CAlcina* pContainer)
 {
-    m_eAnimState = STATE_ANIM::LOOP;
-    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CAlcina::ANIM_STATE::NORMAL);
-    pContainer->Switch_Anim("Idle", true);
+    m_eAnimState = STATE_ANIM::START;
+    *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CAlcina::ANIM_STATE::ATTACK);
+    pContainer->Switch_Anim("Die", true);
 }
 
 void CDie_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
 {
-    pContainer->Get_BlackBoard()->Set_Data().fNoies += fDeltatime * 0.5f;
+    pContainer->Target_LookTurn(fDeltatime * 3.f);
+    if (m_eAnimState == STATE_ANIM::START)
+    {
+        pContainer->Get_BlackBoard()->Set_Data().fNoies -= fDeltatime * 1.3f;
+        if (pContainer->Get_BlackBoard()->Get_Data().fNoies <= 0.f)
+        {
+            m_eAnimState = STATE_ANIM::LOOP;
+            pContainer->Get_BlackBoard()->Set_Data().bIsFly = false;
+            pContainer->Spawn_EffectReset();
+            pContainer->Get_BlackBoard()->Set_Data().bIsSpawnFly = true;
 
-    if (pContainer->Get_BlackBoard()->Get_Data().fNoies > 1.f)
-        pContainer->SetDead();
+            pContainer->Get_BlackBoard()->Set_Data().fNoies = 0.f;
+        }
+    }
+    else if (m_eAnimState == STATE_ANIM::LOOP)
+    {
+        pContainer->Get_BlackBoard()->Set_Data().fNoies += fDeltatime * 0.5f;
+        if (pContainer->Get_BlackBoard()->Get_Data().fNoies > 1.f)
+            pContainer->SetDead();
+    }
 }
 
 void CDie_Alcina::Exit(CAlcina* pContainer)

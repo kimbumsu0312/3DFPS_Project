@@ -35,8 +35,6 @@ HRESULT CScreen_Blood::Initialize(void* pArg)
 
 void CScreen_Blood::Priority_Update(_float fTimeDelta)
 {
-    if (m_pGameInstance->IsKeyDown(DIK_J))
-        m_fAlpha = 0.5f;
 }
 
 void CScreen_Blood::Update(_float fTimeDelta)

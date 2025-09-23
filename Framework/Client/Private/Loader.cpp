@@ -253,7 +253,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	SparkDesc.iNumInstance = 1;
 	SparkDesc.vCenter = _float3(0.f, 0.f, 0.f);
 	SparkDesc.vRange = _float3(0.0f, 0.0f, 0.f);
-	SparkDesc.vSize = _float2(1.f, 1.f);
+	SparkDesc.vSize = _float2(0.4f, 0.4f);
 	SparkDesc.vLifeTime = _float2(1.f, 1.f);
 	SparkDesc.vPivot = _float3(0.1f, 0.f, 0.f);
 	SparkDesc.vSpeed = _float2(0.f, 0.f);
@@ -271,7 +271,7 @@ HRESULT CLoader::Loading_For_GamePlay_Level()
 	CVIBuffer_Mesh_Instance::MESH_INSTANCE_DESC FlyDesc{};
 	FlyDesc.iNumInstance = 2000;
 	FlyDesc.vCenter = _float3(0.f, 0.f, 0.f);
-	FlyDesc.vRange = _float3(0.7f, 1.5f, 0.7f);
+	FlyDesc.vRange = _float3(0.7f, 2.5f, 0.7f);
 	FlyDesc.vSize = _float2(0.3f, 0.5f);
 	FlyDesc.vLifeTime = _float2(6.f, 9.f);
 	FlyDesc.vPivot = _float3(0.f, 0.f, 0.f);

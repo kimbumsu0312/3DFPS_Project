@@ -199,6 +199,9 @@
     <Filter Include="01.Utility\10.Shadow">
       <UniqueIdentifier>{35a509b5-5bc8-4968-9349-ca76b2065d68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03.Component\VIBuffer\Trail">
+      <UniqueIdentifier>{355099f2-2a2a-4a54-b8ea-242f944559dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Engine_Defines.h">
@@ -408,6 +411,9 @@
     <ClInclude Include="..\public\Shadow.h">
       <Filter>01.Utility\10.Shadow</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Trail.h">
+      <Filter>01.Utility\03.Component\VIBuffer\Trail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -598,6 +604,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Shadow.cpp">
       <Filter>01.Utility\10.Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Trail.cpp">
+      <Filter>01.Utility\03.Component\VIBuffer\Trail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

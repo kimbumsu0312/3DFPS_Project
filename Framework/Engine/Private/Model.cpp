@@ -99,7 +99,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, ANIM_STATUS eAnimStatus, const A
     if (m_fTransitionTime < m_fTransitionDuration && IsBogan == true)
     {
         m_bPreRootSet = true;
-        m_fTransitionTime += 0.016;
+        m_fTransitionTime += fTimeDelta;
         _float fRatio = min(m_fTransitionTime / m_fTransitionDuration, 1.0f);
        
         m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices_Transition(m_Bones, pAnimFrameData, fRatio);

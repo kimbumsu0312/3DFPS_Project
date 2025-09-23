@@ -50,26 +50,13 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	//if (m_bPreMapShadow != m_bIsMapShadow)
-	//{
-	//	m_pGameInstance->On_Static_Shadow(m_bIsMapShadow);
-	//	m_bPreMapShadow = m_bIsMapShadow;
-	//}
-	//if (m_bIsMapShadow)
-	//{
-	//	m_pGameInstance->On_Static_Shadow(m_bIsMapShadow);
-	//	m_bIsMapShadow = false;
-	//}
 	
 	if (m_pGameInstance->IsMouseDown(MOUSEKEYSTATE::LB))
 	{
-		CFly_Effect::FLY_EFFECT_INIT FlyDesc;
-		FlyDesc.vPos = XMVectorSet(-30.95f, -7.47f, 61.67f, 1.f);
-		m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Fly"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &FlyDesc);
 
-		CBlood_Effect::BLODE_EFFECT_INIT BlodeDesc;
-		BlodeDesc.vPos = XMVectorSet(-32.95f, -7.47f, 55.67f, 1.f);
-		m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &BlodeDesc);
+		CSpark_Effect::SPARK_EFFECT_INIT SparkDesc;
+		SparkDesc.vPos = XMVectorSet(-32.95f, -7.47f, 55.67f, 1.f);
+		m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
 
 	}
 	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
@@ -402,7 +389,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring& strLayerTag)
 
 	FlyDesc.szPoolingPath = TEXT("Pool_Spark");
 
-	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Spark_Effect"), 10, &FlyDesc)))
+	if (FAILED(m_pGameInstance->Add_Object_ToPool(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Spark_Effect"), 1000, &FlyDesc)))
 		return E_FAIL;
 
 	CSnow::SNOW_DESC Desc{};

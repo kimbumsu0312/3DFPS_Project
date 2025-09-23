@@ -323,7 +323,7 @@ PS_EMISSIVE PS_Spark(PS_IN In)
     if (Out.vColor.a < 0.01f)
         discard;
     if (Out.vColor.r > 0.65f && Out.vColor.g > 0.65f)
-        Out.vColor.rgb = Out.vColor.rgb * 3.f;
+        Out.vColor.rg = Out.vColor.rg * 3.f;
     float fColor = saturate(In.vLifeTime.y - In.vLifeTime.x);
     Out.vColor.a = Out.vColor.a * fColor * 0.5f;
     Out.vEmissive = Out.vColor;

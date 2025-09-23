@@ -8,7 +8,11 @@
 
 #include "Walk_Alcina.h"
 #include "Idle_Alcina.h"
-#include "Attack_Alcina.h"
+#include "Attack1_Alcina.h"
+#include "Attack2_Alcina.h"
+#include "Attack3_Alcina.h"
+#include "Event1_Alcina.h"
+
 #include "Damage_Alcina.h"
 #include "Die_Alcina.h"
 
@@ -46,6 +50,9 @@ HRESULT CAlcina::Initialize(void* pArg)
 	if (FAILED(Ready_StateObjects()))
 		return E_FAIL;
 
+	if (FAILED(Ready_TriggerEvent()))
+		return E_FAIL;
+
 
 	m_pColliderBone[ColliderType_Mon::Body] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
 	m_pColliderBone[ColliderType_Mon::Head] = m_pBodyObject->Get_BoneMatrix(TEXT("Head"));
@@ -60,12 +67,25 @@ void CAlcina::Priority_Update(_float fTimeDelta)
 	m_bIsHeadShot = false;
 	m_pTransformCom->PrePostion_Update();
 	m_pBodyObject->Priority_Update(fTimeDelta);
+
+	if (m_BlackBoard->Get_Data().fAttack2Cool > 0.f)
+	{
+		m_BlackBoard->Set_Data().fAttack2Cool -= fTimeDelta;
+	}
+
+	if (m_BlackBoard->Get_Data().bIsFly == true)
+		m_pEffect->Priority_Update(fTimeDelta);
+	if (m_BlackBoard->Get_Data().bIsSpawnFly == true)
+		m_pSpawnEffect->Priority_Update(fTimeDelta);
 }
 
 void CAlcina::Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->IsKeyDown(DIK_H))
-		m_BlackBoard->Set_Data().IsChase = true;
+	{
+		m_BlackBoard->Set_Data().iHp *= 0.4f;
+	}
+
 	m_pBehaviorTree->Update();
 	State_Change();
 	m_pCulStateObject->Update(this, fTimeDelta);
@@ -76,17 +96,37 @@ void CAlcina::Update(_float fTimeDelta)
 	Root_Move();
 
 	Collider_Update();
+
+	_vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
+	vPos = XMVectorSetY(vPos, XMVectorGetY(vPos) + 2.f);
+
+	if (m_BlackBoard->Get_Data().bIsFly == true)
+	{
+		m_pEffect->Set_Potion(vPos);
+		m_pEffect->Update(fTimeDelta);
+	}
+	if (m_BlackBoard->Get_Data().bIsSpawnFly == true)
+	{
+		m_pSpawnEffect->Set_Potion(vPos);
+		m_pSpawnEffect->Update(fTimeDelta);
+	}
 }
 
 void CAlcina::Late_Update(_float fTimeDelta)
 {
-	for (_int i = 0; i < ColliderType_Mon::End; ++i)
+	if (m_BlackBoard->Get_Data().fNoies < 0.8f)
 	{
-		if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
-			return;
-	}
+		for (_int i = 0; i < ColliderType_Mon::End; ++i)
+		{
+			if (i == ColliderType_Mon::ATTACK)
+				continue;
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
+			if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
+				return;
+		}
+	}
+	Update_Effect(fTimeDelta);
+	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::EFFECT, this)))
 		return;
 
 	m_pBodyObject->Late_Update(fTimeDelta);
@@ -95,13 +135,32 @@ void CAlcina::Late_Update(_float fTimeDelta)
 	{
 		m_pGameInstance->Add_DebugComponent(m_pColliderCom[i]);
 	}
-
 #endif
+	if (m_BlackBoard->Get_Data().bIsFly == true)
+		m_pEffect->Late_Update(fTimeDelta);
+
+	if (m_BlackBoard->Get_Data().bIsSpawnFly == true)
+		m_pSpawnEffect->Late_Update(fTimeDelta);
 
 }
 
 HRESULT CAlcina::Render()
 {
+	m_pTransformCom->Bind_Shader_Resource(m_pShaderCom, "g_WorldMatrix");
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ))))
+		return E_FAIL;
+
+	m_pTrailTexCom->Bind_Shader_Resource(m_pShaderCom, "g_DiffuseTexture", 1);
+	m_pShaderCom->Begin(0);
+
+	for (_int i = 0; i < 4; ++i)
+	{
+		m_pTrailCom[i]->Bind_Resources();
+		m_pTrailCom[i]->Render();
+	}
 	return S_OK;
 }
 
@@ -160,6 +219,42 @@ void CAlcina::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColli
 
 }
 
+void CAlcina::Attack_Collision()
+{
+	if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[ColliderType_Mon::ATTACK])))
+		return;
+}
+
+_vector CAlcina::Bone_WorldTransform(const _wstring pBoneName)
+{
+	_float4x4 BoneMatrix = *m_pBodyObject->Get_BoneMatrix(pBoneName);
+	_vector vBonePos = { BoneMatrix._41, BoneMatrix._42, BoneMatrix._43, 1.f };
+
+	vBonePos = XMVector3TransformCoord(vBonePos, m_pTransformCom->Get_WorldMatrix());
+
+	return vBonePos;
+}
+
+void CAlcina::Trail_On(_bool m_IsRight)
+{
+	m_bIsTrail = true;
+	m_bIsRight = m_IsRight;
+	for (_int i = 0; i < 4; ++i)
+	{
+		m_pTrailCom[i]->Reset();
+	}
+}
+
+void CAlcina::Trail_Off()
+{
+	m_bIsTrail = false;
+}
+
+void CAlcina::Spawn_EffectReset()
+{
+	m_pSpawnEffect->Reset();
+}
+
 HRESULT CAlcina::Ready_Components()
 {
 	CBounding_OBB::BOUNDING_OBB_DESC  OBBDesc{};
@@ -208,6 +303,30 @@ HRESULT CAlcina::Ready_Components()
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
 
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex_Trail"),
+		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		return E_FAIL;
+
+
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Trail"),
+		TEXT("Com_TrailCom_0"), reinterpret_cast<CComponent**>(&m_pTrailCom[0]))))
+		return E_FAIL;
+	
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Trail"),
+		TEXT("Com_TrailCom_1"), reinterpret_cast<CComponent**>(&m_pTrailCom[1]))))
+		return E_FAIL;
+
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Trail"),
+		TEXT("Com_TrailCom_2"), reinterpret_cast<CComponent**>(&m_pTrailCom[2]))))
+		return E_FAIL;
+
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Trail"),
+		TEXT("Com_TrailCom_3"), reinterpret_cast<CComponent**>(&m_pTrailCom[3]))))
+		return E_FAIL;
+
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Trail"),
+		TEXT("Com_TrailTexCom"), reinterpret_cast<CComponent**>(&m_pTrailTexCom))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -230,6 +349,21 @@ HRESULT CAlcina::Ready_PartObjects()
 	m_pBodyObject = pBody;
 	Safe_AddRef(m_pBodyObject);
 
+	CFly_Effect::FLY_EFFECT_DESC FlyDesc{};
+	FlyDesc.isDead = false;
+	FlyDesc.eType = CFly_Effect::Fly_Type::SPIN;
+	FlyDesc.szPoolingPath = TEXT("Pool_Fly_Spin");
+	FlyDesc.fRotationPerSec = 1.f;
+	FlyDesc.fSpeedPerSec = 1.f;
+
+	m_pEffect = dynamic_cast<CFly_Effect*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Fly_Effect"), &FlyDesc));
+
+	FlyDesc.eType = CFly_Effect::Fly_Type::SPREAD;
+	FlyDesc.szPoolingPath = TEXT("Pool_Fly_Spread");
+	FlyDesc.fRotationPerSec = 1.f;
+	FlyDesc.fSpeedPerSec = 1.f;
+
+	m_pSpawnEffect = dynamic_cast<CFly_Effect*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::GAMEOBJECT, ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Fly_Effect"), &FlyDesc));
 	return S_OK;
 }
 
@@ -241,15 +375,25 @@ HRESULT CAlcina::Ready_Utility()
 	m_BlackBoard->Set_Data().iAnimState = &m_iAnimState;
 	m_BlackBoard->Set_Data().szAnimTag = &m_szAnimTag;
 	m_BlackBoard->Set_Data().szCulStateTag = &m_szCulStateTag; 
+	
+	m_BlackBoard->Set_Data().isBogan = true;
 	m_BlackBoard->Set_Data().iHp = 200;
 	m_BlackBoard->Set_Data().iDamage = 0;
+
 	m_BlackBoard->Set_Data().IsAttack = false;
+	m_BlackBoard->Set_Data().IsPage2 = false;
+
+	m_BlackBoard->Set_Data().fAttack2Cool = 0.f;
 
 	m_BlackBoard->Set_Data().IsChase = false;
-	m_BlackBoard->Set_Data().MonPos = m_pTransformCom->Get_WorldMatrixPtr();
+	m_BlackBoard->Set_Data().IsEvent_1 = false;
 
-	m_BlackBoard->Set_Data().eAttackType = Attack_Type::END;
+	m_BlackBoard->Set_Data().MonPos = m_pTransformCom->Get_WorldMatrixPtr();
+	m_BlackBoard->Set_Data().fNoies = 0.f;
 	m_pBehaviorTree = CBehaviorTree_Alcina::Create(m_BlackBoard);
+
+	m_BlackBoard->Set_Data().bIsFly = false;
+	m_BlackBoard->Set_Data().bIsSpawnFly = false;
 
 	return S_OK;
 }
@@ -257,13 +401,36 @@ HRESULT CAlcina::Ready_Utility()
 HRESULT CAlcina::Ready_StateObjects()
 {
 	Add_StateObject(TEXT("Idle"), CIdle_Alcina::Create());
-	Add_StateObject(TEXT("Attack"), CAttack_Alcina::Create());
+	Add_StateObject(TEXT("Attack1"), CAttack1_Alcina::Create());
+	Add_StateObject(TEXT("Attack2"), CAttack2_Alcina::Create());
+	Add_StateObject(TEXT("Attack3"), CAttack3_Alcina::Create());
+
+	Add_StateObject(TEXT("Event1"), CEvent1_Alcina::Create());
+
 	Add_StateObject(TEXT("Walk"), CWalk_Alcina::Create());
 	Add_StateObject(TEXT("Damage"), CDamage_Alcina::Create());
 	Add_StateObject(TEXT("Die"), CDie_Alcina::Create());
 
 	m_pCulStateObject = Find_StateObject(TEXT("Idle"));
 	Safe_AddRef(m_pCulStateObject);
+	return S_OK;
+}
+
+HRESULT CAlcina::Ready_TriggerEvent()
+{
+	CTrigger::TRIGEER_DESC TriggerDesc;
+
+	TriggerDesc.eType = TRIGGER_TYPE::PLAYER;
+	TriggerDesc.eObjType = OBJECT_TYPE::PLAYER;
+	TriggerDesc.TriggerEvent = { [&]() {return Event_Start(); } };
+
+	TriggerDesc.vCenter = _float3{ 0.f, 0.f, 0.f };
+	TriggerDesc.vExtents = _float3{ 1.f, 1.f, 1.f };
+	TriggerDesc.vPos = _float3{ -14.60, -8.68f, 44.97f };
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Trigger"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Trigger"), &TriggerDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -308,23 +475,19 @@ void CAlcina::State_Change()
 
 void CAlcina::Root_Move()
 {
-	//월드 분해
 	_vector vScale, vWorldRot, vWorldTrans;
 	XMMatrixDecompose(&vScale, &vWorldRot, &vWorldTrans, m_pTransformCom->Get_WorldMatrix());
 	_vector vMovePos = XMLoadFloat3(m_pBodyObject->Get_MovePos());
 	_vector vMoveRot = XMLoadFloat4(m_pBodyObject->Get_MoveRot());
 
-	//회전량 누적
-	//vWorldRot = XMQuaternionMultiply(XMVectorSetW(vMoveRot, 1.f), vWorldRot);
-	//vWorldRot = XMQuaternionNormalize(vWorldRot);
-
-	//vMovePos = XMVector3Rotate(vMovePos, XMQuaternionInverse(vMoveRot));
 	//월드 기준으로 방향 보정
 	vMovePos = XMVector3Rotate(vMovePos, vWorldRot);
-	vWorldRot = XMQuaternionMultiply(XMVectorSetW(vMoveRot, 1.f), vWorldRot);
-	vWorldRot = XMQuaternionNormalize(vWorldRot);
+
 	//이동량 누적
 	vWorldTrans += vMovePos;
+	//회전량 누적
+	vWorldRot = XMQuaternionMultiply(XMVectorSetW(vMoveRot, 1.f), vWorldRot);
+	vWorldRot = XMQuaternionNormalize(vWorldRot);
 
 	_matrix ScaleMat = XMMatrixScalingFromVector(vScale);
 	_matrix Movemat = XMMatrixTranslationFromVector(vWorldTrans);
@@ -335,9 +498,6 @@ void CAlcina::Root_Move()
 
 	m_pTransformCom->Set_WorldMatrix(WorldMatrix);
 	m_pTransformCom->Is_Sliding(m_pNavigationCom);
-
-	m_pTransformCom->Set_State(Engine::STATE::POSITION,
-		m_pNavigationCom->Compute_OnCell(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
 }
 
 void CAlcina::Collider_Update()
@@ -361,6 +521,60 @@ void CAlcina::Collider_Update()
 		_matrix WorldMatrix = WorldRotMat * WorldTransMat * Worldmat;
 
 		m_pColliderCom[i]->Update(WorldMatrix);
+	}
+}
+
+void CAlcina::Event_Start()
+{
+	m_BlackBoard->Set_Data().IsChase = true;
+	m_BlackBoard->Set_Data().fAttack2Cool = 10.f;
+}
+
+void CAlcina::Update_Effect(_float fTimeDelta)
+{
+	for (_int i = 0; i < 4; ++i)
+	{
+		m_pTrailCom[i]->Update_Trail(fTimeDelta);
+	}
+	if (m_bIsTrail == true)
+	{
+		_float3 vTopPos{}, vBottomPos;
+		if (m_bIsRight)
+		{
+			XMStoreFloat3(&vTopPos, Bone_WorldTransform(TEXT("R_IndexNail_1")));
+			XMStoreFloat3(&vBottomPos, Bone_WorldTransform(TEXT("R_IndexNail_0")));
+			m_pTrailCom[0]->Add_Postion(vTopPos, vBottomPos, fTimeDelta);
+
+			XMStoreFloat3(&vTopPos, Bone_WorldTransform(TEXT("R_MiddleNail_1")));
+			XMStoreFloat3(&vBottomPos, Bone_WorldTransform(TEXT("R_MiddleNail_0")));
+			m_pTrailCom[1]->Add_Postion(vTopPos, vBottomPos, fTimeDelta);
+
+			XMStoreFloat3(&vTopPos, Bone_WorldTransform(TEXT("R_PinkyNail_1")));
+			XMStoreFloat3(&vBottomPos, Bone_WorldTransform(TEXT("R_PinkyNail_0")));
+			m_pTrailCom[2]->Add_Postion(vTopPos, vBottomPos, fTimeDelta);
+
+			XMStoreFloat3(&vTopPos, Bone_WorldTransform(TEXT("R_RingNail_1")));
+			XMStoreFloat3(&vBottomPos, Bone_WorldTransform(TEXT("R_RingNail_0")));
+			m_pTrailCom[3]->Add_Postion(vTopPos, vBottomPos, fTimeDelta);
+		}
+		else
+		{
+			XMStoreFloat3(&vTopPos, Bone_WorldTransform(TEXT("L_PinkyNail_1")));
+			XMStoreFloat3(&vBottomPos, Bone_WorldTransform(TEXT("L_PinkyNail_0")));
+			m_pTrailCom[0]->Add_Postion(vTopPos, vBottomPos, fTimeDelta);
+
+			XMStoreFloat3(&vTopPos, Bone_WorldTransform(TEXT("L_RingNail_1")));
+			XMStoreFloat3(&vBottomPos, Bone_WorldTransform(TEXT("L_RingNail_0")));
+			m_pTrailCom[1]->Add_Postion(vTopPos, vBottomPos, fTimeDelta);
+
+			XMStoreFloat3(&vTopPos, Bone_WorldTransform(TEXT("L_MiddleNail_1")));
+			XMStoreFloat3(&vBottomPos, Bone_WorldTransform(TEXT("L_MiddleNail_0")));
+			m_pTrailCom[2]->Add_Postion(vTopPos, vBottomPos, fTimeDelta);
+
+			XMStoreFloat3(&vTopPos, Bone_WorldTransform(TEXT("L_IndexNail_1")));
+			XMStoreFloat3(&vBottomPos, Bone_WorldTransform(TEXT("L_IndexNail_0")));
+			m_pTrailCom[3]->Add_Postion(vTopPos, vBottomPos, fTimeDelta);
+		}
 	}
 }
 
@@ -407,4 +621,13 @@ void CAlcina::Free()
 
 	Safe_Release(m_BlackBoard);
 	Safe_Release(m_pBehaviorTree);
+
+	for (_int i = 0; i < 4; ++i)
+		Safe_Release(m_pTrailCom[i]);
+	Safe_Release(m_pTrailTexCom);
+	Safe_Release(m_pShaderCom);
+
+	Safe_Release(m_pEffect);
+	Safe_Release(m_pSpawnEffect);
+
 }

@@ -46,10 +46,11 @@ void CSpark_Particle::Update(_float fTimeDelta)
 
 void CSpark_Particle::Late_Update(_float fTimeDelta)
 {
-    m_fCount += fTimeDelta;
+    _float fTime = fTimeDelta * 1.5f;
+    m_fCount += fTime;
 
     XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pParentMatrix));
-    m_pVIBufferCom->Sprite_Sort(fTimeDelta * 1.f, XMLoadFloat4x4(&m_CombinedWorldMatrix));
+    m_pVIBufferCom->Sprite_Sort(fTime, XMLoadFloat4x4(&m_CombinedWorldMatrix));
 
 
     if (m_fCount >= 1.f)

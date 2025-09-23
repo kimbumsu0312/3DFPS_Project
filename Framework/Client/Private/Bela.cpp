@@ -111,12 +111,15 @@ void CBela::Late_Update(_float fTimeDelta)
 	if (m_szCulStateTag == TEXT("Idle"))
 		return;
 
-	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
+	if (m_BlackBoard->Get_Data().fNoies < 0.8f)
 	{
-		if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
-			return;
-	}
+		for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
+		{
 
+			if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
+				return;
+		}
+	}
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
 		return;
 
@@ -394,7 +397,7 @@ HRESULT CBela::Ready_TriggerEvent()
 	TriggerDesc.TriggerEvent = { [&]() {return Event_3(); } };
 
 	TriggerDesc.vCenter = _float3{ 0.f, 0.f, 0.f };
-	TriggerDesc.vExtents = _float3{ 1.f, 1.f, 1.f };
+	TriggerDesc.vExtents = _float3{ 4.f, 4.f, 4.f };
 	TriggerDesc.vPos = _float3{ -56.29f, -8.68f, 29.79f };
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Trigger"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Trigger"), &TriggerDesc)))

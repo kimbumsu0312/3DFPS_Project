@@ -220,9 +220,6 @@
     <Filter Include="02.GameObject\Spawner\MonSpawner\SpawnPoint">
       <UniqueIdentifier>{b6d8e30b-8142-47fb-8ec8-0cd9bb378c0c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Defines">
-      <UniqueIdentifier>{d8d16bc1-2149-41f4-8de6-cbcd337bba3b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObject\UIObject\Announce\Item_Icon">
       <UniqueIdentifier>{55af56a8-9fbc-4093-8390-4a46c2db6060}</UniqueIdentifier>
     </Filter>
@@ -420,6 +417,15 @@
     </Filter>
     <Filter Include="02.GameObject\Monster\Boss\Bela\MonState_Bela\Event">
       <UniqueIdentifier>{274968f3-d732-4ffa-9602-c5ec315f0bff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State\Attack">
+      <UniqueIdentifier>{19ee4a50-2314-44e7-a4e2-3f5bf7ba4d3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State\Event">
+      <UniqueIdentifier>{909ecda1-59a0-40aa-8f0d-c74addacb6ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Defines">
+      <UniqueIdentifier>{d8d16bc1-2149-41f4-8de6-cbcd337bba3b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -795,9 +801,6 @@
     <ClInclude Include="..\public\Damage_Alcina.h">
       <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Attack_Alcina.h">
-      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Die_Alcina.h">
       <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
     </ClInclude>
@@ -947,6 +950,18 @@
     </ClInclude>
     <ClInclude Include="..\public\Event_3_Bela.h">
       <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Attack3_Alcina.h">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Attack1_Alcina.h">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Attack2_Alcina.h">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Event1_Alcina.h">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State\Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1302,9 +1317,6 @@
     <ClCompile Include="..\private\Damage_Alcina.cpp">
       <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Attack_Alcina.cpp">
-      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Die_Alcina.cpp">
       <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State</Filter>
     </ClCompile>
@@ -1455,6 +1467,18 @@
     <ClCompile Include="..\private\Event_3_Bela.cpp">
       <Filter>02.GameObject\Monster\Boss\Bela\MonState_Bela\Event</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Attack1_Alcina.cpp">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Attack2_Alcina.cpp">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Attack3_Alcina.cpp">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Event1_Alcina.cpp">
+      <Filter>02.GameObject\Monster\Boss\Alchina\Monstate_Alcina\State\Event</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
@@ -1482,6 +1506,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxInstance_MeshParticle.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex_Trail.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

@@ -2,11 +2,11 @@
 #include "MonState_Alcina.h"
 
 NS_BEGIN(Client)
-class CAttack_Alcina final : public CMonState_Alcina
+class CAttack3_Alcina final : public CMonState_Alcina
 {
 private:
-	CAttack_Alcina();
-	virtual ~CAttack_Alcina() = default;
+	CAttack3_Alcina();
+	virtual ~CAttack3_Alcina() = default;
 
 public:
 	virtual HRESULT				Initalize(void* pArg) override;
@@ -14,8 +14,12 @@ public:
 	virtual void				Update(CAlcina* pContainer, _float fDeltatime) override;
 	virtual void				Exit(CAlcina* pContainer) override;
 
+private:
+	_int						m_iAttackCount = { 0 };
+	_wstring					m_szAttackName = {};
+
 public:
-	static CAttack_Alcina* Create(void* pArg = nullptr);
+	static CAttack3_Alcina*		Create(void* pArg = nullptr);
 	virtual void				Free() override;
 };
 

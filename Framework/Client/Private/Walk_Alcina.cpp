@@ -32,6 +32,7 @@ void CWalk_Alcina::Enter(CAlcina* pContainer)
 
 void CWalk_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
 {
+    pContainer->Target_LookTurn(fDeltatime);
     if (m_eAnimState == STATE_ANIM::START)
     {
         _bool AnimFinsh = *pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh;
@@ -41,20 +42,11 @@ void CWalk_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
             *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CAlcina::ANIM_STATE::NORMAL);
             pContainer->Switch_Anim("Walk_Loop", true);
         }
-        pContainer->Target_LookTurn(fDeltatime);
     }
-
-    if (m_eAnimState == STATE_ANIM::LOOP)
+    else if (m_eAnimState == STATE_ANIM::LOOP)
     {
-        _int iTargetCellIndex = CPlayer_Manager::GetInstance()->Get_CellIndex();
+        pContainer->Get_TransForm()->Go_Straight(fDeltatime);
 
-        _float3 vPlayerPos{};
-        XMStoreFloat3(&vPlayerPos, CPlayer_Manager::GetInstance()->Get_PlayerPos());
-        if (m_iPreTargetIndex != iTargetCellIndex)
-        {
-            m_iPreTargetIndex = iTargetCellIndex;
- 
-        }
      
     }
 }

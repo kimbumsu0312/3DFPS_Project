@@ -23,7 +23,7 @@ void CDie_Bela::Update(CBela* pContainer, _float fDeltatime)
 {
     if (m_eAnimState == STATE_ANIM::START)
     {
-        _float fNoies = pContainer->Get_BlackBoard()->Set_Data().fNoies -= fDeltatime * 0.5f;
+        pContainer->Get_BlackBoard()->Set_Data().fNoies -= fDeltatime * 0.5f;
         
         
         if (pContainer->Get_BlackBoard()->Get_Data().fNoies <= 0.f)
