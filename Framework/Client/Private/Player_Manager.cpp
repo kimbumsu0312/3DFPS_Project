@@ -35,7 +35,18 @@ void CPlayer_Manager::Player_Hp(_int iValue)
 	m_fCulHp += iValue;
 	m_pGameInstance->Publish(Event_Player_Hp_UI_Open{ 0 });
 	m_pGameInstance->Publish(Event_OnDamageUI_OPEN{});
-	
+
+	if (m_bIsGuard)
+	{
+		m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::PLAYER));
+		m_pGameInstance->PlaySoundW(TEXT("Guard.wav"), ENUM_CLASS(SOUND_CHANNEL::PLAYER), g_fBGMVolume - 0.2f);
+	}
+	else
+	{
+		m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::PLAYER));
+		m_pGameInstance->PlaySoundW(TEXT("Player_Hit.wav"), ENUM_CLASS(SOUND_CHANNEL::PLAYER), g_fBGMVolume - 0.2f);
+	}
+
 	if (m_fPreHp != m_fCulHp)
 	{
 		if (m_fCulHp >= m_fMaxHp * 0.75)
@@ -47,6 +58,16 @@ void CPlayer_Manager::Player_Hp(_int iValue)
 		else if (m_fCulHp < m_fMaxHp * 0.25)
 			m_pGameInstance->Publish(Event_Player_Hp_Set{ {0.7f, 0.f, 0.f, 0.7f} });
 	}
+}
+
+void CPlayer_Manager::Player_Hp_Recovery(_float fTimeDelta)
+{
+	if (m_fCulHp < m_fMaxHp)
+		m_fCulHp += fTimeDelta * 0.5f;
+	else
+		m_fCulHp = m_fMaxHp;
+	
+	m_fPreHp = m_fCulHp;
 }
 
 void CPlayer_Manager::Add_QuickSlotItem(_int iSlotIndex, _int iItemIndex)

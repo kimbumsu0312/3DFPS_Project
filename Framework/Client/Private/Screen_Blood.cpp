@@ -28,7 +28,7 @@ HRESULT CScreen_Blood::Initialize(void* pArg)
     if (FAILED(Ready_Components()))
         return E_FAIL;
 
-   m_pGameInstance->Subscribe<Event_OnDamageUI_OPEN>([&](const Event_OnDamageUI_OPEN& e) { m_fAlpha = 0.5f; });
+   m_pGameInstance->Subscribe<Event_OnDamageUI_OPEN>([&](const Event_OnDamageUI_OPEN& e) { if(CPlayer_Manager::GetInstance()->Get_Guard() == false) m_fAlpha = 0.5f; });
 
     return S_OK;
 }

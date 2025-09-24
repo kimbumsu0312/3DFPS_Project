@@ -9,7 +9,11 @@ NS_END
 NS_BEGIN(Client)
 class CSniper final : public CWeaponObject
 {
-
+public:
+	typedef struct tagWeaponSniperDesc : public CWeaponObject::WEAPON_DESC
+	{
+		CBlackBoard<CPlayer::PLAYER_DATA>* m_BlackBoard = { nullptr };
+	}SNIPER_DESC;
 private:
 	CSniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CSniper(const CSniper& Prototype);
@@ -31,6 +35,10 @@ private:
 	
 	_bool					m_bEffect = {};
 	_float					m_fRange = { -0.86f };
+	CBlackBoard<CPlayer::PLAYER_DATA>* m_pBlackBoard = { nullptr };
+
+	_float					m_fAccTime = {};
+	_bool					m_IsSounde = {};
 
 private:
 	HRESULT					Ready_Components();

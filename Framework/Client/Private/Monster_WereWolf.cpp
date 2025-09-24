@@ -61,12 +61,18 @@ HRESULT CMonster_WereWolf::Initialize(void* pArg)
 
 void CMonster_WereWolf::Priority_Update(_float fTimeDelta)
 {
+	if (!m_bIsStart)
+		return;
+
 	m_pTransformCom->PrePostion_Update();
 	m_pBodyObject->Priority_Update(fTimeDelta);
 }
 
 void CMonster_WereWolf::Update(_float fTimeDelta)
 {
+	if (!m_bIsStart)
+		return;
+
 	if (m_BlackBoard->Get_Data().fAttackCool > 0.f)
 		m_BlackBoard->Set_Data().fAttackCool -= fTimeDelta;
 
@@ -83,6 +89,8 @@ void CMonster_WereWolf::Update(_float fTimeDelta)
 
 void CMonster_WereWolf::Late_Update(_float fTimeDelta)
 {
+	if (!m_bIsStart)
+		return;
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
 		return;
@@ -144,10 +152,17 @@ void CMonster_WereWolf::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY T
 		{
 		case ENUM_CLASS(OBJECT_TYPE::RAY):
 
-			m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
-			m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
-			Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
-			m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
+			if (m_BlackBoard->Get_Data().IsChase == true)
+			{
+				m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
+				m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
+			
+				Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
+				m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
+
+				m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::ALCINA));
+				m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Gun.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA), g_fBGMVolume - 0.9f);
+			}
 			break;
 		}
 	}

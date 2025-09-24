@@ -58,7 +58,7 @@ void CAnnounce::Update(_float fTimeDelta)
     UIAlpha_OnOff(fTimeDelta);
 
     if(m_iITemType == -1)
-        m_pSlot->Set_Size({ 0.f, 0.f });
+        m_pSlot->Set_Size({ 0.1f, 0.1f });
     else if (m_iITemType == 1)
         m_pSlot->Set_Size({ 64.f * 2.f, 64.f });
     else
@@ -179,7 +179,7 @@ void CAnnounce::UIOpen(_int iType, _int iItemIndex, _wstring szFont, RENDERGROUP
     m_pIcon->Set_RenderGroup(m_eRnderGroup);
     if (iType == 0)
     {
-        if (!m_bIsOpen == true)
+        if (!m_bIsOpen)
         {
             m_iITemType = g_ItemData[iItemIndex].m_iQuickSlotType;
             m_bIsOpen = true;
@@ -204,7 +204,7 @@ void CAnnounce::UIOpen(_int iType, _int iItemIndex, _wstring szFont, RENDERGROUP
     }
     else if(iType == 1)
     {
-        if (!m_bIsOpen == true)
+        if (!m_bIsOpen)
         {
             m_iITemType = -1;
             m_bIsOpen = true;

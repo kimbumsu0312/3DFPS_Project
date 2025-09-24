@@ -106,6 +106,7 @@ private:
 	CBlackBoard<ALCHINA_DATA>*	m_BlackBoard = { nullptr };
 	class CBehaviorTree_Alcina* m_pBehaviorTree = { nullptr };
 
+	_bool						m_bIsStart = { false };
 	//이펙트 관련
 	_bool						m_bIsTrail = { false };
 	_bool						m_bIsRight = { false };

@@ -37,6 +37,8 @@ void CIdle_NorMon_1::Enter(CMonster_Normal* pContainer)
         *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::FALL);
         pContainer->Switch_Anim("Fall_Start", false);
         m_eAnimState = STATE_ANIM::LOOP;
+        m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER));
+        m_pGameInstance->PlaySoundW(TEXT("Mon_fall.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER), g_fBGMVolume);
         break;
     }
 
@@ -79,6 +81,8 @@ void CIdle_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
                 pContainer->Get_BlackBoard()->Set_Data().IsChase = true;
                 pContainer->Get_BlackBoard()->Set_Data().IsIdle = false;
                 pContainer->Switch_Anim("Idle_Loop", true);
+
+
             }
             break;
         }

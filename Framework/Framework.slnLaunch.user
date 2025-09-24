@@ -7,7 +7,7 @@
         "Action": "Start"
       },
       {
-        "Path": "Edit\\Default\\Edit.vcxproj",
+        "Path": "Engine\\Default\\Engine.vcxproj",
         "Action": "Start"
       }
     ]

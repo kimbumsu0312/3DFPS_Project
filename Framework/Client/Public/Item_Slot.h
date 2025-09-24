@@ -39,6 +39,8 @@ private:
 	_uint						m_iPassIndex = {};
 	_uint						m_iItemIndex = {};
 
+	_bool						m_bPreSelete = { false };
+	_bool						m_bCulSelete = { false };
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_Children();

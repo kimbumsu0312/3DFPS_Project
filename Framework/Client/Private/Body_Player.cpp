@@ -39,7 +39,7 @@ void CBody_Player::Priority_Update(_float fTimeDelta)
 void CBody_Player::Update(_float fTimeDelta)
 {
     CPlayer::PLAYER_DATA pData = m_pBlackBoard->Get_Data();
-    *pData.bIsAnimFinsh = m_pAnimCom->Player_Animation(*pData.iAnimState, *pData.szAnimTag, *pData.bIsAnimLoop, m_pModelCom, fTimeDelta, m_iRootLodeIndex);
+    *pData.bIsAnimFinsh = m_pAnimCom->Player_Animation(*pData.iAnimState, *pData.szAnimTag, *pData.bIsAnimLoop, m_pModelCom, fTimeDelta, m_iRootLodeIndex, pData.isBogan);
 
     Update_CombinedMatrix();
 }
@@ -52,7 +52,9 @@ void CBody_Player::Late_Update(_float fTimeDelta)
 
 HRESULT CBody_Player::Render()
 {
-   
+    if (*m_pBlackBoard->Get_Data().szCulStateTag == TEXT("Aim") && *m_pBlackBoard->Get_Data().iAnimState == ENUM_CLASS(PLAYER_ANIM::SNIPER))
+        return S_OK;
+
     if (FAILED(Bind_ShaderResources()))
         return E_FAIL;
 
@@ -60,6 +62,9 @@ HRESULT CBody_Player::Render()
 
     for (_uint i = 0; i < iNumMeshes; i++)
     {
+        if (i >= 29)
+            continue;
+
         if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_DiffuseTexture", i, 0, 0)))
             continue;
 

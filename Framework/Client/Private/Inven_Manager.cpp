@@ -214,6 +214,16 @@ _bool CInven_Manager::Erase_ItemSlot(CInvenItem* pItem)
 
 void CInven_Manager::InvenOpen(_bool IsOpen)
 {
+	if (IsOpen == true)
+	{
+		m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::BGM));
+		m_pGameInstance->PlaySoundW(TEXT("Inven_Open.wav"), ENUM_CLASS(SOUND_CHANNEL::BGM), g_fBGMVolume - 0.3f);
+	}
+	else
+	{
+		m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::BGM));
+		m_pGameInstance->PlaySoundW(TEXT("Inven_Close.wav"), ENUM_CLASS(SOUND_CHANNEL::BGM), g_fBGMVolume - 0.6f);
+	}
 	m_IsInvenOpen = IsOpen;
 	for (auto Item : m_InvenItems)
 	{

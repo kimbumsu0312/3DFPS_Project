@@ -10,6 +10,11 @@ NS_END
 NS_BEGIN(Client)
 class CMsgItem final : public CGameObject
 {
+public:
+	typedef struct tagMsgItem : public CGameObject::GAMEOBJECT_DESC
+	{
+		_vector vPos = {};
+	}MSGITEM_DESC;
 private:
 	enum class ITEM_COLLIDER {
 		ITEM, DETACT_REAGE, END

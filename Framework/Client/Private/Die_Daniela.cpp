@@ -32,6 +32,7 @@ void CDie_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
             pContainer->Get_BlackBoard()->Set_Data().fNoies += fDeltatime * 0.5f;
             if (pContainer->Get_BlackBoard()->Get_Data().fNoies > 1.f)
             {
+                CItemSpawner::GetInstance()->Spawn_Item(5, pContainer->Get_Transform()->Get_State(STATE::POSITION), pContainer->Get_Navi()->Get_CulIndex());
                 pContainer->SetDead();
                 m_pGameInstance->OnOff_Light(TEXT("Light_Daniela"), false);
 

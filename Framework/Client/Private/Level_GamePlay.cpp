@@ -45,20 +45,13 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	CInven_Manager::GetInstance()->Level_Init(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Event"));
 	m_pGameInstance->On_Static_Shadow(true);
+	m_pGameInstance->StopAll();
+	m_pGameInstance->PlayBGM(TEXT("GamePlay.wav"), g_fBGMVolume - 0.8f);
 	return S_OK;
 }
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	
-	if (m_pGameInstance->IsMouseDown(MOUSEKEYSTATE::LB))
-	{
-
-		CSpark_Effect::SPARK_EFFECT_INIT SparkDesc;
-		SparkDesc.vPos = XMVectorSet(-32.95f, -7.47f, 55.67f, 1.f);
-		m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-
-	}
 	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_1))
 		CInven_Manager::GetInstance()->Add_ItemSlot(0, TEXT("Pool_Item"));
 	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_2))
@@ -475,6 +468,20 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 {
+	CTrigger::TRIGEER_DESC TriggerDesc;
+
+	TriggerDesc.eType = TRIGGER_TYPE::PLAYER;
+	TriggerDesc.eObjType = OBJECT_TYPE::PLAYER;
+	TriggerDesc.TriggerEvent = { [&]() {m_pGameInstance->Publish(Event_NormonSpawn_1{1}); } };
+
+	TriggerDesc.vCenter = _float3{ 0.f, 0.f, 0.f };
+	TriggerDesc.vExtents = _float3{ 1.f, 1.f, 1.f };
+	TriggerDesc.vPos = _float3{ -32.41f, -9.14f, 44.55f };
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Trigger"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Trigger"), &TriggerDesc)))
+		return E_FAIL;
+
+
 	POOLMONDESC DataPoolMonDesc{};
 	DataPoolMonDesc.iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
 	DataPoolMonDesc.iCellIndex = 7329;
@@ -486,6 +493,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	
 	DataPoolMonDesc.vAngleY = 45.f;
 	DataPoolMonDesc.iDropImteIndex = 5;
+	DataPoolMonDesc.iIndex = 1;
 	m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_NormalMon_1"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Monster"), &DataPoolMonDesc);
 
 	CMonSpawner::MONSPAWNERDESC Desc1{};
@@ -517,7 +525,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	Desc2.vCenter = { 0.f, 0.f, 0.f };
 	Desc2.vExtents = { 2.f, 2.f, 2.f };
 	Desc2.szPoolPath = TEXT("Pool_NormalMon_1");
-	Desc2.vSpawnerPostion = { -49.05f, -8.68f, 30.45f };
+	Desc2.vSpawnerPostion = { -65.22f, -8.48f, 30.96f };
 
 	//MonDesc2.vPostion = { -64.41f, -8.68f, 27.64f };
 	//MonDesc2.iCellIndex = 817;
@@ -529,24 +537,26 @@ HRESULT CLevel_GamePlay::Ready_Layer_Event(const _wstring& strLayerTag)
 	//MonDesc2.vAngleY = -60.f;
 	//Desc2.MonDesc.push_back(MonDesc2);
 
-	MonDesc2.vPostion = { -59.54f, -8.68f, 26.96f };
-	MonDesc2.iCellIndex = 970;
+	MonDesc2.vPostion = { -62.81f, -8.67f, 27.33f };
+	MonDesc2.iCellIndex = 696;
 	MonDesc2.iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
 	MonDesc2.szAnimTag = "Clime_Pop";
 	MonDesc2.iWeponType = ENUM_CLASS(CMonster_Normal::NORMAL_MON_WEAPON::SHOTEL);
 	MonDesc2.szState = TEXT("Idle");
 	MonDesc2.iStartMotion = 2;
 	MonDesc2.vAngleY = 0.f;
+	MonDesc2.iDropImteIndex = 6;
 	Desc2.MonDesc.push_back(MonDesc2);
 
-	MonDesc2.vPostion = { -59.53f, -8.67f, 30.00f };
-	MonDesc2.iCellIndex = 952;
+	MonDesc2.vPostion = { -66.25f, -8.68f, 25.10f };
+	MonDesc2.iCellIndex = 496;
 	MonDesc2.iAnimState = ENUM_CLASS(CMonster_Normal::NORMAL_MON_STATE::NORMAL);
 	MonDesc2.szAnimTag = "Clime_Pop";
 	MonDesc2.iWeponType = ENUM_CLASS(CMonster_Normal::NORMAL_MON_WEAPON::END);
 	MonDesc2.szState = TEXT("Idle");
 	MonDesc2.iStartMotion = 2;
-	MonDesc2.vAngleY = 60.f;
+	MonDesc2.vAngleY = 30.f;
+	MonDesc2.iDropImteIndex = 5;
 	Desc2.MonDesc.push_back(MonDesc2);
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag,
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_MonSpawneer"), &Desc2)))

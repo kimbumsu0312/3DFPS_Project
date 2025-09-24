@@ -67,7 +67,7 @@ void CAttack_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
         pContainer->Attack_Collision();
         if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {
-            pContainer->Get_BlackBoard()->Set_Data().fAttackCool = 5.f;
+            pContainer->Get_BlackBoard()->Set_Data().fAttackCool = 2.f;
             pContainer->Get_BlackBoard()->Set_Data().IsAttack = false;
         }
     }

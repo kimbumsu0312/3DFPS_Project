@@ -53,6 +53,8 @@ void CDie_Bela::Update(CBela* pContainer, _float fDeltatime)
 
         if (pContainer->Get_BlackBoard()->Get_Data().fFreezes >= 1.f)
         {
+            CItemSpawner::GetInstance()->Spawn_Item(5, pContainer->Get_Transform()->Get_State(STATE::POSITION), pContainer->Get_Navi()->Get_CulIndex());
+
             pContainer->SetDead();
             m_pGameInstance->Publish(Event_OpenDoor{ true , 1.f });
         }

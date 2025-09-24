@@ -50,6 +50,8 @@ HRESULT CMonster_Normal::Initialize(void* pArg)
 	m_pColliderBone[ColliderType_Mon::BODY] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
 	m_pColliderBone[ColliderType_Mon::Head] = m_pBodyObject->Get_BoneMatrix(TEXT("Head"));
 	m_pColliderBone[ColliderType_Mon::Hand] = m_pBodyObject->Get_BoneMatrix(TEXT("L_Hand"));
+	
+	m_pGameInstance->Subscribe<Event_NormonSpawn_1>([&](const Event_NormonSpawn_1& e) {if (e.i == m_iIndex) { m_BlackBoard->Set_Data().IsChase = true; }; });
 
 	return S_OK;
 }
@@ -201,15 +203,26 @@ void CMonster_Normal::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY Tar
 		}
 		Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
 		m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
+		m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER));
+		m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Gun.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER), g_fBGMVolume - 0.9f);
 
 		break;
 
 	case ENUM_CLASS(OBJECT_TYPE::WEAPON):
-		if (m_BlackBoard->Get_Data().IsWeaponDamage == true)
+		if (CPlayer_Manager::GetInstance()->Get_KnifeAttack() == true)
 			break;
+		CPlayer_Manager::GetInstance()->Set_KnifeAttack(true);
 		m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
 		m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
 		m_BlackBoard->Set_Data().IsWeaponDamage = true;
+		m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER));
+		m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Knife.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER), g_fBGMVolume - 0.9f);
+		
+		Desc.vPos = (CPlayer_Manager::GetInstance()->Get_PlayerPos() + m_pTransformCom->Get_State(STATE::POSITION)) * 0.5f;
+		Desc.vPos = XMVectorSetY(Desc.vPos, XMVectorGetY(Desc.vPos) + 1.5f);
+
+		m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
+
 		break;
 	}
 
@@ -219,6 +232,7 @@ HRESULT CMonster_Normal::Initialize_Pool(void* pArg)
 {
 	POOLMONDESC* pDesc = static_cast<POOLMONDESC*>(pArg);
 
+	m_iIndex = pDesc->iIndex;
 	m_BlackBoard->Set_Data().iHp = 100;
 	m_iAnimState = pDesc->iAnimState;
 	m_szAnimTag = pDesc->szAnimTag;

@@ -51,21 +51,33 @@ void CInvenItem::Update(_float fTimeDelta)
 	{
 		if (m_pGameInstance->IsKeyDown(DIK_1))
 		{
+			m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::UI));
+			m_pGameInstance->PlaySoundW(TEXT("Inven_QuickSlot.wav"), ENUM_CLASS(SOUND_CHANNEL::UI), g_fBGMVolume - 0.6f);
+
 			m_pGameInstance->Publish(Event_Equip_QuickSlot{ (_uint)m_ItemData.iItemIndex, 1 });
 			CPlayer_Manager::GetInstance()->Add_QuickSlotItem(1, m_ItemData.iItemIndex);
 		}
 		if (m_pGameInstance->IsKeyDown(DIK_2))
 		{
+			m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::UI));
+			m_pGameInstance->PlaySoundW(TEXT("Inven_QuickSlot.wav"), ENUM_CLASS(SOUND_CHANNEL::UI), g_fBGMVolume - 0.6f);
+
 			m_pGameInstance->Publish(Event_Equip_QuickSlot{ (_uint)m_ItemData.iItemIndex, 2 });
 			CPlayer_Manager::GetInstance()->Add_QuickSlotItem(2, m_ItemData.iItemIndex);
 		}
 		if (m_pGameInstance->IsKeyDown(DIK_3))
 		{
+			m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::UI));
+			m_pGameInstance->PlaySoundW(TEXT("Inven_QuickSlot.wav"), ENUM_CLASS(SOUND_CHANNEL::UI), g_fBGMVolume - 0.6f);
+
 			m_pGameInstance->Publish(Event_Equip_QuickSlot{ (_uint)m_ItemData.iItemIndex, 3 });
 			CPlayer_Manager::GetInstance()->Add_QuickSlotItem(3, m_ItemData.iItemIndex);
 		}
 		if (m_pGameInstance->IsKeyDown(DIK_4))
 		{
+			m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::UI));
+			m_pGameInstance->PlaySoundW(TEXT("Inven_QuickSlot.wav"), ENUM_CLASS(SOUND_CHANNEL::UI), g_fBGMVolume - 0.6f);
+
 			m_pGameInstance->Publish(Event_Equip_QuickSlot{ (_uint)m_ItemData.iItemIndex, 4 });
 			CPlayer_Manager::GetInstance()->Add_QuickSlotItem(4, m_ItemData.iItemIndex);
 		}
@@ -228,6 +240,10 @@ void CInvenItem::State_Selete()
 		{
 			m_bIsCulRotation ? m_bIsCulRotation = false : m_bIsCulRotation = true;
 			IsRotation(m_bIsCulRotation);
+
+			m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::UI));
+			m_pGameInstance->PlaySoundW(TEXT("Inven_Rot.wav"), ENUM_CLASS(SOUND_CHANNEL::UI), g_fBGMVolume - 0.6f);
+
 		}
 
 		if (m_pGameInstance->IsMouseUp(MOUSEKEYSTATE::LB))
@@ -236,9 +252,15 @@ void CInvenItem::State_Selete()
 			{
 				m_bIsCulRotation = m_bIsPreRotation;
 				IsRotation(m_bIsCulRotation);
+				m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::UI));
+				m_pGameInstance->PlaySoundW(TEXT("Inven_Fail.wav"), ENUM_CLASS(SOUND_CHANNEL::UI), g_fBGMVolume - 0.6f);
+
 			}
 			else
 			{
+				m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::UI));
+				m_pGameInstance->PlaySoundW(TEXT("Inven_Drop.wav"), ENUM_CLASS(SOUND_CHANNEL::UI), g_fBGMVolume - 0.6f);
+
 				if (m_bIsCulRotation != m_bIsPreRotation)
 				{
 					_int Size = m_ItemData.iInvenSizeX;

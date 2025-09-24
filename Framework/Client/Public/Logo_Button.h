@@ -25,6 +25,8 @@ private:
 	CVIBuffer_Rect*				m_pVIBufferCom = { nullptr };
 	_uint						m_iIndex = {};
 	_uint						m_iMaxIndex = {};
+
+	_bool						m_bPreSelete = { false };
 	_bool						m_bIsSelete = { false };
 	_float4						m_vBackGroundColor = {};
 

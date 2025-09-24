@@ -38,10 +38,20 @@ void CShotGun::Update(_float fTimeDelta)
 {
     if (*m_pCulStateTag == TEXT("Attack"))
     {
+        m_fAccTime += fTimeDelta;
         m_pAnimCom->Player_Animation(0, "Aimshot", false, m_pModelCom, fTimeDelta, 0);
+
+        if (m_fAccTime > 1.35f && !m_IsSounde)
+        {
+            m_IsSounde = true;
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::PLAYER));
+            m_pGameInstance->PlaySoundW(TEXT("ShotGun_Reload_2.wav"), ENUM_CLASS(SOUND_CHANNEL::PLAYER), g_fBGMVolume - 0.2f);
+        }
     }
     else if (*m_pCulStateTag == TEXT("Reload"))
     {
+        m_fAccTime = 0.f;
+        m_IsSounde = false;
         m_bEffect = false;
         if (m_isReload == false)
         {
@@ -57,18 +67,20 @@ void CShotGun::Update(_float fTimeDelta)
             }
             else if (m_iReloadStack == 1)
             {
-                if (m_pAnimCom->Player_Animation(0, "Reload_Loop", false, m_pModelCom, fTimeDelta, 0))
+                if (m_pAnimCom->Player_Animation(0, "Reload_Loop", false, m_pModelCom, fTimeDelta, 0, false))
                     m_iReloadStack = 2;
             }
             else if(m_iReloadStack == 2)
             {
-                if (m_pAnimCom->Player_Animation(0, "Reload_End", false, m_pModelCom, fTimeDelta, 0))
+                if (m_pAnimCom->Player_Animation(0, "Reload_End", false, m_pModelCom, fTimeDelta, 0, false))
                     m_iReloadStack = 3;
             }
         }
     }
     else
     {
+        m_fAccTime = 0.f;
+        m_IsSounde = false;
         m_bEffect = false;
         m_isReload = false;
         m_pAnimCom->Player_Animation(0, "Idle_Loop", true, m_pModelCom, fTimeDelta, 0);

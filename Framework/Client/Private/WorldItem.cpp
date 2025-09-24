@@ -105,6 +105,9 @@ void CWorldItem::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCo
 			m_pGuideUI->IsOn();
 			if (m_pGameInstance->IsKeyDown(DIK_F))
 			{
+				m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::UI));
+				m_pGameInstance->PlaySoundW(TEXT("Get_Item.wav"), ENUM_CLASS(SOUND_CHANNEL::UI), g_fBGMVolume - 0.6f);
+
 				if (CInven_Manager::GetInstance()->Add_ItemSlot(m_iItemIndex, m_szPoolPath))
 				{
 					SetDead();

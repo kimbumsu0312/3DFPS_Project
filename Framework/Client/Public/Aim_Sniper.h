@@ -31,8 +31,8 @@ private:
 	_bool						m_bIsSelete = { false };
 	_bool						m_bZoom = { false };
 
-	_float						m_fCool = {};
 	_bool						m_bIsZoomIn = { false };
+	_bool						m_bIsKeyInput = { true };
 
 private:
 	HRESULT						Ready_Components();

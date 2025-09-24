@@ -16,6 +16,9 @@ HRESULT CSniper::Initialize_Prototype()
 
 HRESULT CSniper::Initialize(void* pArg)
 {
+    SNIPER_DESC* pDesc = static_cast<SNIPER_DESC*>(pArg);
+    m_pBlackBoard = pDesc->m_BlackBoard;
+    Safe_AddRef(m_pBlackBoard);
     m_AnimTag = "Idle";
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
@@ -39,15 +42,26 @@ void CSniper::Update(_float fTimeDelta)
 
     if (*m_pCulStateTag ==TEXT("Attack"))
     {
+        m_fAccTime += fTimeDelta;
+        if (m_fAccTime > 1.55f && !m_IsSounde)
+        {
+            m_IsSounde = true;
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::PLAYER));
+            m_pGameInstance->PlaySoundW(TEXT("Sniper_Shot_Reload.wav"), ENUM_CLASS(SOUND_CHANNEL::PLAYER), g_fBGMVolume - 0.2f);
+        }
         m_pAnimCom->Player_Animation(0, "AimShot", false, m_pModelCom, fTimeDelta, 0);
     }
     else if (*m_pCulStateTag == TEXT("Reload"))
     {
+        m_fAccTime = 0.f;
+        m_IsSounde = false;
         m_bEffect = false;
         m_pAnimCom->Player_Animation(0, "Reload", false, m_pModelCom, fTimeDelta, 0);
     }
     else
     {
+        m_fAccTime = 0.f;
+        m_IsSounde = false;
         m_bEffect = false;
         m_pAnimCom->Player_Animation(0, "Idle", true, m_pModelCom, fTimeDelta, 0);
     }
@@ -92,6 +106,9 @@ void CSniper::Late_Update(_float fTimeDelta)
 
 HRESULT CSniper::Render()
 {
+    if (*m_pBlackBoard->Get_Data().szCulStateTag == TEXT("Aim") && *m_pBlackBoard->Get_Data().iAnimState == ENUM_CLASS(PLAYER_ANIM::SNIPER))
+        return S_OK;
+
     if (FAILED(Bind_ShaderResources()))
         return E_FAIL;
 
@@ -186,4 +203,6 @@ void CSniper::Free()
     Safe_Release(m_pModelCom);
     Safe_Release(m_pShaderCom);
     Safe_Release(m_pAnimCom);
+
+    Safe_Release(m_pBlackBoard);
 }

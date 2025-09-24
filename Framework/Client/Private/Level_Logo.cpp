@@ -30,7 +30,8 @@ HRESULT CLevel_Logo::Initialize()
 	m_pGameInstance->Subscribe<Event_NextLevel>([&](const Event_NextLevel& e) {m_bIsNextLevel = true; });
 	
 	m_pGameInstance->StopAll();
-	m_pGameInstance->PlayBGM(L"Logo.wav", g_fBGMVolume);
+	m_pGameInstance->PlayBGM(TEXT("Logo.wav"), g_fBGMVolume + 3.f);
+	m_pGameInstance->PlayBGM(TEXT("Wind.wav"), g_fBGMVolume - 0.3f);
 
 	return S_OK;
 }

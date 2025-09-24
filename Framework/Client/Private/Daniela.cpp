@@ -204,6 +204,9 @@ void CDaniela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColl
 			Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
 			m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
 			m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
+			m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::DANIELA));
+			m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Gun.wav"), ENUM_CLASS(SOUND_CHANNEL::DANIELA), g_fBGMVolume - 0.9f);
+
 			if (m_BlackBoard->Get_Data().fDamage_Cool <= 0.f)
 				m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
 			break;

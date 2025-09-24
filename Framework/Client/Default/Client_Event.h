@@ -115,4 +115,8 @@ namespace Client
 	{
 	}Event_BelaSpawn;
 
+	typedef struct Event_NormaonSpawn
+	{
+		_int i;
+	}Event_NormonSpawn_1;
 }

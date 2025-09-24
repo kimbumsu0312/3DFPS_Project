@@ -32,6 +32,7 @@ void CDie_WereWolf::Update(CMonster_WereWolf* pContainer, _float fDeltatime)
             if (pContainer->Get_BlackBoard()->Get_Data().fNoies > 1.f)
             {
                 pContainer->SetDead();
+                CItemSpawner::GetInstance()->Spawn_Item(7, pContainer->Get_Transform()->Get_State(STATE::POSITION), pContainer->Get_Navi()->Get_CulIndex());
                 m_pGameInstance->OnOff_Light(TEXT("Light_WereWolf1"), false);
                 m_pGameInstance->OnOff_Light(TEXT("Light_WereWolf2"), false);
                 m_pGameInstance->OnOff_Light(TEXT("Light_WereWolf3"), false);

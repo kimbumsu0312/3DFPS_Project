@@ -60,6 +60,7 @@ public:
 	void							Switch_Anim(string szAnimTag, _bool IsLoop);
 	CBlackBoard<WEREWOLF_DATA>*		Get_BlackBoard() { return m_BlackBoard; }
 	CTransform*						Get_Transform() {return m_pTransformCom; }
+	CNavigation*					Get_Navi() { return m_pNavigationCom; }
 
 	virtual void					OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
 

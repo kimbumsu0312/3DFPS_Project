@@ -31,6 +31,8 @@ void CDamage_NorMon_1::Enter(CMonster_Normal* pContainer)
 
     pContainer->Get_BlackBoard()->Set_Data().IsChase = true;
     pContainer->Get_BlackBoard()->Set_Data().IsIdle = false;
+
+
 }
 
 void CDamage_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
@@ -40,7 +42,7 @@ void CDamage_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
         m_eAnimState = STATE_ANIM::LOOP;
         pContainer->Get_BlackBoard()->Set_Data().iDamage = 0;
         pContainer->Get_BlackBoard()->Set_Data().IsWeaponDamage = false;
-        pContainer->Get_BlackBoard()->Set_Data().fAttackCool = 3.f;
+        pContainer->Get_BlackBoard()->Set_Data().fAttackCool = 1.2f;
 
     }
 }

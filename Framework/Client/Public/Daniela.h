@@ -63,6 +63,7 @@ public:
 
 	CTransform*						Get_Transform() { return m_pTransformCom; }
 	CBlackBoard<DANIELA_DATA>*		Get_BlackBoard() { return m_BlackBoard; }
+	CNavigation*					Get_Navi() {return m_pNavigationCom;}
 
 	void							Target_LookTurn(_float fTimeDelta);
 	void							Target_LookTurn_Navi(_float fTimeDelta);

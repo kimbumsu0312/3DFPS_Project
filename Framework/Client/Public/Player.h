@@ -36,6 +36,8 @@ public:
 		_bool		isAim;
 		_bool		isWeaponSwap;
 
+		_bool		isBogan;
+		_bool		isZoomOn;
 	}PLAYER_DATA;
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -93,6 +95,8 @@ private:
 
 	_int						m_iRayCount = {};
 	_float						m_fRayRange = {};
+
+	_float						m_fDamage_Cool = {};
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_PartObjects();

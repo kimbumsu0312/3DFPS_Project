@@ -58,11 +58,8 @@ void CAim_Sniper::Update(_float fTimeDelta)
     if (!m_bIsSelete)
         return;
 
-    if (m_fCool > 0.f)
-        m_fCool -= fTimeDelta;
-    else
+    if(m_bIsKeyInput)
         KeyInput();
-
 
     __super::Update(fTimeDelta);
 }
@@ -174,10 +171,10 @@ void CAim_Sniper::KeyInput()
 
 void CAim_Sniper::Shoting()
 {
+    m_bIsKeyInput ? m_bIsKeyInput = false : m_bIsKeyInput = true;
     m_pGameInstance->Publish(Event_HUD_GUN_AIM{ false });
     m_pGameInstance->Publish(Event_Camera_Zoom{ CAMERA_STATE::ZOOM_RESET, 0.f, 0.f });
     m_bIsZoomIn = false;
-    m_fCool = 0.5f;
 }
 
 CAim_Sniper* CAim_Sniper::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

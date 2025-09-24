@@ -40,17 +40,34 @@ void CItem_Slot::Priority_Update(_float fTimeDelta)
 
 void CItem_Slot::Update(_float fTimeDelta, CInvenItem* pItem)
 {
+	m_bCulSelete = IsPick();
 
-	if (IsPick())
+	if (m_bPreSelete != m_bCulSelete)
+	{
+		if (m_bCulSelete == true && CInven_Manager::GetInstance())
+		{
+			m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::UI));
+			m_pGameInstance->PlaySoundW(TEXT("Inven_Over.wav"), ENUM_CLASS(SOUND_CHANNEL::UI), g_fBGMVolume - 0.6f);
+		}
+		m_bPreSelete = m_bCulSelete;
+	}
+	if (m_bCulSelete)
 	{
 		if (IsClick_Down(MOUSEKEYSTATE::LB))
+		{
 			pItem->IsSelete(true);
-
+			m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::UI));
+			m_pGameInstance->PlaySoundW(TEXT("Inven_Click.wav"), ENUM_CLASS(SOUND_CHANNEL::UI), g_fBGMVolume - 0.6f);
+		}
 		m_pItemSelete->IsSelete(true);
 		
 		if (!pItem->Get_ItemSelete() && IsClick_Down(MOUSEKEYSTATE::RB) && g_ItemData[m_iItemIndex].m_eQuickSlot == QUICKSLOT_TYPE::EQUIP)
+		{
 			pItem->IsClick(m_pItemSelete->IsClick());
+			m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::UI));
+			m_pGameInstance->PlaySoundW(TEXT("Inven_Selete_R.wav"), ENUM_CLASS(SOUND_CHANNEL::UI), g_fBGMVolume - 0.6f);
 
+		}
 		m_pGameInstance->Publish(Event_Inven_Info{ m_iItemIndex });
 	}
 	else

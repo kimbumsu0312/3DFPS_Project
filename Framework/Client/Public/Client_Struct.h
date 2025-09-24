@@ -39,6 +39,8 @@ namespace Client
 		_wstring	szState;
 		_int		iStartMotion;
 		_int        iDropImteIndex;
+
+		_int		iIndex;
 	}POOLMONDESC;
 
 }

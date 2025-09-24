@@ -62,12 +62,6 @@ HRESULT CBela::Initialize(void* pArg)
 
 void CBela::Priority_Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->IsKeyDown(DIK_K))
-		m_BlackBoard->Set_Data().IsSpawn == true ? m_BlackBoard->Set_Data().IsSpawn = false : m_BlackBoard->Set_Data().IsSpawn = true;
-
-	if (m_pGameInstance->IsKeyDown(DIK_L))
-		m_BlackBoard->Get_Data().iHp <= 0 ? m_BlackBoard->Set_Data().iHp = 100 : m_BlackBoard->Set_Data().iHp = 0;
-
 	m_pTransformCom->PrePostion_Update();
 	m_pBodyObject->Priority_Update(fTimeDelta);
 	m_pWeaponObject->Priority_Update(fTimeDelta);
@@ -111,15 +105,13 @@ void CBela::Late_Update(_float fTimeDelta)
 	if (m_szCulStateTag == TEXT("Idle"))
 		return;
 
-	if (m_BlackBoard->Get_Data().fNoies < 0.8f)
+	for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
 	{
-		for (_int i = 0; i < ENUM_CLASS(ColliderType_Mon::End); ++i)
-		{
-
-			if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
-				return;
-		}
+	
+		if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
+			return;
 	}
+
 	if (FAILED(m_pGameInstance->Add_RenderGroup(RENDERGROUP::NONBLEND, this)))
 		return;
 
@@ -403,8 +395,8 @@ HRESULT CBela::Ready_TriggerEvent()
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Trigger"), &TriggerDesc)))
 		return E_FAIL;
 
-	TriggerDesc.eType = TRIGGER_TYPE::PLAYER;
-	TriggerDesc.eObjType = OBJECT_TYPE::PLAYER;
+	TriggerDesc.eType = TRIGGER_TYPE::MONSTER;
+	TriggerDesc.eObjType = OBJECT_TYPE::MON_BODY;
 	TriggerDesc.TriggerEvent = { [&]() {return Event_DIe(); } };
 
 	TriggerDesc.vCenter = _float3{ 0.f, 0.f, 0.f };

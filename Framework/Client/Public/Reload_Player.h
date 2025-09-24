@@ -18,6 +18,9 @@ public:
 
 	RELOAD_TYPE					m_eReload_Type = RELOAD_TYPE::END;
 
+private:
+	_float						m_fAccTime = { 0.f };
+	_int						m_iCount = {};
 public:
 	static CReload_Player*		Create(void* pArg = nullptr);
 	virtual void				Free() override;

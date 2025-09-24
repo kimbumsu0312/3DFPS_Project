@@ -25,6 +25,7 @@ HRESULT CCamera_Player::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
     m_DefultWorldMatrix = m_pTransformCom->Get_WorldMatrix();
+    m_fResetFovy = m_fFovy;
 
     m_pGameInstance->Subscribe<Event_Camera_Zoom>([&](const Event_Camera_Zoom& e) {
         switch (e.eState)

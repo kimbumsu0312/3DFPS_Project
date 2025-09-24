@@ -15,6 +15,7 @@ private:
 public:
 	HRESULT			Initialize();
 	void			Player_Hp(_int iValue);
+	void			Player_Hp_Recovery(_float fTimeDelta);
 	void			Set_PlayerPos(_vector vPos) { m_vPlayerPos = vPos;}
 	void			Set_PlayerWorld(_matrix vWorldMat) { m_PlayerWorldMat = vWorldMat; }
 
@@ -26,10 +27,20 @@ public:
 	_int			Get_Coin() { return m_iCoin; }
 	const _int&		Get_Damage() { return m_iDamage; }
 	void			Set_Damage(_int iDamage) { m_iDamage = iDamage; }
+	void			Set_IsDamage(_bool isDamage) { m_bIsDamage = isDamage; }
 	void			Add_QuickSlotItem(_int iSlotIndex, _int iItemIndex);
 	void			Selete_Slot(_int i);
 	const _int&		Get_QuickSlotItem(_int index) { return m_iQuickSlot[index - 1]; }
 	_int			Get_SeleteItemIndex() { return m_iQuickSlot[m_iSeleteItem]; }
+
+	_bool			Get_Guard() { return m_bIsGuard; }
+	void			Set_Guard(_bool isGuard) { m_bIsGuard = isGuard; }
+
+	_bool			Get_KnifeAttack() { return m_bIsKnifeAttack; }
+	void			Set_KnifeAttack(_bool isAttack) { m_bIsKnifeAttack = isAttack; }
+
+	_int			Get_Player_Weapon() { return m_iPlayerWeapon; }
+	void			Set__Player_Weapon(_int eWeapon) { m_iPlayerWeapon = eWeapon; }
 
 	void			Update_Cell(_int iIndex) { m_iCellIndex = iIndex; }
 	const _int&		Get_CellIndex() {return m_iCellIndex; }
@@ -52,6 +63,9 @@ private:
 	_int			m_iSeleteItem = { 0 };
 
 	_bool			m_bIsDamage = { false };
+	_bool			m_bIsGuard = { false };
+	_bool			m_bIsKnifeAttack = { false };
+	_int			m_iPlayerWeapon = { ENUM_CLASS(PLAYER_ANIM::END) };
 public:
 	virtual void Free() override;
 };

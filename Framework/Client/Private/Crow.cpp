@@ -32,7 +32,9 @@ HRESULT CCrow::Initialize(void* pArg)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.3f, 0.f, 0.f, 1.f));
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(220.f));
 
-	m_pGameInstance->Subscribe<Event_Level_Change>([&](const Event_Level_Change& e) {m_bIsNextLevel = true; });
+	m_pGameInstance->Subscribe<Event_Level_Change>([&](const Event_Level_Change& e) {m_bIsNextLevel = true;
+		m_pGameInstance->PlaySoundW(TEXT("Crow.wav"), ENUM_CLASS(SOUND_CHANNEL::MAP), g_fBGMVolume);
+		});
 
 	return S_OK;
 }

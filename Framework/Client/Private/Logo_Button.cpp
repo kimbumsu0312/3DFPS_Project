@@ -70,6 +70,15 @@ void CLogo_Button::Update(_float fTimeDelta)
 {
 	Button_Event();
 	Button_Selete();
+	if (m_bPreSelete != m_bIsSelete)
+	{
+		if (m_bIsSelete)
+		{
+			m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::UI));
+			m_pGameInstance->PlaySoundW(TEXT("Logo_Button_Over.wav"), ENUM_CLASS(SOUND_CHANNEL::UI), g_fBGMVolume - 0.6f);
+		}
+		m_bPreSelete = m_bIsSelete;
+	}
 }
 
 void CLogo_Button::Late_Update(_float fTimeDelta)
@@ -80,6 +89,8 @@ void CLogo_Button::Late_Update(_float fTimeDelta)
 	{
 		__super::Late_Update(fTimeDelta);
 	}
+
+	
 }
 
 HRESULT CLogo_Button::Render()
@@ -147,6 +158,8 @@ void CLogo_Button::Button_Event()
 {
 	if (IsClick_Down(MOUSEKEYSTATE::LB) || m_pGameInstance->IsKeyDown(DIK_F) && m_bIsSelete)
 	{
+		m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::UI));
+		m_pGameInstance->PlaySoundW(TEXT("Logo_Button_Selete.wav"), ENUM_CLASS(SOUND_CHANNEL::UI), g_fBGMVolume -0.6f);
 		switch (m_iIndex)
 		{
 		case 1:

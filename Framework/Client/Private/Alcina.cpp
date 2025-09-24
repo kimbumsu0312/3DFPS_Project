@@ -59,11 +59,22 @@ HRESULT CAlcina::Initialize(void* pArg)
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-10.87f, -8.68f, 55.79f, 1.f));
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f));
+
+	m_pGameInstance->Subscribe<Event_OpenDoor>([&](const Event_OpenDoor& e) {m_bIsStart = true; });
+
 	return S_OK;
 }
 
 void CAlcina::Priority_Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->IsKeyDown(DIK_H))
+	{
+		m_bIsStart = true;
+		m_BlackBoard->Set_Data().iHp -= 100;
+	}
+	if (!m_bIsStart)
+		return;
+		
 	m_bIsHeadShot = false;
 	m_pTransformCom->PrePostion_Update();
 	m_pBodyObject->Priority_Update(fTimeDelta);
@@ -81,10 +92,8 @@ void CAlcina::Priority_Update(_float fTimeDelta)
 
 void CAlcina::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->IsKeyDown(DIK_H))
-	{
-		m_BlackBoard->Set_Data().iHp *= 0.4f;
-	}
+	if (!m_bIsStart)
+		return;
 
 	m_pBehaviorTree->Update();
 	State_Change();
@@ -114,6 +123,9 @@ void CAlcina::Update(_float fTimeDelta)
 
 void CAlcina::Late_Update(_float fTimeDelta)
 {
+	if (!m_bIsStart)
+		return;
+
 	if (m_BlackBoard->Get_Data().fNoies < 0.8f)
 	{
 		for (_int i = 0; i < ColliderType_Mon::End; ++i)
@@ -211,6 +223,8 @@ void CAlcina::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColli
 			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
 				m_bIsHeadShot = true;
 			m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
+			m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::ALCINA));
+			m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Gun.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA), g_fBGMVolume - 0.9f);
 			Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
 			m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
 			break;

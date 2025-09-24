@@ -63,28 +63,44 @@ void CKnife::Late_Update(_float fTimeDelta)
 
 HRESULT CKnife::Render()
 {
+    //if (FAILED(Bind_ShaderResources()))
+    //    return E_FAIL;
+
+    //_uint           iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+    //for (_uint i = 0; i < iNumMeshes; i++)
+    //{
+    //    if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_DiffuseTexture", i, 0, 0)))
+    //        continue;
+
+    //    if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_NormalTexture", i, 1, 0)))
+    //        m_pShaderCom->Begin(0);
+    //    else
+    //        m_pShaderCom->Begin(2);
+
+    //    if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
+    //        continue;
+
+    //    m_pModelCom->Render(i);
+    //}
+
     if (FAILED(Bind_ShaderResources()))
         return E_FAIL;
 
     _uint           iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-    for (_uint i = 0; i < iNumMeshes; i++)
+    for (size_t i = 0; i < iNumMeshes; i++)
     {
         if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_DiffuseTexture", i, 0, 0)))
             continue;
 
-        if (FAILED(m_pModelCom->Bind_Materials(m_pShaderCom, "g_NormalTexture", i, 1, 0)))
-            m_pShaderCom->Begin(0);
-        else
-            m_pShaderCom->Begin(2);
-
         if (FAILED(m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", i)))
             continue;
 
+        m_pShaderCom->Begin(0);
+
         m_pModelCom->Render(i);
     }
-
-
 
     return S_OK;
 }

@@ -37,7 +37,17 @@ void CDie_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
     {
         pContainer->Get_BlackBoard()->Set_Data().fNoies += fDeltatime * 0.5f;
         if (pContainer->Get_BlackBoard()->Get_Data().fNoies > 1.f)
+        {
+            CMsgItem::MSGITEM_DESC Desc{};
+            Desc.szModel_Path = TEXT("Prototype_Component_Model_Paper_3");
+            Desc.vPos = pContainer->Get_TransForm()->Get_State(STATE::POSITION);
+            Desc.isLoad = false;
+            if (FAILED(CGameInstance::GetInstance()->Add_GameObject_ToLayer(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_BackGround"),
+                ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_MsgItem"), &Desc)))
+                return;
             pContainer->SetDead();
+            
+        }
     }
 }
 

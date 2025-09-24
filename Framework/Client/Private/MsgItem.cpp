@@ -17,8 +17,9 @@ HRESULT CMsgItem::Initialize_Prototype()
 
 HRESULT CMsgItem::Initialize(void* pArg)
 {
-	CGameObject::GAMEOBJECT_DESC* Desc = static_cast<GAMEOBJECT_DESC*>(pArg);
-
+	MSGITEM_DESC* Desc = static_cast<MSGITEM_DESC*>(pArg);
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
 	m_iCount = 0;
 	if (Desc->szModel_Path == TEXT("Prototype_Component_Model_Paper_0"))
 		m_iMsgType = 0;
@@ -27,10 +28,10 @@ HRESULT CMsgItem::Initialize(void* pArg)
 	if (Desc->szModel_Path == TEXT("Prototype_Component_Model_Paper_2"))
 		m_iMsgType = 2;
 	if (Desc->szModel_Path == TEXT("Prototype_Component_Model_Paper_3"))
+	{
 		m_iMsgType = 3;
-
-	if (FAILED(__super::Initialize(pArg)))
-		return E_FAIL;
+		m_pTransformCom->Set_State(STATE::POSITION, Desc->vPos);
+	}
 
 	if (FAILED(Ready_Components(Desc->szModel_Path)))
 		return E_FAIL;
@@ -113,6 +114,9 @@ void CMsgItem::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColl
 			{
 				++m_iCount;
 				m_pGameInstance->Publish(EVENT_GUIDE_PAPER{ m_iMsgType });
+				m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::UI));
+				m_pGameInstance->PlaySoundW(TEXT("Guide_UI.wav"), ENUM_CLASS(SOUND_CHANNEL::UI), g_fBGMVolume - 0.6f);
+
 			}
 			break;
 		}

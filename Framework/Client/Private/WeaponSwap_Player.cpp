@@ -38,6 +38,9 @@ void CWeaponSwap_Player::Enter(CPlayer* pContainer)
     }
     else
     {
+        m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::PLAYER));
+        m_pGameInstance->PlaySoundW(TEXT("Weapon_Swap.wav"), ENUM_CLASS(SOUND_CHANNEL::PLAYER), g_fBGMVolume - 0.2f);
+
         pContainer->WeaponSwap();
     }
 }
@@ -46,6 +49,9 @@ void CWeaponSwap_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 {
    if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true )
    {
+       m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::PLAYER));
+       m_pGameInstance->PlaySoundW(TEXT("Weapon_Swap.wav"), ENUM_CLASS(SOUND_CHANNEL::PLAYER), g_fBGMVolume - 0.2f);
+
         pContainer->WeaponSwap();
    }
 }

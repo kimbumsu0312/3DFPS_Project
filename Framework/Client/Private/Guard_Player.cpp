@@ -13,15 +13,11 @@ HRESULT CGuard_Player::Initalize(void* pArg)
 
 void CGuard_Player::Enter(CPlayer* pContainer)
 {
-    pContainer->Switch_Anim("Guard_Loop", true);
+    pContainer->Switch_Anim("Guard_Walk", true);
 }
 
 void CGuard_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 {
-  if (pContainer->Get_BlackBoard()->Get_Data().isMove == true)
-      pContainer->Switch_Anim("Guard_Walk", true);
-  else
-      pContainer->Switch_Anim("Guard_Loop", true);
 }
 
 void CGuard_Player::Exit(CPlayer* pContainer)

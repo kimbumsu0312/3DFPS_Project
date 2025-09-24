@@ -103,6 +103,7 @@ private:
 	_bool						m_bIsAnimLoop = { true };
 	_bool						m_bIsAnimFinsh = { false };
 
+	_int						m_iIndex = {};
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_PartObjects();

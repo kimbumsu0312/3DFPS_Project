@@ -14,10 +14,13 @@ HRESULT CIdle_Player::Initalize(void* pArg)
 void CIdle_Player::Enter(CPlayer* pContainer)
 {
     m_eAnimState = STATE_ANIM::LOOP;
-    if (*pContainer->Get_BlackBoard()->Get_Data().iAnimState == ENUM_CLASS(PLAYER_ANIM::NONE))
+    if (*pContainer->Get_BlackBoard()->Get_Data().iAnimState == ENUM_CLASS(PLAYER_ANIM::NONE) ||
+        *pContainer->Get_BlackBoard()->Get_Data().iAnimState == ENUM_CLASS(PLAYER_ANIM::KNIFE))
         pContainer->Switch_Anim("Walk_Loop", true);
-    else
+    else     if (*pContainer->Get_BlackBoard()->Get_Data().iAnimState == ENUM_CLASS(PLAYER_ANIM::SNIPER))
         pContainer->Switch_Anim("Idle_Loop", true);
+    else
+        pContainer->Switch_Anim("Walk_Loop", true);
 }
 
 void CIdle_Player::Update(CPlayer* pContainer, _float fTimeDelta)

@@ -33,6 +33,8 @@ private:
 
 	_bool					m_bEffect = {};
 	_float					m_fRange = { -0.79f };
+	_float					m_fAccTime = {};
+	_bool					m_IsSounde = {};
 private:
 	HRESULT					Ready_Components();
 	HRESULT					Bind_ShaderResources();
