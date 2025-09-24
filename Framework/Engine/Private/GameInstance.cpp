@@ -19,6 +19,7 @@
 #include "Collision_Manager.h"
 #include "Target_Manager.h"
 #include "Shadow.h"
+#include "Sound_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -99,6 +100,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 
 	m_pCollision_Manager = CCollision_Manager::Create(EngineDesc.iNumLayerFilter);
 	if (nullptr == m_pCollision_Manager)
+		return E_FAIL;
+
+	m_pSound_Manager = CSound_Manager::Create();
+	if (nullptr == m_pSound_Manager)
 		return E_FAIL;
 
 	return S_OK;
@@ -328,6 +333,41 @@ const _float4x4* CGameInstance::Get_ShadowLight_Transform_Float4x4(D3DTS eTransf
 HRESULT CGameInstance::Ready_ShadowLight(SHADOW_LIGHT_DESC LightDesc)
 {
 	return m_pShadow->Ready_ShadowLight(LightDesc);
+}
+
+void CGameInstance::PlaySoundW(const TCHAR* pSoundKey, _uint SoundChannel, float fVolume)
+{
+	m_pSound_Manager->PlaySoundW(pSoundKey, SoundChannel, fVolume);
+}
+
+void CGameInstance::PlayLoopSound(const TCHAR* pSoundKey, _uint SoundChannel, float fVolume)
+{
+	m_pSound_Manager->PlayLoopSound(pSoundKey, SoundChannel, fVolume);
+}
+
+void CGameInstance::PlayBGM(const TCHAR* pSoundKey, float fVolume)
+{
+	m_pSound_Manager->PlayBGM(pSoundKey, fVolume);
+}
+
+void CGameInstance::StopSound(_uint SoundChannel)
+{
+	m_pSound_Manager->StopSound(SoundChannel);
+}
+
+void CGameInstance::StopAll()
+{
+	m_pSound_Manager->StopAll();
+}
+
+void CGameInstance::SetChannelVolume(_uint SoundChannel, float fVolume)
+{
+	m_pSound_Manager->SetChannelVolume(SoundChannel, fVolume);
+}
+
+bool CGameInstance::IsPlaying(_uint SoundChannel)
+{
+	return m_pSound_Manager->IsPlaying(SoundChannel);
 }
 
 _matrix CGameInstance::Get_Transform_Matrix_Inverse(D3DTS eTransformState) const
@@ -593,6 +633,7 @@ void CGameInstance::Release_Engine()
 	Safe_Release(m_pInput_Device);
 	Safe_Release(m_pGraphic_Device);
 	Safe_Release(m_pEvent_Manager);
+	Safe_Release(m_pSound_Manager);
 }
 
 void CGameInstance::Free()

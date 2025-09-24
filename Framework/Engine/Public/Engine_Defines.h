@@ -32,6 +32,15 @@ using namespace DirectX;
 #include <fstream>
 #include "nlohmann/json.hpp"
 using namespace nlohmann;
+
+//fmod
+#include <io.h>
+#include "FMod/fmod.h"
+#include "FMod/fmod.hpp"
+#pragma comment(lib, "fmod_vc.lib")
+#pragma comment(lib, "User32.lib")
+#define MAXCHANNEL 64
+
 #include <vector>
 #include <list>
 #include <map>

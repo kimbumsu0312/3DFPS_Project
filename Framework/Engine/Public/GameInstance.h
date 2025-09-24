@@ -198,6 +198,15 @@ public:
 	const _float4x4*			Get_ShadowLight_Transform_Float4x4(D3DTS eTransformState) const;
 	HRESULT						Ready_ShadowLight(SHADOW_LIGHT_DESC LightDesc);
 #pragma
+#pragma region SOUND_MANAGER
+	void						PlaySoundW(const TCHAR* pSoundKey, _uint SoundChannel, float fVolume);
+	void						PlayLoopSound(const TCHAR* pSoundKey, _uint SoundChannel, float fVolume);
+	void						PlayBGM(const TCHAR* pSoundKey, float fVolume);
+	void						StopSound(_uint SoundChannel);
+	void						StopAll();
+	void						SetChannelVolume(_uint SoundChannel, float fVolume);
+	bool						IsPlaying(_uint SoundChannel);
+#pragma
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CInput_Device*		m_pInput_Device = { nullptr };
@@ -216,6 +225,7 @@ private:
 	class CCollision_Manager*	m_pCollision_Manager = { nullptr };
 	class CTarget_Manager*		m_pTarget_Manager = { nullptr };
 	class CShadow*				m_pShadow = { nullptr };
+	class CSound_Manager*		m_pSound_Manager = { nullptr };
 
 public:
 	void						Release_Engine();

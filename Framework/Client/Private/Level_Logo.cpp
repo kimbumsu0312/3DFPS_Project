@@ -28,6 +28,9 @@ HRESULT CLevel_Logo::Initialize()
 		return E_FAIL;
 	//이벤트 구독
 	m_pGameInstance->Subscribe<Event_NextLevel>([&](const Event_NextLevel& e) {m_bIsNextLevel = true; });
+	
+	m_pGameInstance->StopAll();
+	m_pGameInstance->PlayBGM(L"Logo.wav", g_fBGMVolume);
 
 	return S_OK;
 }
