@@ -15,17 +15,20 @@ void CAttack2_Alcina::Enter(CAlcina* pContainer)
     m_eAnimState = STATE_ANIM::START;
     *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CAlcina::ANIM_STATE::ATTACK);
     pContainer->Switch_Anim("Claw_Moving_Attack_Start", false);
+
 }
 
 void CAttack2_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
 {
-    pContainer->Target_LookTurn(fDeltatime);
+    pContainer->Target_LookTurn(fDeltatime * 2.f);
     if (m_eAnimState == STATE_ANIM::START)
     {
         if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {
             m_eAnimState = STATE_ANIM::LOOP;
             pContainer->Switch_Anim("Claw_Moving_Attack_Loop", false);
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::ALCINA));
+            m_pGameInstance->PlaySoundW(TEXT("Alcina_Attack_S2.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA), g_fBGMVolume);
         }
     }
     else if(m_eAnimState == STATE_ANIM::LOOP)
@@ -36,6 +39,8 @@ void CAttack2_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
 
         if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true || fDis <= 3.f)
         {
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::ALCINA));
+            m_pGameInstance->PlaySoundW(TEXT("Alcina_Attack_L.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA), g_fBGMVolume);
             m_eAnimState = STATE_ANIM::LOOP2;
             pContainer->Switch_Anim("Claw_Moving_Attack_End_Start", false);
         }
@@ -53,7 +58,7 @@ void CAttack2_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
     {
         CSpark_Effect::SPARK_EFFECT_INIT SparkDesc;
 
-        pContainer->Attack_Collision();
+        pContainer->Attack_Collision(true);
         SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("R_PinkyNail_1"));
         m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
         SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("R_IndexNail_1"));

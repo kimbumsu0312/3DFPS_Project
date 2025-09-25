@@ -35,7 +35,13 @@ void CChase_NorMon_1::Enter(CMonster_Normal* pContainer)
 
 void CChase_NorMon_1::Update(CMonster_Normal* pContainer, _float fTimeDelta)
 {
-    //pContainer->Move_Node(fTimeDelta);
+    m_fAccTime += fTimeDelta;
+    if (m_fAccTime > 1.f)
+    {
+        m_fAccTime = 0.f;
+        m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER_1_MOVE));
+        m_pGameInstance->PlaySoundW(TEXT("Normon_1_Move.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER_1_MOVE), g_fBGMVolume);
+    }
     pContainer->Target_LookAt(fTimeDelta);
     if (m_eAnimState == STATE_ANIM::START)
     {

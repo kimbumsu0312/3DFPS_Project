@@ -61,7 +61,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-30.95f, -8.97f, 63.67f, 1.f));
 
-	m_pGameInstance->Subscribe<Event_OnDamageUI_OPEN>([&](const Event_OnDamageUI_OPEN& e) { m_fDamage_Cool = 1.f; });
+	m_pGameInstance->Subscribe<Event_OnDamageUI_OPEN>([&](const Event_OnDamageUI_OPEN& e) { m_fDamage_Cool = 2.f; });
 
 	m_fYaw = 180.f;
 	

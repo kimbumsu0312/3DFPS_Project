@@ -36,7 +36,7 @@ public:
 		_bool IsEvent_1 = { false };
 		_bool IsEvent_2 = { false };
 		_bool IsEvent_3 = { false };
-
+		_bool IsMonDamage = { false };
 		const _float4x4* MonPos = { nullptr };
 
 		_float fNoies = {};

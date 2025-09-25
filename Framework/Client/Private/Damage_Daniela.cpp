@@ -15,12 +15,12 @@ void CDamage_Daniela::Enter(CDaniela* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
     pContainer->Switch_AnimState(ENUM_CLASS(CDaniela::ANIM_STATE::DAMAGE));
-
     if(pContainer->Get_BlackBoard()->Get_Data().iDamage > 50)
         Big_Damage(pContainer);
     else
         Normal_Damage(pContainer);
 
+    pContainer->Get_BlackBoard()->Set_Data().isBogan = true;
 }
 
 void CDamage_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
@@ -42,7 +42,7 @@ void CDamage_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
 
 void CDamage_Daniela::Exit(CDaniela* pContainer)
 {
-    pContainer->Get_BlackBoard()->Set_Data().fDamage_Cool = 3.f;
+    //pContainer->Get_BlackBoard()->Set_Data().fDamage_Cool = 3.f;
     m_eAnimState = STATE_ANIM::END;
 }
 

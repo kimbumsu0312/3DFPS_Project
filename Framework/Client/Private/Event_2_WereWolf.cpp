@@ -20,7 +20,6 @@ void CEvent_2_WereWolf::Enter(CMonster_WereWolf* pContainer)
     m_eEvent = Event::END;
     m_iCount = 0;
     pContainer->Get_Transform()->Set_State(STATE::POSITION, _vector{ -47.46f, -3.63f, 30.14f, 1.f });
-
 }
 
 void CEvent_2_WereWolf::Update(CMonster_WereWolf* pContainer, _float fDeltatime)
@@ -36,6 +35,7 @@ void CEvent_2_WereWolf::Update(CMonster_WereWolf* pContainer, _float fDeltatime)
         
         if (m_eEvent == Event::END && *pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER_2));
             pContainer->Switch_Anim("Attack_L", false);
             m_eEvent = Event::TURN;
         }
@@ -53,6 +53,8 @@ void CEvent_2_WereWolf::Update(CMonster_WereWolf* pContainer, _float fDeltatime)
         {
             pContainer->Get_BlackBoard()->Set_Data().IsChase = false;
             pContainer->Get_BlackBoard()->Set_Data().IsEvent_2 = false;
+            pContainer->Get_BlackBoard()->Set_Data().IsMonDamage = true;
+
         }
     }
 }

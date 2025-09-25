@@ -151,17 +151,21 @@ void CMonster_WereWolf::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY T
 		switch (TargetCollision.iObjType)
 		{
 		case ENUM_CLASS(OBJECT_TYPE::RAY):
-
-			if (m_BlackBoard->Get_Data().IsChase == true)
+			if (m_BlackBoard->Set_Data().IsMonDamage == true)
 			{
 				m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
 				m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
-			
+
 				Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
 				m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
 
-				m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::ALCINA));
-				m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Gun.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA), g_fBGMVolume - 0.9f);
+				m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER_2));
+				m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Gun.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER_2), g_fBGMVolume - 0.7f);
+			}
+			else
+			{
+				m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::PLAYER));
+				m_pGameInstance->PlaySoundW(TEXT("ricochet.wav"), ENUM_CLASS(SOUND_CHANNEL::PLAYER), g_fBGMVolume - 0.4f);
 			}
 			break;
 		}
@@ -318,7 +322,7 @@ HRESULT CMonster_WereWolf::Ready_Utility()
 	m_BlackBoard->Set_Data().IsEvent_2 = false;
 	m_BlackBoard->Set_Data().IsEvent_3 = false;
 	m_BlackBoard->Set_Data().fNoies = 0.f;
-
+	m_BlackBoard->Set_Data().IsMonDamage = false;
 	m_pBehaviorTree = CBehaviorTree_WereWolf::Create(m_BlackBoard);
 
 	return S_OK;

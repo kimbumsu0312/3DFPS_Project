@@ -43,7 +43,7 @@ void CBody_NorMon::Update(_float fTimeDelta)
 {
     CMonster_Normal::NORMALMON_DATA& pData = m_BlackBoard->Set_Data();
 
-    *pData.bIsAnimFinsh = m_pAnimCom->Player_Animation((*pData.iAnimState), (*pData.szAnimTag), (*pData.bIsAnimLoop), m_pModelCom, fTimeDelta, m_iRootLodeIndex);
+    *pData.bIsAnimFinsh = m_pAnimCom->Player_Animation((*pData.iAnimState), (*pData.szAnimTag), (*pData.bIsAnimLoop), m_pModelCom, fTimeDelta, m_iRootLodeIndex, pData.isBogan);
 
     Update_CombinedMatrix();
 }

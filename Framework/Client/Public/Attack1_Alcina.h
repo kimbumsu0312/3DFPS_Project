@@ -18,8 +18,7 @@ private:
 	_int						m_iAttackCount = { 0 };
 	_wstring					m_szAttackName = {};
 
-private:
-	void						Attack_Effect(CAlcina* pContainer);
+	_bool						m_bisRight = { false };
 public:
 	static CAttack1_Alcina* Create(void* pArg = nullptr);
 	virtual void				Free() override;

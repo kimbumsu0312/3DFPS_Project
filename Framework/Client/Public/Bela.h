@@ -48,6 +48,7 @@ public:
 		_bool				bIsSpawnFly = {};
 
 		_float				fMoveSpeed = {};
+
 	}BELA_DATA;
 
 private:

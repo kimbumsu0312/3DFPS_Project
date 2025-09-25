@@ -65,6 +65,10 @@ void CEvent_3_Bela::Update(CBela* pContainer, _float fDeltatime)
             *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CBela::ANIM_STATE::ATTACK);
             pContainer->Switch_Anim("Jump_Attack_End", false);
 
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::BELA));
+            m_pGameInstance->PlaySoundW(TEXT("Sliding.wav"), ENUM_CLASS(SOUND_CHANNEL::BELA), g_fBGMVolume);
+
+
         }
     }
     else if (m_eAnimState == STATE_ANIM::LOOP2)

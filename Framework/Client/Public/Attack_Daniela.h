@@ -16,6 +16,10 @@ public:
 
 private:
 	_int						m_iAttackType = {};
+	_float						m_fAccTime = {};
+
+	_int						m_iAttack_ID = {};
+
 public:
 	static CAttack_Daniela* Create(void* pArg = nullptr);
 	virtual void				Free() override;

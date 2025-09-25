@@ -16,6 +16,8 @@ void CDie_Bela::Enter(CBela* pContainer)
     m_eAnimState = STATE_ANIM::START;
     *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CBela::ANIM_STATE::DAMAGE);
     pContainer->Switch_Anim("Freezes_Die", false);
+    m_pGameInstance->StopAll();
+    m_pGameInstance->PlayBGM(TEXT("GamePlay.wav"), g_fBGMVolume - 0.8f);
 
 }
 
@@ -35,6 +37,9 @@ void CDie_Bela::Update(CBela* pContainer, _float fDeltatime)
 
             pContainer->Get_BlackBoard()->Set_Data().fNoies = 0.f;
             pContainer->Get_BlackBoard()->Set_Data().IsFreezes = true;
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::BELA));
+            m_pGameInstance->PlaySoundW(TEXT("Freezes.wav"), ENUM_CLASS(SOUND_CHANNEL::BELA), g_fBGMVolume);
+
         }
     }
     else if (m_eAnimState == STATE_ANIM::LOOP)
@@ -45,6 +50,7 @@ void CDie_Bela::Update(CBela* pContainer, _float fDeltatime)
         {
             pContainer->Get_BlackBoard()->Set_Data().bIsSpawnFly = false;
             m_eAnimState = STATE_ANIM::END;
+
         }
     }
     else if (m_eAnimState == STATE_ANIM::END)
@@ -56,7 +62,6 @@ void CDie_Bela::Update(CBela* pContainer, _float fDeltatime)
             CItemSpawner::GetInstance()->Spawn_Item(5, pContainer->Get_Transform()->Get_State(STATE::POSITION), pContainer->Get_Navi()->Get_CulIndex());
 
             pContainer->SetDead();
-            m_pGameInstance->Publish(Event_OpenDoor{ true , 1.f });
         }
     }
 }

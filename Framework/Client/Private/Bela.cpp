@@ -89,11 +89,17 @@ void CBela::Update(_float fTimeDelta)
 	
 	if (m_BlackBoard->Get_Data().bIsFly == true)
 	{
+		m_pGameInstance->PlayLoopSound(TEXT("Fly.wav"), ENUM_CLASS(SOUND_CHANNEL::BELA_EFFECT), g_fBGMVolume - 0.3f);
+
 		m_pEffect->Set_Potion(vPos);
 		m_pEffect->Update(fTimeDelta);
 	}
+	else
+		m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::BELA_EFFECT));
+
 	if (m_BlackBoard->Get_Data().bIsSpawnFly == true)
 	{
+
 		m_pSpawnEffect->Set_Potion(vPos);
 		m_pSpawnEffect->Update(fTimeDelta);
 	}
@@ -183,9 +189,11 @@ void CBela::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollisi
 		case ENUM_CLASS(OBJECT_TYPE::RAY):
 			if (m_BlackBoard->Get_Data().IsFreezes == true)
 			{
+				m_pGameInstance->Publish(Event_OpenDoor{ true , 1.f });
 				m_BlackBoard->Set_Data().IsDamage = true;
 				Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
 				m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
+
 			}
 			break;
 		}
@@ -504,6 +512,8 @@ void CBela::Event_Spawn()
 {
 	m_BlackBoard->Set_Data().IsSpawn = true;
 	Ready_TriggerEvent();
+	m_pGameInstance->StopAll();
+	m_pGameInstance->PlayBGM(TEXT("Boss_Bgm_2.wav"), g_fBGMVolume - 0.3f);
 }
 
 void CBela::Event_2()

@@ -17,7 +17,8 @@ void CCritical_Attack_Daniela::Enter(CDaniela* pContainer)
 
     *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CDaniela::ANIM_STATE::ATTACK);
 
-    pContainer->Switch_Anim("Attack_CriticalHit", false);
+    pContainer->Switch_Anim("Attack_CriticalHit_Start", false);
+
 }
 
 void CCritical_Attack_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
@@ -30,17 +31,25 @@ void CCritical_Attack_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
     }
     else if (m_eAnimState == STATE_ANIM::LOOP)
     {
-        pContainer->Attack_Collision();
+
         if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {
-            pContainer->Get_BlackBoard()->Set_Data().fCriAttackCool = 15.f;
-            pContainer->Get_BlackBoard()->Set_Data().fAttackCool = 3.f;
-            pContainer->Get_BlackBoard()->Set_Data().IsCriticalAttack = false;
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::DANIELA));
+            m_pGameInstance->PlaySoundW(TEXT("Sister_Attack.wav"), ENUM_CLASS(SOUND_CHANNEL::DANIELA), g_fBGMVolume);
+            pContainer->Switch_Anim("Attack_CriticalHit", false);
+            pContainer->Get_BlackBoard()->Set_Data().isBogan = false;
         }
     }
     else if (m_eAnimState == STATE_ANIM::END)
     {
-
+        pContainer->Attack_Collision();
+        if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+        {
+            pContainer->Get_BlackBoard()->Set_Data().isBogan = true;
+            pContainer->Get_BlackBoard()->Set_Data().fCriAttackCool = 15.f;
+            pContainer->Get_BlackBoard()->Set_Data().fAttackCool = 3.f;
+            pContainer->Get_BlackBoard()->Set_Data().IsCriticalAttack = false;
+        }
     }
 
 }

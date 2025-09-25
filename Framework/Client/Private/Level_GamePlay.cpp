@@ -69,21 +69,6 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	if (m_pGameInstance->IsKeyHold(DIK_LSHIFT) && m_pGameInstance->IsKeyDown(DIK_8))
 		CInven_Manager::GetInstance()->Add_ItemSlot(7, TEXT("Pool_Item"));
 
-	if (m_pGameInstance->IsKeyHold(DIK_LCONTROL) && m_pGameInstance->IsKeyDown(DIK_1))
-	{
-		if(FAILED(CItemSpawner::GetInstance()->Spawn_Item(5, XMVectorSet(-61.f, -8.5f, 13.5f, 1.f), 0)))
-		{
-			MSG_BOX(TEXT("아이템 생성 실패"));
-		}
-	}
-
-	if (m_pGameInstance->IsKeyHold(DIK_LCONTROL) && m_pGameInstance->IsKeyDown(DIK_2))
-	{
-		if (FAILED(CItemSpawner::GetInstance()->Spawn_Item(6, XMVectorSet(-61.f, -8.5f, 13.5f, 1.f), 0)))
-		{
-			MSG_BOX(TEXT("아이템 생성 실패"));
-		}
-	}
 }
 
 HRESULT CLevel_GamePlay::Render()

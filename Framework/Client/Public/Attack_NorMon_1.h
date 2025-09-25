@@ -16,7 +16,7 @@ public:
 
 private:
 	_int						m_iAttackType = {};
-
+	_float						m_fAccTime{};
 public:
 	static CAttack_NorMon_1*	Create(void* pArg = nullptr);
 	virtual void				Free() override;

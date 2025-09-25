@@ -41,6 +41,7 @@ public:
 		_int				iDropItemIndex = {};
 
 		_float				fNoies = {};
+		_bool				isBogan = {};
 	}DANIELA_DATA;
 
 private:

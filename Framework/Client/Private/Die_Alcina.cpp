@@ -46,7 +46,8 @@ void CDie_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
                 ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_MsgItem"), &Desc)))
                 return;
             pContainer->SetDead();
-            
+            m_pGameInstance->StopAll();
+            m_pGameInstance->PlayBGM(TEXT("GamePlay.wav"), g_fBGMVolume - 0.8f);
         }
     }
 }

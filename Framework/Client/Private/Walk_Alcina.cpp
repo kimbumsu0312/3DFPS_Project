@@ -32,7 +32,7 @@ void CWalk_Alcina::Enter(CAlcina* pContainer)
 
 void CWalk_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
 {
-    pContainer->Target_LookTurn(fDeltatime);
+    pContainer->Target_LookTurn(fDeltatime * 3.f);
     if (m_eAnimState == STATE_ANIM::START)
     {
         _bool AnimFinsh = *pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh;

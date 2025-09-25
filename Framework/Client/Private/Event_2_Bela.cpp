@@ -16,7 +16,7 @@ void CEvent_2_Bela::Enter(CBela* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
     *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CBela::ANIM_STATE::ATTACK);
-    pContainer->Switch_Anim("Freeszes_Swing", false);
+    pContainer->Switch_Anim("Freeszes_Swing_Start", false);
 
     _matrix vPlayerMat = CPlayer_Manager::GetInstance()->Get_PlayerWorld();
     _vector vScale, vWorldRot, vWorldTrans;
@@ -45,14 +45,10 @@ void CEvent_2_Bela::Update(CBela* pContainer, _float fDeltatime)
 {
     if (m_eAnimState == STATE_ANIM::START)
     {
-        pContainer->Attack_Collision();
-
         m_eAnimState = STATE_ANIM::LOOP;
     }
     else if (m_eAnimState == STATE_ANIM::LOOP)
     {
-        pContainer->Attack_Collision();
-
         m_fAccTime += fDeltatime * 0.02f;
         m_fEffectTime += fDeltatime;
 
@@ -62,14 +58,74 @@ void CEvent_2_Bela::Update(CBela* pContainer, _float fDeltatime)
 
         if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {
+            m_eAnimState = STATE_ANIM::LOOP2;
+            pContainer->Switch_Anim("Freeszes_Swing1", false);
+
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::BELA));
+            m_pGameInstance->PlaySoundW(TEXT("Sister_Attack.wav"), ENUM_CLASS(SOUND_CHANNEL::BELA), g_fBGMVolume);
+        }
+    }
+    else if (m_eAnimState == STATE_ANIM::LOOP2)
+    {
+        pContainer->Attack_Collision();
+
+        m_fAccTime += fDeltatime * 0.02f;
+        m_fEffectTime += fDeltatime;
+
+        pContainer->Get_BlackBoard()->Set_Data().fNoies -= m_fAccTime;
+
+        if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+        {
+            m_eAnimState = STATE_ANIM::LOOP3;
+            pContainer->Switch_Anim("Freeszes_Swing2", false);
             pContainer->Get_BlackBoard()->Set_Data().bIsSpawnFly = false;
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::BELA));
+            m_pGameInstance->PlaySoundW(TEXT("Sister_Attack.wav"), ENUM_CLASS(SOUND_CHANNEL::BELA), g_fBGMVolume);
+
+            pContainer->Get_BlackBoard()->Set_Data().fNoies = 0.f;
+            m_fAccTime = 0.f;
+
+        }
+    }
+    else if (m_eAnimState == STATE_ANIM::LOOP3)
+    {
+        pContainer->Attack_Collision();
+
+        if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+        {
+            m_eAnimState = STATE_ANIM::LOOP4;
+            pContainer->Switch_Anim("Freeszes_Swing3", true);
+
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::BELA));
+            m_pGameInstance->PlaySoundW(TEXT("Sister_Attack.wav"), ENUM_CLASS(SOUND_CHANNEL::BELA), g_fBGMVolume);
+
+        }
+    }
+    else if (m_eAnimState == STATE_ANIM::LOOP4)
+    {
+        pContainer->Attack_Collision();
+
+        if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+        {
+            m_eAnimState = STATE_ANIM::LOOP5;
+            pContainer->Switch_Anim("Freeszes_Swing4", true);
+
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::BELA));
+            m_pGameInstance->PlaySoundW(TEXT("Sister_Attack.wav"), ENUM_CLASS(SOUND_CHANNEL::BELA), g_fBGMVolume);
+        }
+    }
+    else if (m_eAnimState == STATE_ANIM::LOOP5)
+    {
+        pContainer->Attack_Collision();
+
+        if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+        {
             m_eAnimState = STATE_ANIM::END;
             *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CBela::ANIM_STATE::NORMAL);
             pContainer->Switch_Anim("Idle_Freezes", true);
 
             pContainer->Get_BlackBoard()->Set_Data().fNoies = 0.f;
             m_fAccTime = 0.f;
-
         }
     }
     else if (m_eAnimState == STATE_ANIM::END)

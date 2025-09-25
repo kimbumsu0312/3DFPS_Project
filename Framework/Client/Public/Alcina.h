@@ -16,7 +16,7 @@ class CAlcina final : public CContainerObject
 {
 public:
 	enum class ANIM_STATE { NORMAL, ATTACK, DAMAGE, END };
-	enum ColliderType_Mon { Body = 0, Head, RESIST, ATTACK, End };
+	enum ColliderType_Mon { Body = 0, Head, RESIST, ATTACK_L, ATTACK_R, End };
 public:
 	typedef struct Alchina_Data
 	{
@@ -69,7 +69,7 @@ public:
 	void						Target_LookTurn(_float fTimeDelta);
 	void						Target_LookAt();
 	virtual void				OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetCollision) override;
-	void						Attack_Collision();
+	void						Attack_Collision(_bool isRight);
 
 	_vector						Bone_WorldTransform(const _wstring pBoneName);
 	void						Trail_On(_bool m_IsRight);

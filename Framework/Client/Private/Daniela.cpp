@@ -322,7 +322,7 @@ HRESULT CDaniela::Ready_Utility()
 	m_BlackBoard->Set_Data().bIsAnimLoop = &m_bIsAnimLoop;
 	m_BlackBoard->Set_Data().szCulStateTag = &m_szCulStateTag;
 
-	m_BlackBoard->Set_Data().iHp = 100;
+	m_BlackBoard->Set_Data().iHp = 150;
 	m_BlackBoard->Set_Data().iDamage = 0;
 	m_BlackBoard->Set_Data().fDamage_Cool = 0.f;
 
@@ -345,7 +345,10 @@ HRESULT CDaniela::Ready_Utility()
 
 	m_BlackBoard->Set_Data().MonPos = m_pTransformCom->Get_WorldMatrixPtr();
 
+	m_BlackBoard->Set_Data().isBogan = true;
 	m_pBehaviorTree = CBehaviorTree_Daniela::Create(m_BlackBoard);
+
+
 
 
 	return S_OK;

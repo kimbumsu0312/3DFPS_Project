@@ -57,6 +57,9 @@ HRESULT CAlcina::Initialize(void* pArg)
 	m_pColliderBone[ColliderType_Mon::Body] = m_pBodyObject->Get_BoneMatrix(TEXT("Spine_0"));
 	m_pColliderBone[ColliderType_Mon::Head] = m_pBodyObject->Get_BoneMatrix(TEXT("Head"));
 
+	m_pColliderBone[ColliderType_Mon::ATTACK_L] = m_pBodyObject->Get_BoneMatrix(TEXT("L_MiddleNail_1"));
+	m_pColliderBone[ColliderType_Mon::ATTACK_R] = m_pBodyObject->Get_BoneMatrix(TEXT("R_MiddleNail_1"));
+
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-10.87f, -8.68f, 55.79f, 1.f));
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f));
 
@@ -69,8 +72,7 @@ void CAlcina::Priority_Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->IsKeyDown(DIK_H))
 	{
-		m_bIsStart = true;
-		m_BlackBoard->Set_Data().iHp -= 100;
+		m_pGameInstance->Publish(Event_OpenDoor{ true, 1.f });
 	}
 	if (!m_bIsStart)
 		return;
@@ -111,9 +113,15 @@ void CAlcina::Update(_float fTimeDelta)
 
 	if (m_BlackBoard->Get_Data().bIsFly == true)
 	{
+		m_pGameInstance->PlayLoopSound(TEXT("Fly.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA_EFFECT), g_fBGMVolume - 0.3f);
+
 		m_pEffect->Set_Potion(vPos);
 		m_pEffect->Update(fTimeDelta);
 	}
+	else
+		m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::ALCINA_EFFECT));
+
+
 	if (m_BlackBoard->Get_Data().bIsSpawnFly == true)
 	{
 		m_pSpawnEffect->Set_Potion(vPos);
@@ -130,7 +138,7 @@ void CAlcina::Late_Update(_float fTimeDelta)
 	{
 		for (_int i = 0; i < ColliderType_Mon::End; ++i)
 		{
-			if (i == ColliderType_Mon::ATTACK)
+			if (i == ColliderType_Mon::ATTACK_L || i == ColliderType_Mon::ATTACK_R)
 				continue;
 
 			if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[i])))
@@ -222,21 +230,39 @@ void CAlcina::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY TargetColli
 		case ENUM_CLASS(OBJECT_TYPE::RAY):
 			if (MyCollision.iObjType == ENUM_CLASS(OBJECT_TYPE::MON_HEAD))
 				m_bIsHeadShot = true;
-			m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
+			if (true == m_bIsHeadShot)
+			{
+				m_BlackBoard->Set_Data().iHp -= _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
+				m_BlackBoard->Set_Data().iDamage += _int(CPlayer_Manager::GetInstance()->Get_Damage() * 1.3f);
+			}
+			else
+			{
+				m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
+				m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
+			}
+			
 			m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::ALCINA));
-			m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Gun.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA), g_fBGMVolume - 0.9f);
+			m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Gun.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA), g_fBGMVolume - 0.7f);
 			Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
 			m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
+			break;
+		case ENUM_CLASS(OBJECT_TYPE::PLAYER):
+			CPlayer_Manager::GetInstance()->Player_Hp(-25);
 			break;
 		}
 	}
 
 }
 
-void CAlcina::Attack_Collision()
+void CAlcina::Attack_Collision(_bool isRight)
 {
-	if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[ColliderType_Mon::ATTACK])))
-		return;
+
+		if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[ColliderType_Mon::ATTACK_R])))
+			return;
+
+		if (FAILED(m_pGameInstance->Add_ColliderCheck(this, m_pColliderCom[ColliderType_Mon::ATTACK_L])))
+			return;
+
 }
 
 _vector CAlcina::Bone_WorldTransform(const _wstring pBoneName)
@@ -303,11 +329,21 @@ HRESULT CAlcina::Ready_Components()
 	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
 	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::ATTACK);
 	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
-	OBBDesc.vExtents = _float3(1.f, 1.f, 1.f);
-	OBBDesc.vCenter = _float3(0.f, 1.f, 1.f);
+	OBBDesc.vExtents = _float3(0.7f, 0.5f, 0.2f);
+	OBBDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
-		TEXT("Com_Collider_Attack"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::ATTACK]), &OBBDesc)))
+		TEXT("Com_Collider_Attack_R"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::ATTACK_R]), &OBBDesc)))
+		return E_FAIL;
+
+	OBBDesc.iLayer = ENUM_CLASS(COLLISION_LAYER::MONSTER);
+	OBBDesc.iObjType = ENUM_CLASS(OBJECT_TYPE::ATTACK);
+	OBBDesc.vAngles = _float3(XMConvertToRadians(0.f), XMConvertToRadians(0.f), XMConvertToRadians(0.f));
+	OBBDesc.vExtents = _float3(0.7f, 0.5f, 0.2f);
+	OBBDesc.vCenter = _float3(0.f, 0.f, 0.f);
+
+	if (FAILED(CGameObject::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Collider_OBB"),
+		TEXT("Com_Collider_Attack_L"), reinterpret_cast<CComponent**>(&m_pColliderCom[ColliderType_Mon::ATTACK_L]), &OBBDesc)))
 		return E_FAIL;
 
 	CNavigation::NAVIGATION_DESC        NaviDesc{};
@@ -521,7 +557,7 @@ void CAlcina::Collider_Update()
 
 	for (_int i = 0; i < ColliderType_Mon::End; ++i)
 	{
-		if (ColliderType_Mon::RESIST == i || ColliderType_Mon::ATTACK == i)
+		if (ColliderType_Mon::RESIST == i)
 		{
 			m_pColliderCom[i]->Update(m_pTransformCom->Get_WorldMatrix());
 			continue;
@@ -542,6 +578,9 @@ void CAlcina::Event_Start()
 {
 	m_BlackBoard->Set_Data().IsChase = true;
 	m_BlackBoard->Set_Data().fAttack2Cool = 10.f;
+	m_pGameInstance->Publish(Event_OpenDoor{ false, 2.f });
+	m_pGameInstance->StopAll();
+	m_pGameInstance->PlayBGM(TEXT("Boss_Bgm_2.wav"), g_fBGMVolume - 0.1f);
 }
 
 void CAlcina::Update_Effect(_float fTimeDelta)

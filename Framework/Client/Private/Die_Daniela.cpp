@@ -16,6 +16,10 @@ void CDie_Daniela::Enter(CDaniela* pContainer)
     m_eAnimState = STATE_ANIM::START;
     pContainer->Switch_AnimState(ENUM_CLASS(CDaniela::ANIM_STATE::DAMAGE));
     pContainer->Switch_Anim("Freezes_Die", false);
+    pContainer->Get_BlackBoard()->Set_Data().isBogan = true;
+    m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::DANIELA));
+    m_pGameInstance->PlaySoundW(TEXT("Sister_Die.wav"), ENUM_CLASS(SOUND_CHANNEL::DANIELA), g_fBGMVolume);
+
 }
 
 void CDie_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
@@ -26,7 +30,6 @@ void CDie_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
     }
     else if (m_eAnimState == STATE_ANIM::LOOP)
     {
-        pContainer->Target_LookTurn(fDeltatime);
         if (m_isNoies)
         {
             pContainer->Get_BlackBoard()->Set_Data().fNoies += fDeltatime * 0.5f;
@@ -41,6 +44,7 @@ void CDie_Daniela::Update(CDaniela* pContainer, _float fDeltatime)
         else if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {
             m_isNoies = true;
+            pContainer->Target_LookTurn(fDeltatime);
            
         }
     }

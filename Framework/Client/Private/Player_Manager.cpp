@@ -32,7 +32,11 @@ void CPlayer_Manager::Player_Hp(_int iValue)
 		return;
 
 	m_bIsDamage = true;
-	m_fCulHp += iValue;
+	if(m_bIsGuard)
+		m_fCulHp += ((_float)iValue * 0.5f);
+	else
+		m_fCulHp += iValue;
+
 	m_pGameInstance->Publish(Event_Player_Hp_UI_Open{ 0 });
 	m_pGameInstance->Publish(Event_OnDamageUI_OPEN{});
 

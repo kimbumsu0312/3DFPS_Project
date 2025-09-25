@@ -31,7 +31,7 @@ void CDamage_NorMon_1::Enter(CMonster_Normal* pContainer)
 
     pContainer->Get_BlackBoard()->Set_Data().IsChase = true;
     pContainer->Get_BlackBoard()->Set_Data().IsIdle = false;
-
+    pContainer->Get_BlackBoard()->Set_Data().isBogan = true;
 
 }
 

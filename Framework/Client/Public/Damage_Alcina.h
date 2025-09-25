@@ -17,6 +17,8 @@ public:
 	virtual void				Exit(CAlcina* pContainer) override;
 
 private:
+	_bool						m_isNoies = { true };
+private:
 	void						Damage_F(CAlcina* pContainer);
 
 public:

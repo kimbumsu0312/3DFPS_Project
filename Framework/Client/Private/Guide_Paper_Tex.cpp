@@ -154,7 +154,7 @@ void CGuide_Paper_Tex::Render_Font_EVENT_3()
 
 void CGuide_Paper_Tex::Render_Font_EVENT_4()
 {
-    _wstring szFont = TEXT("고생했습니다.");
+    _wstring szFont = TEXT("감사합니다..");
 
     _float2 vFontPos = {};
     vFontPos.x = m_vPos.x;

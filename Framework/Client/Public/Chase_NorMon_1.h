@@ -17,6 +17,7 @@ public:
 
 private:
 	_int						m_iWeapon{};
+	_float						m_fAccTime{};
 public:
 	static CChase_NorMon_1*		Create(void* pArg = nullptr);
 	virtual void				Free() override;

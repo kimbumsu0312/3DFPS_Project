@@ -17,6 +17,7 @@ void CEvent_1_WereWolf::Enter(CMonster_WereWolf* pContainer)
     *pContainer->Get_BlackBoard()->Set_Data().iAnimState = (ENUM_CLASS(CMonster_WereWolf::ANIM_STATE::ATTACK));
     pContainer->Switch_Anim("Attack_Rush_Howling", false);
     m_pGameInstance->OnOff_Light(TEXT("Light_WereWolf1"), true);
+
 }
 
 void CEvent_1_WereWolf::Update(CMonster_WereWolf* pContainer, _float fDeltatime)
@@ -30,6 +31,7 @@ void CEvent_1_WereWolf::Update(CMonster_WereWolf* pContainer, _float fDeltatime)
 
         if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {
+   
             pContainer->Switch_Anim("Attack_Rush_Loop", true);
             m_eAnimState = STATE_ANIM::END;
         }

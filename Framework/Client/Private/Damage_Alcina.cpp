@@ -15,12 +15,37 @@ void CDamage_Alcina::Enter(CAlcina* pContainer)
     m_eAnimState = STATE_ANIM::START;
     *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(CAlcina::ANIM_STATE::DAMAGE);
     Damage_F(pContainer);
+
 }
 
 void CDamage_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
 {
-    if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
-        pContainer->Get_BlackBoard()->Set_Data().iDamage = 0;
+    if (m_eAnimState == STATE_ANIM::START)
+    {
+        if (pContainer->Get_BlackBoard()->Get_Data().IsPage2 == true)
+        {
+            if (pContainer->Get_BlackBoard()->Get_Data().fNoies < 1.f)
+                pContainer->Get_BlackBoard()->Set_Data().fNoies += fDeltatime;
+        }
+        if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+        {
+            if (pContainer->Get_BlackBoard()->Get_Data().IsPage2 == true)
+            {
+                m_eAnimState = STATE_ANIM::LOOP;
+                pContainer->Get_BlackBoard()->Set_Data().fNoies = 1.f;
+            }
+            else
+                pContainer->Get_BlackBoard()->Set_Data().iDamage = 0;
+        }
+    }
+    else if (m_eAnimState == STATE_ANIM::LOOP)
+    {
+        pContainer->Get_BlackBoard()->Set_Data().fNoies -= fDeltatime;
+
+        if(pContainer->Get_BlackBoard()->Get_Data().fNoies < 0.f)
+            pContainer->Get_BlackBoard()->Set_Data().iDamage = 0;
+    }
+   
 }
 
 void CDamage_Alcina::Exit(CAlcina* pContainer)

@@ -56,18 +56,27 @@ void CAttack3_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
                 pContainer->Trail_On(true);
                 pContainer->Switch_Anim("Claw_Diagonal_Attack", false);
                 m_szAttackName = TEXT("Claw_Diagonal_Attack");
+
+                m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::ALCINA));
+                m_pGameInstance->PlaySoundW(TEXT("Alcina_Attack_M.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA), g_fBGMVolume);
             }
             else if (m_szAttackName == TEXT("Claw_Vertical_Start"))
             {
                 pContainer->Trail_On(true);
                 pContainer->Switch_Anim("Claw_Vertical_Attack", false);
                 m_szAttackName = TEXT("Claw_Vertical_Attack");
+
+                m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::ALCINA));
+                m_pGameInstance->PlaySoundW(TEXT("Alcina_Attack_M.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA), g_fBGMVolume);
             }
             else if (m_szAttackName == TEXT("Claw_Distance_Start"))
             {
                 pContainer->Trail_On(true);
                 pContainer->Switch_Anim("Claw_Distance_Attack", false);
                 m_szAttackName = TEXT("Claw_Distance_Attack");
+
+                m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::ALCINA));
+                m_pGameInstance->PlaySoundW(TEXT("Alcina_Attack_L.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA), g_fBGMVolume);
 
             }
 
@@ -78,7 +87,7 @@ void CAttack3_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
     else if (m_eAnimState == STATE_ANIM::LOOP2)
     {
         pContainer->Get_BlackBoard()->Set_Data().fNoies -= fDeltatime;
-        pContainer->Attack_Collision();
+        pContainer->Attack_Collision(true);
         if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {
             if (m_szAttackName == TEXT("Claw_Diagonal_Attack"))
@@ -113,7 +122,6 @@ void CAttack3_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
 
 void CAttack3_Alcina::Exit(CAlcina* pContainer)
 {
-    pContainer->Get_BlackBoard()->Set_Data().fNoies = 1.f;
     pContainer->Get_BlackBoard()->Set_Data().isBogan = true;
 }
 

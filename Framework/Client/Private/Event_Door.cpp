@@ -24,11 +24,14 @@ HRESULT CEvent_Door::Initialize(void* pArg)
 	if (FAILED(Ready_PartObjects()))
 		return E_FAIL;
 	m_eDoorEvent = Door_Event::END;
-
+	m_fAngle = XMConvertToRadians(90.f);
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-17.41f, -8.67f, 45.17f, 1.f));
-	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(90.f));
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), m_fAngle);
 
-	m_pGameInstance->Subscribe<Event_OpenDoor>([&](const Event_OpenDoor& e) { e.isOpen ? m_eDoorEvent = Door_Event::OPEN : m_eDoorEvent = Door_Event::CLOSE; m_fSpeed = e.fSpeed;  });
+	m_pGameInstance->Subscribe<Event_OpenDoor>([&](const Event_OpenDoor& e) { 
+		e.isOpen ? m_eDoorEvent = Door_Event::OPEN : m_eDoorEvent = Door_Event::CLOSE; m_fSpeed = e.fSpeed;
+
+		  });
 
 	return S_OK;
 }
@@ -44,23 +47,30 @@ void CEvent_Door::Update(_float fTimeDelta)
 	{
 	case CEvent_Door::Door_Event::OPEN:
 		m_fAngle -= fTimeDelta * m_fSpeed;
-		if (m_fAngle <= XMConvertToRadians(-90.f))
+		if (m_fAngle < XMConvertToRadians(0.f))
 		{
-			m_fAngle = XMConvertToRadians(-90.f);
+			m_fAngle = XMConvertToRadians(0.f);
+			m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), m_fAngle);
+			m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::DOOR));
+			m_pGameInstance->PlaySoundW(TEXT("Door_Open.wav"), ENUM_CLASS(SOUND_CHANNEL::DOOR), g_fBGMVolume);
+
 			m_eDoorEvent = Door_Event::END;
 		}
 		else
-			m_pTransformCom->Turn(_vector{ 0.f, 1.f, 0.f, 0.f }, -fTimeDelta * m_fSpeed);
+			m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), m_fAngle);
 		break;
 	case CEvent_Door::Door_Event::CLOSE:
 		m_fAngle += fTimeDelta * m_fSpeed;
-		if (m_fAngle >= XMConvertToRadians(0.f))
+		if (m_fAngle > XMConvertToRadians(90.f))
 		{
-			m_fAngle = XMConvertToRadians(0.f);
+			m_fAngle = XMConvertToRadians(90.f);
+			m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), m_fAngle);
+			m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::DOOR));
+			m_pGameInstance->PlaySoundW(TEXT("Door_Close.wav"), ENUM_CLASS(SOUND_CHANNEL::DOOR), g_fBGMVolume);
 			m_eDoorEvent = Door_Event::END;
 		}
 		else
-			m_pTransformCom->Turn(_vector{ 0.f, 1.f, 0.f, 0.f }, fTimeDelta * m_fSpeed);
+			m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), m_fAngle);
 		break;
 	}
 	m_pModelObject->Update(fTimeDelta);

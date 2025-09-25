@@ -16,6 +16,7 @@ public:
 
 private:
 	_bool						m_bIsLight = {};
+	_float						m_fAccTime = {};
 public:
 	static CChase_Daniela* Create(void* pArg = nullptr);
 	virtual void				Free() override;

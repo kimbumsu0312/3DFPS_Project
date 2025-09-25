@@ -42,6 +42,8 @@ public:
 
 		_float				fNoies = {};
 
+		_bool				isBogan = {};
+
 	}NORMALMON_DATA;
 private:
 	enum ColliderType_Mon { BODY = 0, Head, Hand, RESIST, CHASE, END };

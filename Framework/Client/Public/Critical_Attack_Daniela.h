@@ -14,13 +14,12 @@ public:
 	virtual void				Update(CDaniela* pContainer, _float fDeltatime) override;
 	virtual void				Exit(CDaniela* pContainer) override;
 
+private:
+	_float						m_fAccTime = {};
+
 public:
 	static CCritical_Attack_Daniela* Create(void* pArg = nullptr);
 	virtual void				Free() override;
-};
-
-class Critical_Attack_Daniela
-{
 };
 
 NS_END

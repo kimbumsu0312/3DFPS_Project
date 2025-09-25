@@ -14,6 +14,9 @@ public:
 	virtual void				Update(CPlayer* pContainer, _float fTimeDelta) override;
 	virtual void				Exit(CPlayer* pContainer) override;
 
+private:
+	_bool						m_bisNonAnime = {};
+	_float						m_fAccTime = {};
 public:
 	static CWeaponSwap_Player* Create(void* pArg = nullptr);
 	virtual void				Free() override;

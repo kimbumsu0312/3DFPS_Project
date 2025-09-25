@@ -14,8 +14,8 @@ HRESULT CWeaponSwap_Player::Initalize(void* pArg)
 void CWeaponSwap_Player::Enter(CPlayer* pContainer)
 {
     m_eAnimState = STATE_ANIM::START;
-
-
+    m_fAccTime = 0.f;
+    m_bisNonAnime = false;
     if (*pContainer->Get_BlackBoard()->Get_Data().iAnimState == ENUM_CLASS(PLAYER_ANIM::HANDGUN))
     {
         *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(PLAYER_ANIM::WEAPONCHANGE);
@@ -35,6 +35,7 @@ void CWeaponSwap_Player::Enter(CPlayer* pContainer)
     {
         *pContainer->Get_BlackBoard()->Set_Data().iAnimState = ENUM_CLASS(PLAYER_ANIM::NONE);
         pContainer->Switch_Anim("Walk_Loop", false);
+        m_bisNonAnime = true;
     }
     else
     {
@@ -47,13 +48,24 @@ void CWeaponSwap_Player::Enter(CPlayer* pContainer)
 
 void CWeaponSwap_Player::Update(CPlayer* pContainer, _float fTimeDelta)
 {
-   if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true )
-   {
-       m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::PLAYER));
-       m_pGameInstance->PlaySoundW(TEXT("Weapon_Swap.wav"), ENUM_CLASS(SOUND_CHANNEL::PLAYER), g_fBGMVolume - 0.2f);
+    m_fAccTime += fTimeDelta;
+    if (m_bisNonAnime)
+    {
+        if (m_fAccTime > 1.f)
+        {
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::PLAYER));
+            m_pGameInstance->PlaySoundW(TEXT("Weapon_Swap.wav"), ENUM_CLASS(SOUND_CHANNEL::PLAYER), g_fBGMVolume - 0.2f);
 
-        pContainer->WeaponSwap();
-   }
+            pContainer->WeaponSwap();
+        }
+    }
+    else if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
+    {
+        m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::PLAYER));
+        m_pGameInstance->PlaySoundW(TEXT("Weapon_Swap.wav"), ENUM_CLASS(SOUND_CHANNEL::PLAYER), g_fBGMVolume - 0.2f);
+    
+         pContainer->WeaponSwap();
+    }
 }
 
 void CWeaponSwap_Player::Exit(CPlayer* pContainer)

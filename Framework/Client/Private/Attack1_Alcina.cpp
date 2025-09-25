@@ -55,27 +55,43 @@ void CAttack1_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
             pContainer->Get_BlackBoard()->Set_Data().isBogan = false;
             if (m_szAttackName == TEXT("Claw_Behind_Start"))
             {
+                m_bisRight = false;
                 pContainer->Trail_On(false);
                 pContainer->Switch_Anim("Claw_Behind_Attack", false);
                 m_szAttackName = TEXT("Claw_Behind_Attack");
+                m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::ALCINA));
+                m_pGameInstance->PlaySoundW(TEXT("Alcina_Attack_S.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA), g_fBGMVolume);
+
             }
             else if (m_szAttackName == TEXT("Claw_Left_Zero_Start"))
             {
+                m_bisRight = false;
                 pContainer->Trail_On(false);
                 pContainer->Switch_Anim("Claw_Left_Zero_Attack", false);
                 m_szAttackName = TEXT("Claw_Left_Zero_Attack");
+                m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::ALCINA));
+                m_pGameInstance->PlaySoundW(TEXT("Alcina_Attack_S.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA), g_fBGMVolume);
             }
             else if (m_szAttackName == TEXT("Claw_Left_Short_Start"))
             {
+                m_bisRight = false;
                 pContainer->Trail_On(false);
                 pContainer->Switch_Anim("Claw_Left_Short_Attack", false);
                 m_szAttackName = TEXT("Claw_Left_Short_Attack");
+
+                m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::ALCINA));
+                m_pGameInstance->PlaySoundW(TEXT("Alcina_Attack_S2.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA), g_fBGMVolume);
             }
             else if (m_szAttackName == TEXT("Claw_Right_Short_Start"))
             {
+                m_bisRight = true;
                 pContainer->Trail_On(true);
                 pContainer->Switch_Anim("Claw_Right_Short_Attack", false);
                 m_szAttackName = TEXT("Claw_Right_Short_Attack");
+
+                m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::ALCINA));
+                m_pGameInstance->PlaySoundW(TEXT("Alcina_Attack_S2.wav"), ENUM_CLASS(SOUND_CHANNEL::ALCINA), g_fBGMVolume);
+
 
             }
  
@@ -84,7 +100,7 @@ void CAttack1_Alcina::Update(CAlcina* pContainer, _float fDeltatime)
     }
     else if (m_eAnimState == STATE_ANIM::LOOP2)
     {
-        pContainer->Attack_Collision();
+        pContainer->Attack_Collision(m_bisRight);
         if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {
             if (m_szAttackName == TEXT("Claw_Behind_Attack"))
@@ -123,60 +139,6 @@ void CAttack1_Alcina::Exit(CAlcina* pContainer)
 {
     pContainer->Get_BlackBoard()->Set_Data().isBogan = true;
 
-}
-
-void CAttack1_Alcina::Attack_Effect(CAlcina* pContainer)
-{
-    CSpark_Effect::SPARK_EFFECT_INIT SparkDesc;
-
-    if (m_szAttackName == TEXT("Claw_Behind_Attack"))
-    {
-        pContainer->Attack_Collision();
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("L_PinkyNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("L_RingNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("L_MiddleNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("L_IndexNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-    }
-    else if (m_szAttackName == TEXT("Claw_Left_Zero_Attack"))
-    {
-        pContainer->Attack_Collision();
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("L_PinkyNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("L_RingNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("L_MiddleNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("L_IndexNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-    }
-    else if (m_szAttackName == TEXT("Claw_Left_Short_Attack"))
-    {
-        pContainer->Attack_Collision();
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("L_PinkyNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("L_RingNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("L_MiddleNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("L_IndexNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-    }
-    else if (m_szAttackName == TEXT("Claw_Right_Short_Attack"))
-    {
-        pContainer->Attack_Collision();
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("R_PinkyNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("R_IndexNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("R_MiddleNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-        SparkDesc.vPos = pContainer->Bone_WorldTransform(TEXT("R_IndexNail_1"));
-        m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Spark"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &SparkDesc);
-    }
 }
 
 CAttack1_Alcina* CAttack1_Alcina::Create(void* pArg)

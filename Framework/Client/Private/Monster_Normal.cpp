@@ -203,8 +203,8 @@ void CMonster_Normal::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY Tar
 		}
 		Desc.vPos = TargetCollision.RayDesc.OnCloiderPos;
 		m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
-		m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER));
-		m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Gun.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER), g_fBGMVolume - 0.9f);
+		m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER_1));
+		m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Gun.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER_1), g_fBGMVolume - 0.9f);
 
 		break;
 
@@ -215,8 +215,8 @@ void CMonster_Normal::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY Tar
 		m_BlackBoard->Set_Data().iHp -= CPlayer_Manager::GetInstance()->Get_Damage();
 		m_BlackBoard->Set_Data().iDamage += CPlayer_Manager::GetInstance()->Get_Damage();
 		m_BlackBoard->Set_Data().IsWeaponDamage = true;
-		m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER));
-		m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Knife.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER), g_fBGMVolume - 0.9f);
+		m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER_1));
+		m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Knife.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER_1), g_fBGMVolume - 0.9f);
 		
 		Desc.vPos = (CPlayer_Manager::GetInstance()->Get_PlayerPos() + m_pTransformCom->Get_State(STATE::POSITION)) * 0.5f;
 		Desc.vPos = XMVectorSetY(Desc.vPos, XMVectorGetY(Desc.vPos) + 1.5f);
@@ -414,7 +414,7 @@ HRESULT CMonster_Normal::Ready_Utility()
 
 	m_BlackBoard->Set_Data().fNoies = 0.f;
 
-
+	m_BlackBoard->Set_Data().isBogan = true;
 	m_pBehaviorTree = CBehaviorTree_Normon_1::Create(m_BlackBoard);
 
 	return S_OK;
