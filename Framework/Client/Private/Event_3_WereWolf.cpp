@@ -23,6 +23,8 @@ void CEvent_3_WereWolf::Update(CMonster_WereWolf* pContainer, _float fDeltatime)
     if (m_eAnimState == STATE_ANIM::START)
     {
         m_eAnimState = STATE_ANIM::LOOP;
+        m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER_2));
+        m_pGameInstance->PlaySoundW(TEXT("Wolf_Howl.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER_2), g_fBGMVolume);
     }
     else if (m_eAnimState == STATE_ANIM::LOOP)
     {

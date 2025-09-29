@@ -160,7 +160,7 @@ void CMonster_WereWolf::OnCollision(COLLISIONENTRY MyCollision, COLLISIONENTRY T
 				m_pGameInstance->Add_Pool_ToLayer(TEXT("Pool_Blood"), ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_Effect"), &Desc);
 
 				m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER_2));
-				m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Gun.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER_2), g_fBGMVolume - 0.7f);
+				m_pGameInstance->PlaySoundW(TEXT("Monster_hit_Gun.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER_2), g_fBGMVolume - 0.3f);
 			}
 			else
 			{

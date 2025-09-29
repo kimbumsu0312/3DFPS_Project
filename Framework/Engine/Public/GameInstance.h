@@ -207,6 +207,11 @@ public:
 	void						SetChannelVolume(_uint SoundChannel, float fVolume);
 	bool						IsPlaying(_uint SoundChannel);
 #pragma
+#pragma region LUT
+public:
+		HRESULT					Set_TexPass(_int iPass);
+		HRESULT					Bind_LutTexture(class CShader* pShader, const _char* pConstantName);
+#pragma
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CInput_Device*		m_pInput_Device = { nullptr };
@@ -226,7 +231,7 @@ private:
 	class CTarget_Manager*		m_pTarget_Manager = { nullptr };
 	class CShadow*				m_pShadow = { nullptr };
 	class CSound_Manager*		m_pSound_Manager = { nullptr };
-
+	class CLut*					m_pLut = { nullptr };
 public:
 	void						Release_Engine();
 	virtual void				Free() override;

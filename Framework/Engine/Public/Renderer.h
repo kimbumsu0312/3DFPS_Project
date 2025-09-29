@@ -9,7 +9,7 @@ private:
 	virtual ~CRenderer() = default;
 
 public:
-	HRESULT						Initialize();
+	HRESULT						Initialize(_bool isLut);
 	HRESULT						Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
 	HRESULT						Draw();
 	void						On_Static_Shadow(_bool IsOn);
@@ -30,6 +30,8 @@ private:
 private:
 	class CShader*				m_pShader = { nullptr };
 	class CShader*				m_pFogShader = { nullptr };
+	class CShader*				m_pLutShader = { nullptr };
+
 	class CVIBuffer_Rect*		m_pVIBuffer = { nullptr };
 	_float4x4					m_WorldMatrix{}, m_ViewMatrix{}, m_ProjMatrix{};
 	
@@ -37,7 +39,8 @@ private:
 	_float						m_fViewportWidth{}, m_fViewportHeight{};
 
 	_bool						m_bIsMapShadow = false;
-	
+	_bool						m_bIsLut = false;
+
 #ifdef _DEBUG
 private:
 	list<class CComponent*>		m_DebugComponent;
@@ -55,6 +58,7 @@ private:
 	HRESULT						Render_Blend();
 	HRESULT						Render_Bloom();
 	HRESULT						Render_Fog();
+	HRESULT						Render_Lut();
 	HRESULT						Render_Effect();
 	HRESULT						Render_UI();
 	HRESULT						Render_UI_Effect();
@@ -69,7 +73,7 @@ private:
 
 
 public:
-	static CRenderer*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CRenderer*			Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _bool isLut);
 	virtual void				Free() override;
 };
 

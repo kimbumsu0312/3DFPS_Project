@@ -17,6 +17,9 @@ public:
 private:
 	_int						m_iStartType = 0;
 	_float						m_fLightTime = {};
+	_float						m_fAccTime = {};
+	_bool						m_isSound = {};
+
 public:
 	static CEvent_1_WereWolf* Create(void* pArg = nullptr);
 	virtual void				Free() override;

@@ -16,6 +16,8 @@ void CDie_WereWolf::Enter(CMonster_WereWolf* pContainer)
     m_eAnimState = STATE_ANIM::START;
     *pContainer->Get_BlackBoard()->Set_Data().iAnimState = (ENUM_CLASS(CMonster_WereWolf::ANIM_STATE::DAMAGE));
     pContainer->Switch_Anim("Die", false);
+    m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER_2));
+    m_pGameInstance->PlaySoundW(TEXT("Wolf_StandUp.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER_2), g_fBGMVolume);
 }
 
 void CDie_WereWolf::Update(CMonster_WereWolf* pContainer, _float fDeltatime)

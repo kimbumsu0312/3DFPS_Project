@@ -71,6 +71,7 @@ void CAttack_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
         pContainer->Target_LookAt(fDeltatime);
         if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {
+            ++m_iAttackType;
             m_eAnimState = STATE_ANIM::END;
             pContainer->Get_BlackBoard()->Set_Data().isBogan = false;
             if (pContainer->Get_BlackBoard()->Get_Data().iWeapon == ENUM_CLASS(CMonster_Normal::NORMAL_MON_WEAPON::END))
@@ -120,7 +121,6 @@ void CAttack_NorMon_1::Update(CMonster_Normal* pContainer, _float fDeltatime)
             pContainer->Get_BlackBoard()->Set_Data().isBogan = true;
             pContainer->Get_BlackBoard()->Set_Data().fAttackCool = 2.f;
             pContainer->Get_BlackBoard()->Set_Data().IsAttack = false;
-            ++m_iAttackType;
 
             if (m_iAttackType >= 3)
                 m_iAttackType = 0;

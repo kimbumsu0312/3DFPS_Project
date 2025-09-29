@@ -15,6 +15,10 @@ namespace Engine
 		unsigned int	iNumLevels;
 		unsigned int	iNumLayerFilter;
 
+		bool			isLut;
+		wstring			szLutTextureFilePath;
+		unsigned int	iLutNumTextures;
+
 	}ENGINE_DESC;	
 
 

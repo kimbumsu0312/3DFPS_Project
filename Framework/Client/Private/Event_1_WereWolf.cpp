@@ -22,6 +22,16 @@ void CEvent_1_WereWolf::Enter(CMonster_WereWolf* pContainer)
 
 void CEvent_1_WereWolf::Update(CMonster_WereWolf* pContainer, _float fDeltatime)
 {
+    m_fAccTime += fDeltatime;
+    if (m_fAccTime > 1.2f)
+    {
+        if (m_isSound == false)
+        {
+            m_isSound = true;
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER_2));
+            m_pGameInstance->PlaySoundW(TEXT("Wolf_Howl.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER_2), g_fBGMVolume);
+        }
+    }
     if (m_eAnimState == STATE_ANIM::START)
     {
         m_eAnimState = STATE_ANIM::LOOP;
@@ -32,6 +42,8 @@ void CEvent_1_WereWolf::Update(CMonster_WereWolf* pContainer, _float fDeltatime)
         if (*pContainer->Get_BlackBoard()->Get_Data().bIsAnimFinsh == true)
         {
    
+            m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER_2));
+            m_pGameInstance->PlayLoopSound(TEXT("Wolf_Patrol01.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER_2), g_fBGMVolume);
             pContainer->Switch_Anim("Attack_Rush_Loop", true);
             m_eAnimState = STATE_ANIM::END;
         }

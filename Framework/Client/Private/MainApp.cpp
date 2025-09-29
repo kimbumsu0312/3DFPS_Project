@@ -30,6 +30,9 @@ HRESULT CMainApp::Initialize()
 	EngineDesc.iWinSizeY = g_iWinSizeY;
 	EngineDesc.iNumLevels = ENUM_CLASS(LEVEL::END);
 	EngineDesc.iNumLayerFilter = ENUM_CLASS(COLLISION_LAYER::END);
+	EngineDesc.isLut = true;
+	EngineDesc.szLutTextureFilePath = TEXT("../Bin/Resources/Textures/Lut/LUT_%d.png");
+	EngineDesc.iLutNumTextures = 2;
 
 	if (FAILED(m_pGameInstance->Initialize_Engine(EngineDesc, &m_pDevice, &m_pContext)))
 		return E_FAIL;

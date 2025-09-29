@@ -20,7 +20,7 @@
 #include "Target_Manager.h"
 #include "Shadow.h"
 #include "Sound_Manager.h"
-
+#include "Lut.h"
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
@@ -62,7 +62,14 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pTarget_Manager)
 		return E_FAIL;
 
-	m_pRenderer = CRenderer::Create(*ppDevice, *ppContext);
+	if (EngineDesc.isLut == true)
+	{
+		m_pLut = CLut::Create(*ppDevice, *ppContext, EngineDesc.szLutTextureFilePath.c_str(), EngineDesc.iLutNumTextures);
+		if (nullptr == m_pLut)
+			return E_FAIL;
+	}
+
+	m_pRenderer = CRenderer::Create(*ppDevice, *ppContext, EngineDesc.isLut);
 	if (nullptr == m_pRenderer)
 		return E_FAIL;
 
@@ -370,6 +377,16 @@ bool CGameInstance::IsPlaying(_uint SoundChannel)
 	return m_pSound_Manager->IsPlaying(SoundChannel);
 }
 
+HRESULT CGameInstance::Set_TexPass(_int iPass)
+{
+	return m_pLut->Set_TexPass(iPass);
+}
+
+HRESULT CGameInstance::Bind_LutTexture(CShader* pShader, const _char* pConstantName)
+{
+	return m_pLut->Bind_LutTexture(pShader, pConstantName);
+}
+
 _matrix CGameInstance::Get_Transform_Matrix_Inverse(D3DTS eTransformState) const
 {
 	return m_pPipeLine->Get_Transform_Matrix_Inverse(eTransformState);
@@ -615,6 +632,7 @@ HRESULT CGameInstance::Render_RT_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuff
 void CGameInstance::Release_Engine()
 {
 	Release();
+	Safe_Release(m_pLut);
 	Safe_Release(m_pShadow);
 	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pCollision_Manager);

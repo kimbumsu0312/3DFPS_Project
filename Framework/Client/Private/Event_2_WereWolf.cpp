@@ -20,6 +20,10 @@ void CEvent_2_WereWolf::Enter(CMonster_WereWolf* pContainer)
     m_eEvent = Event::END;
     m_iCount = 0;
     pContainer->Get_Transform()->Set_State(STATE::POSITION, _vector{ -47.46f, -3.63f, 30.14f, 1.f });
+
+
+    m_pGameInstance->StopSound(ENUM_CLASS(SOUND_CHANNEL::MONSTER_2));
+    m_pGameInstance->PlayLoopSound(TEXT("Wolf_Patrol02.wav"), ENUM_CLASS(SOUND_CHANNEL::MONSTER_2), g_fBGMVolume);
 }
 
 void CEvent_2_WereWolf::Update(CMonster_WereWolf* pContainer, _float fDeltatime)

@@ -9,8 +9,9 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) : m_p
     Safe_AddRef(m_pGameInstance);
 }
 
-HRESULT CRenderer::Initialize()
+HRESULT CRenderer::Initialize(_bool isLut)
 {
+    m_bIsLut = isLut;
     _uint iNumViewports = 1;
     D3D11_VIEWPORT ViewportDesc{};
 
@@ -53,6 +54,9 @@ HRESULT CRenderer::Initialize()
     if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_BlurY"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f))))
         return E_FAIL;
 
+    if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Fog"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(1.f, 0.f, 1.f, 0.f))))
+        return E_FAIL;
+
     //게임 오브젝트들의 정보를 저장 받음
     //각 랜더 타겟 뷰에 필요한 정보들을 담아두고 이후 필요한 연산에서 꺼내서 쓸수 있게한다.
     if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse"))))
@@ -79,6 +83,10 @@ HRESULT CRenderer::Initialize()
     if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow"), TEXT("Target_LightDepth"))))
         return E_FAIL;
 
+    //포그
+    if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Fog"), TEXT("Target_Fog"))))
+        return E_FAIL;
+
     //최종 장면
     if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_BackBuffer"), TEXT("Target_BackBuffer"))))
         return E_FAIL;
@@ -103,6 +111,10 @@ HRESULT CRenderer::Initialize()
 
     m_pFogShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Engine_Shader_Fog.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
     if (nullptr == m_pFogShader)
+        return E_FAIL;
+
+    m_pLutShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Engine_Shader_Lut.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
+    if (nullptr == m_pLutShader)
         return E_FAIL;
 
     XMStoreFloat4x4(&m_WorldMatrix, XMMatrixScaling(ViewportDesc.Width, ViewportDesc.Height, 1.f));
@@ -182,7 +194,11 @@ HRESULT CRenderer::Draw()
 
     if (FAILED(Render_Fog()))
         return E_FAIL;
-
+    if (m_bIsLut == true)
+    {
+        if (FAILED(Render_Lut()))
+            return E_FAIL;
+    }
     if (FAILED(Render_UI()))
         return E_FAIL;
     
@@ -478,6 +494,11 @@ HRESULT CRenderer::Render_Bloom()
 
 HRESULT CRenderer::Render_Fog()
 {
+    if (m_bIsLut == true)
+    {
+        if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Fog"))))
+            return E_FAIL;
+    }
     if (FAILED(m_pFogShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
         return E_FAIL;
     if (FAILED(m_pFogShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
@@ -492,6 +513,34 @@ HRESULT CRenderer::Render_Fog()
         return E_FAIL;
 
     m_pFogShader->Begin(0);
+    m_pVIBuffer->Bind_Resources();
+    m_pVIBuffer->Render();
+
+    if (m_bIsLut == true)
+    {
+        if (FAILED(m_pGameInstance->End_MRT()))
+            return E_FAIL;
+    }
+    
+    return S_OK;
+}
+
+HRESULT CRenderer::Render_Lut()
+{
+    if (FAILED(m_pLutShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+        return E_FAIL;
+    if (FAILED(m_pLutShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+        return E_FAIL;
+    if (FAILED(m_pLutShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_Fog"), m_pLutShader, "g_DiffuseTexture")))
+        return E_FAIL;
+
+    if (FAILED(m_pGameInstance->Bind_LutTexture(m_pLutShader, "g_LutTexture")))
+        return E_FAIL;
+
+    m_pLutShader->Begin(0);
     m_pVIBuffer->Bind_Resources();
     m_pVIBuffer->Render();
 
@@ -657,11 +706,11 @@ HRESULT CRenderer::Render_Debug()
     return S_OK;
 }
 #endif
-CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _bool isLut)
 {
     CRenderer* pInstance = new CRenderer(pDevice, pContext);
 
-    if (FAILED(pInstance->Initialize()))
+    if (FAILED(pInstance->Initialize(isLut)))
     {
         MSG_BOX(TEXT("Failed to Created : CRenderer"));
         Safe_Release(pInstance);
@@ -695,5 +744,6 @@ void CRenderer::Free()
     
     Safe_Release(m_pShader);
     Safe_Release(m_pFogShader);
+    Safe_Release(m_pLutShader);
     Safe_Release(m_pVIBuffer);
 }
